@@ -1,0 +1,10 @@
+Profiles/**/building.ini
+Profiles/**/Stats/
+Profiles/**/Logs/
+Profiles/**/Loots/
+Profiles/**/Temp/
+lib/debug
+Profiles/**/stats_chkelixir.INI
+Profiles/**/stats_chkelixir50percent.INI
+Profiles/**/stats_chkelixir75percent.INI
+Profiles/**/stats_chktownhall.INI
