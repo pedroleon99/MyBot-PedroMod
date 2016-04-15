@@ -137,4 +137,15 @@ $tabMOD = GUICtrlCreateTabItem("Mods")
 			GUICtrlSetOnEvent(-1, "HideTaskbar")
 		$lblHideTaskBar = GUICtrlCreateLabel("Warning: May cause erratic behaviour, uncheck if you have problems.", $x + 120, $y + 23, 290, 30, $SS_LEFT)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+	
+	; Misc Battle Settings
+	Local $x = 140, $y = 345
+	$grpDontEndBattle = GUICtrlCreateGroup("Miscellaneous Battle Settings", $x - 20, $y - 20, 165, 45)
+		$chkFastADBClicks = GUICtrlCreateCheckbox("Enable Fast ADB Clicks", $x - 10, $y - 5, -1, -1)
+			$txtTip = "Tick this to enable faster ADB deployment for MEmu and Droid4x in Multi-finger mode." & @CRLF & @CRLF & _ 
+				      "     WARNING:  This is experimental, if you have issues with deployment, disable it."
+			GUICtrlSetTip(-1, $txtTip)
+			GUICtrlSetOnEvent(-1, "chkFastADBClicks")
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
 GUICtrlCreateTabItem("")

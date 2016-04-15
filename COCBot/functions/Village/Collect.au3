@@ -14,6 +14,13 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func Collect()
+Local $ImagesToUse[3]
+	$ImagesToUse[0] = @ScriptDir & "\images\Button\Treasury.png"
+	$ImagesToUse[1] = @ScriptDir & "\images\Button\Collect.png"
+	$ImagesToUse[2] = @ScriptDir & "\images\Button\CollectOkay.png"
+	$ToleranceImgLoc = 0.90
+	Local $t = 0
+
 	If $RunState = False Then Return
 
 	ClickP($aAway, 1, 0, "#0332") ;Click Away
@@ -177,4 +184,104 @@ Func Collect()
 	EndIf
 
 	UpdateStats()
+If (Number($tempGold) <= Number($itxtTreasuryGold)) Or (Number($tempElixir) <= Number($itxtTreasuryElixir)) Or (Number($tempDElixir) <= Number($itxtTreasuryDark)) Then
+If ($aCCPos[0] = "-1" Or $aCCPos[1] = "-1") Then
+   SetLog("Clan Castle Not Located To Collect Loot Treasury, Please Locate Clan Castle.",$COLOR_RED)
+LocateClanCastle()
+EndIf
+	SetLog("Collecting Treasury Loot...",$COLOR_BLUE)
+		ClickP($aAway, 1, 0, "#04004") ; Click away
+		Sleep(100)
+		click($aCCPos[0], $aCCPos[1], 1, 0, "#04005")
+	  Sleep(1000)
+		_CaptureRegion2(125, 610, 740, 715)
+	  $res = DllCall($pImgLib, "str", "MBRSearchImage", "handle", $hHBitmap2, "str", $ImagesToUse[0], "float", $ToleranceImgLoc)
+	  	
+		 If IsArray($res) Then
+			   If $DebugSetlog = 1 Then SetLog("DLL Call succeeded " & $res[0], $COLOR_RED)
+				  If $res[0] = "0" Then
+					; failed to find Treasury Button
+					 If $DebugSetlog then SetLog("No Button found")
+				  ElseIf $res[0] = "-1" Then
+					SetLog("DLL Error", $COLOR_RED)
+				  ElseIf $res[0] = "-2" Then
+					SetLog("Invalid Resolution", $COLOR_RED)
+				  Else
+					$expRet = StringSplit($res[0], "|", 2)
+					$ButtonX = 125 + Int($expRet[1])
+					$ButtonY = 610 + Int($expRet[2])
+					 Click($ButtonX, $ButtonY, 1, 0, "#04006")
+				 Sleep(1000)
+				 	  		
+		_CaptureRegion2()
+	  $res = DllCall($pImgLib, "str", "MBRSearchImage", "handle", $hHBitmap2, "str", $ImagesToUse[1], "float", $ToleranceImgLoc)
+	  	
+		 If IsArray($res) Then
+			   If $DebugSetlog = 1 Then SetLog("DLL Call succeeded " & $res[0], $COLOR_RED)
+				  If $res[0] = "0" Then
+					; failed to find Treasury Button
+					If $DebugSetlog then SetLog("No Button found")
+				  ElseIf $res[0] = "-1" Then
+					SetLog("DLL Error", $COLOR_RED)
+				  ElseIf $res[0] = "-2" Then
+					SetLog("Invalid Resolution", $COLOR_RED)
+				  Else
+					$expRet = StringSplit($res[0], "|", 2)
+					$ButtonX = Int($expRet[1])
+					$ButtonY = Int($expRet[2])
+					Click($ButtonX, $ButtonY, 1, 0, "#04007")
+			    Sleep(1000)
+				 	  		
+		_CaptureRegion2()
+	  $res = DllCall($pImgLib, "str", "MBRSearchImage", "handle", $hHBitmap2, "str", $ImagesToUse[2], "float", $ToleranceImgLoc)
+			   If IsArray($res) Then
+				  If $DebugSetlog = 1 Then SetLog("DLL Call succeeded " & $res[0], $COLOR_RED)
+					 If $res[0] = "0" Then
+						; failed to find Treasury Button
+						If $DebugSetlog then SetLog("No Button found")
+					 ElseIf $res[0] = "-1" Then
+					 SetLog("DLL Error", $COLOR_RED)
+					 ElseIf $res[0] = "-2" Then
+					 SetLog("Invalid Resolution", $COLOR_RED)
+					 Else
+					$expRet = StringSplit($res[0], "|", 2)
+					$ButtonX = Int($expRet[1])
+					$ButtonY = Int($expRet[2])
+					Click($ButtonX, $ButtonY, 1, 0, "#04008")
+					SetLog("Loot Treasury Collected Successfully.",$COLOR_BLUE)
+				 EndIf
+			  EndIf
+		   EndIf
+		EndIf
+	 EndIf
+  EndIf
+ElseIF (Number($tempGold) <= Number($itxtTreasuryGold)) Or (Number($tempElixir) <= Number($itxtTreasuryElixir)) Or (Number($tempDElixir) <= Number($itxtTreasuryDark)) = False Then
+			   SetLog("Resources Don't Match With Minimum Required Resources To Collect Loot Treasury",$COLOR_RED)
+EndIf
+	VillageReport(True, True)
+	$tempCounter = 0
+	While ($iGoldCurrent = "" Or $iElixirCurrent = "" Or ($iDarkCurrent = "" And $iDarkStart <> "")) And $tempCounter < 3
+		$tempCounter += 1
+		VillageReport(True, True)
+	WEnd
+
+	If $tempGold <> "" And $iGoldCurrent <> "" Then
+		$tempGoldCollected = $iGoldCurrent - $tempGold
+		$iGoldFromMines += $tempGoldCollected
+		$iGoldTotal += $tempGoldCollected
+	EndIf
+
+	If $tempElixir <> "" And $iElixirCurrent <> "" Then
+		$tempElixirCollected = $iElixirCurrent - $tempElixir
+		$iElixirFromCollectors += $tempElixirCollected
+		$iElixirTotal += $tempElixirCollected
+	EndIf
+
+	If $tempDElixir <> "" And $iDarkCurrent <> "" Then
+		$tempDElixirCollected = $iDarkCurrent - $tempDElixir
+		$iDElixirFromDrills += $tempDElixirCollected
+		$iDarkTotal += $tempDElixirCollected
+	 EndIf
+	UpdateStats()
+
 EndFunc   ;==>Collect

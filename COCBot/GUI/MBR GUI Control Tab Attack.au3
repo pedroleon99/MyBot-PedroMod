@@ -5,7 +5,7 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: GkevinOD (2014)
-; Modified ......: Hervidero (2015), LunaEclipse(January, 2016)
+; Modified ......: Hervidero (2015), LunaEclipse (April, 2016)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -26,13 +26,22 @@ Func chkDBSmartAttackRedArea()
 			GUICtrlSetState($chkDBSmartAttackRedArea, $GUI_SHOW)
 	EndSwitch
 
-	If GUICtrlRead($chkDBSmartAttackRedArea) = $GUI_CHECKED Then
+	If _GUICtrlComboBox_GetCurSel($cmbDBDeploy) <> $eMultiFinger Then
 		$iChkRedArea[$DB] = 1
-		For $i = $lblDBSmartDeploy To $picDBAttackNearDarkElixirDrill
+		
+		If _GUICtrlComboBox_GetCurSel($cmbDBDeploy) <> $eSmartSave Then
+			GUICtrlSetState($lblDBSmartDeploy, $GUI_SHOW)
+			GUICtrlSetState($cmbDBSmartDeploy, $GUI_SHOW)
+		Else
+			GUICtrlSetState($lblDBSmartDeploy, $GUI_HIDE)
+			GUICtrlSetState($cmbDBSmartDeploy, $GUI_HIDE)
+		EndIf
+				
+		For $i = $chkDbAttackNearGoldMine To $picDBAttackNearDarkElixirDrill
 			GUICtrlSetState($i, $GUI_SHOW)
 		Next
 	Else
-		$iChkRedArea[$DB] = 0
+		$iChkRedArea[$DB] = 0		
 		For $i = $lblDBSmartDeploy To $picDBAttackNearDarkElixirDrill
 			GUICtrlSetState($i, $GUI_HIDE)
 		Next

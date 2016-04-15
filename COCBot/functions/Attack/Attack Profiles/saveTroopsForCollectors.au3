@@ -39,13 +39,13 @@ Func calculateElixirCollectors(ByRef $aElixir)
 	Local $return = 0
 
 	; Check to see if able to store elixir
-	If Not getElixirStorageFull() Then
+	If Number($iChkSmartAttack[$DB][1]) = 1 And Not getElixirStorageFull() Then
 		; It's not full so get the array of elixir collectors
 		$aElixir = getArrayInDiamond(GetLocationElixir())
 		; Get a count of the number of elixir collectors found
 		$return = UBound($aElixir)
 	Else
-		SetLog("Elixir full, skipping detection of elixir collectors!", $COLOR_BLUE)
+		SetLog("Skipping detection of elixir collectors!", $COLOR_BLUE)
 	EndIf
 
 	Return $return
@@ -57,13 +57,13 @@ Func calculateDrills(ByRef $aDrills)
 	Local $return = 0
 
 	; Check to see if able to store Dark Elixir
-	If $iTownHallLevel >= 7 And Not getDarkElixirStorageFull() Then
+	If Number($iChkSmartAttack[$DB][2]) = 1 And $iTownHallLevel >= 7 And Not getDarkElixirStorageFull() Then
 		; It's not full, and player is high enough to collect DE so get the array of drills
 		$aDrills = getArrayInDiamond(GetLocationDarkElixir())
 		; Get a count of the number of drills found
 		$return = UBound($aDrills)
 	Else
-		SetLog("Dark Elixir full, skipping detection of dark elixir drills!", $COLOR_BLUE)
+		SetLog("Skipping detection of dark elixir drills!", $COLOR_BLUE)
 	EndIf
 
 	Return $return
@@ -75,13 +75,13 @@ Func calculateMines(ByRef $aMines)
 	Local $return = 0
 
 	; Check to see if able to store gold
-	If Not getGoldStorageFull() Then
+	If Number($iChkSmartAttack[$DB][0]) = 1 And Not getGoldStorageFull() Then
 		; It's not full so get the array of mines
 		$aMines = getArrayInDiamond(GetLocationMine())
 		; Get a count of the number of mines found
 		$return = UBound($aMines)
 	Else
-		SetLog("Gold full, skipping detection of gold mines!", $COLOR_BLUE)
+		SetLog("Skipping detection of gold mines!", $COLOR_BLUE)
 	EndIf
 
 	Return $return
@@ -250,7 +250,6 @@ Func launchSaveTroopsForCollectors($listInfoDeploy, $CC, $King, $Queen, $Warden,
 						$dropAmount = calculateSaveTroopsDropAmount($unitCount[$kind], UBound($collectorDropPoints), $maxSaveTroopsPerCollector[$kind])
 
 						If $dropAmount > 0 And $dropAmount <= $unitCount[$kind] Then
-							KeepClicks()
 							Switch $kind
 								Case $eBarb, $eArch, $eWiza, $eMini, $eGobl
 									; Drop these unit types further away
@@ -281,7 +280,6 @@ Func launchSaveTroopsForCollectors($listInfoDeploy, $CC, $King, $Queen, $Warden,
 								Case Else
 									; We are not interested in other troop types, so we are doing nothing here
 							EndSwitch
-							ReleaseClicks()
 						EndIf
 					EndIf
 				Next
@@ -320,6 +318,7 @@ Func launchSaveTroopsForCollectors($listInfoDeploy, $CC, $King, $Queen, $Warden,
 		WEnd
 	EndIf
 
+	If IsAttackPage() Then SmartZap()
 	CloseBattle(True)
 
 	Return True

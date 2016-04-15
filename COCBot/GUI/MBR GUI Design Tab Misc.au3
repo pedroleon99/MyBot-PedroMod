@@ -51,7 +51,7 @@ Local $x = 30, $y = 150
 			GUICtrlSetState (-1, $GUI_HIDE)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-Local $x = 30, $y = 205
+;Local $x = 30, $y = 205
 #cs No longer Needed
 	$grpProfiles = GUICtrlCreateGroup(GetTranslated(7,26, "Switch Profiles"), $x - 20, $y - 20, 240, 45)
 		$y -= 5
@@ -142,8 +142,8 @@ Local $x = 30, $y = 205
 			EndIf
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 #ce
-Local $x = 275, $y = 205
-	$grpLanguages = GUICtrlCreateGroup(GetTranslated(7,32, "GUI Language"), $x - 20, $y - 20, 205, 45)
+Local $x = 260, $y = 205
+	$grpLanguages = GUICtrlCreateGroup(GetTranslated(7,32, "GUI Language"), $x - 20, $y - 20, 220, 45)
 		$cmbLanguage = GUICtrlCreateCombo("", $x - 10 , $y - 5, 177, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			$txtTip = GetTranslated(7,33, "Use this to switch to a different GUI language")
 			GUICtrlSetTip(-1, $txtTip)
@@ -154,8 +154,9 @@ Local $x = 275, $y = 205
 			GUICtrlSetOnEvent(-1, "cmbLanguage")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
-Local $x = 30, $y = 253
-	$grpMisc = GUICtrlCreateGroup(GetTranslated(7,90, "Rearm, Collect, Clear"), $x -20, $y - 20 , 225, 115)
+;Local $x = 30, $y = 253
+Local $x = 30, $y = 220
+	$grpMisc = GUICtrlCreateGroup(GetTranslated(7,90, "Rearm, Collect, Clear"), $x -20, $y - 20 , 225, 150)
 	;$grpTraps = GUICtrlCreateGroup(GetTranslated(7,91, "Traps, X-bows && Infernos"), $x -20, $y - 20 , 225, 55)
 		GUICtrlCreateIcon($pIconLib, $eIcnTrap, $x - 5, $y, 24, 24)
 		GUICtrlCreateIcon($pIconLib, $eIcnXbow, $x + 20, $y, 24, 24)
@@ -171,12 +172,33 @@ Local $x = 30, $y = 253
 		GUICtrlCreateIcon($pIconLib, $eIcnMine, $x - 5, $y, 24, 24)
 		GUICtrlCreateIcon($pIconLib, $eIcnCollector, $x + 20, $y, 24, 24)
 		GUICtrlCreateIcon($pIconLib, $eIcnDrill, $x + 45, $y, 24, 24)
-		$chkCollect = GUICtrlCreateCheckbox(GetTranslated(7,36, "Collect Resources") & @CRLF & "            && " & GetTranslated(7,99, "Loot Cart"), $x + 75, $y + 2, -1, 30, $BS_MULTILINE)
+		$chkCollect = GUICtrlCreateCheckbox(GetTranslated(7,36, "Collect Resources,") & @CRLF & "Loot Cart " & GetTranslated(7,99, "&& Treasure"), $x + 75, $y + 2, -1, 30, $BS_MULTILINE)
 			$txtTip = GetTranslated(7,37, "Check this to automatically collect the Village's Resources") & @CRLF & GetTranslated(7,38, "from Gold Mines, Elixir Collectors and Dark Elixir Drills.") & @CRLF & GetTranslated(7,100, "This will also search for a Loot Cart in your village and collect it.")
 			GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetState(-1, $GUI_CHECKED)
 	;GUICtrlCreateGroup("", -99, -99, 1, 1)
-	$y += 28
+
+	$y += 30
+;----------------------Collect Loot Treasury---------------------
+		;$grpTreasury = GUICtrlCreateGroup("Collect Treasury", $x - 20, $y - 20 , 225, 55)
+;~ 		$lblRestartMins = GUICtrlCreateLabel("Collect Loot Treasury When Resources Lower Than: "), $x - 3 , $y + 6, 110, 50)
+		$lblRestartElixir = GUICtrlCreateLabel("Collect Treasury When Resources Lower:", $x - 3, $y + 2, -1, -1)
+		GUICtrlCreateIcon ($pIconLib, $eIcnGold,  $x - 7 , $y + 16, 16, 16)
+		$txtTreasuryGold = GUICtrlCreateInput("1000",  $x + 10, $y + 16, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			$txtTip = "Minimum Gold value for the bot to collect castle treasury because of low gold."
+			GUICtrlSetTip(-1, $txtTip)
+			GUICtrlSetLimit(-1, 7)
+		GUICtrlCreateIcon ($pIconLib, $eIcnElixir, $x + 62, $y + 16, 16, 16)
+		$txtTreasuryElixir = GUICtrlCreateInput("1500", $x + 78, $y + 16, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			$txtTip = "Minimum Elixir value for the bot to collect castle treasury because of low elixir."
+			GUICtrlSetTip(-1, $txtTip)
+			GUICtrlSetLimit(-1, 7)
+		GUICtrlCreateIcon ($pIconLib, $eIcnDark, $x + 130, $y + 16, 16, 16)
+		$txtTreasuryDark = GUICtrlCreateInput("500", $x + 147, $y + 16, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			$txtTip = "Minimum Dark Elixir value for the bot to collect castle treasury because of low dark elixir."
+			GUICtrlSetTip(-1, $txtTip)
+			GUICtrlSetLimit(-1, 6)
+$y += 35
 	;Local $x = 30, $y = 400
 	;$grpTombstones = GUICtrlCreateGroup(GetTranslated(7,93, "Clear Tombstones"), $x - 20, $y - 20 , 225, 55)
 		GUICtrlCreateIcon($pIconLib, $eIcnTombstone, $x - 5 , $y + 4, 24, 24)

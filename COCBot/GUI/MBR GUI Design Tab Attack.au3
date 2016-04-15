@@ -5,7 +5,7 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: GKevinOD (2014)
-; Modified ......: DkEd, Hervidero (2015)
+; Modified ......: DkEd, Hervidero (2015), LunaEclipse (April, 2016)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -69,19 +69,28 @@ $tabAttack = GUICtrlCreateTabItem(GetTranslated(3, 1, "Attack"))
 			GUICtrlSetTip(-1, $txtTip)
 		$y += 26
 		$chkDbAttackNearGoldMine = GUICtrlCreateCheckbox("", $x + 20, $y, 17, 17)
-			$txtTip = GetTranslated(3,37, "Drop troops near Gold Mines")
+			$txtTip = "Save Troops for Collectors:" & @CRLF & _ 
+					  "     Select this option to check Gold Mines." & @CRLF & _ 
+					  "     Troops will only be used if Gold Storage is not full!" & @CRLF & @CRLF & _ 
+					  "Other attack types: " & GetTranslated(3, 37, "Drop troops near Gold Mines")
 			GUICtrlSetTip(-1, $txtTip)
 		$picDBAttackNearGoldMine = GUICtrlCreateIcon($pIconLib, $eIcnMine, $x + 40 , $y - 3 , 24, 24)
 			GUICtrlSetTip(-1, $txtTip)
 		$x += 75
 		$chkDBAttackNearElixirCollector = GUICtrlCreateCheckbox("", $x, $y, 17, 17)
-			$txtTip = GetTranslated(3,38, "Drop troops near Elixir Collectors")
+			$txtTip = "Save Troops for Collectors:" & @CRLF & _ 
+					  "     Select this option to check Elixir Collectors." & @CRLF & _ 
+					  "     Troops will only be used if Elixir Storage is not full!" & @CRLF & @CRLF & _ 
+					  "Other attack types: " & GetTranslated(3, 38, "Drop troops near Elixir Collectors")
 			GUICtrlSetTip(-1, $txtTip)
 		$picDBAttackNearElixirCollector = GUICtrlCreateIcon($pIconLib, $eIcnCollector, $x + 20 , $y - 3 , 24, 24)
 			GUICtrlSetTip(-1, $txtTip)
  		$x += 55
   		$chkDBAttackNearDarkElixirDrill = GUICtrlCreateCheckbox("", $x, $y, 17, 17)
-			$txtTip = GetTranslated(3,39, "Drop troops near Dark Elixir Drills")
+			$txtTip = "Save Troops for Collectors:" & @CRLF & _ 
+			          "     Select this option to check Dark Elixir Drills." & @CRLF & _ 
+					  "     Troops will only be used if Dark Elixir Storage is not full!" & @CRLF & @CRLF & _ 
+					  "Other attack types: " & GetTranslated(3, 39, "Drop troops near Dark Elixir Drills")
  			GUICtrlSetTip(-1, $txtTip)
 		$picDBAttackNearDarkElixirDrill = GUICtrlCreateIcon($pIconLib, $eIcnDrill, $x + 20 , $y - 3, 24, 24)
  			GUICtrlSetTip(-1, $txtTip)

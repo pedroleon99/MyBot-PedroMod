@@ -144,6 +144,8 @@ AdlibRegister("PushBulletRemoteControl", $PBRemoteControlInterval)
 AdlibRegister("PushBulletDeleteOldPushes", $PBDeleteOldPushesInterval)
 
 
+Getchatid(GetTranslated(18, 48, "select your remote")) ; receive Telegram chat id and send keyboard
+
 CheckDisplay() ; verify display size and DPI (Dots Per Inch) setting
 
 
@@ -288,6 +290,7 @@ Func runBot() ;Bot that runs everything in order
 			UpgradeWall()
 				If _Sleep($iDelayRunBot3) Then Return
 				If $Restart = True Then ContinueLoop
+			PushMsg("CheckBuilderIdle")
 			Idle()
 				If _Sleep($iDelayRunBot3) Then Return
 				If $Restart = True Then ContinueLoop

@@ -126,7 +126,7 @@ Func calculateAttackSide(ByRef $aMines, ByRef $aElixir, ByRef $aDrills, ByRef $a
 EndFunc   ;==>calculateAttackSide
 
 ; Gets the location of the priority target for use with spells
-; Must be called after getAttackSide so that it has a target building
+; Must be called after getAttackSide so that it has a target building locations
 Func getSpellTargetLocation(ByRef $aDEStorage, ByRef $aTownHall)
 	; Set the return to the screen center by default
 	Local $result[3] = ["Center", $centerX, $centerY]
@@ -190,14 +190,6 @@ Func customDeployDropOnEdge($sideCoords, $dropVectors, $waveNumber, $kind, $drop
 	EndSwitch
 EndFunc   ;==>customDeployDropOnEdge
 
-Func customDeployDropOnEdges($sideCoords, $dropVectors, $waveNumber, $kind, $dropAmount, $position = 0)
-	KeepClicks()
-	customDeployDropOnEdge($sideCoords, $dropVectors, $waveNumber, $kind, $dropAmount, $position)
-	ReleaseClicks()
-
-	Return True
-EndFunc   ;==>customDeployDropOnEdges
-
 Func launchCustomDeploy($listInfoDeploy, $CC, $King, $Queen, $Warden, $overrideSmartDeploy = -1)
 	; Arrays to store positions of all important buildings, used for calculating attack side
 	Local $aMines, $aElixir, $aDrills, $aGoldStorage, $aElixirStorage, $aDEStorage, $aTownHall
@@ -237,24 +229,23 @@ Func launchCustomDeploy($listInfoDeploy, $CC, $King, $Queen, $Warden, $overrideS
 			EndIf
 		ElseIf $kind <= $eHaSpell Then
 			$barPosition = $aDeployButtonPositions[$kind]
-			$positionSide = StringUpper(StringRight($position, 1))
-
-			If $positionSide = "R" Then
-				$deployX = $deploySide[4][0]
-				$deployY = $deploySide[4][1]
-				$position = Number(StringTrimRight($position, 1))
-			ElseIf $positionSide = "L" Then
-				$deployX = $deploySide[0][0]
-				$deployY = $deploySide[0][1]
-				$position = Number(StringTrimRight($position, 1))
-			Else
-				$deployX = $deploySide[2][0]
-				$deployY = $deploySide[2][1]
-				$position = Number($position)
-				$positionSide = "C"
-			EndIf
 
 			If $barPosition <> -1 Then
+				$positionSide = StringUpper(StringRight($position, 1))
+				$position = Number($position)
+
+				Switch $positionSide
+					Case "L"
+						$deployX = $deploySide[0][0]
+						$deployY = $deploySide[0][1]
+					Case "R"
+						$deployX = $deploySide[4][0]
+						$deployY = $deploySide[4][1]
+					Case Else
+						$deployX = $deploySide[2][0]
+						$deployY = $deploySide[2][1]
+				EndSwitch
+
 				Switch $kind
 					Case $eKing
 						dropHeroes($deployX, $deployY, $King, -1, -1)
@@ -272,7 +263,7 @@ Func launchCustomDeploy($listInfoDeploy, $CC, $King, $Queen, $Warden, $overrideS
 									  $kind, $minTroopsPerPosition[$kind])
 
 							If $unitCount[$kind] >= $minTroopsPerPosition[$kind] Then $unitCount[$kind] -= $minTroopsPerPosition[$kind]
-						Else
+						ElseIf $kind = $eESpell And $King = -1 Then
 							SetLog("Saving earthquake for when the king is present", $COLOR_BLUE)
 						EndIf
 					Case Else
@@ -288,7 +279,7 @@ Func launchCustomDeploy($listInfoDeploy, $CC, $King, $Queen, $Warden, $overrideS
 									EndIf
 								Case Else
 									SetLog("Dropping " & getWaveName($waveNumber, $waveCount) & " wave of " & $dropAmount & " " & getTranslatedTroopName($kind), $COLOR_GREEN)
-									If customDeployDropOnEdges($deploySide, $dropVectors, $i, $barPosition, $dropAmount, $position) Then
+									If customDeployDropOnEdge($deploySide, $dropVectors, $i, $barPosition, $dropAmount, $position) Then
 										If _SleepAttack(SetSleep(1)) Then Return
 									EndIf
 							EndSwitch

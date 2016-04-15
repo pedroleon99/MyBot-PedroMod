@@ -1008,9 +1008,15 @@ Func saveConfig() ;Saves the controls settings to the config
 	EndIf
 	If GUICtrlRead($chkCollect) = $GUI_CHECKED Then
 		IniWrite($config, "other", "chkCollect", 1)
+		IniWrite($config, "other","treasuryGold", GUICtrlRead($txtTreasuryGold))
+		IniWrite($config, "other","treasuryElixir", GUICtrlRead($txtTreasuryElixir))
+		IniWrite($config, "other","treasuryDark", GUICtrlRead($txtTreasuryDark))
 	Else
 		IniWrite($config, "other", "chkCollect", 0)
-	EndIf
+		 IniWrite($config, "other","treasuryGold", GUICtrlRead($txtTreasuryGold))
+		IniWrite($config, "other","treasuryElixir", GUICtrlRead($txtTreasuryElixir))
+		IniWrite($config, "other","treasuryDark", GUICtrlRead($txtTreasuryDark))
+EndIf
 	If GUICtrlRead($chkTombstones) = $GUI_CHECKED Then
 		IniWrite($config, "other", "chkTombstones", 1)
 	Else
@@ -1755,6 +1761,13 @@ Func saveConfig() ;Saves the controls settings to the config
 	EndIf
 	IniWrite($config, "SaveTroops", "PercentCollectors", GUICtrlRead($txtPercentCollectors))
 	IniWrite($config, "SaveTroops", "MaxDistance", GUICtrlRead($txtDistance))
+
+	; Misc Battle Settings - Added by LunaEclipse
+	If GUICtrlRead($chkFastADBClicks) = $GUI_CHECKED Then
+		IniWrite($config, "Fast Clicks", "UseADBFastClicks", 1)
+	Else
+		IniWrite($config, "Fast Clicks", "UseADBFastClicks", 0)
+	EndIf
 
 	; Custom Deployment Settings - Added by LunaEclipse
 	IniWrite($config, "Custom Deployment", "Deployment", deployArrayToString($deployValues))

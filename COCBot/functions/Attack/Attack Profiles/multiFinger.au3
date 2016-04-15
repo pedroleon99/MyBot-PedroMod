@@ -46,9 +46,9 @@ Func multiFingerDropOnEdge($multiStyle, $dropVectors, $waveNumber, $kind, $dropA
 	If $position = 0 Or $dropAmount < $position Then $position = $dropAmount
 
 	KeepClicks()
-	If _SleepAttack($iDelayDropOnEdge1) Then Return
+	; If _SleepAttack($iDelayDropOnEdge1) Then Return
 	SelectDropTroop($kind) ; Select Troop
-	If _SleepAttack($iDelayDropOnEdge2) Then Return
+	; If _SleepAttack($iDelayDropOnEdge2) Then Return
 
 	Switch $multiStyle
 		Case $mfFFStandard, $mfFFSpiralLeft, $mfFFSpiralRight

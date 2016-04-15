@@ -91,9 +91,3 @@ Func CompareDBitmaps($bm1, $bm2)
     ;Return ($call[0]=0)
 
 EndFunc  ;==>CompareBitmaps
-
-Func DonateStatsReset()
-	FileDelete($dirTemp & "DonateStats\*.bmp")
-	InitDonateStats()
-
-EndFunc

@@ -18,7 +18,7 @@ Func GUIAbout()
 	$hAboutGUI = GUICreate(GetTranslated(15,1, "About Us"), 461, 400, 1, 65, -1, $WS_EX_MDICHILD, $frmbot)
 	
 	GUISetIcon($pIconLib, $eIcnGUI)
-	GUISetOnEvent($GUI_EVENT_CLOSE, "CloseGUIAbout") ; Run this function when the secondary GUI [X] is clicked
+	;GUISetOnEvent($GUI_EVENT_CLOSE, "CloseGUIAbout") ; Run this function when the secondary GUI [X] is clicked
 GUISetBkColor ($COLOR_WHITE)
 GUICtrlSetBkColor(-1, $COLOR_WHITE)
 	

@@ -1299,9 +1299,15 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 
 	If $iChkCollect = 1 Then
 		GUICtrlSetState($chkCollect, $GUI_CHECKED)
+		GUICtrlSetData($txtTreasuryGold, $itxtTreasuryGold)
+		GUICtrlSetData($txtTreasuryElixir, $itxtTreasuryElixir)
+		GUICtrlSetData($txtTreasuryDark, $itxtTreasuryDark)
 	Else
 		GUICtrlSetState($chkCollect, $GUI_UNCHECKED)
-	EndIf
+		GUICtrlSetData($txtTreasuryGold, $itxtTreasuryGold)
+		GUICtrlSetData($txtTreasuryElixir, $itxtTreasuryElixir)
+		GUICtrlSetData($txtTreasuryDark, $itxtTreasuryDark)
+EndIf
 
 	If $ichkTombstones = 1 Then
 		GUICtrlSetState($chkTombstones, $GUI_CHECKED)
@@ -1862,6 +1868,15 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 	EndIf
 	GUICtrlSetData($txtPercentCollectors, $percentCollectors)
 	GUICtrlSetData($txtDistance, $redlineDistance)
+
+	; Misc Battle Settings - Added by LunaEclipse
+	If $AndroidAdbClicksEnabled = 1 Then
+		GUICtrlSetState($chkFastADBClicks, $GUI_CHECKED)
+		$AndroidAdbClicksEnabled = True
+	Else
+		GUICtrlSetState($chkFastADBClicks, $GUI_UNCHECKED)
+		$AndroidAdbClicksEnabled = False
+	EndIf
 
 	; Custom Deployment Settings - Added by LunaEclipse
 	GUICtrlSetData($txtTownHall, $valueTownHall)

@@ -146,9 +146,27 @@ Func GUIControl($hWind, $iMsg, $wParam, $lParam)
 				Case $btnQuickStats
 					If $RunState Then btnVillageStat()
 			EndSwitch
-	   Case $WM_SYSCOMMAND ; 274
+; Modified By AminTalkin for closing About GUI
+;	   Case $WM_SYSCOMMAND ; 274
+;			If $__TEST_ERROR = True Then SetDebugLog("Bot WM_SYSCOMMAND: " & Hex($wParam, 4))
+;            If $hWind = $frmBot Then ; Only close Bot when Bot Window sends Close Message
+;			   Switch $wParam
+;				   Case $SC_MINIMIZE
+;					   $FrmBotMinimized = True
+;				   Case $SC_RESTORE ; 0xf120
+;					   ; set redraw controls flag to check if after restore visibile controls require redraw
+;					   If $FrmBotMinimized = True Then
+;						  $FrmBotMinimized = False ; prevents "flickering" due to DLL hanging of bot
+;						  $bRedrawBotWindow[2] = True
+;					   EndIf
+;				   Case $SC_CLOSE ; 0xf060
+;					   BotClose()
+;			   EndSwitch
+;			EndIf
+		Case $WM_SYSCOMMAND ; 274
 			If $__TEST_ERROR = True Then SetDebugLog("Bot WM_SYSCOMMAND: " & Hex($wParam, 4))
-            If $hWind = $frmBot Then ; Only close Bot when Bot Window sends Close Message
+            Switch $hWind
+			Case $frmBot ; Only close Bot when Bot Window sends Close Message
 			   Switch $wParam
 				   Case $SC_MINIMIZE
 					   $FrmBotMinimized = True
@@ -161,7 +179,12 @@ Func GUIControl($hWind, $iMsg, $wParam, $lParam)
 				   Case $SC_CLOSE ; 0xf060
 					   BotClose()
 			   EndSwitch
-			EndIf
+			Case $hAboutGUI
+			   Switch $wParam
+				   Case $SC_CLOSE ; 0xf060
+					   CloseGUIAbout()
+			   EndSwitch
+			EndSwitch
 	EndSwitch
 
 	Return $GUI_RUNDEFMSG

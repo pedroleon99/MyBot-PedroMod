@@ -176,13 +176,13 @@ Func ChatbotCreateGui()
    GUICtrlSetState($chkUseGeneric, $ChatbotClanAlwaysMsg)
    GUICtrlSetOnEvent(-1, "ChatGuiCheckboxUpdate")
    $y += 25
-   $chkChatPushbullet = GUICtrlCreateCheckbox("Use PushBullet for clan chatting", $x - 5, $y)
-   GUICtrlSetTip($chkChatPushbullet, "Send and recieve chats via pushbullet. Use BOT <myvillage> GETCHATS <interval|NOW|STOP> to get the latest clan chat as an image, and BOT <myvillage> SENDCHAT <chat message> to send a chat to your clan")
+   $chkChatPushbullet = GUICtrlCreateCheckbox("Use PushBullet or Telegram for chatting", $x - 5, $y)
+   GUICtrlSetTip($chkChatPushbullet, "Send and recieve chats via pushbullet or telegram. Use BOT <myvillage> GETCHATS <interval|NOW|STOP> to get the latest clan chat as an image, and BOT <myvillage> SENDCHAT <chat message> to send a chat to your clan")
    GUICtrlSetState($chkChatPushbullet, $ChatbotUsePushbullet)
    GUICtrlSetOnEvent(-1, "ChatGuiCheckboxUpdate")
    $y += 25
-   $chkPbSendNewChats = GUICtrlCreateCheckbox("Send pb message on new clan chat", $x - 5, $y)
-   GUICtrlSetTip($chkPbSendNewChats, "Will send an image of your clan chat via pushbullet when a new chat is detected. Not guaranteed to be 100% accurate.")
+   $chkPbSendNewChats = GUICtrlCreateCheckbox("Notify me new clan chat", $x - 5, $y)
+   GUICtrlSetTip($chkPbSendNewChats, "Will send an image of your clan chat via pushbullet & telegram when a new chat is detected. Not guaranteed to be 100% accurate.")
    GUICtrlSetState($chkPbSendNewChats, $ChatbotPbSendNew)
    GUICtrlSetOnEvent(-1, "ChatGuiCheckboxUpdate")
    $y += 25

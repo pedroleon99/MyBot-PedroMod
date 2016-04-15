@@ -63,6 +63,14 @@ Func txtDistance()
 	$redlineDistance = GUICtrlRead($txtDistance)
 EndFunc   ;==>txtDistance
 
+Func chkFastADBClicks()
+	If GUICtrlRead($chkFastADBClicks) = $GUI_CHECKED Then
+		$AndroidAdbClicksEnabled = True
+	Else
+		$AndroidAdbClicksEnabled = False
+	EndIf
+EndFunc   ;==>chkFastADBClicks
+
 ;MBR GUI_MOD CONTROLS
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

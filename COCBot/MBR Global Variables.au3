@@ -681,7 +681,7 @@ Global $itxtWallMinGold
 Global $itxtWallMinElixir
 Global $iVSDelay, $iMaxVSDelay
 Global $isldTrainITDelay
-Global $ichkTrap, $iChkCollect, $ichkTombstones, $ichkCleanYard
+Global $ichkTrap, $iChkCollect, $ichkTombstones, $ichkCleanYard, $itxtTreasuryGold, $itxtTreasuryElixir, $itxtTreasuryDark
 Global $iCmbUnitDelay[$iModeCount], $iCmbWaveDelay[$iModeCount], $iChkRandomspeedatk[$iModeCount]
 Global $iTimeTroops = 0
 Global $iTimeGiant = 120

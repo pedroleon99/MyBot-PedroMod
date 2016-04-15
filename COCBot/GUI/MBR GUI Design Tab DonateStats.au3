@@ -21,8 +21,6 @@
 
 Global $hImage, $lvDonatedTroops, $DonateFile, $bm1, $bm2
 
-If Not FileExists($dirTemp & "DonateStats\") Then DirCreate($dirTemp & "DonateStats\")
-
 $tabDonateStats = GUICtrlCreateTabItem("Donated")
 Local $x = 30, $y = 145
 $lvDonatedTroops = GUICtrlCreateListView("Name|Barbarians|Archers|Giants|Goblins|Wall Breakers|Balloons|Wizards|Healers|Dragons|Pekkas|Minions|Hog Riders|Valkyries|Golems|Witches|Lava Hounds|Bowlers|Poison Spells|Earthquake Spells|Haste Spells", $x - 25, $y, 459, 363, $LVS_REPORT)
@@ -31,7 +29,7 @@ _GUICtrlListView_SetColumnWidth($lvDonatedTroops, 0, 139)
 
 $DonateStatsReset = GUICtrlCreateButton("Reset Stats", $x + 366, $y - 20, 67, 20)
 _GUICtrlListView_SetExtendedListViewStyle(-1, $WS_EX_TOPMOST+$WS_EX_TRANSPARENT)
-GUICtrlSetOnEvent(-1, "DonateStatsReset")
+GUICtrlSetOnEvent(-1, "InitDonateStats")
 
 For $x = 0 To 20
 	_GUICtrlListView_JustifyColumn($lvDonatedTroops, $x, 2) ; Center text in all columns

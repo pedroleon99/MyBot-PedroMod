@@ -521,6 +521,10 @@ Func readConfig() ;Reads config and sets it to the variables
 
 		$ichkTrap = IniRead($config, "other", "chkTrap", "0")
 		$iChkCollect = IniRead($config, "other", "chkCollect", "1")
+$itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
+		$itxtTreasuryElixir = iniRead($config,"other","treasuryElixir","0000")
+		$itxtTreasuryDark = iniRead($config,"other","treasuryDark","0000")
+
 		$ichkTombstones = IniRead($config, "other", "chkTombstones", "0")
 		$ichkCleanYard = IniRead($config, "other", "chkCleanYard", "0")
 		$sTimeWakeUp = IniRead($config, "other", "txtTimeWakeUp", "0")
@@ -733,6 +737,9 @@ Func readConfig() ;Reads config and sets it to the variables
 		$useFFBarchST = IniRead($config, "SaveTroops", "ChangeFF", "1")
 		$percentCollectors = IniRead($config, "SaveTroops", "PercentCollectors", "80")
 		$redlineDistance = IniRead($config, "SaveTroops", "MaxDistance", "50")
+
+		; Misc Battle Settings - Added by LunaEclipse
+		$AndroidAdbClicksEnabled = IniRead($config, "Fast Clicks", "UseADBFastClicks", "0")
 
 		; Custom Deployment Settings - Added by LunaEclipse
 		$deployValues = deployStringToArray(IniRead($config, "Custom Deployment", "Deployment", ""))

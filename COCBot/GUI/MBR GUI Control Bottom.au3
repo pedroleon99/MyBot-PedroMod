@@ -164,7 +164,6 @@ Func IsStopped()
 EndFunc
 
 Func btnStart()
-	GUICtrlSetState($AboutConfig, $GUI_DISABLE)
     ResumeAndroid()
 	If $RunState = False Then
 	    ;GUICtrlSetState($chkBackground, $GUI_DISABLE) ; will be disbaled after check if Android supports Background Mode
@@ -258,7 +257,6 @@ Func btnStart()
 EndFunc   ;==>btnStart
 
 Func btnStop()
-	GUICtrlSetState($AboutConfig, $GUI_ENABLE)
     ResumeAndroid()
 	If $RunState Then ; Or BitOr(GUICtrlGetState($btnStop), $GUI_SHOW) Then ; $btnStop check added for strange $RunState inconsistencies
 
