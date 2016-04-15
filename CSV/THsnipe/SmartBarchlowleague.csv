@@ -1,0 +1,11 @@
+TROOP |S1|S2|Q1|Q2|DEL1 |DEL2 |LOG_TEXT                              				|NOTES,Column 2,Column 3,Column 4,Column 5,Column 6
+Text  |  |  |  |  |     |     |Sniping TH with Barch            	 				|
+Text  |  |  |  |  |     |     |Sending 4 barbarians						    		|
+Barb  | 4| 4| 1| 1| 1800| 2000|                                      				|deploys 4 barbarians to take out traps and waits 2 seconds for bombs to go off
+Text  |  |  |  |  |     |     |Sending 4 archers and wait 30 seconds  	    		|
+Arch  | 4| 4| 1| 1|  800| 1000|                                      				|deploys 4 archers
+WAIT  |  |  |  |  |     |30000|                                      				|wait for 30 seconds
+Text  |  |  |  |  |     |     |Looks like a trapped TH, wait 20 sec to make sure   	|
+WAIT  |  |  |  |  |     |20000|                                      				|wait for 20 seconds to make sure
+Text  |  |  |  |  |     |     |Ending attack in 10 seconds			   				|
+WAIT  |  |  |  |  |     |10000|										 				|

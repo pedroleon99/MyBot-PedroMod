@@ -30,16 +30,11 @@ $tabMain = GUICtrlCreateTab(5, 85, 461, 425, $TCS_MULTILINE)
 $DonateMenu = GUICtrlCreateMenu("&Paypal Donate?")
 $DonateConfig = GUICtrlCreateMenuItem("Support the development", $DonateMenu)
 $AboutMenu = GUICtrlCreateMenu("Help")
-$ModSupportConfig = GUICtrlCreateMenuItem("Mod Support", $AboutMenu)
 $AboutConfig = GUICtrlCreateMenuItem("About Us", $AboutMenu)
+$CheckVersionConfig = GUICtrlCreateMenuItem("Check Version", $AboutMenu)
+$DownloadLatestConfig = GUICtrlCreateMenuItem("Download Latest", $AboutMenu)
 GUICtrlSetOnEvent(-1, "")
 ;GUICtrlSetState($AboutConfig, $GUI_DISABLE)
-
-; CUstom MOD version check menu items
-$UpdateMenu = GUICtrlCreateMenu("&Update MOD")
-$CheckVersionConfig = GUICtrlCreateMenuItem("Check Version", $UpdateMenu)
-$DownloadLatestConfig = GUICtrlCreateMenuItem("Download Latest", $UpdateMenu)
-GUICtrlSetOnEvent(-1, "")
 
 ;~ ------------------------------------------------------
 ;~ Tab Files
