@@ -1088,7 +1088,7 @@ Global $attackcsv_locate_gold_storage = 0
 Global $attackcsv_locate_elixir_storage = 0
 Global $attackcsv_locate_dark_storage = 0
 Global $attackcsv_locate_townhall = 0
-Global $attackcsv_use_red_line = 1
+;Global $attackcsv_use_red_line = 1
 
 ;Milking Attack
 Global $debugresourcesoffset = 0 ;make images with offset to check correct adjust values
@@ -1230,8 +1230,8 @@ Global Const $centerX = 430
 Global Const $centerY = 335
 
 ; Attack settings
-Global Enum $eOneSide, $eTwoSides, $eThreeSides, $eAllSides, $eSmartSave, $eMultiFinger
-Global Enum $eCustomDeploy = $eAllSides + 1, $eMilking
+Global Enum $eOneSide, $eTwoSides, $eThreeSides, $eAllSides, $eMultiFinger, $eSmartSave
+Global Enum $eCustomDeploy = $eMultiFinger + 1, $eMilking
 
 ; Deployment Array Constants
 Global Const $DEPLOY_COLUMNS = 5

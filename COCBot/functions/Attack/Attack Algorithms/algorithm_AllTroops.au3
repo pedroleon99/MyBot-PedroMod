@@ -157,6 +157,7 @@ EndFunc   ;==>useSmartDeploy
 Func getNumberOfSides() ; Returns the number of sides to attack from
 	Local $nbSides = 0
 
+	; Check the ones common to both attack types
 	Switch $iChkDeploySettings[$iMatchMode]
 		Case $eOneSide
 			SetLog("Attacking on a single side.", $COLOR_BLUE)
@@ -170,12 +171,26 @@ Func getNumberOfSides() ; Returns the number of sides to attack from
 		Case $eAllSides
 			SetLog("Attacking on all sides.", $COLOR_BLUE)
 			$nbSides = 4
-	    Case $eSmartSave
-			$nbSides = 4
 		Case $eMultiFinger
 			$nbSides = 4
+		Case Else
+			If $iMatchMode = $DB Then
+				Switch $iChkDeploySettings[$iMatchMode]
+	    Case $eSmartSave
+			$nbSides = 4
+					Case Else
+						; This should never happen unless there is a problem with the code
+				EndSwitch
+			ElseIf $iMatchMode = $LB Then
+				Switch $iChkDeploySettings[$iMatchMode]
 		Case $eCustomDeploy
 			$nbSides = 1
+					Case Else
+						; This should never happen unless there is a problem with the code
+				EndSwitch
+			Else
+				; This should never happen unless there is a problem with the code
+			EndIf
 	EndSwitch
 
 	Return $nbSides
@@ -188,7 +203,7 @@ Func getDeploymentInfo($nbSides, $overrideMode = -1) ; Returns the Deployment ar
     ElseIf ($iMatchMode = $DB And $iChkDeploySettings[$DB] = $eSmartSave And $overrideMode = -1) Or ($iMatchMode = $DB And $overrideMode = $eSmartSave) Then ; Save Troops For Collectors Style
 	    Local $listInfoDeploy = deployArraySetSides($DEFAULT_SAVE_TROOPS_DEPLOY, $nbSides)
         If $debugSetlog = 1 Then SetLog("List Deploy for Save Troops attacks", $COLOR_PURPLE)
-	ElseIf ($iMatchMode = $DB And $iChkDeploySettings[$iMatchMode] = $eMultiFinger And $overrideMode = -1) Or ($iMatchMode = $DB And $overrideMode = $eMultiFinger) Then ; Multi Finger deployment
+	ElseIf ($iChkDeploySettings[$iMatchMode] = $eMultiFinger And $overrideMode = -1) Or $overrideMode = $eMultiFinger Then ; Multi Finger deployment
 		Local $listInfoDeploy = deployArraySetSides($DEFAULT_FOUR_FINGER_DEPLOY, $nbSides)
 		If $debugSetlog = 1 Then SetLog("List Deploy for Four Finger attack", $COLOR_PURPLE)
 	Else
@@ -219,15 +234,17 @@ Func deployTroops($nbSides) ; This function is the branch point to new deploymen
 	Switch $iMatchMode
 		Case $DB
 			Switch $iChkDeploySettings[$DB]
-				Case $eSmartSave
-					launchSaveTroopsForCollectors($listInfoDeploy, $CC, $King, $Queen, $Warden)
 				Case $eMultiFinger
 					launchMultiFinger($listInfoDeploy, $CC, $King, $Queen, $Warden)
+				Case $eSmartSave
+					launchSaveTroopsForCollectors($listInfoDeploy, $CC, $King, $Queen, $Warden)
 				Case Else
 					launchStandard($listInfoDeploy, $CC, $King, $Queen, $Warden)
 			EndSwitch
 		Case $LB
 			Switch $iChkDeploySettings[$LB]
+				Case $eMultiFinger
+					launchMultiFinger($listInfoDeploy, $CC, $King, $Queen, $Warden)
 				Case $eCustomDeploy
 					launchCustomDeploy($listInfoDeploy, $CC, $King, $Queen, $Warden)
 				Case Else

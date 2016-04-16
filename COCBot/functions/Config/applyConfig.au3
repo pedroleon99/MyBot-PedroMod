@@ -1859,6 +1859,7 @@ EndIf
 
 	; Multi Finger Attack Style Settings - Added by LunaEclipse
 	_GUICtrlComboBox_SetCurSel($cmbDBMultiFinger, $iMultiFingerStyle[$DB])
+	_GUICtrlComboBox_SetCurSel($cmbABMultiFinger, $iMultiFingerStyle[$LB])
 
 	; Save Troops for Collector Settings - Added by LunaEclipse
 	If $useFFBarchST = 1 Then

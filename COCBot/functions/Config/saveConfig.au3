@@ -1752,6 +1752,7 @@ EndIf
 
 	; Multi Finger Attack Style Settings - Added by LunaEclipse
 	IniWrite($config, "MultiFinger", "DeadBaseStyle", _GUICtrlComboBox_GetCurSel($cmbDBMultiFinger))
+	IniWrite($config, "MultiFinger", "LiveBaseStyle", _GUICtrlComboBox_GetCurSel($cmbABMultiFinger))
 
 	; Save Troops for Collector Settings - Added by LunaEclipse
 	If GUICtrlRead($chkChangeFF) = $GUI_CHECKED Then

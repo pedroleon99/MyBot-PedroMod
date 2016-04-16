@@ -732,6 +732,7 @@ $itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
 
 		; Multi Finger Attack Style Settings - Added by LunaEclipse
 		$iMultiFingerStyle[$DB] = IniRead($config, "MultiFinger", "DeadBaseStyle", "0")
+		$iMultiFingerStyle[$LB] = IniRead($config, "MultiFinger", "LiveBaseStyle", "0")
 
 		; Save Troops for Collector Settings - Added by LunaEclipse
 		$useFFBarchST = IniRead($config, "SaveTroops", "ChangeFF", "1")

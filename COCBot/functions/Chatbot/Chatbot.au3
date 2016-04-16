@@ -196,6 +196,9 @@ Func ChatbotCreateGui()
    GUICtrlSetOnEvent(-1, "ChatGuiEditUpdate")
 
    GUICtrlCreateTabItem("")
+   
+   ChatGuicheckboxUpdateAT()
+   
 EndFunc
 
 Func ChatGuiCheckboxUpdate()
@@ -238,7 +241,63 @@ Func ChatGuiCheckboxUpdate()
    IniWrite($chatIni, "clan", "always",     $ChatbotClanAlwaysMsg)
    IniWrite($chatIni, "clan", "pushbullet", $ChatbotUsePushbullet)
    IniWrite($chatIni, "clan", "pbsendnew",  $ChatbotPbSendNew)
+   
+   ChatGuiCheckboxUpdateAT()
+   
 EndFunc
+
+Func ChatGuiCheckboxUpdateAT()
+	If GUICtrlRead($chkClanChat) = $GUI_CHECKED Then
+		GUICtrlSetState($chkUseResponses , $GUI_ENABLE)
+		GUICtrlSetState($chkUseCleverbot , $GUI_ENABLE)
+		GUICtrlSetState($chkUseSimsimi , $GUI_ENABLE)
+		GUICtrlSetState($chkUseGeneric , $GUI_ENABLE)
+		GUICtrlSetState($chkChatPushbullet , $GUI_ENABLE)
+		GUICtrlSetState($chkPbSendNewChats , $GUI_ENABLE)
+		GUICtrlSetState($editResponses , $GUI_ENABLE)
+		GUICtrlSetState($editGeneric , $GUI_ENABLE)
+	Else
+		GUICtrlSetState($chkUseResponses , $GUI_DISABLE)
+		GUICtrlSetState($chkUseCleverbot , $GUI_DISABLE)
+		GUICtrlSetState($chkUseSimsimi , $GUI_DISABLE)
+		GUICtrlSetState($chkUseGeneric , $GUI_DISABLE)
+		GUICtrlSetState($chkChatPushbullet , $GUI_DISABLE)
+		GUICtrlSetState($chkPbSendNewChats , $GUI_DISABLE)
+		GUICtrlSetState($editResponses , $GUI_DISABLE)
+		GUICtrlSetState($editGeneric , $GUI_DISABLE)
+	EndIf
+		If GUICtrlRead($chkGlobalChat) = $GUI_CHECKED Then
+		GUICtrlSetState($chkGlobalScramble , $GUI_ENABLE)
+		GUICtrlSetState($chkSwitchLang , $GUI_ENABLE)
+		GUICtrlSetState($ChatbotChatDelayLabel , $GUI_ENABLE)
+		GUICtrlSetState($chkchatdelay , $GUI_ENABLE)
+		GUICtrlSetState($editGlobalMessages1 , $GUI_ENABLE)
+		GUICtrlSetState($editGlobalMessages2 , $GUI_ENABLE)
+		GUICtrlSetState($editGlobalMessages3 , $GUI_ENABLE)
+		GUICtrlSetState($editGlobalMessages4 , $GUI_ENABLE)
+	Else
+		GUICtrlSetState($chkGlobalScramble , $GUI_DISABLE)
+		GUICtrlSetState($chkSwitchLang , $GUI_DISABLE)
+		GUICtrlSetState($ChatbotChatDelayLabel , $GUI_DISABLE)
+		GUICtrlSetState($chkchatdelay , $GUI_DISABLE)
+		GUICtrlSetState($editGlobalMessages1 , $GUI_DISABLE)
+		GUICtrlSetState($editGlobalMessages2 , $GUI_DISABLE)
+		GUICtrlSetState($editGlobalMessages3 , $GUI_DISABLE)
+		GUICtrlSetState($editGlobalMessages4 , $GUI_DISABLE)
+	EndIf
+EndFunc
+
+Func ChatGuiCheckboxDisableAT()
+	For $i = $chkGlobalChat To $editGeneric ; Save state of all controls on tabs
+		GUICtrlSetState($i, $GUI_DISABLE)
+	Next
+EndFunc
+Func ChatGuiCheckboxEnableAT()
+	For $i = $chkGlobalChat To $editGeneric ; Save state of all controls on tabs
+		GUICtrlSetState($i, $GUI_ENABLE)
+	Next
+EndFunc
+
 
 Func ChatGuiEditUpdate()
    $glb1 = GUICtrlRead($editGlobalMessages1)

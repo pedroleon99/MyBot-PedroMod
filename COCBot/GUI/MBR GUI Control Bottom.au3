@@ -218,6 +218,8 @@ Func btnStart()
 			If $i = $divider Then ContinueLoop ; exclude divider
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
+		
+		ChatGuiCheckboxDisableAT()
 
 		$RunState = True
 	    SetRedrawBotWindow(True)
@@ -292,6 +294,8 @@ Func btnStop()
 			GUICtrlSetState($i, $iPrevState[$i])
 		Next
 
+		ChatGuiCheckboxEnableAT()
+		
 		$RunState = False
 		AndroidBotStopEvent() ; signal android that bot is now stopping
 

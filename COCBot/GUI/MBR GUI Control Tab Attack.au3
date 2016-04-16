@@ -15,7 +15,7 @@
 
 Func chkDBSmartAttackRedArea()
     Switch _GUICtrlComboBox_GetCurSel($cmbDBDeploy)
-		Case $eSmartSave, $eMultiFinger
+		Case $eMultiFinger, $eSmartSave
 			GUICtrlSetState($chkDBSmartAttackRedArea, $GUI_UNCHECKED)
 			GUICtrlSetState($chkDBSmartAttackRedArea, $GUI_HIDE)			
 			GUICtrlSetState($lblDBMultiFinger, $GUI_SHOW)
@@ -37,7 +37,7 @@ Func chkDBSmartAttackRedArea()
 			GUICtrlSetState($cmbDBSmartDeploy, $GUI_HIDE)
 		EndIf
 				
-		For $i = $chkDbAttackNearGoldMine To $picDBAttackNearDarkElixirDrill
+		For $i = $chkDBAttackNearGoldMine To $picDBAttackNearDarkElixirDrill
 			GUICtrlSetState($i, $GUI_SHOW)
 		Next
 	Else
@@ -54,21 +54,35 @@ EndFunc   ;==>cmbDBMultiFinger
 
 Func chkABSmartAttackRedArea()
 	chkDESideEB()
-	If _GUICtrlComboBox_GetCurSel($cmbABDeploy) = $eMilking Then
-		GUICtrlSetState($btnMilkingOptions, $GUI_SHOW)
-	ElseIf _GUICtrlComboBox_GetCurSel($cmbABDeploy) = $eCustomDeploy Then
+ 	Switch _GUICtrlComboBox_GetCurSel($cmbABDeploy)
+		Case $eMultiFinger
+			GUICtrlSetState($btnMilkingOptions, $GUI_HIDE)
+			GUICtrlSetState($chkABSmartAttackRedArea, $GUI_UNCHECKED)
+			GUICtrlSetState($chkABSmartAttackRedArea, $GUI_HIDE)
+			GUICtrlSetState($lblABMultiFinger, $GUI_SHOW)
+			GUICtrlSetState($cmbABMultiFinger, $GUI_SHOW)
+		Case $eCustomDeploy
 		GUICtrlSetState($btnMilkingOptions, $GUI_HIDE)
 		GUICtrlSetState($chkABSmartAttackRedArea, $GUI_UNCHECKED)
 		GUICtrlSetState($chkABSmartAttackRedArea, $GUI_HIDE)
+			GUICtrlSetState($lblABMultiFinger, $GUI_HIDE)
+			GUICtrlSetState($cmbABMultiFinger, $GUI_HIDE)
 
 		For $i = 0 to $DEPLOY_MAX_WAVES - 1
 			GUICtrlSetState($ctrlDeploy[$i][1], $GUI_ENABLE)
 			GUICtrlSetState($ctrlDeploy[$i][2], $GUI_ENABLE)
 		Next
-	Else
+		Case $eMilking
+			GUICtrlSetState($btnMilkingOptions, $GUI_SHOW)
+			GUICtrlSetState($lblABMultiFinger, $GUI_HIDE)
+			GUICtrlSetState($cmbABMultiFinger, $GUI_HIDE)
+			GUICtrlSetState($chkABSmartAttackRedArea, $GUI_SHOW)			
+		Case Else
 		GUICtrlSetState($btnMilkingOptions, $GUI_HIDE)
-  	    GUICtrlSetState($chkABSmartAttackRedArea, $GUI_SHOW)
-	EndIf
+			GUICtrlSetState($lblABMultiFinger, $GUI_HIDE)
+			GUICtrlSetState($cmbABMultiFinger, $GUI_HIDE)
+			GUICtrlSetState($chkABSmartAttackRedArea, $GUI_SHOW)			
+	EndSwitch
 
 	If GUICtrlRead($chkABSmartAttackRedArea) = $GUI_CHECKED Then
 		$iChkRedArea[$LB] = 1
@@ -82,6 +96,10 @@ Func chkABSmartAttackRedArea()
 		 Next
 	EndIf
 EndFunc  ;==>chkABSmartAttackRedArea
+
+Func cmbABMultiFinger()
+	$iMultiFingerStyle[$LB] = _GUICtrlComboBox_GetCurSel($cmbABMultiFinger)
+EndFunc   ;==>cmbDBMultiFinger
 
 Func chkBalanceDR()
 	If GUICtrlRead($chkUseCCBalanced) = $GUI_CHECKED Then

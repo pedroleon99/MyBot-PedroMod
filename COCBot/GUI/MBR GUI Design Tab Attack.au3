@@ -23,7 +23,7 @@ $tabAttack = GUICtrlCreateTabItem(GetTranslated(3, 1, "Attack"))
 		$lblDBDeploy = GUICtrlCreateLabel(GetTranslated(3,3, "Attack on")&":", $x, $y + 5, -1, -1)
 		$cmbDBDeploy = GUICtrlCreateCombo("", $x + 55, $y, 140, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetTip(-1, GetTranslated(3, 4, "Attack on a single side, penetrates through base") & @CRLF & GetTranslated(3, 5, "Attack on two sides, penetrates through base") & @CRLF & GetTranslated(3, 6, "Attack on three sides, gets outer and some inside of base"), GetTranslated(3, 7,"Select the No. of sides to attack on."))
-			GUICtrlSetData(-1, GetTranslated(3, 8, "One Side") & "|" & GetTranslated(3, 9, "Two Sides") & "|" & GetTranslated(3, 10, "Three Sides") &"|" & GetTranslated(3, 11,"All Sides Equally" ) & "|" & "Save Troops for Collectors" & "|" & "Multi Finger", "Save Troops for Collectors")
+			GUICtrlSetData(-1, GetTranslated(3, 8, "One Side") & "|" & GetTranslated(3, 9, "Two Sides") & "|" & GetTranslated(3, 10, "Three Sides") &"|" & GetTranslated(3, 11, "All Sides Equally" ) & "|" & "Multi Finger" & "|" & "Save Troops for Collectors", "Save Troops for Collectors")
 			GUICtrlSetOnEvent(-1, "chkDBSmartAttackRedArea")
 		$y += 25
 		$lblDBSelectTroop=GUICtrlCreateLabel(GetTranslated(3,12, "Troops") & ":",$x, $y + 5, -1 , -1)
@@ -68,7 +68,7 @@ $tabAttack = GUICtrlCreateTabItem(GetTranslated(3, 1, "Attack"))
 			GUICtrlSetData(-1, GetTranslated(3,35, "Sides, then Troops") & "|" & GetTranslated(3,36, "Troops, then Sides") , GetTranslated(3,35, "Sides, then Troops"))
 			GUICtrlSetTip(-1, $txtTip)
 		$y += 26
-		$chkDbAttackNearGoldMine = GUICtrlCreateCheckbox("", $x + 20, $y, 17, 17)
+		$chkDBAttackNearGoldMine = GUICtrlCreateCheckbox("", $x + 20, $y, 17, 17)
 			$txtTip = "Save Troops for Collectors:" & @CRLF & _ 
 					  "     Select this option to check Gold Mines." & @CRLF & _ 
 					  "     Troops will only be used if Gold Storage is not full!" & @CRLF & @CRLF & _ 
@@ -150,7 +150,7 @@ $tabAttack = GUICtrlCreateTabItem(GetTranslated(3, 1, "Attack"))
 		$lblABDeploy = GUICtrlCreateLabel(GetTranslated(3,3, -1) & ":", $x, $y + 5, -1, -1)
 		$cmbABDeploy = GUICtrlCreateCombo("", $x + 55, $y, 140, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetTip(-1, GetTranslated(3, 4, -1) & @CRLF & GetTranslated(3, 5, -1) & @CRLF & GetTranslated(3, 6, -1) & @CRLF & GetTranslated(3, 63, -1) & @CRLF & "Attack on the single side closest to the priority target" & @CRLF & GetTranslated(3,83, "Milking Farm Attack"), GetTranslated(3,7, -1))
-			GUICtrlSetData(-1, GetTranslated(3, 8, -1) & "|" & GetTranslated(3, 9, -1) & "|" & GetTranslated(3, 10, -1) & "|" & GetTranslated(3, 11, -1) & "|" & "Custom Side Deployment" & "|" & GetTranslated(3,83, "Milking Farm Attack"), "Custom Side Deployment")
+			GUICtrlSetData(-1, GetTranslated(3, 8, -1) & "|" & GetTranslated(3, 9, -1) & "|" & GetTranslated(3, 10, -1) & "|" & GetTranslated(3, 11, -1) & "|" & "Multi Finger" & "|" & "Custom Side Deployment" & "|" & GetTranslated(3,83, "Milking Farm Attack"), "Custom Side Deployment")
 			GUICtrlSetOnEvent(-1, "chkABSmartAttackRedArea")
 		$y += 25
 		$lblABSelectTroop=GUICtrlCreateLabel(GetTranslated(3,12, -1) & ":",$x, $y + 5, -1 , -1)
@@ -162,16 +162,25 @@ $tabAttack = GUICtrlCreateTabItem(GetTranslated(3, 1, "Attack"))
 			GUICtrlSetTip(-1, $txtTip)
 		$cmbABUnitDelay = GUICtrlCreateCombo("", $x + 55, $y, 36, 21, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetTip(-1, $txtTip)
-			GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10", "5")
+			GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10", "0")
 		$lblABWaveDelay = GUICtrlCreateLabel(GetTranslated(3,27, -1) & ":", $x + 100, $y + 5, -1, -1)
 			GUICtrlSetTip(-1, $txtTip)
 		$cmbABWaveDelay = GUICtrlCreateCombo("", $x + 140, $y, 36, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetTip(-1, $txtTip)
-			GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10", "5")
+			GUICtrlSetData(-1, "0|1|2|3|4|5|6|7|8|9|10", "0")
 		$y += 22
 		$chkABRandomSpeedAtk = GUICtrlCreateCheckbox(GetTranslated(3,28, -1), $x, $y, -1, -1)
 			GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetOnEvent(-1, "chkABRandomSpeedAtk")
+		$y += 25
+		$lblABMultiFinger = GUICtrlCreateLabel("Style:", $x - 10, $y + 3, 30, -1, $SS_RIGHT)
+		$cmbABMultiFinger = GUICtrlCreateCombo("", $x + 25, $y, 170, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+			$txtTip = "Select which multi finger attack style you would like." & @CRLF & @CRLF & _ 
+				      "     Random will chose one of the attacks at random." & @CRLF & _ 
+				      "     Four Finger and Eight Finger attacks will attack from all 4 sides at once."
+			GUICtrlSetTip(-1, $txtTip)
+			GUICtrlSetData(-1, "Random" & "|" & "Four Finger Standard" & "|" & "Four Finger Spiral Left" & "|" & "Four Finger Spiral Right" & "|" & "Eight Finger Blossom" & "|" & "Eight Finger Implosion" & "|" & "Eight Finger Pin Wheel Spiral Left" & "|" & "Eight Finger Pin Wheel Spiral Right", "Random")
+			GUICtrlSetOnEvent(-1, "cmbABMultiFinger")
 	$y = 243
 		$chkABSmartAttackRedArea = GUICtrlCreateCheckbox(GetTranslated(3,29, -1), $x, $y, -1, -1)
 			$txtTip = GetTranslated(3,30, -1)
