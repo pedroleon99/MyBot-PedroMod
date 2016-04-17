@@ -59,9 +59,11 @@ Func TogglePauseImpl($Source)
 	While $TPaused ; Actual Pause loop
 		If _Sleep($iDelayTogglePause1) Then ExitLoop
 		$counter = $counter + 1
-	    If $pEnabled = 1 AND $pRemote = 1 AND $counter = 200 Then
+	    If $pRemote = 1 AND $counter = 200 Then
+			If $pEnabled = 1 Or $pEnabled2 = 1 Then
 			_RemoteControl()
 			$counter = 0
+		EndIf
 		EndIf
 	WEnd
 	; everything below this WEnd is executed when unpaused!

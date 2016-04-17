@@ -1,0 +1,58 @@
+NOTE  |Author: Cosote - ver. 1.2 - 2016-04-16
+NOTE  |Gibarch FFF (Fast Four Fingers)
+NOTE  |Attack: FF Gibarch, +2 tile from redline
+NOTE  |Make these Troops: Barbarians 50%, Archers 50%, 8-12 Giants
+NOTE  |Will drop Barb, Giants, Archs and finally All Heroes and Castle if enabled from GUI
+
+      |---------------------------------------- four fingers gibarch start -----------------------------|
+
+      |EXTR. GOLD |EXTR.ELIXIR|EXTR. DARK |DEPO. GOLD |DEPO.ELIXIR|DEPO. DARK |TOWNHALL   |FORCED SIDE|
+SIDE  |1          |1          |           |           |           |           |           |           |
+
+
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|___________|MAKE BARBARIAN VECTORS
+MAKE  |A          |FRONT-RIGHT|15         |1          |INT-EXT    |2          |2          |           |
+MAKE  |B          |FRONT-LEFT |15         |1          |INT-EXT    |2          |2          |           |
+MAKE  |C          |RIGHT-FRONT|15         |1          |INT-EXT    |2          |2          |           |
+MAKE  |D          |LEFT-FRONT |15         |1          |INT-EXT    |2          |2          |           |
+MAKE  |E          |BACK-RIGHT |15         |1          |INT-EXT    |2          |2          |           |
+MAKE  |F          |BACK-LEFT  |15         |1          |INT-EXT    |2          |2          |           |
+MAKE  |G          |RIGHT-BACK |15         |1          |INT-EXT    |2          |2          |           |
+MAKE  |H          |LEFT-BACK  |15         |1          |INT-EXT    |2          |2          |           |
+      |VECTOR_____|SIDE_______|DROP_POINTS|ADDTILES___|VERSUS_____|RANDOMX_PX_|RANDOMY_PX_|___________|MAKE VECTORS TO DROP KINK, QUEEN and CASTLE
+MAKE  |Q          |RANDOM     |70         |1          |INT-EXT    |2          |2          |           |random side to drop king, at 1 tile from redarea
+MAKE  |R          |RANDOM     |70         |3          |INT-EXT    |2          |2          |           |random side to drop queen and castle, at 3 tiles from redarea
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________|DROP BARB
+DROP  |A-B-C-D    |1-10       |10         |barb       |0          |0          |0          |           |launch barbarians using all 4 vectors concurrently...        40 barb
+DROP  |E-F-G-H    |1-10       |10         |barb       |0          |0          |0          |           |launch barbarians using all 4 vectors concurrently...        40 barb
+DROP  |A-B-B-A    |1-10       |10         |barb       |0          |0          |0          |           |launch barbarians using all 4 vectors concurrently...        40 barb
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________|DROP GIANTS
+DROP  |A-B-C-D    |6          |1          |giant      |0          |0          |0          |           |launch giants using all 4 vectors concurrently...             4 giant
+DROP  |E-F-G-H    |6          |1          |giant      |0          |0          |0          |           |launch giants using all 4 vectors concurrently...             4 giant
+DROP  |A-B-C-D    |6          |1          |giant      |0          |0          |0          |           |launch giants using all 4 vectors concurrently...             4 giant
+DROP  |E-F-G-H    |6          |1          |giant      |0          |0          |0          |           |launch giants using all 4 vectors concurrently...             4 giant
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________|DROP ARCH
+DROP  |A-B-C-D    |1-10       |10         |arch       |0          |0          |0          |           |launch archers using all 4 vectors concurrently...           40 arch
+DROP  |E-F-G-H    |1-10       |10         |arch       |0          |0          |0          |           |launch archers using all 4 vectors concurrently...           40 arch
+DROP  |A-B-B-A    |1-10       |10         |arch       |0          |0          |0          |           |launch archers using all 4 vectors concurrently...           40 arch
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________|DROP HEROES
+DROP  |A          |3          |1          |king       |0          |0          |0          |           |launch King                                                  king
+DROP  |A          |3          |1          |castle     |0          |0          |0          |           |launch Castle                                                castle
+DROP  |A          |3          |1          |queen      |0          |0          |0          |           |launch Queen                                                 queen
+DROP  |A          |3          |1          |Warden     |0          |0          |0          |           |launch Grand Warden                                          warden
+
+RECALC|           |           |           |           |           |           |           |           |recalculate remaining troops and then launch...
+
+      |VECTOR_____|INDEX______|QTY_X_VECT_|TROOPNAME__|DELAY_DROP_|DELAYCHANGE|SLEEPAFTER_|___________|DROP REMAINING
+DROP  |A-B-B-A    |1-10       |10         |arch       |0          |0          |0          |           |launch barbarians using all 4 vectors concurrently...        40 arch
+DROP  |A-B-B-A    |1-10       |10         |barb       |0          |0          |0          |           |launch archers using all 4 vectors concurrently...           40 barb
+DROP  |A-B-B-A    |6          |1          |giant      |0          |0          |0          |           |launch giants using all 4 vectors concurrently...             4 giant
+
+      |------------------------------------- four fingers gibarch end-----------------------------------|
+NOTE2 |Change log
+NOTE2 |2016-04-16 ver. 1.2 Changed all Heroes to vector A, index 3
+NOTE2 |2016-04-16 ver. 1.1 Moved main Archs drop prior to heroes

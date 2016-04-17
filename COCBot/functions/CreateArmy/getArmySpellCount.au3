@@ -81,6 +81,8 @@ Func getArmySpellCount($bOpenArmyWindow = False, $bCloseArmyWindow = False)
 			EndIf
 			If $FullTemp = "" And $debugSetlog = 1 Then
 				Setlog(" - was not detected anything in slot: " & $i + 1, $COLOR_PURPLE)
+			ElseIf $FullTemp = "" Then
+				_ArrayAdd($TroopSpellStats, $FullTemp & "|" & $SpellQ)
 			EndIf
 		Next
 	EndIf

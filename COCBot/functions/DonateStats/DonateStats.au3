@@ -1,7 +1,7 @@
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: DonateStats
-; Description ...: GetTroopColumn(), LoadDonateStats, CompareBitmaps(), part of DonateStats, for collecting total counts of Troops donated
+; Description ...: GetTroopColumn(), LoadDonateStats, CompareDBitmaps(), part of DonateStats, for collecting total counts of Troops donated
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
@@ -90,4 +90,4 @@ Func CompareDBitmaps($bm1, $bm2)
 	Return ($iErrorRet ? SetError($iErrorRet, $iExtendedRet, 0) : $aReturn[0] = 0)
     ;Return ($call[0]=0)
 
-EndFunc  ;==>CompareBitmaps
+EndFunc  ;==>CompareDBitmaps

@@ -18,6 +18,7 @@ Func clanHop()
     If GUICtrlRead($chkClanHop) = $GUI_CHECKED Then
 		$ichkClanHop = 1
 		SetLog("Start Clan Hopping", $COLOR_BLUE)
+		Train()
 	Else
 		$ichkClanHop = 0
         Return
