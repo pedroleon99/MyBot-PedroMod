@@ -588,6 +588,12 @@ Func saveConfig() ;Saves the controls settings to the config
 	;attk their queen
 
 	;Donate Settings-------------------------------------------------------------------------
+	If GUICtrlRead($chkDStats) = $GUI_CHECKED Then
+		IniWrite($config, "donate", "chkDStats", 1)
+	Else
+		IniWrite($config, "donate", "chkDStats", 0)
+	EndIf
+
 	If GUICtrlRead($chkRequest) = $GUI_CHECKED Then
 		IniWrite($config, "donate", "chkRequest", 1)
 	Else
@@ -933,8 +939,6 @@ Func saveConfig() ;Saves the controls settings to the config
 	IniWrite($config, "troop", "fulltroop", GUICtrlRead($txtFullTroop))
 	IniWrite($config, "troop", "TrainITDelay", GUICtrlRead($sldTrainITDelay))
 
-	;barracks boost not saved (no use)
-
 	; Boost  -------------------------------------------------------------------------------
 	IniWrite($config, "troop", "QuantBoostBarracks", _GUICtrlComboBox_GetCurSel($cmbQuantBoostBarracks))
 	IniWrite($config, "troop", "BoostBarracks", _GUICtrlComboBox_GetCurSel($cmbBoostBarracks))
@@ -955,6 +959,8 @@ Func saveConfig() ;Saves the controls settings to the config
 	Else
 		IniWrite($config, "Spells", "BarrackSpell", 0)
 	EndIf
+
+	;barracks boost not saved (no use)
 
 	; Spells Creation  ---------------------------------------------------------------------
 	IniWrite($config, "Spells", "LightningSpell", GUICtrlRead($txtNumLightningSpell))
@@ -999,7 +1005,6 @@ Func saveConfig() ;Saves the controls settings to the config
 	IniWrite($config, "other", "minrestartdark", GUICtrlRead($txtRestartDark))
 
 	IniWrite($config, "other", "mingainperhours", GUICtrlRead($txtgainperhours))
-
 
 	If GUICtrlRead($chkTrap) = $GUI_CHECKED Then
 		IniWrite($config, "other", "chkTrap", 1)
@@ -1651,6 +1656,7 @@ EndIf
 
 	IniWrite($config, "MOD", "Account", GUICtrlRead($Account))
 
+
     ;MilkingAttack Options
     IniWrite($config, "MilkingAttack", "LocateMine", $MilkFarmLocateMine)
     IniWrite($config, "MilkingAttack", "LocateElixir", $MilkFarmLocateElixir)
@@ -1681,9 +1687,6 @@ EndIf
 ;~     IniWrite($config, "MilkingAttack", "TownhallTiles", $MilkFarmTHMaxTilesFromBorder)
 ;~     IniWrite($config, "MilkingAttack", "TownHallAlgorithm", $MilkFarmAlgorithmTh)
 ;~     IniWrite($config, "MilkingAttack", "TownHallHitAnyway", $MilkFarmSnipeEvenIfNoExtractorsFound)
-
-	;Chat bot
-	IniWrite($config, "global", "chdelay",  GUICtrlRead($chkchatdelay))
 
 	;Profile Switch Settings
 	If GUICtrlRead($chkGoldSwitchMax) = $GUI_CHECKED Then
@@ -1750,6 +1753,24 @@ EndIf
 	IniWrite($config, "profiles", "cmbTrophyMinProfile", _GUICtrlComboBox_GetCurSel($cmbTrophyMinProfile))
 	IniWrite($config, "profiles", "txtMinTrophyAmount", GUICtrlRead($txtMinTrophyAmount))
 
+    ; SmartZap Settings - Added by LunaEclipse
+    If GUICtrlRead($chkSmartLightSpell) = $GUI_CHECKED Then
+        IniWrite($config, "SmartZap", "UseSmartZap", 1)
+    Else
+        IniWrite($config, "SmartZap", "UseSmartZap", 0)
+    EndIf
+    If GUICtrlRead($chkSmartZapDB) = $GUI_CHECKED Then
+        IniWrite($config, "SmartZap", "ZapDBOnly", 1)
+    Else
+        IniWrite($config, "SmartZap", "ZapDBOnly", 0)
+    EndIf
+    If GUICtrlRead($chkSmartZapSaveHeroes) = $GUI_CHECKED Then
+        IniWrite($config, "SmartZap", "THSnipeSaveHeroes", 1)
+    Else
+        IniWrite($config, "SmartZap", "THSnipeSaveHeroes", 0)
+    EndIf
+    IniWrite($config, "SmartZap", "MinDE", GUICtrlRead($txtMinDark))
+
 	; Multi Finger Attack Style Settings - Added by LunaEclipse
 	IniWrite($config, "MultiFinger", "DeadBaseStyle", _GUICtrlComboBox_GetCurSel($cmbDBMultiFinger))
 	IniWrite($config, "MultiFinger", "LiveBaseStyle", _GUICtrlComboBox_GetCurSel($cmbABMultiFinger))
@@ -1789,23 +1810,8 @@ EndIf
 		IniWrite($config, "Android", "HideTaskBarIcon", 0)
 	EndIf
 
-    ; SmartZap Settings - Added by LunaEclipse
-    If GUICtrlRead($chkSmartLightSpell) = $GUI_CHECKED Then
-        IniWrite($config, "SmartZap", "UseSmartZap", 1)
-    Else
-        IniWrite($config, "SmartZap", "UseSmartZap", 0)
-    EndIf
-    If GUICtrlRead($chkSmartZapDB) = $GUI_CHECKED Then
-        IniWrite($config, "SmartZap", "ZapDBOnly", 1)
-    Else
-        IniWrite($config, "SmartZap", "ZapDBOnly", 0)
-    EndIf
-    If GUICtrlRead($chkSmartZapSaveHeroes) = $GUI_CHECKED Then
-        IniWrite($config, "SmartZap", "THSnipeSaveHeroes", 1)
-    Else
-        IniWrite($config, "SmartZap", "THSnipeSaveHeroes", 0)
-    EndIf
-    IniWrite($config, "SmartZap", "MinDE", GUICtrlRead($txtMinDark))
+	;Chat bot
+	IniWrite($config, "global", "chdelay",  GUICtrlRead($chkchatdelay))
 
 	If $hFile <> -1 Then FileClose($hFile)
 

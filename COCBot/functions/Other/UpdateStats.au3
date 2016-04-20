@@ -43,6 +43,7 @@ Func UpdateStats()
 		GUICtrlSetState($picResultGoldNow, $GUI_SHOW)
 		GUICtrlSetState($lblResultElixirNow, $GUI_SHOW)
 		GUICtrlSetState($picResultElixirNow, $GUI_SHOW)
+
 		If $iDarkCurrent <> "" Then
 			GUICtrlSetState($lblResultDeNow, $GUI_SHOW)
 			GUICtrlSetState($picResultDeNow, $GUI_SHOW)
@@ -52,34 +53,44 @@ Func UpdateStats()
 			GUICtrlSetState($picDarkLastAttack, $GUI_HIDE)
 			GUICtrlSetState($picHourlyStatsDark, $GUI_HIDE)
 		EndIf
+
 		GUICtrlSetState($lblResultTrophyNow, $GUI_SHOW)
 		GUICtrlSetState($lblResultBuilderNow, $GUI_SHOW)
 		GUICtrlSetState($lblResultGemNow, $GUI_SHOW)
+
 		$iGoldStart = $iGoldCurrent
 		$iElixirStart = $iElixirCurrent
 		$iDarkStart = $iDarkCurrent
 		$iTrophyStart = $iTrophyCurrent
+
 		GUICtrlSetData($lblResultGoldStart, _NumberFormat($iGoldCurrent, True))
 		GUICtrlSetData($lblResultGoldNow, _NumberFormat($iGoldCurrent, True))
 		$iOldGoldCurrent = $iGoldCurrent
+
 		GUICtrlSetData($lblResultElixirStart, _NumberFormat($iElixirCurrent, True))
 		GUICtrlSetData($lblResultElixirNow, _NumberFormat($iElixirCurrent, True))
 		$iOldElixirCurrent = $iElixirCurrent
+
 		If $iDarkStart <> "" Then
 			GUICtrlSetData($lblResultDEStart, _NumberFormat($iDarkCurrent, True))
 			GUICtrlSetData($lblResultDeNow, _NumberFormat($iDarkCurrent, True))
 			$iOldDarkCurrent = $iDarkCurrent
 		EndIf
+
 		GUICtrlSetData($lblResultTrophyStart, _NumberFormat($iTrophyCurrent, True))
 		GUICtrlSetData($lblResultTrophyNow, _NumberFormat($iTrophyCurrent, True))
 		$iOldTrophyCurrent = $iTrophyCurrent
+
 		GUICtrlSetData($lblResultGemNow, _NumberFormat($iGemAmount, True))
 		$iOldGemAmount = $iGemAmount
+
 		GUICtrlSetData($lblResultBuilderNow, $iFreeBuilderCount & "/" & $iTotalBuilderCount)
 		$iOldFreeBuilderCount = $iFreeBuilderCount
 		$iOldTotalBuilderCount = $iTotalBuilderCount
+		
 		$FirstRun = 0
 		GUICtrlSetState($btnResetStats, $GUI_ENABLE)
+
 		Return
 	EndIf
 
@@ -88,15 +99,18 @@ Func UpdateStats()
 		GUICtrlSetState($lblLastAttackBonusTemp, $GUI_HIDE)
 		GUICtrlSetState($lblTotalLootTemp, $GUI_HIDE)
 		GUICtrlSetState($lblHourlyStatsTemp, $GUI_HIDE)
+
 		$FirstAttack = 2
 	EndIf
 
 	If $ResetStats = 1 Then
 		GUICtrlSetData($lblResultGoldStart, _NumberFormat($iGoldCurrent, True))
 		GUICtrlSetData($lblResultElixirStart, _NumberFormat($iElixirCurrent, True))
+
 		If $iDarkStart <> "" Then
 			GUICtrlSetData($lblResultDEStart, _NumberFormat($iDarkCurrent, True))
 		EndIf
+
 		GUICtrlSetData($lblResultTrophyStart, _NumberFormat($iTrophyCurrent, True))
 		GUICtrlSetData($lblHourlyStatsGold, "")
 		GUICtrlSetData($lblHourlyStatsElixir, "")
@@ -303,12 +317,14 @@ Func UpdateStats()
 	; SmartZap DE Gain - Added by LunaEclipse
 	If $iOldSmartZapGain <> $smartZapGain Then
 		GUICtrlSetData($lblSmartZap, _NumberFormat($smartZapGain, True))
+		GUICtrlSetData($lblSmartZapStat, _NumberFormat($smartZapGain, True))
 		$iOldSmartZapGain = $smartZapGain
 	EndIf
 
 	; SmartZap Spells Used - Added by LunaEclipse
 	If $iOldNumLTSpellsUsed <> $numLSpellsUsed Then
 		GUICtrlSetData($lblLightningUsed, _NumberFormat($numLSpellsUsed, True))
+		GUICtrlSetData($lblLightningUsedStat, _NumberFormat($numLSpellsUsed, True))
 		$iOldNumLTSpellsUsed = $numLSpellsUsed
  	EndIf
 
@@ -398,6 +414,15 @@ Func UpdateStats()
 		GUICtrlSetData($lbltopelixirloot,_NumberFormat($topelixirloot))
 	EndIf
 
+	If Number($iDarkLast) > Number($topdarkloot) Then
+		$topdarkloot = $iDarkLast
+		GUICtrlSetData($lbltopdarkloot,_NumberFormat($topdarkloot))
+	EndIf
+	
+	If Number($iTrophyLast) > Number($toptrophyloot) Then
+		$toptrophyloot = $iTrophyLast
+		GUICtrlSetData($lbltoptrophyloot,_NumberFormat($toptrophyloot))
+	EndIf
 
 	If $ResetStats = 1 Then
 		$ResetStats = 0
@@ -418,12 +443,16 @@ Func ResetStats()
 	GUICtrlSetState($lblHourlyStatsTemp, $GUI_SHOW)
 	GUICtrlSetData($lbltopgoldloot,"")
 	GUICtrlSetData($lbltopelixirloot,"")
+	GUICtrlSetData($lbltopdarkloot,"")
+	GUICtrlSetData($lbltoptrophyloot,"")
 	$iGoldStart = $iGoldCurrent
 	$iElixirStart = $iElixirCurrent
 	$iDarkStart = $iDarkCurrent
 	$iTrophyStart = $iTrophyCurrent
 	$topgoldloot = 0
 	$topelixirloot = 0
+	$topdarkloot = 0
+	$toptrophyloot = 0
 	$iGoldTotal = 0
 	$iElixirTotal = 0
 	$iDarkTotal = 0

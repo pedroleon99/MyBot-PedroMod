@@ -66,6 +66,7 @@ Func txtDeployStyle($troopSlot)
 
 	GUICtrlSetData(@GUI_CtrlId, $deployValues[$troopSlot][1])
 EndFunc   ;==>txtDeployStyle
+
 Func btnReset()
 	deployArrayToUISettings()
 EndFunc   ;==>chkDontEndBattle

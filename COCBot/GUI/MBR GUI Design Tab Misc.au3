@@ -173,7 +173,7 @@ Local $x = 30, $y = 220
 		GUICtrlCreateIcon($pIconLib, $eIcnCollector, $x + 20, $y, 24, 24)
 		GUICtrlCreateIcon($pIconLib, $eIcnDrill, $x + 45, $y, 24, 24)
 		$chkCollect = GUICtrlCreateCheckbox(GetTranslated(7,36, "Collect Resources,") & @CRLF & "Loot Cart " & GetTranslated(7,99, "&& Treasure"), $x + 75, $y + 2, -1, 30, $BS_MULTILINE)
-			$txtTip = GetTranslated(7,37, "Check this to automatically collect the Village's Resources") & @CRLF & GetTranslated(7,38, "from Gold Mines, Elixir Collectors and Dark Elixir Drills.") & @CRLF & GetTranslated(7,100, "This will also search for a Loot Cart in your village and collect it.")
+			$txtTip = GetTranslated(7,37, "Check this to automatically collect the Village's Resources") & @CRLF & GetTranslated(7,38, "from Gold Mines, Elixir Collectors and Dark Elixir Drills.") & @CRLF & GetTranslated(7,100, "This will also search for a Loot Cart in your village and collect it.") & @CRLF & ("If minimum value match this will also collect Treasury from Clan Castle.")
 			GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetState(-1, $GUI_CHECKED)
 	;GUICtrlCreateGroup("", -99, -99, 1, 1)
@@ -205,7 +205,7 @@ $y += 35
 		$chkTombstones = GUICtrlCreateCheckbox(GetTranslated(7,39, "Tombs"), $x + 23, $y + 6, -1, -1)
 			$txtTip = GetTranslated(7,40, "Check this to automatically clear tombstones after enemy attack.")
 			GUICtrlSetTip(-1, $txtTip)
-			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			GUICtrlSetState(-1, $GUI_CHECKED)
 
 		GUICtrlCreateIcon($pIconLib, $eIcnCleanYard, $x + 80, $y + 4, 24, 24)
 		$chkCleanYard = GUICtrlCreateCheckbox(GetTranslated(7,101, "Obstacles"), $x + 108, $y + 6, -1, -1)

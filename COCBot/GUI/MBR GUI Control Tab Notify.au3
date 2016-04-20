@@ -47,13 +47,13 @@ Func chkPBenabled()
 		EndIf
 	Else
 		$pEnabled = 0
-	    GUICtrlSetState($PushBTokenValue, $GUI_DISABLE)
+		GUICtrlSetState($PushBTokenValue, $GUI_DISABLE)
 	     GUICtrlSetState($chkDeleteAllPushes, $GUI_DISABLE)
 		 GUICtrlSetState($chkDeleteOldPushes, $GUI_DISABLE)
 		 GUICtrlSetState($btnDeletePBmessages, $GUI_DISABLE)
 		 GUICtrlSetState($cmbHoursPushBullet, $GUI_DISABLE)
 		If $pEnabled2 = 0 Then
-		GUICtrlSetState($chkPBRemote, $GUI_DISABLE)
+			 GUICtrlSetState($chkPBRemote, $GUI_DISABLE)
 		GUICtrlSetState($OrigPushB, $GUI_DISABLE)
 		GUICtrlSetState($chkAlertPBVMFound, $GUI_DISABLE)
 		GUICtrlSetState($chkAlertPBLastRaid, $GUI_DISABLE)
@@ -168,4 +168,3 @@ Func _Restart_()
 
 	Return SetError(2, 0, 0)
 EndFunc   ;==>_Restart
-

@@ -64,7 +64,7 @@ $grpButtons = GUICtrlCreateGroup("https://mybot.run" & GetTranslated(13,26, "- f
 		GUICtrlSetFont(-1, 7)
 		GUICtrlSetTip(-1, $txtTip)
 		GUICtrlSetOnEvent(-1, "chkBackground")
-		GUICtrlSetState(-1, $GUI_UNCHECKED)
+		GUICtrlSetState(-1, $GUI_CHECKED)
 	$btnAttackNowDB = GUICtrlCreateButton(GetTranslated(13,18, "DB Attack!"), $x + 190, $y - 4, 60, -1)
 		;GUICtrlSetOnEvent(-1, "btnAttackNowDB")
 		GUICtrlSetState(-1, $GUI_HIDE)
@@ -76,9 +76,15 @@ $grpButtons = GUICtrlCreateGroup("https://mybot.run" & GetTranslated(13,26, "- f
 		GUICtrlSetState(-1, $GUI_HIDE)
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
+$sBotTitleAT = GUICtrlCreateLabel($AndroidInstance <> "" ? $AndroidInstance : $Android, 205, $y - 10, 60, 17, $SS_CENTER)
+$txtTip = "The Bot Is Running With " & ($AndroidInstance <> "" ? $AndroidInstance : $Android) & " Emulator Or Instance"
+GUICtrlSetTip($sBotTitleAT, $txtTip)
+GUICtrlSetColor(-1, $COLOR_MEDGRAY)
 $pic2arrow = GUICtrlCreatePic(@ScriptDir & "\Images\2arrow.jpg", $x + 193, $y + 10, 50, 45)
 GUICtrlSetOnEvent(-1, "ArrowTest")
 $lblVersion = GUICtrlCreateLabel($sBotVersion, 205, $y + 60, 60, 17, $SS_CENTER)
+$txtTip = $sBotTitleDefault
+GUICtrlSetTip(-1, $txtTip)
 	GUICtrlSetColor(-1, $COLOR_MEDGRAY)
 
 ;~ Village

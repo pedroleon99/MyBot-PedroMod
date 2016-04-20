@@ -226,6 +226,3 @@ Func CloseGUI2()
 	GUISetState(@SW_ENABLE, $frmBot)
 	WinActivate($frmBot)
 EndFunc
-Func btnexitabout()
-	CloseGUI2()
-EndFunc

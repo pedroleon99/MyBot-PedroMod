@@ -56,17 +56,19 @@ GUICtrlSetOnEvent(-1, "")
 #include "GUI\MBR GUI Design Tab MOD.au3"
 #include "GUI\MBR GUI Design Tab Upgrade.au3"
 #include "GUI\MBR GUI Design Tab Notify.au3"
-;#include "GUI\MBR GUI Design Tab Android.au3"
 #include "GUI\MBR GUI Design Tab Expert.au3"
 #include "GUI\MBR GUI Design Tab Stats.au3" ; includes '$LastControlToHide" on GUI
+#include "GUI\MBR GUI Design Tab DonateStats.au3" ; Added By Cutidudz
 #include "GUI\MBR GUI Design Collectors.au3"
 #include "GUI\MBR GUI Design About.au3" ; Added By AminTalkin
 #include "GUI\MBR GUI Design Milking.au3"
-#include "GUI\MBR GUI Design Tab DonateStats.au3"
+
 ;~ ------------------------------------------------------
 ;~ Chat mod GUI
 ;~ ------------------------------------------------------
 ChatbotCreateGui()
+
+
 ;~ -------------------------------------------------------------
 ;~ About Us Tab
 ;~ -------------------------------------------------------------
@@ -74,7 +76,7 @@ ChatbotCreateGui()
 ;Local $x = 30, $y = 150
 ;	$grpCredits = GUICtrlCreateGroup("Credits", $x - 20, $y - 20, 450, 375)
 ;		$lblBckGrnd = GUICtrlCreateLabel("", $x - 20, $y - 20, 450, 375)  ; adds fixed white background for entire tab, if using "Labels"
-;		GUICtrlSetBkColor(-1, $COLOR_WHITE)
+;			GUICtrlSetBkColor(-1, $COLOR_WHITE)
 ;		$txtCredits = "My Bot is brought to you by a worldwide team of open source"  & @CRLF & _
 ;						"programmers and a vibrant community of forum members!"
 ;		$lblCredits1 = GUICtrlCreateLabel($txtCredits, $x - 5, $y - 5, 400, 30)

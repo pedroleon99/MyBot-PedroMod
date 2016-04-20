@@ -258,7 +258,22 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 				_GDIPlus_ImageSaveToFile($hBitmap, @ScriptDir & "\Zombies\" & $Date & " at " & $Time & ".png")
 				_WinAPI_DeleteObject($hBitmap)
 			EndIf
+
+			If $iChkMeetOne[$DB] = 0 Then
+				If $iChkNoLeague[$DB] = 1 Then
+					If _CheckPixel($aNoLeague, True) Then
+						SetLog("      " & "Dead Base is not in a league.", $COLOR_GREEN, "Lucida Console", 7.5)
+					Else
+						SetLog("      " & "Dead Base is in a league.", $COLOR_RED, "Lucida Console", 7.5)
+						$match[$DB] = False ; skip attack
+					EndIf
+				EndIf
+			EndIf
+			If $match[$DB] Then
+				$iMatchMode = $DB
+
 			ExitLoop
+			EndIf
 		; Modified by LunaEclipse
 		ElseIf $match[$LB] And $iChkDeploySettings[$LB] = $eMilking And StringLen($MilkFarmObjectivesSTR) > 0 Then
 			SetLog($GetResourcesTXT, $COLOR_GREEN, "Lucida Console", 7.5)
@@ -271,8 +286,22 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 			SetLog($GetResourcesTXT, $COLOR_GREEN, "Lucida Console", 7.5)
 			SetLog("      " & "Live Base Found!", $COLOR_GREEN, "Lucida Console", 7.5)
 			$logwrited = True
+			
+			If $iChkMeetOne[$LB] = 0 Then
+				If $iChkNoLeague[$LB] = 1 Then
+					If _CheckPixel($aNoLeague, True) Then
+						SetLog("      " & "Live Base is not in a league.", $COLOR_GREEN, "Lucida Console", 7.5)
+					Else
+						SetLog("      " & "Live Base is in a league.", $COLOR_RED, "Lucida Console", 7.5)
+						$match[$LB] = False ; skip attack
+					EndIf
+				EndIf
+			EndIf
+			If $match[$LB] Then
+
 			$iMatchMode = $LB
 			ExitLoop
+			EndIf
 		; Modified by LunaEclipse
 		ElseIf $match[$LB] Or $match[$DB] And $iChkDeploySettings[$LB] <> $eMilking Then
 			If $OptBullyMode = 1 And ($SearchCount >= $ATBullyMode) Then

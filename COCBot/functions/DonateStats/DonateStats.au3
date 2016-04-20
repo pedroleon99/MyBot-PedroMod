@@ -1,7 +1,7 @@
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: DonateStats
-; Description ...: GetTroopColumn(), LoadDonateStats, CompareDBitmaps(), part of DonateStats, for collecting total counts of Troops donated
+; Description ...: GUICreateDStat(), GetTroopColumn(), InitDonateStats, CompareBitmaps(), part of DonateStats, for collecting total counts of Troops donated
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
@@ -13,8 +13,6 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
-
 
 Func GetTroopColumn($iTroopName)
 	Local $startIndex = 1
@@ -90,4 +88,4 @@ Func CompareDBitmaps($bm1, $bm2)
 	Return ($iErrorRet ? SetError($iErrorRet, $iExtendedRet, 0) : $aReturn[0] = 0)
     ;Return ($call[0]=0)
 
-EndFunc  ;==>CompareDBitmaps
+EndFunc  ;==>CompareBitmaps

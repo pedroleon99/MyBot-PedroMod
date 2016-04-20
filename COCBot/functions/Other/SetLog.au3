@@ -22,7 +22,13 @@
 Func SetLog($String, $Color = $COLOR_BLACK, $Font = "Verdana", $FontSize = 7.5, $statusbar = 1, $time = Time(), $bConsoleWrite = True, $LogPrefix = "L ") ;Sets the text for the log
     Local $log = $LogPrefix & TimeDebug() & $String
     If $bConsoleWrite = True And $String <> "" Then ConsoleWrite($log  & @CRLF) ; Always write any log to console
-	If $hLogFileHandle = "" Then CreateLogFile()
+	Local $DateStampLog = @YEAR & "-" & @MON & "-" & @MDAY
+	Local $DateStampLog2 = StringLeft($sLogFName, 10)
+	If $hLogFileHandle = "" Then
+		CreateLogFile()
+	ElseIf $DateStampLog2 <> $DateStampLog Then
+		CreateLogFile2()
+	EndIf
     If $SilentSetLog = True Then
 	   ; Silent mode is active, only write to log file, not to log control
 	   __FileWriteLog($hLogFileHandle, $log)

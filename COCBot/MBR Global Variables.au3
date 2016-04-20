@@ -339,6 +339,8 @@ Global $first = 0
 Global $chat_id2 = 0
 Global $lastremote = 0
 Global $pEnabled2
+Global $lastuid
+Global $oHTTP2
 Global $PBRemoteControlInterval = 60000 ; 60 secs
 Global $PBDeleteOldPushesInterval = 1800000 ; 30 mins
 Global $iOrigPushB
@@ -409,8 +411,9 @@ Global $iChkSearchReduction
 Global $ReduceCount, $ReduceGold, $ReduceElixir, $ReduceGoldPlusElixir, $ReduceDark, $ReduceTrophy ; Reducing values
 ;Global $chkConditions[7], $ichkMeetOne ;Conditions (meet gold...)
 ;Global $icmbTH
-Global $iChkEnableAfter[$iModeCount], $iCmbMeetGE[$iModeCount], $iChkMeetDE[$iModeCount], $iChkMeetTrophy[$iModeCount], $iChkMeetTH[$iModeCount], $iChkMeetTHO[$iModeCount], $iChkNoLeague[$iModeCount], $iChkMeetOne[$iModeCount], $iCmbTH[$iModeCount], $iChkWeakBase[$iModeCount], $iChkWeakBase[$iModeCount]
-Global $chkDBMeetTHO, $chkABMeetTHO, $chkATH, $chkDBNoLeague, $chkABNoLeague
+Global $iChkEnableAfter[$iModeCount], $iCmbMeetGE[$iModeCount], $iChkMeetDE[$iModeCount], $iChkMeetTrophy[$iModeCount], $iChkMeetTH[$iModeCount], $iChkMeetTHO[$iModeCount], $iChkMeetOne[$iModeCount], $iCmbTH[$iModeCount], $iChkWeakBase[$iModeCount]
+Global $chkDBMeetTHO, $chkABMeetTHO, $chkATH
+Global $chkDBNoLeague, $chkABNoLeague, $iChkNoLeague[$iModeCount]
 Global $THLocation
 Global $THx = 0, $THy = 0
 Global $DESLoc
@@ -752,6 +755,8 @@ Global $myHourlyStatsGold = ""
 Global $myHourlyStatsElixir =""
 Global $topgoldloot = 0
 Global $topelixirloot = 0
+Global $topdarkloot = 0
+Global $toptrophyloot = 0
 
 ;Global $iWBMortar
 ;Global $iWBWizTower
@@ -1088,7 +1093,7 @@ Global $attackcsv_locate_gold_storage = 0
 Global $attackcsv_locate_elixir_storage = 0
 Global $attackcsv_locate_dark_storage = 0
 Global $attackcsv_locate_townhall = 0
-;Global $attackcsv_use_red_line = 1
+Global $attackcsv_use_red_line = 1
 
 ;Milking Attack
 Global $debugresourcesoffset = 0 ;make images with offset to check correct adjust values
@@ -1172,6 +1177,12 @@ If $aCmdLine[0] > 1 Then
 	Next
 EndIf
 
+;Multy Farming
+Global $iSwCount
+Global $ichkSwitchDonate
+Global $ichkMultyFarming
+Global $iAccount, $OkLoc, $AccFourthLoc, $AccThirdLoc, $AccSecondLoc, $AccmainLoc
+
 Global $iRadClickSpeedFast, $radClickSpeedFast, $radClickSpeedNormal
 
 Global $cmbQuantBoostBarracks
@@ -1193,12 +1204,6 @@ Global $iCmbBoostWarden
 Global $dbBase
 Global $TroopDropNumber = 0
 Global $remainingTroops[12][2]
-
-;Multy Farming
-Global $iSwCount
-Global $ichkSwitchDonate
-Global $ichkMultyFarming
-Global $iAccount, $OkLoc, $AccFourthLoc, $AccThirdLoc, $AccSecondLoc, $AccmainLoc
 
 ; DO NOT ENABLE ! ! ! Only for testing Error behavior ! ! !
 Global $__TEST_ERROR_ADB_DEVICE_NOT_FOUND = False
@@ -1355,19 +1360,19 @@ Global $numLSpellsUsed = 0
 
 ; SmartZap Array to hold Total Amount of DE available from Drill at each level (1-6) - Added by LunaEclipse
 Global Const $drillLevelHold[6] = [120, _
-								   225, _
-								   405, _
-								   630, _
-								   960, _
-								   1350]
+                                   225, _
+                                   405, _
+                                   630, _
+                                   960, _
+                                   1350]
 
 ; SmartZap Array to hold Amount of DE available to steal from Drills at each level (1-6) - Added by LunaEclipse
 Global Const $drillLevelSteal[6] = [59, _
                                     102, _
-								    172, _
-								    251, _
-								    343, _
-								    479]
+                                    172, _
+                                    251, _
+                                    343, _
+                                    479]
 ;
 ; End Addition by LunaEclipse
 

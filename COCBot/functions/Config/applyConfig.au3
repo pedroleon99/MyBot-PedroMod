@@ -1024,7 +1024,6 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 	GUICtrlSetData($txtFullTroop, $fulltroop)
 	GUICtrlSetData($sldTrainITDelay, $isldTrainITDelay)
 	GUICtrlSetData($lbltxtTrainITDelay, "delay " & $isldTrainITDelay & " ms.")
-	;barracks boost not saved (no use)
 
 	If $iChkDontRemove = 1 Then
 		GUICtrlSetState($chkDontRemove, $GUI_CHECKED)
@@ -1047,6 +1046,8 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 	_GUICtrlComboBox_SetCurSel($cmbBoostBarbarianKing, $iCmbBoostBarbarianKing)
 	_GUICtrlComboBox_SetCurSel($cmbBoostArcherQueen, $iCmbBoostArcherQueen)
 	_GUICtrlComboBox_SetCurSel($cmbBoostWarden, $iCmbBoostWarden)
+
+	;barracks boost not saved (no use)
 
 	; Spells Creation  ---------------------------------------------------------------------
 	GUICtrlSetData($txtNumLightningSpell, $iLightningSpellComp)
@@ -1772,7 +1773,15 @@ EndIf
 	EndIf
 	chkUseAttackABCSV()
 
-	;MOD Settings--------------------------------------------------------------------------
+	If $iRadClickSpeedFast = 1 Then
+		GUICtrlSetState($radClickSpeedFast, $GUI_CHECKED)
+		GUICtrlSetState($radClickSpeedNormal, $GUI_UNCHECKED)
+	Else
+		GUICtrlSetState($radClickSpeedFast, $GUI_UNCHECKED)
+		GUICtrlSetState($radClickSpeedNormal, $GUI_CHECKED)
+	EndIf
+
+	;Multi Farming Settings--------------------------------------------------------------------------
 	If $ichkSwitchDonate = 1 Then
 		GUICtrlSetState($chkSwitchDonate, $GUI_CHECKED)
 	Else
@@ -1786,14 +1795,6 @@ EndIf
 	EndIf
 	GUICtrlSetData($Account, $iAccount)
 	MultiFarming()
-
-	; Clan Hop Setting
-	If $ichkClanHop = 1 Then
-		GUICtrlSetState($chkClanHop, $GUI_CHECKED)
-	Else
-		GUICtrlSetState($chkClanHop, $GUI_UNCHECKED)
-	EndIf
-
 
 	;Profile Switch
 	If $ichkGoldSwitchMax = 1 Then
@@ -1856,6 +1857,29 @@ EndIf
 	_GUICtrlComboBox_SetCurSel($cmbTrophyMinProfile, $icmbTrophyMinProfile)
 	GUICtrlSetData($txtMinTrophyAmount, $itxtMinTrophyAmount)
 
+    ; SmartZap Settings - Added by LunaEclipse
+    If $ichkSmartZap = 1 Then
+        GUICtrlSetState($chkSmartLightSpell, $GUI_CHECKED)
+        GUICtrlSetState($chkSmartZapDB, $GUI_ENABLE)
+        GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_ENABLE)
+        GUICtrlSetState($txtMinDark, $GUI_ENABLE)
+    Else
+        GUICtrlSetState($chkSmartZapDB, $GUI_DISABLE)
+        GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_DISABLE)
+        GUICtrlSetState($txtMinDark, $GUI_DISABLE)
+        GUICtrlSetState($chkSmartLightSpell, $GUI_UNCHECKED)
+    EndIf
+    If $ichkSmartZapDB = 1 Then
+        GUICtrlSetState($chkSmartZapDB, $GUI_CHECKED)
+    Else
+        GUICtrlSetState($chkSmartZapDB, $GUI_UNCHECKED)
+    EndIf
+    If $ichkSmartZapSaveHeroes = 1 Then
+        GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_CHECKED)
+    Else
+        GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_UNCHECKED)
+    EndIf
+    GUICtrlSetData($txtMinDark, $itxtMinDE)
 
 	; Multi Finger Attack Style Settings - Added by LunaEclipse
 	_GUICtrlComboBox_SetCurSel($cmbDBMultiFinger, $iMultiFingerStyle[$DB])
@@ -1903,31 +1927,24 @@ EndIf
 	EndIf
 	modifyAndroid()
 
-    ; SmartZap Settings - Added by LunaEclipse
-    If $ichkSmartZap = 1 Then
-        GUICtrlSetState($chkSmartLightSpell, $GUI_CHECKED)
-        GUICtrlSetState($chkSmartZapDB, $GUI_ENABLE)
-        GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_ENABLE)
-        GUICtrlSetState($txtMinDark, $GUI_ENABLE)
-    Else
-        GUICtrlSetState($chkSmartZapDB, $GUI_DISABLE)
-        GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_DISABLE)
-        GUICtrlSetState($txtMinDark, $GUI_DISABLE)
-        GUICtrlSetState($chkSmartLightSpell, $GUI_UNCHECKED)
-    EndIf
-    If $ichkSmartZapDB = 1 Then
-        GUICtrlSetState($chkSmartZapDB, $GUI_CHECKED)
-    Else
-        GUICtrlSetState($chkSmartZapDB, $GUI_UNCHECKED)
-    EndIf
-    If $ichkSmartZapSaveHeroes = 1 Then
-        GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_CHECKED)
-    Else
-        GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_UNCHECKED)
-    EndIf
-    GUICtrlSetData($txtMinDark, $itxtMinDE)
+	;chat bot
+	GUICtrlSetData($chkchatdelay, $ichkchatdelay)
 
 	; Reenabling window redraw
 	If $bRedrawAtExit Then SetRedrawBotWindow(True)
+
+		; Clan Hop Setting
+	If $ichkClanHop = 1 Then
+		GUICtrlSetState($chkClanHop, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkClanHop, $GUI_UNCHECKED)
+	EndIf
+
+	; Donate Stats
+	If $ichkDStats = 1 Then
+		GUICtrlSetState($chkDStats, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkDStats, $GUI_UNCHECKED)
+	EndIf
 
 EndFunc   ;==>applyConfig

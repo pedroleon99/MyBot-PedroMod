@@ -384,6 +384,7 @@ Func SendText($sText)
    EndIf
    Return $Result
 EndFunc
+
 Func FastClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 ;    If $AndroidAdbClick = True Then
 ;		AndroidClick($x, $y, $times, 0)

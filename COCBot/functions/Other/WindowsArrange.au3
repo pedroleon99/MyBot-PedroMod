@@ -73,6 +73,7 @@ Func WindowsArrange($position, $offsetX = 0, $offsetY = 0)
 			EndSwitch
 		EndIf
 	EndIf
+
 EndFunc   ;==>WindowsArrange
 
 Func DisposeWindows()

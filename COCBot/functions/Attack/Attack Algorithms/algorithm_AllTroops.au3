@@ -92,7 +92,7 @@ Func useTownHallSnipe() ; End battle after a town hall snipe
 	If ($THusedKing = 1 Or $THusedQueen = 1) And ($ichkSmartZapSaveHeroes = 1 Or $ichkSmartZap = 0) Then
 		SetLog("King and/or Queen dropped, close attack")
 		If $ichkSmartZap = 1 Then SetLog("Skipping SmartZap to protect your royals!", $COLOR_FUCHSIA)
-		ElseIf IsAttackPage() And Not SmartZap() And $THusedKing = 0 And $THusedQueen = 0 Then
+	ElseIf IsAttackPage() And Not SmartZap() And $THusedKing = 0 And $THusedQueen = 0 Then
 		Setlog("Wait few sec before close attack")
 		If _SleepAttack(Random(2, 5, 1) * 1000) Then Return ; wait 2-5 second before exit if king and queen are not dropped
 	EndIf
@@ -176,15 +176,15 @@ Func getNumberOfSides() ; Returns the number of sides to attack from
 		Case Else
 			If $iMatchMode = $DB Then
 				Switch $iChkDeploySettings[$iMatchMode]
-	    Case $eSmartSave
-			$nbSides = 4
+					Case $eSmartSave
+						$nbSides = 4
 					Case Else
 						; This should never happen unless there is a problem with the code
 				EndSwitch
 			ElseIf $iMatchMode = $LB Then
 				Switch $iChkDeploySettings[$iMatchMode]
-		Case $eCustomDeploy
-			$nbSides = 1
+					Case $eCustomDeploy
+						$nbSides = 1
 					Case Else
 						; This should never happen unless there is a problem with the code
 				EndSwitch

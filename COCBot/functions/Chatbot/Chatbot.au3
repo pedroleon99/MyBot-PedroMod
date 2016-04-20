@@ -247,26 +247,7 @@ Func ChatGuiCheckboxUpdate()
 EndFunc
 
 Func ChatGuiCheckboxUpdateAT()
-	If GUICtrlRead($chkClanChat) = $GUI_CHECKED Then
-		GUICtrlSetState($chkUseResponses , $GUI_ENABLE)
-		GUICtrlSetState($chkUseCleverbot , $GUI_ENABLE)
-		GUICtrlSetState($chkUseSimsimi , $GUI_ENABLE)
-		GUICtrlSetState($chkUseGeneric , $GUI_ENABLE)
-		GUICtrlSetState($chkChatPushbullet , $GUI_ENABLE)
-		GUICtrlSetState($chkPbSendNewChats , $GUI_ENABLE)
-		GUICtrlSetState($editResponses , $GUI_ENABLE)
-		GUICtrlSetState($editGeneric , $GUI_ENABLE)
-	Else
-		GUICtrlSetState($chkUseResponses , $GUI_DISABLE)
-		GUICtrlSetState($chkUseCleverbot , $GUI_DISABLE)
-		GUICtrlSetState($chkUseSimsimi , $GUI_DISABLE)
-		GUICtrlSetState($chkUseGeneric , $GUI_DISABLE)
-		GUICtrlSetState($chkChatPushbullet , $GUI_DISABLE)
-		GUICtrlSetState($chkPbSendNewChats , $GUI_DISABLE)
-		GUICtrlSetState($editResponses , $GUI_DISABLE)
-		GUICtrlSetState($editGeneric , $GUI_DISABLE)
-	EndIf
-		If GUICtrlRead($chkGlobalChat) = $GUI_CHECKED Then
+	If GUICtrlRead($chkGlobalChat) = $GUI_CHECKED Then
 		GUICtrlSetState($chkGlobalScramble , $GUI_ENABLE)
 		GUICtrlSetState($chkSwitchLang , $GUI_ENABLE)
 		GUICtrlSetState($ChatbotChatDelayLabel , $GUI_ENABLE)
@@ -285,6 +266,27 @@ Func ChatGuiCheckboxUpdateAT()
 		GUICtrlSetState($editGlobalMessages3 , $GUI_DISABLE)
 		GUICtrlSetState($editGlobalMessages4 , $GUI_DISABLE)
 	EndIf
+	If GUICtrlRead($chkClanChat) = $GUI_CHECKED Then
+		GUICtrlSetState($chkUseResponses , $GUI_ENABLE)
+		GUICtrlSetState($chkUseCleverbot , $GUI_ENABLE)
+		GUICtrlSetState($chkUseSimsimi , $GUI_ENABLE)
+		GUICtrlSetState($chkUseGeneric , $GUI_ENABLE)
+		GUICtrlSetState($chkChatPushbullet , $GUI_ENABLE)
+		GUICtrlSetState($chkPbSendNewChats , $GUI_ENABLE)
+		GUICtrlSetState($editResponses , $GUI_ENABLE)
+		GUICtrlSetState($editGeneric , $GUI_ENABLE)
+		GUICtrlSetState($ChatbotChatDelayLabel , $GUI_ENABLE)
+		GUICtrlSetState($chkchatdelay , $GUI_ENABLE)
+	Else
+		GUICtrlSetState($chkUseResponses , $GUI_DISABLE)
+		GUICtrlSetState($chkUseCleverbot , $GUI_DISABLE)
+		GUICtrlSetState($chkUseSimsimi , $GUI_DISABLE)
+		GUICtrlSetState($chkUseGeneric , $GUI_DISABLE)
+		GUICtrlSetState($chkChatPushbullet , $GUI_DISABLE)
+		GUICtrlSetState($chkPbSendNewChats , $GUI_DISABLE)
+		GUICtrlSetState($editResponses , $GUI_DISABLE)
+		GUICtrlSetState($editGeneric , $GUI_DISABLE)
+	EndIf
 EndFunc
 
 Func ChatGuiCheckboxDisableAT()
@@ -296,6 +298,7 @@ Func ChatGuiCheckboxEnableAT()
 	For $i = $chkGlobalChat To $editGeneric ; Save state of all controls on tabs
 		GUICtrlSetState($i, $GUI_ENABLE)
 	Next
+	ChatGuiCheckboxUpdateAT()
 EndFunc
 
 

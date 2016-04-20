@@ -62,23 +62,23 @@ Func chkABSmartAttackRedArea()
 			GUICtrlSetState($lblABMultiFinger, $GUI_SHOW)
 			GUICtrlSetState($cmbABMultiFinger, $GUI_SHOW)
 		Case $eCustomDeploy
-		GUICtrlSetState($btnMilkingOptions, $GUI_HIDE)
-		GUICtrlSetState($chkABSmartAttackRedArea, $GUI_UNCHECKED)
-		GUICtrlSetState($chkABSmartAttackRedArea, $GUI_HIDE)
+			GUICtrlSetState($btnMilkingOptions, $GUI_HIDE)
+			GUICtrlSetState($chkABSmartAttackRedArea, $GUI_UNCHECKED)
+			GUICtrlSetState($chkABSmartAttackRedArea, $GUI_HIDE)
 			GUICtrlSetState($lblABMultiFinger, $GUI_HIDE)
 			GUICtrlSetState($cmbABMultiFinger, $GUI_HIDE)
 
-		For $i = 0 to $DEPLOY_MAX_WAVES - 1
-			GUICtrlSetState($ctrlDeploy[$i][1], $GUI_ENABLE)
-			GUICtrlSetState($ctrlDeploy[$i][2], $GUI_ENABLE)
-		Next
+			For $i = 0 to $DEPLOY_MAX_WAVES - 1
+				GUICtrlSetState($ctrlDeploy[$i][1], $GUI_ENABLE)
+				GUICtrlSetState($ctrlDeploy[$i][2], $GUI_ENABLE)
+			Next
 		Case $eMilking
 			GUICtrlSetState($btnMilkingOptions, $GUI_SHOW)
 			GUICtrlSetState($lblABMultiFinger, $GUI_HIDE)
 			GUICtrlSetState($cmbABMultiFinger, $GUI_HIDE)
 			GUICtrlSetState($chkABSmartAttackRedArea, $GUI_SHOW)			
 		Case Else
-		GUICtrlSetState($btnMilkingOptions, $GUI_HIDE)
+			GUICtrlSetState($btnMilkingOptions, $GUI_HIDE)
 			GUICtrlSetState($lblABMultiFinger, $GUI_HIDE)
 			GUICtrlSetState($cmbABMultiFinger, $GUI_HIDE)
 			GUICtrlSetState($chkABSmartAttackRedArea, $GUI_SHOW)			

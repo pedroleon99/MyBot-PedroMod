@@ -1,11 +1,11 @@
 ; #FUNCTION# ====================================================================================================================
-; Name ..........: MBR GUI Control Tab Profile
+; Name ..........: MBR GUI Control
 ; Description ...: This file Includes all functions to current GUI
 ; Syntax ........:
 ; Parameters ....: None
 ; Return values .: None
-; Author ........: GkevinOD (2014)
-; Modified ......: Hervidero (2015)
+; Author ........:
+; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -25,8 +25,6 @@ Func cmbProfile()
 	readConfig()
 	applyConfig()
 	saveConfig()
-	
-	selectProfile()
 
 	SetLog(_PadStringCenter("Profile " & $sCurrProfile & " loaded from " & $config, 50, "="), $COLOR_GREEN)
 EndFunc   ;==>cmbProfile
@@ -53,6 +51,7 @@ Func btnAddConfirm()
 			; Setup the profile if it doesn't exist.
 			createProfile()
 			setupProfileComboBox()
+			setupProfileComboBoxswitch()
 			selectProfile()
 			GUICtrlSetState($txtVillageName, $GUI_HIDE)
 			GUICtrlSetState($cmbProfile, $GUI_SHOW)
@@ -78,6 +77,7 @@ Func btnDeleteCancel()
 				; Confirmed profile deletion so delete it.
 				deleteProfile()
 				setupProfileComboBox()
+				setupProfileComboBoxswitch()
 				selectProfile()
 			EndIf
 		Case $btnCancel
@@ -122,6 +122,7 @@ Func btnRenameConfirm()
 			; Rename the profile.
 			renameProfile()
 			setupProfileComboBox()
+			setupProfileComboBoxswitch()
 			selectProfile()
 
 			GUICtrlSetState($txtVillageName, $GUI_HIDE)
@@ -136,3 +137,37 @@ Func btnRenameConfirm()
 			SetLog("If you are seeing this log message there is something wrong.", $COLOR_RED)
 	EndSwitch
 EndFunc   ;==>btnRenameConfirm
+Func setupProfileComboBoxswitch()
+		; Clear the combo box current data in case profiles were deleted
+		GUICtrlSetData($cmbGoldMaxProfile, "", "")
+		; Set the new data of available profiles
+		GUICtrlSetData($cmbGoldMaxProfile, $profileString, "<No Profiles>")
+		; Clear the combo box current data in case profiles were deleted
+		GUICtrlSetData($cmbGoldMinProfile, "", "")
+		; Set the new data of available profiles
+		GUICtrlSetData($cmbGoldMinProfile, $profileString, "<No Profiles>")
+		; Clear the combo box current data in case profiles were deleted
+		GUICtrlSetData($cmbElixirMaxProfile, "", "")
+		; Set the new data of available profiles
+		GUICtrlSetData($cmbElixirMaxProfile, $profileString, "<No Profiles>")
+		; Clear the combo box current data in case profiles were deleted
+		GUICtrlSetData($cmbElixirMinProfile, "", "")
+		; Set the new data of available profiles
+		GUICtrlSetData($cmbElixirMinProfile, $profileString, "<No Profiles>")
+		; Clear the combo box current data in case profiles were deleted
+		GUICtrlSetData($cmbDEMaxProfile, "", "")
+		; Set the new data of available profiles
+		GUICtrlSetData($cmbDEMaxProfile, $profileString, "<No Profiles>")
+		; Clear the combo box current data in case profiles were deleted
+		GUICtrlSetData($cmbDEMinProfile, "", "")
+		; Set the new data of available profiles
+		GUICtrlSetData($cmbDEMinProfile, $profileString, "<No Profiles>")
+		; Clear the combo box current data in case profiles were deleted
+		GUICtrlSetData($cmbTrophyMaxProfile, "", "")
+		; Set the new data of available profiles
+		GUICtrlSetData($cmbTrophyMaxProfile, $profileString, "<No Profiles>")
+		; Clear the combo box current data in case profiles were deleted
+		GUICtrlSetData($cmbTrophyMinProfile, "", "")
+		; Set the new data of available profiles
+		GUICtrlSetData($cmbTrophyMinProfile, $profileString, "<No Profiles>")
+EndFunc   ;==>setupProfileComboBox

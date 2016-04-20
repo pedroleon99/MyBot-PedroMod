@@ -151,18 +151,25 @@ GUICtrlSetState(-1, $GUI_DISABLE)
 
 $x = 10
 $y += 3
+#cs No longer Needed
 GUICtrlCreateIcon($pIconLib, $eIcnGold, $x , $y, 16, 16)
 $lbltopgold = GUICtrlCreateLabel(GetTranslated(11,104, "Top Loot: "), $x + 10, $y + 2, 55, 17, $SS_RIGHT)
-$lbltopgoldloot = GUICtrlCreateLabel("", $x + 60, $y + 2, 55, 17, $SS_RIGHT)
+$lbltopgoldloot = GUICtrlCreateLabel("", $x + 50, $y + 2, 55, 17, $SS_RIGHT)
 $txtTip = GetTranslated(11,102, "Top Gold gained")
 GUICtrlSetTip(-1, $txtTip)
 
-GUICtrlCreateIcon($pIconLib, $eIcnElixir, $x + 150 , $y, 16, 16)
-$lbltopelixir = GUICtrlCreateLabel(GetTranslated(11,104, "Top Loot: "), $x + 160, $y + 2, 55, 17, $SS_RIGHT)
-$lbltopelixirloot = GUICtrlCreateLabel("", $x + 200, $y + 2, 55, 17, $SS_RIGHT)
+GUICtrlCreateIcon($pIconLib, $eIcnElixir, $x + 110 , $y, 16, 16)
+$lbltopelixir = GUICtrlCreateLabel(GetTranslated(11,104, "Top Loot: "), $x + 120, $y + 2, 55, 17, $SS_RIGHT)
+$lbltopelixirloot = GUICtrlCreateLabel("", $x + 160, $y + 2, 55, 17, $SS_RIGHT)
 $txtTip = GetTranslated(11,103, "Top Elixir gained")
 GUICtrlSetTip(-1, $txtTip)
 
+GUICtrlCreateIcon($pIconLib, $eIcnDark, $x + 220 , $y, 16, 16)
+$lbltopdark = GUICtrlCreateLabel(GetTranslated(11,104, "Top Loot: "), $x + 230, $y + 2, 55, 17, $SS_RIGHT)
+$lbltopdarkloot = GUICtrlCreateLabel("", $x + 250, $y + 2, 55, 17, $SS_RIGHT)
+$txtTip = GetTranslated(11,105, "Top DE gained")
+GUICtrlSetTip(-1, $txtTip)
+#ce
 
 $x = 30
 $y = 260
@@ -403,43 +410,90 @@ GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 $x += 108 + 5
 $y = 405
-$grpStatsTB = GUICtrlCreateGroup(GetTranslated(11,84, "TH Bully"), $x - 20, $y - 20, 111, 120)
+$grpStatsTB = GUICtrlCreateGroup(GetTranslated(11,84, "Top Gain && Zap"), $x - 20, $y - 20, 111, 120)
+#cs No longer Needed
 GUICtrlCreateLabel(GetTranslated(11,72, "Attacked") & ":", $x - 15, $y - 2, -1, 17)
 $lblAttacked[$TB] = GUICtrlCreateLabel("0", $x + 2, $y - 2, 80, 17, $SS_RIGHT)
 $txtTip = GetTranslated(11,85, "The No. of TH Bully bases that were attacked by the Bot.")
 GUICtrlSetTip(-1, $txtTip)
-
+#ce
+GUICtrlCreateIcon($pIconLib, $eIcnGold, $x - 15, $y - 4, 16, 16)
+$lbltopgold = GUICtrlCreateLabel(GetTranslated(11,106, "Top") & ":", $x + 3, $y - 2, -1, 17)
+$lbltopgoldloot = GUICtrlCreateLabel("0", $x + 2, $y - 2, 80, 17, $SS_RIGHT)
+$txtTip = GetTranslated(11,102, "Top Gold gained")
+GUICtrlSetTip(-1, $txtTip)
 $y += 17
+#cs No longer Needed
 GUICtrlCreateIcon($pIconLib, $eIcnGold, $x - 15, $y - 4, 16, 16)
 GUICtrlCreateLabel(GetTranslated(11,74, "gain") & ":", $x + 3, $y - 2, -1, 17)
 $lblTotalGoldGain[$TB] = GUICtrlCreateLabel("0", $x + 2, $y - 2, 80, 17, $SS_RIGHT)
 $txtTip = GetTranslated(11,86, "The amount of Gold gained from TH Bully bases attacked by the Bot.")
 GUICtrlSetTip(-1, $txtTip)
+#ce
+GUICtrlCreateIcon($pIconLib, $eIcnElixir, $x - 15, $y - 4, 16, 16)
+$lbltopelixir = GUICtrlCreateLabel(GetTranslated(11,106, "Top") & ":", $x + 3, $y - 2, -1, 17)
+$lbltopelixirloot = GUICtrlCreateLabel("0", $x + 2, $y - 2, 80, 17, $SS_RIGHT)
+$txtTip = GetTranslated(11,103, "Top Elixir gained")
+GUICtrlSetTip(-1, $txtTip)
 $y += 17
+#cs No longer Needed
 GUICtrlCreateIcon($pIconLib, $eIcnElixir, $x - 15, $y - 4, 16, 16)
 GUICtrlCreateLabel(GetTranslated(11,74, "gain") & ":", $x + 3, $y - 2, -1, 17)
 $lblTotalElixirGain[$TB] = GUICtrlCreateLabel("0", $x + 2, $y - 2, 80, 17, $SS_RIGHT)
 $txtTip = GetTranslated(11,87, "The amount of Elixir gained from TH Bully bases attacked by the Bot.")
 GUICtrlSetTip(-1, $txtTip)
+#ce
+GUICtrlCreateIcon($pIconLib, $eIcnDark, $x - 15, $y - 4, 16, 16)
+$lbltopdark = GUICtrlCreateLabel(GetTranslated(11,106, "Top") & ":", $x + 3, $y - 2, -1, 17)
+$lbltopdarkloot = GUICtrlCreateLabel("0", $x + 2, $y - 2, 80, 17, $SS_RIGHT)
+$txtTip = GetTranslated(11,105, "Top DE gained")
+GUICtrlSetTip(-1, $txtTip)
 $y += 17
+#cs No longer Needed
 GUICtrlCreateIcon($pIconLib, $eIcnDark, $x - 15, $y - 4, 16, 16)
 GUICtrlCreateLabel(GetTranslated(11,74, "gain") & ":", $x + 3, $y - 2, -1, 17)
 $lblTotalDElixirGain[$TB] = GUICtrlCreateLabel("0", $x + 2, $y - 2, 80, 17, $SS_RIGHT)
 $txtTip = GetTranslated(11,88, "The amount of Dark Elixir gained from TH Bully bases attacked by the Bot.")
 GUICtrlSetTip(-1, $txtTip)
+#ce
+GUICtrlCreateIcon($pIconLib, $eIcnTrophy, $x - 15, $y - 4, 16, 16)
+$lbltoptrophy = GUICtrlCreateLabel(GetTranslated(11,106, "Top") & ":", $x + 3, $y - 2, -1, 17)
+$lbltoptrophyloot = GUICtrlCreateLabel("0", $x + 2, $y - 2, 80, 17, $SS_RIGHT)
+$txtTip = GetTranslated(11,107, "Top Trophy gained")
+GUICtrlSetTip(-1, $txtTip)
 $y += 17
+#cs No longer Needed
 GUICtrlCreateIcon($pIconLib, $eIcnTrophy, $x - 15, $y - 4, 16, 16)
 GUICtrlCreateLabel(GetTranslated(11,74, "gain") & ":", $x + 3, $y - 2, -1, 17)
 $lblTotalTrophyGain[$TB] = GUICtrlCreateLabel("0", $x + 2, $y - 2, 80, 17, $SS_RIGHT)
 $txtTip = GetTranslated(11,89, "The amount of Trophy gained from TH Bully bases attacked by the Bot.")
 GUICtrlSetTip(-1, $txtTip)
+#ce
+$picSmartZap = GUICtrlCreateIcon($pIconLib, $eIcnDrill, $x - 15, $y - 4, 16, 16)
+GUICtrlCreateLabel("Zap:", $x + 3, $y - 2, -1, 17)
+GUICtrlSetColor(-1, 0x279B61)
+$lblSmartZapStat = GUICtrlCreateLabel("0", $x + 2, $y - 2, 80, 17, $SS_RIGHT)
+;GUICtrlSetFont(-1, 16, $FW_BOLD, Default, "arial", $CLEARTYPE_QUALITY)
+GUICtrlSetColor(-1, 0x279B61)
+$txtTip = "Number of dark elixir zapped during the attack with lightning."
+GUICtrlSetTip(-1, $txtTip)
 $y += 17
+#cs No longer Needed
 $lblNbrOfDetectedMines[$TB] = GUICtrlCreateLabel("0", $x - 18, $y - 2, 18, 17, $SS_RIGHT)
 GUICtrlCreateIcon($pIconLib, $eIcnMine, $x + 1, $y - 4, 16, 16)
 $lblNbrOfDetectedCollectors[$TB] = GUICtrlCreateLabel("0", $x + 18, $y - 2, 18, 17, $SS_RIGHT)
 GUICtrlCreateIcon($pIconLib, $eIcnCollector, $x + 37, $y - 4, 16, 16)
 $lblNbrOfDetectedDrills[$TB] = GUICtrlCreateLabel("0", $x + 54, $y - 2, 18, 17, $SS_RIGHT)
 GUICtrlCreateIcon($pIconLib, $eIcnDrill, $x + 73, $y - 4, 16, 16)
+#ce
+GUICtrlCreateIcon($pIconLib, $eIcnLightSpell, $x - 15, $y - 4, 16, 16)
+GUICtrlCreateLabel("Spell:", $x + 3, $y - 2, -1, 17)
+GUICtrlSetColor(-1, 0x279B61)
+;GUICtrlSetFont(-1, 16, $FW_BOLD, Default, "arial", $CLEARTYPE_QUALITY)
+$lblLightningUsedStat = GUICtrlCreateLabel("0", $x + 2, $y - 2, 80, 17, $SS_RIGHT)
+GUICtrlSetColor(-1, 0x279B61)
+$txtTip = "Amount of used spells."
+GUICtrlSetTip(-1, $txtTip)
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 $x += 108 + 5

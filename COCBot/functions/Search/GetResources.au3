@@ -119,15 +119,6 @@ Func GetResources($bLog = True, $pMatchMode = -1) ;Reads resources
 			$THString = " [TH]:" & StringFormat("%2s", $searchTH) & ", " & $THLoc
 		EndIf
 	EndIf
-	If ($iCmbSearchMode <> $LB And $iChkNoLeague[$DB] = 1) Or $iCmbSearchMode <> $DB And $iChkNoLeague[$LB] = 1 Then
-		if _CheckPixel($aNoLeague, True) Then
-			SetLog("The player is not in a league.")
-			$NoLeague = 1
-		Else
-			 SetLog("The player is in a league.")
-			$NoLeague = 0
-		EndIf
-	EndIf
 
 	$SearchCount += 1 ; Counter for number of searches
 	If $bLog = True Then SetLog(StringFormat("%3s", $SearchCount) & "> [G]:" & StringFormat("%7s", $searchGold) & " [E]:" & StringFormat("%7s", $searchElixir) & " [D]:" & StringFormat("%5s", $searchDark) & " [T]:" & StringFormat("%2s", $searchTrophy) & $THString, $COLOR_BLACK, "Lucida Console", 7.5)

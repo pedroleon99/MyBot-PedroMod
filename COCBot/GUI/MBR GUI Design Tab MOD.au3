@@ -26,16 +26,16 @@ $tabMOD = GUICtrlCreateTabItem("Mods")
 					  "can function perfectly."
 			GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetOnEvent(-1, "chkSmartLightSpell")
-			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			GUICtrlSetState(-1, $GUI_CHECKED)
 		$chkSmartZapDB = GUICtrlCreateCheckbox("Only Zap Drills in Dead Bases", $x + 20, $y + 21, -1, -1)
 			$txtTip = "It is recommended you only zap drills in dead bases as most of the " & @CRLF & _
 					  "Dark Elixir in a live base will be in the storage."
 			GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetOnEvent(-1, "chkSmartZapDB")
-			GUICtrlSetState(-1, $GUI_CHECKED)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetState(-1, $GUI_DISABLE)
-		$lblSmartZap = GUICtrlCreateLabel("Min. amount of Dark Elixir:", $x - 10, $y + 48, 160, -1, $SS_RIGHT)
-		$txtMinDark = GUICtrlCreateInput("478", $x + 155, $y + 45, 35, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$lblSmartZap = GUICtrlCreateLabel("Min. amount of Dark Elixir:", $x, $y + 48, 160, -1, $SS_RIGHT)
+		$txtMinDark = GUICtrlCreateInput("200", $x + 165, $y + 45, 35, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		    $txtTip = "The value here depends a lot on what level your Town Hall is, " & @CRLF & _
 					  "and what level drills you most often see."
 			GUICtrlSetTip(-1, $txtTip)
@@ -48,7 +48,7 @@ $tabMOD = GUICtrlCreateTabItem("Mods")
 					  "This protects their health so they will be ready for battle sooner!"
 			GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetOnEvent(-1, "chkSmartZapSaveHeroes")
-			GUICtrlSetState(-1, $GUI_CHECKED)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetState(-1, $GUI_DISABLE)
 	Local $x = 236, $y = 155
 		$picSmartZap = GUICtrlCreateIcon($pIconLib, $eIcnDark, $x + 160, $y + 3, 24, 24)
@@ -72,6 +72,7 @@ $tabMOD = GUICtrlCreateTabItem("Mods")
 			$txtTip = "Change to Multi Finger if less than " & $percentCollectors & "% of collectors near RED LINE." & @CRLF & _
 					  "     This will switch to 0 delay for troops for a fast deployment."
 			GUICtrlSetTip(-1, $txtTip)
+			GUICtrlSetState(-1, $GUI_CHECKED)
 			GUICtrlSetOnEvent(-1, "chkChangeFF")
 		$lblChangeFF = GUICtrlCreateLabel("Minimum near Red Line:", $x + 105, $y - 2, 125, -1, $SS_RIGHT)
 		$txtPercentCollectors = GUICtrlCreateInput("80", $x + 235, $y - 5, 35, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
@@ -113,7 +114,7 @@ $tabMOD = GUICtrlCreateTabItem("Mods")
 			GUICtrlSetLimit(-1, 4)
 			GUICtrlSetState(-1, $GUI_DISABLE)
 		$lblmultyAcc = GUICtrlCreateLabel(GetTranslated(17,2, "How Many:"), $x -5, $y + 29, -1, -1)
-		   	GUICtrlSetTip(-1, $txtTip)
+			GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetState(-1, $GUI_DISABLE)
 
 	; Android Settings
@@ -131,11 +132,11 @@ $tabMOD = GUICtrlCreateTabItem("Mods")
 			GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetOnEvent(-1, "txtAndroidInstance")
 			GUICtrlSetState(-1, $GUI_DISABLE)
-		$chkHideTaskBar = GUICtrlCreateCheckbox("Hide Taskbar Icon", $x - 10, $y + 20, 100, -1)
+		$chkHideTaskBar = GUICtrlCreateCheckbox("Hide Taskbar Icon", $x - 10, $y + 20, 120, -1)
 			$txtTip = "This will hide the android client from the taskbar when you press the Hide button"
 			GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetOnEvent(-1, "HideTaskbar")
-		$lblHideTaskBar = GUICtrlCreateLabel("Warning: May cause erratic behaviour, uncheck if you have problems.", $x + 120, $y + 23, 290, 30, $SS_LEFT)
+		$lblHideTaskBar = GUICtrlCreateLabel("Warning: May cause erratic behaviour, uncheck if you have problems.", $x - 10, $y + 45, 340, 30, $SS_LEFT)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	
@@ -146,6 +147,7 @@ $tabMOD = GUICtrlCreateTabItem("Mods")
 			$txtTip = "Tick this to enable faster ADB deployment for MEmu and Droid4x in Multi-finger mode." & @CRLF & @CRLF & _ 
 				      "     WARNING:  This is experimental, if you have issues with deployment, disable it."
 			GUICtrlSetTip(-1, $txtTip)
+			GUICtrlSetState(-1, $GUI_CHECKED)
 			GUICtrlSetOnEvent(-1, "chkFastADBClicks")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 GUICtrlCreateTabItem("")

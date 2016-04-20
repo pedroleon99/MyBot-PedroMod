@@ -182,8 +182,6 @@ Func runBot() ;Bot that runs everything in order
 		$Restart = False
 		$fullArmy = False
 		$CommandStop = -1
-		RequestCC()
-		If $Restart = True Then ContinueLoop
 		If _Sleep($iDelayRunBot1) Then Return
 		checkMainScreen()
 		If $Restart = True Then ContinueLoop
@@ -367,12 +365,11 @@ Func runBot() ;Bot that runs everything in order
 EndFunc   ;==>runBot
 
 Func Idle() ;Sequence that runs until Full Army
-	If $canRequestCC = True Then RequestCC()
 	Local $TimeIdle = 0 ;In Seconds
 	;If $debugsetlog = 1 Then SetLog("Func Idle ", $COLOR_PURPLE)
 	While $fullArmy = False Or $bFullArmyHero = False
 		checkAndroidTimeLag()
-		RequestCC()
+
 		If $RequestScreenshot = 1 Then PushMsg("RequestScreenshot")
 		If _Sleep($iDelayIdle1) Then Return
 		If $CommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLOR_GREEN)
@@ -412,7 +409,6 @@ Func Idle() ;Sequence that runs until Full Army
 		EndIf
 		$iCollectCounter = $iCollectCounter + 1
 		If $CommandStop = -1 Then
-			RequestCC()
 			Train()
 				If $Restart = True Then ExitLoop
 				If _Sleep($iDelayIdle1) Then ExitLoop
@@ -421,7 +417,6 @@ Func Idle() ;Sequence that runs until Full Army
 		If _Sleep($iDelayIdle1) Then Return
 		If $CommandStop = 0 And $bTrainEnabled = True Then
 			If Not ($fullArmy) Then
-				RequestCC()
 				Train()
 					If $Restart = True Then ExitLoop
 					If _Sleep($iDelayIdle1) Then ExitLoop
@@ -444,6 +439,8 @@ Func Idle() ;Sequence that runs until Full Army
 		If $Restart = True Then ExitLoop
 		$TimeIdle += Round(TimerDiff($hTimer) / 1000, 2) ;In Seconds
 
+		If $canRequestCC = True Then RequestCC()
+
 		SetLog("Time Idle: " & StringFormat("%02i", Floor(Floor($TimeIdle / 60) / 60)) & ":" & StringFormat("%02i", Floor(Mod(Floor($TimeIdle / 60), 60))) & ":" & StringFormat("%02i", Floor(Mod($TimeIdle, 60))))
 
 		If $OutOfGold = 1 Or $OutOfElixir = 1 Then Return  ; Halt mode due low resources, only 1 idle loop
@@ -452,7 +449,7 @@ Func Idle() ;Sequence that runs until Full Army
 EndFunc   ;==>Idle
 
 Func AttackMain() ;Main control for attack functions
-	If $iChkUseCCBalanced = 1 or $iChkUseCCBalancedCSV = 1 Then ;launch profilereport() only if option balance D/R it's activated
+	If $iChkUseCCBalanced = 1 Or $iChkUseCCBalancedCSV = 1 Then ;launch profilereport() only if option balance D/R it's activated
 		ProfileReport()
 		If _Sleep($iDelayAttackMain1) Then Return
 		checkMainScreen(False)
@@ -513,9 +510,9 @@ EndFunc   ;==>AttackMain
 
 Func Attack() ;Selects which algorithm
 	SetLog(" ====== Start Attack ====== ", $COLOR_GREEN)
-	If  ($iMatchMode = $DB and $ichkUseAttackDBCSV = 1) or ($iMatchMode = $LB and $ichkUseAttackABCSV = 1) Then
+	If ($iMatchMode = $DB And $ichkUseAttackDBCSV = 1) Or ($iMatchMode = $LB And $ichkUseAttackABCSV = 1) Then
 		Algorithm_AttackCSV()
-	Elseif $iMatchMode= $LB and  $iChkDeploySettings[$LB] = $eMilking Then
+	ElseIf $iMatchMode = $LB And $iChkDeploySettings[$LB] = $eMilking Then
 	    Alogrithm_MilkingAttack()
 		; check if can snipe external TH
 		If $OptTrophyMode = 1 Then ;Enables Combo Mode Settings
@@ -548,5 +545,3 @@ Func Attack() ;Selects which algorithm
 		algorithm_AllTroops()
 	EndIf
 EndFunc   ;==>Attack
-
-

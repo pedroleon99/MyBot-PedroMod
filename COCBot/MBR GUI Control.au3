@@ -61,7 +61,6 @@ AtkLogHead()
 #include "GUI\MBR GUI Control Tab MOD.au3"
 #include "GUI\MBR GUI Control Tab Upgrade.au3"
 #include "GUI\MBR GUI Control Tab Notify.au3"
-;#include "GUI\MBR GUI Control Tab Android.au3"
 #include "GUI\MBR GUI Control Tab Expert.au3"
 #include "GUI\MBR GUI Control Tab Stats.au3"
 #include "GUI\MBR GUI Control Collectors.au3"
@@ -163,7 +162,7 @@ Func GUIControl($hWind, $iMsg, $wParam, $lParam)
 ;					   BotClose()
 ;			   EndSwitch
 ;			EndIf
-		Case $WM_SYSCOMMAND ; 274
+	   Case $WM_SYSCOMMAND ; 274
 			If $__TEST_ERROR = True Then SetDebugLog("Bot WM_SYSCOMMAND: " & Hex($wParam, 4))
             Switch $hWind
 			Case $frmBot ; Only close Bot when Bot Window sends Close Message

@@ -80,6 +80,9 @@ Func setupInstances()
 	Local $sOldTitle = $sBotTitle
 
 	$sBotTitle = $sBotTitleDefault & "(" & ($AndroidInstance <> "" ? $AndroidInstance : $Android) & ")"
+	GUICtrlSetData($sBotTitleAT, $AndroidInstance <> "" ? $AndroidInstance : $Android)
+	$txtTip = "The Bot Is Running With " & ($AndroidInstance <> "" ? $AndroidInstance : $Android) & " Emulator Or Instance"
+	GUICtrlSetTip($sBotTitleAT, $txtTip)
 	Local $hMutexTmp = _Singleton($sBotTitle, 1)
 	If $hMutexTmp = 0 And $sBotTitle <> $sOldTitle Then
 		MsgBox(0, $sBotTitle, "My Bot for " & $Android & ($AndroidInstance <> "" ? " instance (" & $AndroidInstance & ")" : "") & " is already running." & @CRLF & @CRLF & _

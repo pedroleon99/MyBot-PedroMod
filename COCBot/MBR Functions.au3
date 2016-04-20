@@ -256,15 +256,21 @@
 #include "functions\Village\ClanLevel.au3"
 #include "functions\Village\StarBonus.au3"
 #include "functions\Other\JSON.au3"
+
+;DonateStats - by Cutidudz
+#include "functions\DonateStats\DonateStats.au3"
+
+; Clan Hop - Added by AminTalkin
 #include "functions\Village\ProfileSwitch.au3"
 
+; Clan Hop - Added by LakeReng
 #include "functions\Mod\SwitchDonate.au3"
 #include "functions\Mod\SwitchAccount.au3"
 #include "functions\Mod\DetectAccount.au3"
 
+; Clan Hop - Added by Rhino
 #include "functions\Village\ClanHop.au3"
-;DonateStats - by Cutidudz
-#include "functions\DonateStats\DonateStats.au3"
+
 ; Attack files - Added by LunaEclipse
 #include "functions\Attack\attackFunctions.au3"
 #include "functions\Attack\unitInfo.au3"

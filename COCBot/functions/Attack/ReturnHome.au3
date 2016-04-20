@@ -163,4 +163,3 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ; Return main screen
 		EndIf
 	WEnd
 EndFunc   ;==>ReturnHome
-

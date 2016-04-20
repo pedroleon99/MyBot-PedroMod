@@ -21,6 +21,15 @@ Func CreateLogFile()
 	$sLogPath = $dirLogs & $sLogFName
 	$hLogFileHandle = FileOpen($sLogPath, $FO_APPEND)
 EndFunc   ;==>CreateLogFile
+Func CreateLogFile2()
+    if $hLogFileHandle<>"" Then
+		FileClose($hLogFileHandle)
+		$hLogFileHandle = ""
+	EndIf
+    $sLogFName = @YEAR & "-" & @MON & "-" & @MDAY & ".log"
+	$sLogPath = $dirLogs & $sLogFName
+	$hLogFileHandle = FileOpen($sLogPath, $FO_APPEND)
+EndFunc   ;==>CreateLogFile
 
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: CreateAttackLogFile

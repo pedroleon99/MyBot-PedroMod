@@ -150,7 +150,7 @@ $tabAttack = GUICtrlCreateTabItem(GetTranslated(3, 1, "Attack"))
 		$lblABDeploy = GUICtrlCreateLabel(GetTranslated(3,3, -1) & ":", $x, $y + 5, -1, -1)
 		$cmbABDeploy = GUICtrlCreateCombo("", $x + 55, $y, 140, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetTip(-1, GetTranslated(3, 4, -1) & @CRLF & GetTranslated(3, 5, -1) & @CRLF & GetTranslated(3, 6, -1) & @CRLF & GetTranslated(3, 63, -1) & @CRLF & "Attack on the single side closest to the priority target" & @CRLF & GetTranslated(3,83, "Milking Farm Attack"), GetTranslated(3,7, -1))
-			GUICtrlSetData(-1, GetTranslated(3, 8, -1) & "|" & GetTranslated(3, 9, -1) & "|" & GetTranslated(3, 10, -1) & "|" & GetTranslated(3, 11, -1) & "|" & "Multi Finger" & "|" & "Custom Side Deployment" & "|" & GetTranslated(3,83, "Milking Farm Attack"), "Custom Side Deployment")
+			GUICtrlSetData(-1, GetTranslated(3, 8, -1) & "|" & GetTranslated(3, 9, -1) & "|" & GetTranslated(3, 10, -1) & "|" & GetTranslated(3, 11, -1) & "|" & "Multi Finger" & "|" & "Custom Side Deployment" & "|" & GetTranslated(3,83, "Milking Farm Attack"), "Multi Finger")
 			GUICtrlSetOnEvent(-1, "chkABSmartAttackRedArea")
 		$y += 25
 		$lblABSelectTroop=GUICtrlCreateLabel(GetTranslated(3,12, -1) & ":",$x, $y + 5, -1 , -1)

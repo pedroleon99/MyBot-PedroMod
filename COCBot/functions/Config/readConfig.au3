@@ -288,6 +288,7 @@ Func readConfig() ;Reads config and sets it to the variables
 
 
 		;Donate Settings-------------------------------------------------------------------------
+		$ichkDStats = IniRead($config, "donate", "chkDStats", "1")
 		$iChkRequest = IniRead($config, "donate", "chkRequest", "0")
 		$sTxtRequest = IniRead($config, "donate", "txtRequest", "")
 
@@ -464,8 +465,7 @@ Func readConfig() ;Reads config and sets it to the variables
 		$fulltroop = IniRead($config, "troop", "fullTroop", "100")
 
 		$isldTrainITDelay = IniRead($config, "troop", "TrainITDelay", "20")
-		;barracks boost not saved (no use)
-		
+
 		; Boost  -------------------------------------------------------------------------------
 		$iCmbQuantBoostBarracks = IniRead($config, "troop", "QuantBoostBarracks", "0")
 		$iCmbBoostBarracks = IniRead($config, "troop", "BoostBarracks", "0")
@@ -476,6 +476,8 @@ Func readConfig() ;Reads config and sets it to the variables
 		$iCmbBoostWarden = IniRead($config, "troop", "BoostWarden", "0")
 		$iChkDontRemove = IniRead($config, "troop", "DontRemove", "0")
 		$iChkBarrackSpell = IniRead($config, "Spells", "BarrackSpell", "0")
+
+		;barracks boost not saved (no use)
 
 		; Spells Creation  ---------------------------------------------------------------------
 		$iLightningSpellComp = Int(IniRead($config, "Spells", "LightningSpell", "0"))
@@ -542,7 +544,7 @@ $itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
 
 		;PushBullet Settings ---------------------------------------------
 		$PushToken2 = IniRead($config, "pushbullet", "AccountToken2", "")
-		$pEnabled2 = IniRead($config, "pushbullet", "PBEnabled2", "0")
+		$pEnabled2 = IniRead($config, "pushbullet", "PBEnabled2", "0")		
 		$PushToken = IniRead($config, "pushbullet", "AccountToken", "")
 		$iOrigPushB = IniRead($config, "pushbullet", "OrigPushB", $sCurrProfile)
 
@@ -564,6 +566,7 @@ $itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
 		$ichkDeleteOldPushes = IniRead($config, "pushbullet", "DeleteOldPushes", "0")
 		$ichkAlertPBCampFull = IniRead($config, "pushbullet", "AlertCampFull", "0")
 		$ichkAlertBuilderIdle = IniRead($config, "pushbullet", "AlertBuilderIdle", "0")
+		
 
 
 		$ichkDeleteLogs = IniRead($config, "deletefiles", "DeleteLogs", "0")
@@ -697,9 +700,6 @@ $itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
 ;~ 		$MilkFarmAlgorithmTh = IniRead($config,"MilkingAttack","TownHallAlgorithm","Bam")
 ;~ 		$MilkFarmSnipeEvenIfNoExtractorsFound = IniRead($config,"MilkingAttack","TownHallHitAnyway","1")
 
-		;Chat bot
-		$ichkchatdelay = IniRead($config, "global", "chdelay", "0")
-
 	;Profile Switch
 	$ichkGoldSwitchMax = IniRead($config, "profiles", "chkGoldSwitchMax", "0")
 	$icmbGoldMaxProfile = IniRead($config, "profiles", "cmbGoldMaxProfile", "0")
@@ -729,6 +729,11 @@ $itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
 	$icmbTrophyMinProfile = IniRead($config, "profiles", "cmbTrophyMinProfile", "0")
 	$itxtMinTrophyAmount = IniRead($config, "profiles", "txtMinTrophyAmount", "1000")
 
+        ; SmartZap Settings - Added by LunaEclipse
+        $ichkSmartZap = IniRead($config, "SmartZap", "UseSmartZap", "1")
+        $ichkSmartZapDB = IniRead($config, "SmartZap", "ZapDBOnly", "1")
+        $ichkSmartZapSaveHeroes = IniRead($config, "SmartZap", "THSnipeSaveHeroes", "1")
+        $itxtMinDE = IniRead($config, "SmartZap", "MinDE", "250")
 
 		; Multi Finger Attack Style Settings - Added by LunaEclipse
 		$iMultiFingerStyle[$DB] = IniRead($config, "MultiFinger", "DeadBaseStyle", "0")
@@ -757,11 +762,8 @@ $itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
 		$sAndroidInstance = IniRead($config, "Android", "Instance", "")
 		$ichkHideTaskBar = IniRead($config, "Android", "HideTaskBarIcon", "0")
 
-	; SmartZap Settings - Added by LunaEclipse
-        $ichkSmartZap = IniRead($config, "SmartZap", "UseSmartZap", "1")
-        $ichkSmartZapDB = IniRead($config, "SmartZap", "ZapDBOnly", "1")
-        $ichkSmartZapSaveHeroes = IniRead($config, "SmartZap", "THSnipeSaveHeroes", "1")
-        $itxtMinDE = IniRead($config, "SmartZap", "MinDE", "250")
+		;Chat bot
+		$ichkchatdelay = IniRead($config, "global", "chdelay", "0")
 
 	Else
 		Return False
@@ -769,4 +771,5 @@ $itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
 
 	; Clan Hop Setting
 	$ichkClanHop = IniRead($config, "Others", "ClanHop", "0")
+
 EndFunc   ;==>readConfig
