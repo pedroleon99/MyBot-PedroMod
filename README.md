@@ -15,7 +15,7 @@ Documentation
 
 Installation
   ------------
-Essential software(You can find various software here https://drive.google.com/folderview?id=0B6LWrvhVH3LZdWZYMzB0N2VSa0U&usp=sharing ):
+Essential software(You can find some here https://goo.gl/c1IwDB ):
 - Windows Vista/7/8/8.1/10
 - Microsoft Visual C++ 2010 Redistributable Package (x86)
 - Microsoft .NET Framework 4.5
