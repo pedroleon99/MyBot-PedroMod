@@ -110,10 +110,11 @@ Func useSmartDeploy() ; Gets infomation about the red area for Smart Deploy
 		SetLog("Calculating Smart Attack Strategy", $COLOR_BLUE)
 		SetLog("Locating Mines, Collectors & Drills", $COLOR_BLUE)
 
-		ReDim $PixelMine[0]
-		ReDim $PixelElixir[0]
-		ReDim $PixelDarkElixir[0]
-		ReDim $PixelNearCollector[0]
+		Local $aEmpty[0]
+		$PixelMine = $aEmpty
+		$PixelElixir = $aEmpty
+		$PixelDarkElixir = $aEmpty
+		$PixelNearCollector = $aEmpty
 
 		$hTimer = TimerInit()
 

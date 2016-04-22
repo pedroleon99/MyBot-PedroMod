@@ -91,17 +91,25 @@ $tabTroops = GUICtrlCreateTabItem(GetTranslated(1,1, "Troops"))
 
 
 	$y =420
-	$grpMods = GUICtrlCreateGroup("Barrack Options", $x - 20, $y + 2, 150, 65)
+	$grpMods = GUICtrlCreateGroup("Barrack && Offline Options", $x - 20, $y + 2, 150, 83)
 		$y +=18
-		$chkDontRemove = GUICtrlCreateCheckbox("Don't Empty Barracks", $x - 10, $y, -1, -1)
+		$chkDontRemove = GUICtrlCreateCheckbox("Don't Empty Barracks", $x - 15, $y, -1, -1)
 			$txtTip ="The bot will not remove existing troops in the barracks when training."
 			GUICtrlSetTip(-1, $txtTip)
 		$y +=21
-		$chkBarrackSpell = GUICtrlCreateCheckbox("Spell Barrack Mode", $x - 10, $y, -1, -1)
+		$chkBarrackSpell = GUICtrlCreateCheckbox("Spell Barrack Mode", $x - 15, $y, -1, -1)
 			$txtTip ="Train spells continuously in barrack mode (Lightning, Heal, and Rage only)."
 			GUICtrlSetTip(-1, $txtTip)
+		$y +=21
+		$chkStayOfflineWhileTrain = GUICtrlCreateCheckbox("Close COC While Training", $x - 15, $y, -1, -1)
+			$txtTip = "Bot will exit Clash of Clans while troops are being trained and remain offline until they are finished."
+			GUICtrlSetTip(-1, $txtTip)
+			GUICtrlSetOnEvent(-1, "chkGoOfflineWhileTrain")
+			;GUICtrlSetState(-1, $GUI_CHECKED)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+
 
 	$y = 150
 	$x +=155

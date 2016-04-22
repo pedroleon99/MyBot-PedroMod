@@ -169,6 +169,13 @@ Func getOcrPBTtime($x_start, $y_start);  -> Get the Time until PBT starts from P
 	Return getOcrAndCapture("coc-pbttime", $x_start, $y_start, 59, 15)
 EndFunc   ;==>getOcrPBTtime
 
+Func getOcrTroopsTime($x_start, $y_start) ; -> Get the remaining Time until troops are finished --> getRemainingTrainTime.au3
+	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 70, 11, True)
+EndFunc   ;==>getOcrTroopsTime
+
+Func getOcrLaboratoryTime($x_start, $y_start) ; -> Get the remaining Time until spells are finished --> getRemainingTrainTime.au3
+	Return getOcrAndCapture("coc-RemainLaboratory", $x_start, $y_start, 192, 22, True)
+EndFunc   ;==>getRemainTLaboratory
 
 Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = False)
 	_CaptureRegion2($x_start, $y_start, $x_start + $width, $y_start + $height)

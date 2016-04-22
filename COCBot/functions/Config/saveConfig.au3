@@ -330,6 +330,12 @@ Func saveConfig() ;Saves the controls settings to the config
 		IniWrite($config, "attack", "DBDropCC", 0)
 	EndIf
 
+	If GUICtrlRead($chkDBNeed1Hero) = $GUI_CHECKED Then
+		IniWrite($config, "attack", "DBNeed1Hero", 1)
+	Else
+		IniWrite($config, "attack", "DBNeed1Hero", 0)
+	EndIf
+
 	If GUICtrlRead($chkDBWardenAttack) = $GUI_CHECKED Then
 		IniWrite($config, "attack", "DBWardenAtk", $HERO_WARDEN)
 	Else
@@ -356,6 +362,12 @@ Func saveConfig() ;Saves the controls settings to the config
 		IniWrite($config, "attack", "ABDropCC", 1)
 	Else
 		IniWrite($config, "attack", "ABDropCC", 0)
+	EndIf
+
+	If GUICtrlRead($chkABNeed1Hero) = $GUI_CHECKED Then
+		IniWrite($config, "attack", "ABNeed1Hero", 1)
+	Else
+		IniWrite($config, "attack", "ABNeed1Hero", 0)
 	EndIf
 
 	If GUICtrlRead($chkUseCCBalanced) = $GUI_CHECKED Then
@@ -961,6 +973,12 @@ Func saveConfig() ;Saves the controls settings to the config
 	EndIf
 
 	;barracks boost not saved (no use)
+
+	If GUICtrlRead($chkStayOfflineWhileTrain) = $GUI_CHECKED Then
+		IniWrite($config, "troop", "StayOfflineWhileTrain", 1)
+	Else
+		IniWrite($config, "troop", "StayOfflineWhileTrain", 0)
+	EndIf
 
 	; Spells Creation  ---------------------------------------------------------------------
 	IniWrite($config, "Spells", "LightningSpell", GUICtrlRead($txtNumLightningSpell))

@@ -608,7 +608,7 @@ Func DonateTroopType($Type, $Quant = 0, $Custom = False, $bDonateAll = False)
 	EndIf
 
 	;DonateStats
-	If $bDonate And $ichkDStats = 1 Then
+	If $bDonate And $ichkDStats = 1 And $DonatedValue <> 0 Then
 		If $iImageCompare = "Equal" Then
 
 			$TroopCol = GetTroopColumn(NameOfTroop($Type, 1))

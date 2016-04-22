@@ -19,7 +19,7 @@
 #include <ListViewConstants.au3>
 #include <GuiListView.au3>
 
-Global $hImage, $lvDonatedTroops, $DonateFile, $bm1, $bm2, $iChkDStats
+Global $hImage, $lvDonatedTroops, $DonateFile, $bm1, $bm2, $iChkDStats, $DonatedValue = 0
 
 Local $tabDonateStats = GUICtrlCreateTabItem("DStats")
 Local $x = 30, $y = 145

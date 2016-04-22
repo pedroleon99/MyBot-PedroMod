@@ -566,6 +566,14 @@ Func ShowCustomControls()
 
 EndFunc   ;==>ShowCustomControls
 
+Func chkStayOfflineWhileTrain()
+	If GUICtrlRead($chkStayOfflineWhileTrain) = $GUI_CHECKED Then
+		$stayOfflineWhileTrain = 1
+	Else
+		$stayOfflineWhileTrain = 0
+	EndIf
+EndFunc   ;==>chkStayOfflineWhileTrain
+
 Func lblTotalCount()
 
 	GUICtrlSetData($lblTotalCount, GUICtrlRead($txtNumBarb) + GUICtrlRead($txtNumArch) + GUICtrlRead($txtNumGobl))
