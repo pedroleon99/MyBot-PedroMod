@@ -179,6 +179,13 @@ BotClose()
 Func runBot() ;Bot that runs everything in order
 	$TotalTrainedTroops = 0
 	While 1
+		;ModBoju
+		Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
+		If $hourAttack <> $hour[0] Then
+			$hourAttack = $hour[0]
+			;GUICtrlSetData($txthourAttack, $hourAttack)
+		EndIf
+		;-->ModBoju
 		$Restart = False
 		$fullArmy = False
 		$CommandStop = -1
@@ -235,6 +242,7 @@ Func runBot() ;Bot that runs everything in order
 			ReArm()
 				If _Sleep($iDelayRunBot3) Then Return
 				If $Restart = True Then ContinueLoop
+			If IsToAttack() Or $fullArmy1 = False Then ;ModBoju
 			ReplayShare($iShareAttackNow)
 				If _Sleep($iDelayRunBot3) Then Return
 				If $Restart = True Then ContinueLoop
@@ -290,6 +298,7 @@ Func runBot() ;Bot that runs everything in order
 				If $Restart = True Then ContinueLoop
 			PushMsg("CheckBuilderIdle")
 			Idle()
+				$fullArmy1 = $fullArmy ;ModBoju
 				If _Sleep($iDelayRunBot3) Then Return
 				If $Restart = True Then ContinueLoop
 			SaveStatChkTownHall()
@@ -306,6 +315,9 @@ Func runBot() ;Bot that runs everything in order
 				If _Sleep($iDelayRunBot1) Then Return
 				If $Restart = True Then ContinueLoop
 			EndIf
+			Else;ModBoju
+				IsNotToAttack()
+			EndIf;ModBoju
 
 		Else ;When error occours directly goes to attack
 			If $Is_SearchLimit = True Then
@@ -464,6 +476,9 @@ Func Idle() ;Sequence that runs until Full Army
 EndFunc   ;==>Idle
 
 Func AttackMain() ;Main control for attack functions
+
+	If IsToAttack() Then;ModBoju
+		$fullArmy1 = False;ModBoju
 	If $iChkUseCCBalanced = 1 Or $iChkUseCCBalancedCSV = 1 Then ;launch profilereport() only if option balance D/R it's activated
 		ProfileReport()
 		If _Sleep($iDelayAttackMain1) Then Return
@@ -521,6 +536,10 @@ Func AttackMain() ;Main control for attack functions
 	ReturnHome($TakeLootSnapShot)
 		If _Sleep($iDelayAttackMain2) Then Return
 	Return True
+
+	Else;ModBoju
+		SetLog("The attack is planned in the schedule, So Waiting", $COLOR_RED);ModBoju
+	EndIf;ModBoju
 EndFunc   ;==>AttackMain
 
 Func Attack() ;Selects which algorithm
@@ -560,3 +579,58 @@ Func Attack() ;Selects which algorithm
 		algorithm_AllTroops()
 	EndIf
 EndFunc   ;==>Attack
+
+Func IsToAttack()
+
+	If $iPlannedAttackWeekDaysEnable = 1 Then
+		If $iPlannedAttackWeekDays[@WDAY - 1] = 1 Then
+			If $iPlannedAttackHoursEnable = 1 Then
+				Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
+				If $iPlannedAttackHours[$hour[0]] = 0 Then
+					SetLog("Attack not Planned, Skipped..", $COLOR_ORANGE)
+					Return False
+				Else
+					Return True
+				EndIf
+			Else
+				SetLog("Attack not Planned, Skipped..", $COLOR_ORANGE)
+				Return False
+			EndIf
+		Else
+			SetLog("Attack not Planned to: " & _DateDayOfWeek(@WDAY), $COLOR_ORANGE)
+			Return False
+		EndIf
+	Else
+		Return True
+	EndIf
+
+EndFunc   ;==>IsToAttack
+
+Func IsNotToAttack()
+
+	For $i = 0 To 20
+		checkAttackDisable($iTaBChkIdle)
+		If _SleepStatus($iDelayWaitAttack) Then Return False
+		ClickP($aAway, 1, 0, "#0112")
+		checkMainScreen()
+		Local $iReHere = 0
+		While $iReHere < 7
+			$iReHere += 1
+			DonateCC(True)
+			If _Sleep($iDelayIdle2) Then ExitLoop
+			If $Restart = True Then ExitLoop
+		WEnd
+		If _Sleep($iDelayIdle1) Then ExitLoop
+		If $fullArmy = True Then
+			Train()
+		Else
+			Train()
+		EndIf
+		If $Restart = True Then ContinueLoop
+		Collect()
+		If _Sleep($iDelayRunBot1) Then Return
+		CleanYard()
+		If IsToAttack() Then Return
+	Next
+
+EndFunc   ;==>IsNotToAttack

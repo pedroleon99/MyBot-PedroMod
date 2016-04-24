@@ -36,6 +36,9 @@ Func BoostBarracks()
 	;	Verifying existent Variables to run this routine
 	If $bTrainEnabled = False Then Return
 	If $icmbQuantBoostBarracks = 0 Or $icmbBoostBarracks = 0 Then Return
+
+	If $iPlannedBoostWeekDaysEnable = 1 Then
+		If $iPlannedBoostWeekDays[@WDAY - 1] = 1 Then
 	If $iPlannedBoostBarracksEnable = 1 Then
 		Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
 		If $iPlannedBoostBarracksHours[$hour[0]] = 0 Then
@@ -43,6 +46,13 @@ Func BoostBarracks()
 			Return ; exit func if no planned Boost Barracks checkmarks
 		EndIf
 	EndIf
+		Else
+			SetLog("Boost Barracks are not planned to: " & _DateDayOfWeek(@WDAY), $COLOR_ORANGE)
+			Return ; exit func if no planned donate checkmarks
+		EndIf
+	EndIf
+
+
 	If $icmbQuantBoostBarracks > $numBarracksAvaiables Then
 		SetLog(" Hey Chief! I can not Boost more than: " & $numBarracksAvaiables & " Barracks .... ")
 		Return

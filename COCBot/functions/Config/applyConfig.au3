@@ -1965,4 +1965,93 @@ EndIf
 		GUICtrlSetState($chkDStats, $GUI_UNCHECKED)
 	EndIf
 
+	;Mod AttackHour
+	If $iPlannedAttackHoursEnable = 1 Then
+		GUICtrlSetState($chkAttackHours, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkAttackHours, $GUI_UNCHECKED)
+	EndIf
+	chkAttackHours()
+	For $i = 0 To 23
+		If $iPlannedAttackHours[$i] = 1 Then
+			GUICtrlSetState(Eval("chkAttackHours" & $i), $GUI_CHECKED)
+		Else
+			GUICtrlSetState(Eval("chkAttackHours" & $i), $GUI_UNCHECKED)
+		EndIf
+	Next
+	;--> Mod AttackHour
+
+	; Days of The week for Scheduler
+	If $iPlannedWeekdaysEnable = 1 Then
+		GUICtrlSetState($chkDonateWeekdays, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkDonateWeekdays, $GUI_UNCHECKED)
+	EndIf
+	chkDonateWeekDays()
+	For $i = 0 To 6
+		If $iPlannedDonateWeekdays[$i] = 1 Then
+			GUICtrlSetState(Eval("chkDonateWeekdays" & $i), $GUI_CHECKED)
+		Else
+			GUICtrlSetState(Eval("chkDonateWeekdays" & $i), $GUI_UNCHECKED)
+		EndIf
+	Next
+
+	If $iPlannedRequestCCWeekDaysEnable = 1 Then
+		GUICtrlSetState($chkRequestCCWeekDays, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkRequestCCWeekDays, $GUI_UNCHECKED)
+	EndIf
+	chkRequestWeekDays()
+	For $i = 0 To 6
+		If $iPlannedRequestCCWeekDays[$i] = 1 Then
+			GUICtrlSetState(Eval("chkRequestCCWeekdays" & $i), $GUI_CHECKED)
+		Else
+			GUICtrlSetState(Eval("chkRequestCCWeekdays" & $i), $GUI_UNCHECKED)
+		EndIf
+	Next
+
+
+	If $iPlannedUseCCWeekDaysEnable = 1 Then
+		GUICtrlSetState($chkUseCCWeekDays, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkUseCCWeekDays, $GUI_UNCHECKED)
+	EndIf
+	chkUseCCWeekDays()
+	For $i = 0 To 6
+		If $iPlannedUseCCWeekDays[$i] = 1 Then
+			GUICtrlSetState(Eval("chkUseCCWeekdays" & $i), $GUI_CHECKED)
+		Else
+			GUICtrlSetState(Eval("chkUseCCWeekdays" & $i), $GUI_UNCHECKED)
+		EndIf
+	Next
+
+	If $iPlannedBoostWeekDaysEnable = 1 Then
+		GUICtrlSetState($chkBoostWeekDays, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkBoostWeekDays, $GUI_UNCHECKED)
+	EndIf
+	chkBoostWeekDays()
+	For $i = 0 To 6
+		If $iPlannedBoostWeekDays[$i] = 1 Then
+			GUICtrlSetState(Eval("chkBoostWeekdays" & $i), $GUI_CHECKED)
+		Else
+			GUICtrlSetState(Eval("chkBoostWeekdays" & $i), $GUI_UNCHECKED)
+		EndIf
+	Next
+
+	If $iPlannedAttackWeekDaysEnable = 1 Then
+		GUICtrlSetState($chkAttackWeekDays, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkAttackWeekDays, $GUI_UNCHECKED)
+	EndIf
+	chkAttackWeekDays()
+	For $i = 0 To 6
+		If $iPlannedAttackWeekDays[$i] = 1 Then
+			GUICtrlSetState(Eval("chkAttackWeekdays" & $i), $GUI_CHECKED)
+		Else
+			GUICtrlSetState(Eval("chkAttackWeekdays" & $i), $GUI_UNCHECKED)
+		EndIf
+	Next
+	; ---> Days of The week for Scheduler
+
 EndFunc   ;==>applyConfig

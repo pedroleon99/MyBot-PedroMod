@@ -108,6 +108,7 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 		GUICtrlSetState($btnAttackNowDB, $GUI_SHOW)
 		GUICtrlSetState($btnAttackNowLB, $GUI_SHOW)
 		GUICtrlSetState($btnAttackNowTS, $GUI_SHOW)
+		GUICtrlSetState($sBotTitleAT, $GUI_HIDE)
 		GUICtrlSetState($pic2arrow, $GUI_HIDE)
 		GUICtrlSetState($lblVersion, $GUI_HIDE)
 	EndIf
@@ -434,6 +435,7 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 		GUICtrlSetState($btnAttackNowDB, $GUI_HIDE)
 		GUICtrlSetState($btnAttackNowLB, $GUI_HIDE)
 		GUICtrlSetState($btnAttackNowTS, $GUI_HIDE)
+		GUICtrlSetState($sBotTitleAT, $GUI_SHOW)
 		GUICtrlSetState($pic2arrow, $GUI_SHOW)
 		GUICtrlSetState($lblVersion, $GUI_SHOW)
 		$bBtnAttackNowPressed = False

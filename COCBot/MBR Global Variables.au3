@@ -1227,6 +1227,30 @@ Global $ExtendedCocSearchArea = "15|25|825|625" ; Extended
 ; Similarity ( like tolerance ) 0,00 to 1,00
 Global $ToleranceImgLoc = 0.95
 
+;Mod AttackHour
+Global $iplannedattackhoursenable
+Global $iPlannedAttackHours[24]
+Global $fullArmy1 = False
+Global $hourAttack
+Global Const $iDelayWaitAttack = 120000
+;--> Mod AttackHour
+
+; Days of The week for Scheduler
+Global $iPlannedWeekdaysEnable = 0 ; 0 = $GUI_UNCHECKED , 1 = $GUI_CHECKED
+Global $iPlannedDonateWeekdays[7] ; 0= Sunday , 1= Monday , 2= Tuesday, 3= Wednesday, 4= Thursday, 5= Friday, 6= Saturday
+
+Global $iPlannedRequestCCWeekDaysEnable = 0 ; 0 = $GUI_UNCHECKED , 1 = $GUI_CHECKED
+Global $iPlannedRequestCCWeekDays[7] ; 0= Sunday , 1= Monday , 2= Tuesday, 3= Wednesday, 4= Thursday, 5= Friday, 6= Saturday
+
+Global $iPlannedUseCCWeekDaysEnable = 0 ; 0 = $GUI_UNCHECKED , 1 = $GUI_CHECKED
+Global $iPlannedUseCCWeekDays[7] ; 0= Sunday , 1= Monday , 2= Tuesday, 3= Wednesday, 4= Thursday, 5= Friday, 6= Saturday
+
+Global $iPlannedBoostWeekDaysEnable = 0 ; 0 = $GUI_UNCHECKED , 1 = $GUI_CHECKED
+Global $iPlannedBoostWeekDays[7] ; 0= Sunday , 1= Monday , 2= Tuesday, 3= Wednesday, 4= Thursday, 5= Friday, 6= Saturday
+
+Global $iPlannedAttackWeekDaysEnable = 0 ; 0 = $GUI_UNCHECKED , 1 = $GUI_CHECKED
+Global $iPlannedAttackWeekDays[7] ; 0= Sunday , 1= Monday , 2= Tuesday, 3= Wednesday, 4= Thursday, 5= Friday, 6= Saturday
+
 ; Attack Variables, constants and enums - Added by LunaEclipse
 ;
 ; Troop types - Added CC Spell as a type, so clan castle spell can be reported.

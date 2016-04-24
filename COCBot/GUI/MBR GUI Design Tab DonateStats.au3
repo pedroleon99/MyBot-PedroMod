@@ -21,14 +21,14 @@
 
 Global $hImage, $lvDonatedTroops, $DonateFile, $bm1, $bm2, $iChkDStats, $DonatedValue = 0
 
-Local $tabDonateStats = GUICtrlCreateTabItem("DStats")
+Local $tabDonateStats = GUICtrlCreateTabItem("Donate Stats")
 Local $x = 30, $y = 145
 $lvDonatedTroops = GUICtrlCreateListView("Name|Barbarians|Archers|Giants|Goblins|Wall Breakers|Balloons|Wizards|Healers|Dragons|Pekkas|Minions|Hog Riders|Valkyries|Golems|Witches|Lava Hounds|Bowlers|Poison Spells|Earthquake Spells|Haste Spells", $x - 25, $y, 459, 363, $LVS_REPORT)
 _GUICtrlListView_SetExtendedListViewStyle($lvDonatedTroops, $LVS_EX_GRIDLINES+$LVS_EX_FULLROWSELECT)
 _GUICtrlListView_SetColumnWidth($lvDonatedTroops, 0, 139)
 
 Local $chkDStats = GUICtrlCreateCheckbox("Enable", $x + 310, $y - 20, 48, 20)
-GUICtrlSetState(-1, $GUI_CHECKED)
+GUICtrlSetState(-1, $GUI_UNCHECKED)
 $DonateStatsReset = GUICtrlCreateButton("Reset Stats", $x + 366, $y - 20, 67, 20)
 _GUICtrlListView_SetExtendedListViewStyle(-1, $WS_EX_TOPMOST+$WS_EX_TRANSPARENT)
 GUICtrlSetOnEvent(-1, "InitDonateStats")

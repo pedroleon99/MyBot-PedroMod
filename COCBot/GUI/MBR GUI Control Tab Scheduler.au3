@@ -5,7 +5,7 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: GkevinOD (2014)
-; Modified ......: Hervidero (2015)
+; Modified ......: Hervidero (2015), Boju (2016)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -13,77 +13,13 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func sldTrainITDelay()
-	$isldTrainITDelay = GUICtrlRead($sldTrainITDelay)
-	GUICtrlSetData($lbltxtTrainITDelay, GetTranslated(10, 32, "delay") & " " & $isldTrainITDelay & " ms.")
-EndFunc   ;==>sldTrainITDelay
-
-Func chkScreenshotType()
-	If GUICtrlRead($chkScreenshotType) = $GUI_CHECKED Then
-		$iScreenshotType = 1
-	Else
-		$iScreenshotType = 0
-	EndIf
-EndFunc   ;==>chkScreenshotType
-
-Func chkScreenshotHideName()
-	If GUICtrlRead($chkScreenshotHideName) = $GUI_CHECKED Then
-		$ichkScreenshotHideName = 1
-	Else
-		$ichkScreenshotHideName = 0
-	EndIf
-EndFunc   ;==>chkScreenshotHideName
-
-Func chkDeleteLogs()
-	If GUICtrlRead($chkDeleteLogs) = $GUI_CHECKED Then
-		GUICtrlSetState($txtDeleteLogsDays, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($txtDeleteLogsDays, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkDeleteLogs
-
-Func chkDeleteTemp()
-	If GUICtrlRead($chkDeleteTemp) = $GUI_CHECKED Then
-		GUICtrlSetState($txtDeleteTempDays, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($txtDeleteTempDays, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkDeleteTemp
-
-Func chkDeleteLoots()
-	If GUICtrlRead($chkDeleteLoots) = $GUI_CHECKED Then
-		GUICtrlSetState($txtDeleteLootsDays, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($txtDeleteLootsDays, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkDeleteLoots
-
-Func chkAutoStart()
-	If GUICtrlRead($chkAutoStart) = $GUI_CHECKED Then
-		GUICtrlSetState($txtAutostartDelay, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($txtAutostartDelay, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkAutoStart
-
-Func chkDisposeWindows()
-	If GUICtrlRead($chkDisposeWindows) = $GUI_CHECKED Then
-		GUICtrlSetState($cmbDisposeWindowsCond, $GUI_ENABLE)
-		GUICtrlSetState($txtWAOffsetx, $GUI_ENABLE)
-		GUICtrlSetState($txtWAOffsety, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($cmbDisposeWindowsCond, $GUI_DISABLE)
-		GUICtrlSetState($txtWAOffsetx, $GUI_DISABLE)
-		GUICtrlSetState($txtWAOffsety, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkDisposeWindows
-#cs No longer Needed
 Func chkDonateHours()
 	If GUICtrlRead($chkDonateHours) = $GUI_CHECKED Then
 		For $i = $lbDonateHours1 To $lbDonateHoursPM
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 	Else
+		GUICtrlSetState($chkDonateWeekdays, $GUI_UNCHECKED)
 		For $i = $lbDonateHours1 To $lbDonateHoursPM
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
@@ -180,6 +116,7 @@ Func chkRequestCCHours()
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 	Else
+		GUICtrlSetState($chkRequestCCWeekDays, $GUI_UNCHECKED)
 		For $i = $lbRequestCCHours1 To $lbRequestCCHoursPM
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
@@ -192,6 +129,7 @@ Func chkDropCCHours()
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 	Else
+		GUICtrlSetState($chkUSeCCWeekDays, $GUI_UNCHECKED)
 		For $i = $lbDropCCHours1 To $lbDropCCHoursPM
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
@@ -204,6 +142,7 @@ Func chkBoostBarracksHours()
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
 	Else
+		GUICtrlSetState($chkBoostWeekDays, $GUI_UNCHECKED)
 		For $i = $lbBoostBarracksHours1 To $lbBoostBarracksHoursPM
 			GUICtrlSetState($i, $GUI_DISABLE)
 		Next
@@ -237,73 +176,185 @@ Func chkBoostBarracksHoursE2()
 	Sleep(300)
 	GUICtrlSetState($chkBoostBarracksHoursE2, $GUI_UNCHECKED)
 EndFunc   ;==>chkBoostBarracksHoursE2
-#ce
-Func chkTotalCampForced()
-	If GUICtrlRead($chkTotalCampForced) = $GUI_CHECKED Then
-		GUICtrlSetState($txtTotalCampForced, $GUI_ENABLE)
-	Else
-		GUICtrlSetState($txtTotalCampForced, $GUI_DISABLE)
-	EndIf
-EndFunc   ;==>chkTotalCampForced
 
-Func chkSinglePBTForced()
-	If GUICtrlRead($chkSinglePBTForced) = $GUI_CHECKED Then
-		GUICtrlSetState($txtSinglePBTimeForced, $GUI_ENABLE)
-		GUICtrlSetState($txtPBTimeForcedExit, $GUI_ENABLE)
+;Mod AttackHour
+Func chkAttackHours()
+	If GUICtrlRead($chkAttackHours) = $GUI_CHECKED Then
+		For $i = $lbAttackHours1 To $lbAttackHoursPM
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
 	Else
-		GUICtrlSetState($txtSinglePBTimeForced, $GUI_DISABLE)
-		GUICtrlSetState($txtPBTimeForcedExit, $GUI_DISABLE)
+		GUICtrlSetState($chkAttackWeekDays, $GUI_UNCHECKED)
+		For $i = $lbAttackHours1 To $lbAttackHoursPM
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
 	EndIf
-	txtSinglePBTimeForced()
-EndFunc   ;==>chkSinglePBTForced
+EndFunc
 
-Func txtSinglePBTimeForced()
-	Switch Int(GUICtrlRead($txtSinglePBTimeForced))
-		Case 0 To 14
-			GUICtrlSetBkColor($txtSinglePBTimeForced, $COLOR_RED)
-		Case 15
-			GUICtrlSetBkColor($txtSinglePBTimeForced, $COLOR_YELLOW)
-		Case 16 To 999
-			GUICtrlSetBkColor($txtSinglePBTimeForced, $COLOR_MONEYGREEN)
-	EndSwitch
-	Switch Int(GUICtrlRead($txtPBTimeForcedExit))
-		Case 0 To 10
-			GUICtrlSetBkColor($txtPBTimeForcedExit, $COLOR_RED)
-		Case 11 To 14
-			GUICtrlSetBkColor($txtPBTimeForcedExit, $COLOR_YELLOW)
-		Case 15 To 999
-			GUICtrlSetBkColor($txtPBTimeForcedExit, $COLOR_MONEYGREEN)
-	EndSwitch
-EndFunc   ;==>txtSinglePBTimeForced
-
-Func chkDebugSetlog()
-	If GUICtrlRead($chkDebugSetlog) = $GUI_CHECKED Then
-		$DebugSetlog = 1
+Func chkattackhoursE1()
+	If GUICtrlRead($chkattackhoursE1) = $GUI_CHECKED And GUICtrlRead($chkattackhours0) = $GUI_CHECKED Then
+		For $i = $chkattackhours0 To $chkattackhours11
+			GUICtrlSetState($i, $GUI_UNCHECKED)
+		Next
 	Else
-		$DebugSetlog = 0
+		For $i = $chkattackhours0 To $chkattackhours11
+			GUICtrlSetState($i, $GUI_CHECKED)
+		Next
 	EndIf
-EndFunc   ;==>chkDebugSetlog
+	Sleep(300)
+	GUICtrlSetState($chkattackhoursE1, $GUI_UNCHECKED)
+EndFunc   ;==>chkattackhoursE1
 
-Func chkDebugOcr()
-	If GUICtrlRead($chkDebugOcr) = $GUI_CHECKED Then
-		$DebugOcr = 1
+Func chkattackhoursE2()
+	If GUICtrlRead($chkattackhoursE2) = $GUI_CHECKED And GUICtrlRead($chkattackhours12) = $GUI_CHECKED Then
+		For $i = $chkattackhours12 To $chkattackhours23
+			GUICtrlSetState($i, $GUI_UNCHECKED)
+		Next
 	Else
-		$DebugOcr = 0
+		For $i = $chkattackhours12 To $chkattackhours23
+			GUICtrlSetState($i, $GUI_CHECKED)
+		Next
 	EndIf
-EndFunc   ;==>chkDebugOcr
+	Sleep(300)
+	GUICtrlSetState($chkattackhoursE2, $GUI_UNCHECKED)
+EndFunc
+;==>chkAttackHours
 
-Func chkDebugImageSave()
-	If GUICtrlRead($chkDebugImageSave) = $GUI_CHECKED Then
-		$DebugImageSave = 1
-	Else
-		$DebugImageSave = 0
-	EndIf
-EndFunc   ;==>chkDebugImageSave
+Func chkDonateWeekDays()
 
-Func chkdebugBuildingPos()
-	If GUICtrlRead($chkdebugBuildingPos) = $GUI_CHECKED Then
-		$debugBuildingPos = 1
+	If GUICtrlRead($chkDonateWeekdays) = $GUI_CHECKED Then
+		GUICtrlSetState($chkDonateHours, $GUI_ENABLE)
+		GUICtrlSetState($chkDonateHours, $GUI_CHECKED)
+		For $i = $lbDonateWeekdays1 To $lbDonateWeekdays7
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
 	Else
-		$debugBuildingPos = 0
+		GUICtrlSetState($chkDonateHours, $GUI_UNCHECKED)
+		GUICtrlSetState($chkDonateHours, $GUI_DISABLE)
+
+		For $i = $lbDonateWeekdays1 To $lbDonateWeekdays7
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
 	EndIf
-EndFunc   ;==>chkdebugBuildingPos
+	If GUICtrlRead($chkDonateWeekdays) = $GUI_CHECKED Then
+		For $i = $chkDonateWeekdays0 To $chkDonateWeekdays6
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		For $i = $chkDonateWeekdays0 To $chkDonateWeekdays6
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+	chkDonateHours()
+EndFunc
+
+Func chkRequestWeekDays()
+
+	If GUICtrlRead($chkRequestCCWeekDays) = $GUI_CHECKED Then
+		GUICtrlSetState($chkRequestCCHours, $GUI_ENABLE)
+		GUICtrlSetState($chkRequestCCHours, $GUI_CHECKED)
+		For $i = $lbRequestCCWeekdays1 To $lbRequestCCWeekdays7
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		GUICtrlSetState($chkRequestCCHours, $GUI_UNCHECKED)
+		GUICtrlSetState($chkRequestCCHours, $GUI_DISABLE)
+		For $i = $lbRequestCCWeekdays1 To $lbRequestCCWeekdays7
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+	If GUICtrlRead($chkRequestCCWeekDays) = $GUI_CHECKED Then
+		For $i = $chkRequestCCWeekdays0 To $chkRequestCCWeekdays6
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		For $i = $chkRequestCCWeekdays0 To $chkRequestCCWeekdays6
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+	chkRequestCCHours()
+EndFunc
+
+Func chkUseCCWeekDays()
+
+	If GUICtrlRead($chkUSeCCWeekDays) = $GUI_CHECKED Then
+		GUICtrlSetState($chkDropCCHours, $GUI_ENABLE)
+		GUICtrlSetState($chkDropCCHours, $GUI_CHECKED)
+		For $i = $lbUseCCWeekdays1 To $lbUseCCWeekdays7
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		GUICtrlSetState($chkDropCCHours, $GUI_UNCHECKED)
+		GUICtrlSetState($chkDropCCHours, $GUI_DISABLE)
+		For $i = $lbUseCCWeekdays1 To $lbUseCCWeekdays7
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+	If GUICtrlRead($chkUSeCCWeekDays) = $GUI_CHECKED Then
+		For $i = $chkUSeCCWeekDays0 To $chkUSeCCWeekDays6
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		For $i = $chkUSeCCWeekDays0 To $chkUSeCCWeekDays6
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+	chkDropCCHours()
+
+EndFunc
+
+Func chkBoostWeekDays()
+
+	If GUICtrlRead($chkBoostWeekDays) = $GUI_CHECKED Then
+		GUICtrlSetState($chkBoostBarracksHours, $GUI_ENABLE)
+		GUICtrlSetState($chkBoostBarracksHours, $GUI_CHECKED)
+		For $i = $lbBoostWeekdays1 To $lbBoostWeekdays7
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		GUICtrlSetState($chkBoostBarracksHours, $GUI_UNCHECKED)
+		GUICtrlSetState($chkBoostBarracksHours, $GUI_DISABLE)
+		For $i = $lbBoostWeekdays1 To $lbBoostWeekdays7
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+	If GUICtrlRead($chkBoostWeekDays) = $GUI_CHECKED Then
+		For $i = $chkBoostWeekDays0 To $chkBoostWeekDays6
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		For $i = $chkBoostWeekDays0 To $chkBoostWeekDays6
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+	chkBoostBarracksHours()
+
+EndFunc
+
+Func chkAttackWeekDays()
+
+	If GUICtrlRead($chkAttackWeekDays) = $GUI_CHECKED Then
+		GUICtrlSetState($chkAttackHours, $GUI_ENABLE)
+		GUICtrlSetState($chkAttackHours, $GUI_CHECKED)
+		For $i = $lbAttackWeekdays1 To $lbAttackWeekdays7
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		GUICtrlSetState($chkAttackHours, $GUI_UNCHECKED)
+		GUICtrlSetState($chkAttackHours, $GUI_DISABLE)
+		For $i = $lbAttackWeekdays1 To $lbAttackWeekdays7
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+	If GUICtrlRead($chkAttackWeekDays) = $GUI_CHECKED Then
+		For $i = $chkAttackWeekDays0 To $chkAttackWeekDays6
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		For $i = $chkAttackWeekDays0 To $chkAttackWeekDays6
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+	chkAttackHours()
+
+EndFunc

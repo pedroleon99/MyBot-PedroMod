@@ -19,10 +19,17 @@
 Func dropCC($x, $y, $slot) ;Drop clan castle
 	If $slot <> -1 And (($iMatchMode <> $DB And $iMatchMode <> $LB) Or $iDropCC[$iMatchMode] = 1  or $iDropCCCSV[$iMatchMode]=1) Then
 
+		If $iPlannedUseCCWeekDaysEnable = 1 Then
+			If $iPlannedUseCCWeekDays[@WDAY - 1] = 1 Then
 		If $iPlannedDropCCHoursEnable = 1 Then
 			Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
 			If $iPlannedDropCCHours[$hour[0]] = 0 Then
 				SetLog("Drop CC not Planned, Skipped..", $COLOR_GREEN)
+				Return ; exit func if no planned donate checkmarks
+			EndIf
+		EndIf
+			Else
+				SetLog("Drop CC not planned to: " & _DateDayOfWeek(@WDAY), $COLOR_ORANGE)
 				Return ; exit func if no planned donate checkmarks
 			EndIf
 		EndIf

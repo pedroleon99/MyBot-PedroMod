@@ -19,9 +19,11 @@
 $frmBot = GUICreate($sBotTitle, 470, 650)
 	GUISetIcon($pIconLib, $eIcnGUI)
 	TraySetIcon($pIconLib, $eIcnGUI)
-$tabMain = GUICtrlCreateTab(5, 85, 461, 425, $TCS_MULTILINE)
+$tabMain = GUICtrlCreateTab(5, 65, 461, 445, $TCS_MULTILINE)
 	;GUICtrlSetOnEvent(-1, "tabMain") ; moved to Func GUIControl()
-	GUICtrlCreatePic (@ScriptDir & "\Images\logo.jpg", 0, 0, 470, 80)
+	GUICtrlCreateLabel("", 0, 0, 470, 60)
+	GUICtrlSetBkColor(-1, $COLOR_WHITE)
+	GUICtrlCreatePic (@ScriptDir & "\Images\logo.jpg", 60, 0, 352, 60)
 
 ;~ ------------------------------------------------------
 ;~ Header Menu
@@ -34,7 +36,6 @@ $AboutConfig = GUICtrlCreateMenuItem("About Us", $AboutMenu)
 $CheckVersionConfig = GUICtrlCreateMenuItem("Check Version", $AboutMenu)
 $DownloadLatestConfig = GUICtrlCreateMenuItem("Download Latest", $AboutMenu)
 GUICtrlSetOnEvent(-1, "")
-;GUICtrlSetState($AboutConfig, $GUI_DISABLE)
 
 ;~ ------------------------------------------------------
 ;~ Tab Files
@@ -57,6 +58,7 @@ GUICtrlSetOnEvent(-1, "")
 #include "GUI\MBR GUI Design Tab Upgrade.au3"
 #include "GUI\MBR GUI Design Tab Notify.au3"
 #include "GUI\MBR GUI Design Tab Expert.au3"
+#include "GUI\MBR GUI Design Tab Scheduler.au3"
 #include "GUI\MBR GUI Design Tab Stats.au3" ; includes '$LastControlToHide" on GUI
 #include "GUI\MBR GUI Design Tab DonateStats.au3" ; Added By Cutidudz
 #include "GUI\MBR GUI Design Collectors.au3"

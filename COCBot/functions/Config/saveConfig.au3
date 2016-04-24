@@ -1831,6 +1831,101 @@ EndIf
 	;Chat bot
 	IniWrite($config, "global", "chdelay",  GUICtrlRead($chkchatdelay))
 
+	;Mod AttackHour
+
+	If GUICtrlRead($chkAttackHours) = $GUI_CHECKED Then
+		IniWrite($config, "planned", "AttackHoursEnable", 1)
+	Else
+		IniWrite($config, "planned", "AttackHoursEnable", 0)
+	EndIf
+
+	Local $string = ""
+	For $i = 0 To 23
+		If GUICtrlRead(Eval("chkAttackHours" & $i)) = $GUI_CHECKED Then
+			$string &= "1|"
+		Else
+			$string &= "0|"
+		EndIf
+	Next
+	IniWrite($config, "planned", "AttackHours", $string)
+	;--> Mod AttackHour
+
+	; Days of The week for Scheduler
+	If GUICtrlRead($chkDonateWeekdays) = $GUI_CHECKED Then
+		IniWrite($config, "planned", "WeekdaysEnable", 1)
+	Else
+		IniWrite($config, "planned", "WeekdaysEnable", 0)
+	EndIf
+	Local $string = ""
+	For $i = 0 To 6
+		If GUICtrlRead(Eval("chkDonateWeekdays" & $i)) = $GUI_CHECKED Then
+			$string &= "1|"
+		Else
+			$string &= "0|"
+		EndIf
+	Next
+	IniWrite($config, "planned", "DonateWeekdays", $string)
+
+	If GUICtrlRead($chkRequestCCWeekDays) = $GUI_CHECKED Then
+		IniWrite($config, "planned", "RequestCCWeekDaysEnable", 1)
+	Else
+		IniWrite($config, "planned", "RequestCCWeekDaysEnable", 0)
+	EndIf
+	Local $string = ""
+	For $i = 0 To 6
+		If GUICtrlRead(Eval("chkRequestCCWeekdays" & $i)) = $GUI_CHECKED Then
+			$string &= "1|"
+		Else
+			$string &= "0|"
+		EndIf
+	Next
+	IniWrite($config, "planned", "RequestCCWeekDays", $string)
+
+	If GUICtrlRead($chkUseCCWeekDays) = $GUI_CHECKED Then
+		IniWrite($config, "planned", "UseCCWeekDaysEnable", 1)
+	Else
+		IniWrite($config, "planned", "UseCCWeekDaysEnable", 0)
+	EndIf
+	Local $string = ""
+	For $i = 0 To 6
+		If GUICtrlRead(Eval("chkUseCCWeekdays" & $i)) = $GUI_CHECKED Then
+			$string &= "1|"
+		Else
+			$string &= "0|"
+		EndIf
+	Next
+	IniWrite($config, "planned", "UseCCWeekDays", $string)
+
+	If GUICtrlRead($chkBoostWeekDays) = $GUI_CHECKED Then
+		IniWrite($config, "planned", "BoostWeekDaysEnable", 1)
+	Else
+		IniWrite($config, "planned", "BoostWeekDaysEnable", 0)
+	EndIf
+	Local $string = ""
+	For $i = 0 To 6
+		If GUICtrlRead(Eval("chkBoostWeekdays" & $i)) = $GUI_CHECKED Then
+			$string &= "1|"
+		Else
+			$string &= "0|"
+		EndIf
+	Next
+	IniWrite($config, "planned", "BoostWeekDays", $string)
+
+	If GUICtrlRead($chkAttackWeekDays) = $GUI_CHECKED Then
+		IniWrite($config, "planned", "AttackWeekDaysEnable", 1)
+	Else
+		IniWrite($config, "planned", "AttackWeekDaysEnable", 0)
+	EndIf
+	Local $string = ""
+	For $i = 0 To 6
+		If GUICtrlRead(Eval("chkAttackWeekdays" & $i)) = $GUI_CHECKED Then
+			$string &= "1|"
+		Else
+			$string &= "0|"
+		EndIf
+	Next
+	IniWrite($config, "planned", "AttackWeekDays", $string)
+
 	If $hFile <> -1 Then FileClose($hFile)
 
 	; Clan Hop Setting	
