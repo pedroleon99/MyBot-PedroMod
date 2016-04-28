@@ -16,11 +16,11 @@
 ; ===============================================================================================================================
 Func chkShieldStatus($bChkShield = True, $bForceChkPBT = False)
 
-	If ($ichkSinglePBTForced = 0 And ($iChkBotStop = 1 And $icmbBotCond >= 19) = False) Or Not(IsMainPage()) Then Return ; return if force single PB or wait for shield not enabled.
+	If ($ichkSinglePBTForced = 0 And ($iChkBotStop = 1 And $icmbBotCond >= 19 and $icmbBotCond < 25) = False) Or Not(IsMainPage()) Then Return ; return if force single PB or wait for shield not enabled.
 
 	Local $Result, $iTimeTillPBTstartSec, $ichkTime = 0, $ichkSTime = 0, $ichkPBTime = 0
 
-	If $bChkShield Or $aShieldStatus[0] = "" Or $aShieldStatus[1] = "" Or $aShieldStatus[2] = "" Or $sPBStartTime = "" Or $bGForcePBTUpdate = True Then ; almost always get shield information
+	If $bChkShield Or $aShieldStatus[0] = "" Or $aShieldStatus[1] = "" Or $aShieldStatus[2] = "" Or $sPBStartTime = "" Or $bGForcePBTUpdate = True and $icmbBotCond <> 25 Then ; almost always get shield information
 
 		$Result = getShieldInfo() ; get expire time of shield
 
@@ -43,7 +43,7 @@ Func chkShieldStatus($bChkShield = True, $bForceChkPBT = False)
 
 			$aShieldStatus = $Result ; update ShieldStatus global values
 
-			If $iChkBotStop = 1 And $icmbBotCond >= 19 Then ; is Halt mode enabled and With Shield selected?
+			If $iChkBotStop = 1 And $icmbBotCond >= 19 and $icmbBotCond < 25 Then ; is Halt mode enabled and With Shield selected?
 				If $aShieldStatus[0] = "shield" Then ; verify shield
 					Setlog("Shield found, Halt Attack Now!", $COLOR_BLUE)
 					$bWaitShield = True

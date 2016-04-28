@@ -40,8 +40,8 @@ Func TrainClick($x, $y, $iTimes, $iSpeed, $aWatchSpot, $aLootSpot, $sdebugtxt = 
 					   If IsGemOpen(True) = True Then ClickP($aAway) ;Click Away
 					   ExitLoop
 				   EndIf
-				   PureClick($x, $y) ;Click once.
-				   If _Sleep($iSpeed, False) Then ExitLoop
+				   ClickZone($x, $y, 10) ;Click once.
+				   If _Sleep($iSpeed * Random(1,5,1) , False) Then ExitLoop
 			   Next
 			Else
 				If isProblemAffect(True) Then checkMainScreen(False) ; Check for BS/CoC errors
@@ -54,8 +54,8 @@ Func TrainClick($x, $y, $iTimes, $iSpeed, $aWatchSpot, $aLootSpot, $sdebugtxt = 
 					If IsGemOpen(False) = True Then ClickP($aAway) ;Click Away
 					Return
 				EndIf
-				PureClick($x, $y, $iTimes) ;Click $iTimes.
-				If _Sleep($iSpeed, False) Then Return
+				ClickZone($x, $y, 10, $iTimes) ;Click $iTimes.
+				If _Sleep($iSpeed * Random(1,5,1), False) Then Return
 			EndIf
 		Else
 			If isProblemAffect(True) Then checkMainScreen(False) ; Check for BS/CoC errors
@@ -69,9 +69,9 @@ Func TrainClick($x, $y, $iTimes, $iSpeed, $aWatchSpot, $aLootSpot, $sdebugtxt = 
 				Return
 			EndIf
 
-			PureClick($x, $y)
+			ClickZone($x, $y, 10)
 
-			If _Sleep($iSpeed, False) Then Return
+			If _Sleep($iSpeed * Random(1,5,1), False) Then Return
 			If _CheckPixel($aLootSpot, True) = True Then ; Check to see if out of Elixir
 				SetLog("Elixir Check Fail: Color = " & _GetPixelColor($aLootSpot[0], $aLootSpot[1], True), $COLOR_PURPLE)
 				$OutOfElixir = 1

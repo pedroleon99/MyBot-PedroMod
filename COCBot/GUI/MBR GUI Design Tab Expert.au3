@@ -29,7 +29,7 @@ $grpOnLoadBot = GUICtrlCreateGroup(GetTranslated(10,2, "When Bot Loads"), $x - 2
 		$txtTip = GetTranslated(10,6, "Delete log files older than this specified No. of days.")
 		GUICtrlSetTip(-1, $txtTip)
 		GUICtrlSetOnEvent(-1, "chkDeleteLogs")
-	$txtDeleteLogsDays = GUICtrlCreateInput("7", $x + 120, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	$txtDeleteLogsDays = GUICtrlCreateInput("2", $x + 120, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetTip(-1, $txtTip)
 		GUICtrlSetLimit(-1, 2)
 		GUICtrlSetFont(-1, 8)
@@ -40,7 +40,7 @@ $grpOnLoadBot = GUICtrlCreateGroup(GetTranslated(10,2, "When Bot Loads"), $x - 2
 		$txtTip = GetTranslated(10,9, "Delete temp files older than this specified No. of days.")
 		GUICtrlSetTip(-1, $txtTip)
 		GUICtrlSetOnEvent(-1, "chkDeleteTemp")
-	$txtDeleteTempDays = GUICtrlCreateInput("7", $x + 120, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	$txtDeleteTempDays = GUICtrlCreateInput("2", $x + 120, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetTip(-1, $txtTip)
 		GUICtrlSetLimit(-1, 2)
 		GUICtrlSetFont(-1, 8)
@@ -51,7 +51,7 @@ $grpOnLoadBot = GUICtrlCreateGroup(GetTranslated(10,2, "When Bot Loads"), $x - 2
 		$txtTip = GetTranslated(10,11, "Delete loot image files older than this specified No. of days.")
 		GUICtrlSetTip(-1, $txtTip)
 		GUICtrlSetOnEvent(-1, "chkDeleteLoots")
-	$txtDeleteLootsDays = GUICtrlCreateInput("7", $x + 120, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	$txtDeleteLootsDays = GUICtrlCreateInput("2", $x + 120, $y + 2, 25, 16, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		GUICtrlSetTip(-1, $txtTip)
 		GUICtrlSetLimit(-1, 2)
 		GUICtrlSetFont(-1, 8)
@@ -111,7 +111,7 @@ $grpTiming = GUICtrlCreateGroup(GetTranslated(10,30, "Timing"), $x - 20, $y - 20
 		_GUICtrlSlider_SetTipSide(-1, $TBTS_BOTTOM)
 		_GUICtrlSlider_SetTicFreq(-100, 100)
 		GUICtrlSetLimit(-1, 500, 1) ; change max/min value
-		GUICtrlSetData(-1, 10) ; default value
+		GUICtrlSetData(-1, 40) ; default value
 		GUICtrlSetOnEvent(-1, "sldTrainITDelay")
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 

@@ -1152,6 +1152,7 @@ Global $hCollectorGUI = 0
 
 ;About GUI - AminTalkin
 Global $hAboutGUI = 0
+Global $chkRemainTrain = 0
 
 Global $iDeadBase75percent = 1
 Global $iDeadBase75percentStartLevel = 4
@@ -1226,6 +1227,10 @@ Global $DefaultCocSearchArea = "70|70|720|540" ; Deafault
 Global $ExtendedCocSearchArea = "15|25|825|625" ; Extended
 ; Similarity ( like tolerance ) 0,00 to 1,00
 Global $ToleranceImgLoc = 0.95
+
+; Randomization of functions
+Global $RandomTimer = True
+Global $sTimerRandomHalt
 
 ;Mod AttackHour
 Global $iplannedattackhoursenable

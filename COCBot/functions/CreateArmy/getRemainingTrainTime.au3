@@ -30,7 +30,7 @@ Func getRemainingTrainTime($Troops = True, $Spells = True)
 			$aRemainTrainTroopTimer = (Number($ResultTroopsHour[0]) * 60) + Number($ResultTroopsMinutes)
 		Else 
 			If StringInStr($ResultTroops, "m") > 1 Then ; check if time has minute unit
-			$aRemainTrainTroopTimer = Number(StringTrimRight($ResultTroops, 1))
+				$aRemainTrainTroopTimer = Number(StringTrimRight($ResultTroops, 1))
 			EndIf
 		EndIf 
 	EndIf 
@@ -43,8 +43,8 @@ Func getRemainingTrainTime($Troops = True, $Spells = True)
 			$aRemainTrainSpellsTimer = (Number($ResultSpellsHour[0]) * 60) + Number($ResultTroopsMinutes)
 		Else 
 			If StringInStr($ResultTroops, "m") > 1 Then ; check if time has minute unit
-			$aRemainTrainSpellsTimer = Number(StringTrimRight($ResultSpells, 1))
-		EndIf
+				$aRemainTrainSpellsTimer = Number(StringTrimRight($ResultSpells, 1))
+			EndIf
 		EndIf
 	EndIf 
 	

@@ -28,6 +28,7 @@
 #include "functions\Attack\ReturnHome.au3"
 #include "functions\Attack\SnipeWhileTrain.au3"
 #include "functions\Attack\Unbreakable.au3"
+#include "functions\Attack\RandomAttack.au3"
 
 #include "functions\Attack\Attack Algorithms\algorithm_AllTroops.au3"
 #include "functions\Attack\Attack Algorithms\algorithm_Barch.au3"
@@ -111,6 +112,8 @@
 #include "functions\CreateArmy\TrainClick.au3"
 #include "functions\CreateArmy\Train.au3"
 #include "functions\CreateArmy\TrainIt.au3"
+#include "functions\CreateArmy\RemainingTrainingTroops.au3"
+#include "functions\CreateArmy\GetRemainTimeTrainning.au3"
 
 #include "functions\Image Search\ImageSearch.au3"
 #include "functions\Image Search\checkDeadBase.au3"
@@ -178,6 +181,7 @@
 #include "functions\Other\UpdateStats.au3"
 #include "functions\Other\CheckVersion.au3"
 #include "functions\Other\CloseRunningBot.au3"
+#include "functions\Other\RandomClick.au3"
 
 #include "functions\Other\ComError.au3"
 #include "functions\Other\IsPage.au3"

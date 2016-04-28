@@ -15,7 +15,7 @@
 ; ===============================================================================================================================
 Func BotCommand()
 	If $iChkBotStop = 1 Then
-
+		Local $RadonHaltAttack = false
 		$MeetCondStop = False  ; reset flags so bot can restart farming when conditions change.
 		$bTrainEnabled = True
 		$bDonationEnabled = True
@@ -103,6 +103,11 @@ Func BotCommand()
 					$MeetCondStop = True
 					SetLog("gained Gold and Elixir/H: "& _NumberFormat($myHourlyStatsGold + $myHourlyStatsElixir) & " is less than " & _NumberFormat($itxtgainperhours)  , $COLOR_BLUE)
 				EndIf
+			Case 25
+				If RandomAttack() then
+					$MeetCondStop = True
+					$RadonHaltAttack = True
+				EndIf
 		EndSwitch
 
 		If $MeetCondStop Then
@@ -152,6 +157,8 @@ Func BotCommand()
 					If _Sleep($iDelayBotCommand1) Then Return
 					Shutdown(BitOR($SD_REBOOT, $SD_FORCE) ) ; Reboot
 					Return True  ; HaHa - No Return possible!
+				Case 7
+					If $RadonHaltAttack = true then RandomAttaclCloseCoC()
 			EndSwitch
 		EndIf
 	EndIf

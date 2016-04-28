@@ -23,17 +23,18 @@ Func SetSleep($type)
 	   $factor0 = 10
 	   $factor1 = 100
     EndIf
-
+	Local $temp[8] = [1, 5, 10, 11, 12, 13, 14, 15]
+	Local $temp1[4] = [5, 10 , 20 , 25]
 	Switch $type
 		Case 0
 			If $iChkRandomspeedatk[$iMatchMode] = 1 Then
-				Return Round(Random(1, 10)) * $factor0
+				Return $temp[Random(0, 7, 1)] * $factor0 ; random deploying click [10ms to 200ms]
 			Else
 				Return ($iCmbUnitDelay[$iMatchMode]) * $factor0
 			EndIf
 		Case 1
 			If $iChkRandomspeedatk[$iMatchMode] = 1 Then
-				Return Round(Random(1, 10)) * $factor1
+				Return $temp1[Random(0, 3, 1)] * $factor1 ; random delay between waves [500ms to 2500ms]
 			Else
 				Return ($iCmbWaveDelay[$iMatchMode]) * $factor1
 			EndIf

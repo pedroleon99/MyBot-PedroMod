@@ -414,332 +414,335 @@ Func _RemoteControl()
    EndIf
 
 	If $pEnabled2=1 then
-		Getchatid(GetTranslated(18,48,"select your remote"))
-        If $lastmessage = "\/start" Then $lastremote = $lastuid
-		local $body2 = _StringProper(StringStripWS($lastmessage, $STR_STRIPLEADING + $STR_STRIPTRAILING + $STR_STRIPSPACES)) ;upercase & remove space laset message
-
-	    If $lastremote <> $lastuid Then
+		$lastmessage = GetLastMsg()
+        If $lastmessage = "\/start" And $lastremote <> $lastuid Then
 			$lastremote = $lastuid
-			Switch $body2
-				Case GetTranslated(18,2,"Help") & "\n\u2753"
-					Local $txtHelp =  GetTranslated(18,17,"You can remotely control your bot by selecting this key")
-					$txtHelp &= "\n" & GetTranslated(18,18,"HELP - send this help message")
-					$txtHelp &= "\n" & GetTranslated(18,19,"DELETE  - Use this if Remote dont respond to your request")
-					$txtHelp &= "\n" & GetTranslated(18,20,"RESTART - restart the bot and bluestacks")
-					$txtHelp &= "\n" & GetTranslated(18,21,"STOP - stop the bot")
-					$txtHelp &= "\n" & GetTranslated(18,22,"PAUSE - pause the bot")
-					$txtHelp &= "\n" & GetTranslated(18,23,"RESUME   - resume the bot")
-					$txtHelp &= "\n" & GetTranslated(18,24,"STATS - send Village Statistics")
-					$txtHelp &= "\n" & GetTranslated(18,102,"LOG - send the Bot log file")
-					$txtHelp &= "\n" & GetTranslated(18,25,"LASTRAID - send the last raid loot screenshot. you should check Take Loot snapshot in End Battle Tab ")
-					$txtHelp &= "\n" & GetTranslated(18,26,"LASTRAIDTXT - send the last raid loot values")
-					$txtHelp &= "\n" & GetTranslated(18,27,"SCREENSHOT - send a screenshot")
-					$txtHelp &= "\n" & GetTranslated(18,28,"POWER - select power option")
-					$txtHelp &= "\n" & GetTranslated(18,104,"RESETSTATS - reset Village Statistics")
-					$txtHelp &= "\n" & GetTranslated(18,105,"DONATEON <TROOPNAME> <QUANTITY> - turn on donate for troop & quantity")
-					$txtHelp &= "\n" & GetTranslated(18,106,"DONATEOFF <TROOPNAME> <QUANTITY> - turn off donate for troop & quantity")
-					$txtHelp &= "\n" & GetTranslated(18,107,"T&S_STATS - send Troops & Spells Stats")
-					$txtHelp &= "\n" & GetTranslated(18,108,"HALTATTACKON - Turn On 'Halt Attack' in the 'Misc' Tab with the default options")
-					$txtHelp &= "\n" & GetTranslated(18,109,"HALTATTACKOFF - Turn Off 'Halt Attack' in the 'Misc' Tab")
-					$txtHelp &= "\n" & GetTranslated(18,110,"SWITCHPROFILE <PROFILENAME> - Swap Profile Village and restart bot")
-					$txtHelp &= "\n" & GetTranslated(18,111,"GETCHATS <interval|NOW|STOP> - to get the latest clan chat as an image")
-					$txtHelp &= "\n" & GetTranslated(18,112,"SENDCHAT <chat message> - to send a chat to your clan")
-					_Push($iOrigPushB & " | " & GetTranslated(18,29,"Request for Help") & "\n" & $txtHelp)
-					SetLog("Telegram: Your request has been received from ' " & $iOrigPushB & ". Help has been sent", $COLOR_GREEN)
-				Case GetTranslated(18,3,"Pause") & "\n\u2016"
-					If $TPaused = False And $Runstate = True Then
-						If ( _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1], True), Hex($NextBtn[2], 6), $NextBtn[3])) = False And IsAttackPage() Then
-							SetLog("Telegram: Unable to pause during attack", $COLOR_RED)
-							_Push($iOrigPushB & " | " & GetTranslated(18,30,"Request to Pause") & "\n" & GetTranslated(18,30,"Unable to pause during attack, try again later."))
-						ElseIf ( _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1], True), Hex($NextBtn[2], 6), $NextBtn[3])) = True And IsAttackPage() Then
-							ReturnHome(False, False)
-							$Is_SearchLimit = True
-							$Is_ClientSyncError = False
-							UpdateStats()
-							$Restart = True
-							TogglePauseImpl("Push")
-							Return True
-						Else
-							TogglePauseImpl("Push")
-						EndIf
-					Else
-						SetLog("Telegram: Your bot is currently paused, no action was taken", $COLOR_GREEN)
-						_Push($iOrigPushB & " | " & GetTranslated(18,30,"Request to Pause") & "\n" & GetTranslated(18,93,"Your bot is currently paused, no action was taken"))
-					EndIf
-				Case GetTranslated(18,4,"Resume") & "\n\u25b6"
-					If $TPaused = True And $Runstate = True Then
-					 TogglePauseImpl("Push")
-					Else
-					 SetLog("Telegram: Your bot is currently resumed, no action was taken", $COLOR_GREEN)
-					 _Push($iOrigPushB & " | " & GetTranslated(18,31,"Request to Resume") & "\n" & GetTranslated(18,94,"Your bot is currently resumed, no action was taken"))
-					EndIf
-				Case GetTranslated(18,5,"Delete") & "\n\ud83d\udeae"
-					$oHTTP2.Open("Get", $url & $access_token2 & "/getupdates?offset=" & $lastuid  , False)
-					$oHTTP2.Send()
-					SetLog("Telegram: Your request has been received.", $COLOR_GREEN)
-				Case GetTranslated(18,102,"Log") & "\n\ud83d\udcd1"
-					SetLog("Telegram: Your request has been received from " & $iOrigPushB & ". Log is now sent", $COLOR_GREEN)
-					_PushFile2($sLogFName, "logs", "text\/plain; charset=utf-8", $iOrigPushB & " | Current Log " & "\n")
-				Case GetTranslated(18,6,"Power") & "\n\ud83d\udda5"
-					SetLog("Telegram: Your request has been received from " & $iOrigPushB & ". POWER option now sent", $COLOR_GREEN)
-					$oHTTP2.Open("Post", "https://api.telegram.org/bot"&$access_token2&"/sendmessage", False)
-					$oHTTP2.SetRequestHeader("Content-Type", "application/json")
-					local $pPush3 = '{"text": "' & GetTranslated(18,49,"select POWER option") & '", "chat_id":' & $chat_id2 &', "reply_markup": {"keyboard": [["'&GetTranslated(18,7,"Hibernate")&'\n\u26a0\ufe0f","'&GetTranslated(18,8,"Shut down")&'\n\u26a0\ufe0f","'&GetTranslated(18,9,"Standby")&'\n\u26a0\ufe0f"],["'&GetTranslated(18,10,"Cancel")&'"]],"one_time_keyboard": true,"resize_keyboard":true}}'
-					$oHTTP2.Send($pPush3)
-				Case GetTranslated(18,7,"Hibernate") & "\n\u26a0\ufe0f"
-					SetLog("Telegram: Your request has been received from " & $iOrigPushB & ". Hibernate PC", $COLOR_GREEN)
-					Getchatid(GetTranslated(18,50,"PC got Hibernate"))
-					Shutdown(64)
-				Case GetTranslated(18,8,"Shut down") & "\n\u26a0\ufe0f"
-					SetLog("Telegram: Your request has been received from " & $iOrigPushB & ". Shut down PC", $COLOR_GREEN)
-					Getchatid(GetTranslated(18,51,"PC got Shutdown"))
-					Shutdown(5)
-				Case GetTranslated(18,9,"Standby") & "\n\u26a0\ufe0f"
-					SetLog("Telegram: Your request has been received from " & $iOrigPushB & ". Standby PC", $COLOR_GREEN)
-					Getchatid(GetTranslated(18,52,"PC got Standby"))
-					Shutdown(32)
-				Case GetTranslated(18,10,"Cancel")
-					SetLog("Telegram: Your request has been received from " & $iOrigPushB & ". Cancel Power option", $COLOR_GREEN)
-					Getchatid(GetTranslated(18,53,"canceled"))
-				Case GetTranslated(18,11,"Lastraid") & "\n\ud83d\udcd1"
-					 If $LootFileName <> "" Then
-					 _PushFile($LootFileName, "Loots", "image/jpeg", $iOrigPushB & " | " & GetTranslated(18,95,"Last Raid") & "\n" & $LootFileName)
-					Else
-					 _Push($iOrigPushB & " | " & GetTranslated(18,32,"There is no last raid screenshot."))
-					EndIf
-					SetLog("Telegram: Push Last Raid Snapshot...", $COLOR_GREEN)
-				Case GetTranslated(18,12,"Last raid txt") & "\n\ud83d\udcc4"
-					SetLog("Telegram: Your request has been received. Last Raid txt sent", $COLOR_GREEN)
-					_Push($iOrigPushB & " | " & GetTranslated(18,33,"Last Raid txt") & "\n" & "[G]: " & _NumberFormat($iGoldLast) & " [E]: " & _NumberFormat($iElixirLast) & " [D]: " & _NumberFormat($iDarkLast) & " [T]: " & $iTrophyLast)
-				Case GetTranslated(18,13,"Stats") & "\n\ud83d\udcca"
-					SetLog("Telegram: Your request has been received. Statistics sent", $COLOR_GREEN)
-					Local $GoldGainPerHour = 0
-					Local $ElixirGainPerHour = 0
-					Local $DarkGainPerHour = 0
-					Local $TrophyGainPerHour = 0
-					If $FirstAttack = 2 Then
-						$GoldGainPerHour = _NumberFormat(Round($iGoldTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600)) & "K / h"
-						$ElixirGainPerHour = _NumberFormat(Round($iElixirTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600)) & "K / h"
-					EndIf
-					If $iDarkStart <> "" Then
-						$DarkGainPerHour = _NumberFormat(Round($iDarkTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600 * 1000)) & " / h"
-					EndIf
-					$TrophyGainPerHour = _NumberFormat(Round($iTrophyTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600 * 1000)) & " / h"
-					Local $txtStats = " | " & GetTranslated(18,34,"Stats Village Report") & "\n" & GetTranslated(18,35,"At Start") & "\n[G]: " & _NumberFormat($iGoldStart) & " [E]: "
-						  $txtStats &= _NumberFormat($iElixirStart) & " [D]: " & _NumberFormat($iDarkStart) & " [T]: " & $iTrophyStart
-						  $txtStats &= "\n\n" & GetTranslated(18,36,"Now (Current Resources)") & "\n[G]: " & _NumberFormat($iGoldCurrent) & " [E]: " & _NumberFormat($iElixirCurrent)
-						  $txtStats &= " [D]: " & _NumberFormat($iDarkCurrent) & " [T]: " & $iTrophyCurrent & " [GEM]: " & $iGemAmount
-						  $txtStats &= "\n\n" & GetTranslated(11,26,"Gain per Hour") & ":\n[G]: " & $GoldGainPerHour & " [E]: " & $ElixirGainPerHour
-						  $txtStats &= "\n[D]: " & $DarkGainPerHour & " [T]: " & $TrophyGainPerHour
-						  $txtStats &= "\n\n" & GetTranslated(18,37,"No. of Free Builders") & ": " & $iFreeBuilderCount & "\n[" & GetTranslated(18,38,"No. of Wall Up") & "]: G: "
-						  $txtStats &= $iNbrOfWallsUppedGold & "/ E: " & $iNbrOfWallsUppedElixir & "\n\n" & GetTranslated(18,39,"Attacked") & ": "
-						  $txtStats &= GUICtrlRead($lblresultvillagesattacked) & "\n" & GetTranslated(18,40,"Skipped") & ": " & $iSkippedVillageCount
-					_Push($iOrigPushB & $txtStats)
-				Case GetTranslated(18,14,"Screenshot") & "\n\ud83c\udfa6"
-					SetLog("Telegram: ScreenShot request received", $COLOR_GREEN)
-					$RequestScreenshot = 1
-				Case GetTranslated(18,15,"Restart") & "\n\u21aa"
-					SetLog("Telegram: Your request has been received. Bot and BS restarting...", $COLOR_GREEN)
-					_Push($iOrigPushB & " | " & GetTranslated(18,41,"Request to Restart...") & "\n" & GetTranslated(18,42,"Your bot and BS are now restarting..."))
-					SaveConfig()
-					_Restart()
-				Case GetTranslated(18,16,"Stop") & "\n\u23f9"
-					SetLog("Telegram: Your request has been received. Bot is now stopped", $COLOR_GREEN)
-					If $Runstate = True Then
-					 _Push($iOrigPushB & " | " & GetTranslated(18,43,"Request to Stop...") & "\n" & GetTranslated(18,44,"Your bot is now stopping..."))
-					 btnStop()
-					Else
-					 _Push($iOrigPushB & " | " & GetTranslated(18,43,"Request to Stop...") & "\n" & GetTranslated(18,45,"Your bot is currently stopped, no action was taken"))
-					EndIf
-				Case GetTranslated(18,99,"ResetStats") & "\n\ud83d\udcca"
-					btnResetStats()
-					SetLog("Telegram: Your request has been received. Statistics resetted", $COLOR_GREEN)
-					_Push($iOrigPushB & " | " & GetTranslated(18,113,"Request for ResetStats has been resetted."))
-				Case GetTranslated(18,98,"T&S_Stats") & "\n\ud83d\udcca"
-					SetLog("Telegram: Your request has been received. Sending Troop/Spell Stats...", $COLOR_GREEN)
-					Local $txtTroopStats = " | " & GetTranslated(18,114,"Troops/Spells set to Train") & ":\n" & "Barbs:" & $BarbComp & " Arch:" & $ArchComp & " Gobl:" & $GoblComp
-					$txtTroopStats &= "\n" & "Giant:" & $GiantComp & " WallB:" & $WallComp & " Wiza:" & $WizaComp
-					$txtTroopStats &= "\n" & "Balloon:" & $BallComp & " Heal:" & $HealComp & " Dragon:" & $DragComp & " Pekka:" & $PekkComp
-					$txtTroopStats &= "\n" & "Mini:" & $MiniComp & " Hogs:" & $HogsComp & " Valks:" & $ValkComp
-					$txtTroopStats &= "\n" & "Golem:" & $GoleComp & " Witch:" & $WitcComp & " Lava:" & $LavaComp
-					$txtTroopStats &= "\n" & "LSpell:" & $iLightningSpellComp & " HeSpell:" & $iHealSpellComp & " RSpell:" & $iRageSpellComp & " JSpell:" & $iJumpSpellComp
-					$txtTroopStats &= "\n" & "FSpell:" & $iFreezeSpellComp & " PSpell:" & $iPoisonSpellComp & " ESpell:" & $iEarthSpellComp & " HaSpell:" & $iHasteSpellComp & "\n"
-					$txtTroopStats &= "\n" & GetTranslated(18,115,"Current Trained Troops & Spells") & ":"
-					For $i = 0 to Ubound($TroopSpellStats)-1
-						If $TroopSpellStats[$i][0] <> "" Then
-							$txtTroopStats &= "\n" & $TroopSpellStats[$i][0] & ":" & $TroopSpellStats[$i][1]
-						EndIf
-					Next
-					$txtTroopStats &= "\n\n" & GetTranslated(18,116,"Current Army Camp") & ": " & $CurCamp & "/" & $TotalCamp
-					_Push($iOrigPushB & $txtTroopStats)
-				Case GetTranslated(18,100,"HaltAttackOn") & "\n\u25fb"
-					GUICtrlSetState($chkBotStop, $GUI_CHECKED)
-					btnStop()
-					btnStart()
-				Case GetTranslated(18,101,"HaltAttackOff") & "\n\u25b6"
-					GUICtrlSetState($chkBotStop, $GUI_UNCHECKED)
-					btnStop()
-					btnStart()
-				Case Else
-					If StringInStr($body2, "SENDCHAT") Then
-						$chatMessage = StringRight($body2, StringLen($body2) - StringLen("SENDCHAT "))
-						$chatMessage = StringLower($chatMessage)
-						ChatbotPushbulletQueueChat($chatMessage)
-						_Push($iOrigPushB & " | " & GetTranslated(18,97,"Chat queued, will send on next idle"))
-					ElseIf StringInStr($body2, "GETCHATS") Then
-						$Interval = StringRight($body2, StringLen($body2) - StringLen("GETCHATS "))
-						If $Interval = "STOP" Then
-							ChatbotPushbulletStopChatRead()
-							_Push($iOrigPushB & " | " & GetTranslated(18,117,"Stopping interval sending"))
-						ElseIf $Interval = "NOW" Then
-							ChatbotPushbulletQueueChatRead()
-							_Push($iOrigPushB & " | " & GetTranslated(18,118,"Command queued, will send clan chat image on next idle"))
-						Else
-							If Number($Interval) <> 0 Then
-								ChatbotPushbulletIntervalChatRead(Number($Interval))
-								_Push($iOrigPushB & " | " & GetTranslated(18,119,"Command queued, will send clan chat image on interval"))
+			Getchatid(GetTranslated(18,48,"select your remote"))
+		Else
+			local $body2 = _StringProper(StringStripWS($lastmessage, $STR_STRIPLEADING + $STR_STRIPTRAILING + $STR_STRIPSPACES)) ;upercase & remove space laset message
+			If $lastremote <> $lastuid Then
+				$lastremote = $lastuid
+				Switch $body2
+					Case GetTranslated(18,2,"Help") & "\n\u2753"
+						Local $txtHelp =  GetTranslated(18,17,"You can remotely control your bot by selecting this key")
+						$txtHelp &= "\n" & GetTranslated(18,18,"HELP - send this help message")
+						$txtHelp &= "\n" & GetTranslated(18,19,"DELETE  - Use this if Remote dont respond to your request")
+						$txtHelp &= "\n" & GetTranslated(18,20,"RESTART - restart the bot and bluestacks")
+						$txtHelp &= "\n" & GetTranslated(18,21,"STOP - stop the bot")
+						$txtHelp &= "\n" & GetTranslated(18,22,"PAUSE - pause the bot")
+						$txtHelp &= "\n" & GetTranslated(18,23,"RESUME   - resume the bot")
+						$txtHelp &= "\n" & GetTranslated(18,24,"STATS - send Village Statistics")
+						$txtHelp &= "\n" & GetTranslated(18,102,"LOG - send the Bot log file")
+						$txtHelp &= "\n" & GetTranslated(18,25,"LASTRAID - send the last raid loot screenshot. you should check Take Loot snapshot in End Battle Tab ")
+						$txtHelp &= "\n" & GetTranslated(18,26,"LASTRAIDTXT - send the last raid loot values")
+						$txtHelp &= "\n" & GetTranslated(18,27,"SCREENSHOT - send a screenshot")
+						$txtHelp &= "\n" & GetTranslated(18,28,"POWER - select power option")
+						$txtHelp &= "\n" & GetTranslated(18,104,"RESETSTATS - reset Village Statistics")
+						$txtHelp &= "\n" & GetTranslated(18,105,"DONATEON <TROOPNAME> <QUANTITY> - turn on donate for troop & quantity")
+						$txtHelp &= "\n" & GetTranslated(18,106,"DONATEOFF <TROOPNAME> <QUANTITY> - turn off donate for troop & quantity")
+						$txtHelp &= "\n" & GetTranslated(18,107,"T&S_STATS - send Troops & Spells Stats")
+						$txtHelp &= "\n" & GetTranslated(18,108,"HALTATTACKON - Turn On 'Halt Attack' in the 'Misc' Tab with the default options")
+						$txtHelp &= "\n" & GetTranslated(18,109,"HALTATTACKOFF - Turn Off 'Halt Attack' in the 'Misc' Tab")
+						$txtHelp &= "\n" & GetTranslated(18,110,"SWITCHPROFILE <PROFILENAME> - Swap Profile Village and restart bot")
+						$txtHelp &= "\n" & GetTranslated(18,111,"GETCHATS <interval|NOW|STOP> - to get the latest clan chat as an image")
+						$txtHelp &= "\n" & GetTranslated(18,112,"SENDCHAT <chat message> - to send a chat to your clan")
+						_Push($iOrigPushB & " | " & GetTranslated(18,29,"Request for Help") & "\n" & $txtHelp)
+						SetLog("Telegram: Your request has been received from ' " & $iOrigPushB & ". Help has been sent", $COLOR_GREEN)
+					Case GetTranslated(18,3,"Pause") & "\n\u2016"
+						If $TPaused = False And $Runstate = True Then
+							If ( _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1], True), Hex($NextBtn[2], 6), $NextBtn[3])) = False And IsAttackPage() Then
+								SetLog("Telegram: Unable to pause during attack", $COLOR_RED)
+								_Push($iOrigPushB & " | " & GetTranslated(18,30,"Request to Pause") & "\n" & GetTranslated(18,30,"Unable to pause during attack, try again later."))
+							ElseIf ( _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1], True), Hex($NextBtn[2], 6), $NextBtn[3])) = True And IsAttackPage() Then
+								ReturnHome(False, False)
+								$Is_SearchLimit = True
+								$Is_ClientSyncError = False
+								UpdateStats()
+								$Restart = True
+								TogglePauseImpl("Push")
+								Return True
 							Else
-								SetLog("Telegram: received command syntax wrong, command ignored.", $COLOR_RED)
-								_Push($iOrigPushB & " | " & GetTranslated(18,46,"Command not recognized") & "\n" & GetTranslated(18,47,"Please push BOT HELP to obtain a complete command list."))
+								TogglePauseImpl("Push")
 							EndIf
-						EndIf
-					ElseIf StringInStr($body2, "DONATEON") Then
-						$DonateAtivated = 0
-						$TroopType = StringRight($body2, StringLen($body2) - StringLen("DONATEON "))
-						If StringInStr($TroopType, "GOLEM") Then
-							$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 6)))
-							SetLog("Telegram: Request to Donate Golem has been activated", $COLOR_GREEN)
-							GUICtrlSetData($txtNumGole, $TroopQuantity)
-							$GoleComp = $TroopQuantity
-							GUICtrlSetState($ChkDonateGolems, $GUI_CHECKED)
-							$iChkDonateGolems = 1
-							$DonateAtivated = 1
-						ElseIf StringInStr($TroopType, "LAVA") Then
-							$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 5)))
-							SetLog("Telegram: Request to Donate Lava Hounds has been activated", $COLOR_GREEN)
-							GUICtrlSetData($txtNumLava, $TroopQuantity)
-							$LavaComp = $TroopQuantity
-							GUICtrlSetState($chkDonateLavaHounds, $GUI_CHECKED)
-							$ichkDonateLavaHounds = 1
-							$DonateAtivated = 1
-						ElseIf StringInStr($TroopType, "PEKKA") Then
-							$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 6)))
-							SetLog("Telegram: Request to Donate Pekkas has been activated", $COLOR_GREEN)
-							GUICtrlSetData($txtNumPekk, $TroopQuantity)
-							$PekkComp = $TroopQuantity
-							GUICtrlSetState($ChkDonatePekkas, $GUI_CHECKED)
-							$iChkDonatePekkas = 1
-							$DonateAtivated = 1
-						ElseIf StringInStr($TroopType, "BALLOON") Then
-							$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 5)))
-							SetLog("Telegram: Request to Donate Balloons has been activated", $COLOR_GREEN)
-							GUICtrlSetData($txtNumBall, $TroopQuantity)
-							$BallComp = $TroopQuantity
-							GUICtrlSetState($chkDonateBalloons, $GUI_CHECKED)
-							$ichkDonateBalloons = 1
-							$DonateAtivated = 1
-						ElseIf StringInStr($TroopType, "HOGS") Then
-							$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 4)))
-							SetLog("Telegram: Request to Donate Hog Riders has been activated", $COLOR_GREEN)
-							GUICtrlSetData($txtNumHogs, $TroopQuantity)
-							$HogsComp = $TroopQuantity
-							GUICtrlSetState($ChkDonateHogRiders, $GUI_CHECKED)
-							$iChkDonateHogRiders = 1
-							$DonateAtivated = 1
-						ElseIf StringInStr($TroopType, "DRAGON") Then
-							$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 7)))
-							SetLog("Telegram: Request to Donate Dragons has been activated", $COLOR_GREEN)
-							GUICtrlSetData($txtNumDrag, $TroopQuantity)
-							$DragComp = $TroopQuantity
-							GUICtrlSetState($ChkDonateDragons, $GUI_CHECKED)
-							$iChkDonateDragons = 1
-							$DonateAtivated = 1
 						Else
-							_Push($iOrigPushB & " | " & GetTranslated(18,120,"DONATEON Failed, Invalid TroopType") & "\n" & GetTranslated(18,121,"Available Troops: GOLEM|LAVA|PEKKA|BALLOON|HOGS|DRAGON") & "\n" & GetTranslated(18,122,"Example: DONATEON GOLEM 1"))
+							SetLog("Telegram: Your bot is currently paused, no action was taken", $COLOR_GREEN)
+							_Push($iOrigPushB & " | " & GetTranslated(18,30,"Request to Pause") & "\n" & GetTranslated(18,93,"Your bot is currently paused, no action was taken"))
+						EndIf
+					Case GetTranslated(18,4,"Resume") & "\n\u25b6"
+						If $TPaused = True And $Runstate = True Then
+						 TogglePauseImpl("Push")
+						Else
+						 SetLog("Telegram: Your bot is currently resumed, no action was taken", $COLOR_GREEN)
+						 _Push($iOrigPushB & " | " & GetTranslated(18,31,"Request to Resume") & "\n" & GetTranslated(18,94,"Your bot is currently resumed, no action was taken"))
+						EndIf
+					Case GetTranslated(18,5,"Delete") & "\n\ud83d\udeae"
+						$oHTTP2.Open("Get", $url & $access_token2 & "/getupdates?offset=" & $lastuid  , False)
+						$oHTTP2.Send()
+						SetLog("Telegram: Your request has been received.", $COLOR_GREEN)
+					Case GetTranslated(18,102,"Log") & "\n\ud83d\udcd1"
+						SetLog("Telegram: Your request has been received from " & $iOrigPushB & ". Log is now sent", $COLOR_GREEN)
+						_PushFile2($sLogFName, "logs", "text\/plain; charset=utf-8", $iOrigPushB & " | Current Log " & "\n")
+					Case GetTranslated(18,6,"Power") & "\n\ud83d\udda5"
+						SetLog("Telegram: Your request has been received from " & $iOrigPushB & ". POWER option now sent", $COLOR_GREEN)
+						$oHTTP2.Open("Post", "https://api.telegram.org/bot"&$access_token2&"/sendmessage", False)
+						$oHTTP2.SetRequestHeader("Content-Type", "application/json")
+						local $pPush3 = '{"text": "' & GetTranslated(18,49,"select POWER option") & '", "chat_id":' & $chat_id2 &', "reply_markup": {"keyboard": [["'&GetTranslated(18,7,"Hibernate")&'\n\u26a0\ufe0f","'&GetTranslated(18,8,"Shut down")&'\n\u26a0\ufe0f","'&GetTranslated(18,9,"Standby")&'\n\u26a0\ufe0f"],["'&GetTranslated(18,10,"Cancel")&'"]],"one_time_keyboard": true,"resize_keyboard":true}}'
+						$oHTTP2.Send($pPush3)
+					Case GetTranslated(18,7,"Hibernate") & "\n\u26a0\ufe0f"
+						SetLog("Telegram: Your request has been received from " & $iOrigPushB & ". Hibernate PC", $COLOR_GREEN)
+						Getchatid(GetTranslated(18,50,"PC got Hibernate"))
+						Shutdown(64)
+					Case GetTranslated(18,8,"Shut down") & "\n\u26a0\ufe0f"
+						SetLog("Telegram: Your request has been received from " & $iOrigPushB & ". Shut down PC", $COLOR_GREEN)
+						Getchatid(GetTranslated(18,51,"PC got Shutdown"))
+						Shutdown(5)
+					Case GetTranslated(18,9,"Standby") & "\n\u26a0\ufe0f"
+						SetLog("Telegram: Your request has been received from " & $iOrigPushB & ". Standby PC", $COLOR_GREEN)
+						Getchatid(GetTranslated(18,52,"PC got Standby"))
+						Shutdown(32)
+					Case GetTranslated(18,10,"Cancel")
+						SetLog("Telegram: Your request has been received from " & $iOrigPushB & ". Cancel Power option", $COLOR_GREEN)
+						Getchatid(GetTranslated(18,53,"canceled"))
+					Case GetTranslated(18,11,"Lastraid") & "\n\ud83d\udcd1"
+						 If $LootFileName <> "" Then
+						 _PushFile($LootFileName, "Loots", "image/jpeg", $iOrigPushB & " | " & GetTranslated(18,95,"Last Raid") & "\n" & $LootFileName)
+						Else
+						 _Push($iOrigPushB & " | " & GetTranslated(18,32,"There is no last raid screenshot."))
+						EndIf
+						SetLog("Telegram: Push Last Raid Snapshot...", $COLOR_GREEN)
+					Case GetTranslated(18,12,"Last raid txt") & "\n\ud83d\udcc4"
+						SetLog("Telegram: Your request has been received. Last Raid txt sent", $COLOR_GREEN)
+						_Push($iOrigPushB & " | " & GetTranslated(18,33,"Last Raid txt") & "\n" & "[G]: " & _NumberFormat($iGoldLast) & " [E]: " & _NumberFormat($iElixirLast) & " [D]: " & _NumberFormat($iDarkLast) & " [T]: " & $iTrophyLast)
+					Case GetTranslated(18,13,"Stats") & "\n\ud83d\udcca"
+						SetLog("Telegram: Your request has been received. Statistics sent", $COLOR_GREEN)
+						Local $GoldGainPerHour = 0
+						Local $ElixirGainPerHour = 0
+						Local $DarkGainPerHour = 0
+						Local $TrophyGainPerHour = 0
+						If $FirstAttack = 2 Then
+							$GoldGainPerHour = _NumberFormat(Round($iGoldTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600)) & "K / h"
+							$ElixirGainPerHour = _NumberFormat(Round($iElixirTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600)) & "K / h"
+						EndIf
+						If $iDarkStart <> "" Then
+							$DarkGainPerHour = _NumberFormat(Round($iDarkTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600 * 1000)) & " / h"
+						EndIf
+						$TrophyGainPerHour = _NumberFormat(Round($iTrophyTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600 * 1000)) & " / h"
+						Local $txtStats = " | " & GetTranslated(18,34,"Stats Village Report") & "\n" & GetTranslated(18,35,"At Start") & "\n[G]: " & _NumberFormat($iGoldStart) & " [E]: "
+							  $txtStats &= _NumberFormat($iElixirStart) & " [D]: " & _NumberFormat($iDarkStart) & " [T]: " & $iTrophyStart
+							  $txtStats &= "\n\n" & GetTranslated(18,36,"Now (Current Resources)") & "\n[G]: " & _NumberFormat($iGoldCurrent) & " [E]: " & _NumberFormat($iElixirCurrent)
+							  $txtStats &= " [D]: " & _NumberFormat($iDarkCurrent) & " [T]: " & $iTrophyCurrent & " [GEM]: " & $iGemAmount
+							  $txtStats &= "\n\n" & GetTranslated(11,26,"Gain per Hour") & ":\n[G]: " & $GoldGainPerHour & " [E]: " & $ElixirGainPerHour
+							  $txtStats &= "\n[D]: " & $DarkGainPerHour & " [T]: " & $TrophyGainPerHour
+							  $txtStats &= "\n\n" & GetTranslated(18,37,"No. of Free Builders") & ": " & $iFreeBuilderCount & "\n[" & GetTranslated(18,38,"No. of Wall Up") & "]: G: "
+							  $txtStats &= $iNbrOfWallsUppedGold & "/ E: " & $iNbrOfWallsUppedElixir & "\n\n" & GetTranslated(18,39,"Attacked") & ": "
+							  $txtStats &= GUICtrlRead($lblresultvillagesattacked) & "\n" & GetTranslated(18,40,"Skipped") & ": " & $iSkippedVillageCount
+						_Push($iOrigPushB & $txtStats)
+					Case GetTranslated(18,14,"Screenshot") & "\n\ud83c\udfa6"
+						SetLog("Telegram: ScreenShot request received", $COLOR_GREEN)
+						$RequestScreenshot = 1
+					Case GetTranslated(18,15,"Restart") & "\n\u21aa"
+						SetLog("Telegram: Your request has been received. Bot and BS restarting...", $COLOR_GREEN)
+						_Push($iOrigPushB & " | " & GetTranslated(18,41,"Request to Restart...") & "\n" & GetTranslated(18,42,"Your bot and BS are now restarting..."))
+						SaveConfig()
+						_Restart()
+					Case GetTranslated(18,16,"Stop") & "\n\u23f9"
+						SetLog("Telegram: Your request has been received. Bot is now stopped", $COLOR_GREEN)
+						If $Runstate = True Then
+						 _Push($iOrigPushB & " | " & GetTranslated(18,43,"Request to Stop...") & "\n" & GetTranslated(18,44,"Your bot is now stopping..."))
+						 btnStop()
+						Else
+						 _Push($iOrigPushB & " | " & GetTranslated(18,43,"Request to Stop...") & "\n" & GetTranslated(18,45,"Your bot is currently stopped, no action was taken"))
+						EndIf
+					Case GetTranslated(18,99,"ResetStats") & "\n\ud83d\udcca"
+						btnResetStats()
+						SetLog("Telegram: Your request has been received. Statistics resetted", $COLOR_GREEN)
+						_Push($iOrigPushB & " | " & GetTranslated(18,113,"Request for ResetStats has been resetted."))
+					Case GetTranslated(18,98,"T&S_Stats") & "\n\ud83d\udcca"
+						SetLog("Telegram: Your request has been received. Sending Troop/Spell Stats...", $COLOR_GREEN)
+						Local $txtTroopStats = " | " & GetTranslated(18,114,"Troops/Spells set to Train") & ":\n" & "Barbs:" & $BarbComp & " Arch:" & $ArchComp & " Gobl:" & $GoblComp
+						$txtTroopStats &= "\n" & "Giant:" & $GiantComp & " WallB:" & $WallComp & " Wiza:" & $WizaComp
+						$txtTroopStats &= "\n" & "Balloon:" & $BallComp & " Heal:" & $HealComp & " Dragon:" & $DragComp & " Pekka:" & $PekkComp
+						$txtTroopStats &= "\n" & "Mini:" & $MiniComp & " Hogs:" & $HogsComp & " Valks:" & $ValkComp
+						$txtTroopStats &= "\n" & "Golem:" & $GoleComp & " Witch:" & $WitcComp & " Lava:" & $LavaComp
+						$txtTroopStats &= "\n" & "LSpell:" & $iLightningSpellComp & " HeSpell:" & $iHealSpellComp & " RSpell:" & $iRageSpellComp & " JSpell:" & $iJumpSpellComp
+						$txtTroopStats &= "\n" & "FSpell:" & $iFreezeSpellComp & " PSpell:" & $iPoisonSpellComp & " ESpell:" & $iEarthSpellComp & " HaSpell:" & $iHasteSpellComp & "\n"
+						$txtTroopStats &= "\n" & GetTranslated(18,115,"Current Trained Troops & Spells") & ":"
+						For $i = 0 to Ubound($TroopSpellStats)-1
+							If $TroopSpellStats[$i][0] <> "" Then
+								$txtTroopStats &= "\n" & $TroopSpellStats[$i][0] & ":" & $TroopSpellStats[$i][1]
+							EndIf
+						Next
+						$txtTroopStats &= "\n\n" & GetTranslated(18,116,"Current Army Camp") & ": " & $CurCamp & "/" & $TotalCamp
+						_Push($iOrigPushB & $txtTroopStats)
+					Case GetTranslated(18,100,"HaltAttackOn") & "\n\u25fb"
+						GUICtrlSetState($chkBotStop, $GUI_CHECKED)
+						btnStop()
+						btnStart()
+					Case GetTranslated(18,101,"HaltAttackOff") & "\n\u25b6"
+						GUICtrlSetState($chkBotStop, $GUI_UNCHECKED)
+						btnStop()
+						btnStart()
+					Case Else
+						If StringInStr($body2, "SENDCHAT") Then
+							$chatMessage = StringRight($body2, StringLen($body2) - StringLen("SENDCHAT "))
+							$chatMessage = StringLower($chatMessage)
+							ChatbotPushbulletQueueChat($chatMessage)
+							_Push($iOrigPushB & " | " & GetTranslated(18,97,"Chat queued, will send on next idle"))
+						ElseIf StringInStr($body2, "GETCHATS") Then
+							$Interval = StringRight($body2, StringLen($body2) - StringLen("GETCHATS "))
+							If $Interval = "STOP" Then
+								ChatbotPushbulletStopChatRead()
+								_Push($iOrigPushB & " | " & GetTranslated(18,117,"Stopping interval sending"))
+							ElseIf $Interval = "NOW" Then
+								ChatbotPushbulletQueueChatRead()
+								_Push($iOrigPushB & " | " & GetTranslated(18,118,"Command queued, will send clan chat image on next idle"))
+							Else
+								If Number($Interval) <> 0 Then
+									ChatbotPushbulletIntervalChatRead(Number($Interval))
+									_Push($iOrigPushB & " | " & GetTranslated(18,119,"Command queued, will send clan chat image on interval"))
+								Else
+									SetLog("Telegram: received command syntax wrong, command ignored.", $COLOR_RED)
+									_Push($iOrigPushB & " | " & GetTranslated(18,46,"Command not recognized") & "\n" & GetTranslated(18,47,"Please push BOT HELP to obtain a complete command list."))
+								EndIf
+							EndIf
+						ElseIf StringInStr($body2, "DONATEON") Then
 							$DonateAtivated = 0
-						EndIf
-						If $DonateAtivated = 1 Then
-							_Push($iOrigPushB & " | " & GetTranslated(18,123,"DONATE Activated") & "\n" & GetTranslated(18,124,"Troops updated with") & ": " & $TroopType)
-						EndIf
-					ElseIf StringInStr($body2, "DONATEOFF") Then
-						$DonateAtivated = 0
-						$TroopType = StringRight($body2, StringLen($body2) - StringLen("DONATEOFF "))
-						If StringInStr($TroopType, "GOLEM") Then
-							$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 6)))
-							SetLog("Telegram: Request to Donate Golems has been de-activated", $COLOR_GREEN)
-							GUICtrlSetData($txtNumGole, $TroopQuantity)
-							$GoleComp = $TroopQuantity
-							GUICtrlSetState($ChkDonateGolems, $GUI_UNCHECKED)
-							$iChkDonateGolems = 0
-							$DonateAtivated = 1
-						ElseIf StringInStr($TroopType, "LAVA") Then
-							$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 5)))
-							SetLog("Telegram: Request to Donate Lava Hounds has been de-activated", $COLOR_GREEN)
-							GUICtrlSetData($txtNumLava, $TroopQuantity)
-							$LavaComp = $TroopQuantity
-							GUICtrlSetState($chkDonateLavaHounds, $GUI_UNCHECKED)
-							$ichkDonateLavaHounds = 0
-							$DonateAtivated = 1
-						ElseIf StringInStr($TroopType, "PEKKA") Then
-							$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 6)))
-							SetLog("Telegram: Request to Donate Pekkas has been de-activated", $COLOR_GREEN)
-							GUICtrlSetData($txtNumPekk, $TroopQuantity)
-							$PekkComp = $TroopQuantity
-							GUICtrlSetState($ChkDonatePekkas, $GUI_UNCHECKED)
-							$iChkDonatePekkas = 0
-							$DonateAtivated = 1
-						ElseIf StringInStr($TroopType, "BALLOON") Then
-							$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 5)))
-							SetLog("Telegram: Request to Donate Balloons has been de-activated", $COLOR_GREEN)
-							GUICtrlSetData($txtNumBall, $TroopQuantity)
-							$BallComp = $TroopQuantity
-							GUICtrlSetState($chkDonateBalloons, $GUI_UNCHECKED)
-							$ichkDonateBalloons = 0
-							$DonateAtivated = 1
-						ElseIf StringInStr($TroopType, "HOGS") Then
-							$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 4)))
-							SetLog("Telegram: Request to Donate Hog Riders has been de-activated", $COLOR_GREEN)
-							GUICtrlSetData($txtNumHogs, $TroopQuantity)
-							$HogsComp = $TroopQuantity
-							GUICtrlSetState($ChkDonateHogRiders, $GUI_UNCHECKED)
-							$iChkDonateHogRiders = 0
-							$DonateAtivated = 1
-						ElseIf StringInStr($TroopType, "DRAGON") Then
-							$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 7)))
-							SetLog("Telegram: Request to Donate Dragons has been de-activated", $COLOR_GREEN)
-							GUICtrlSetData($txtNumDrag, $TroopQuantity)
-							$DragComp = $TroopQuantity
-							GUICtrlSetState($ChkDonateDragons, $GUI_UNCHECKED)
-							$iChkDonateDragons = 0
-							$DonateAtivated = 1
-						Else
-							_Push($iOrigPushB & " | " & GetTranslated(18,125,"DONATEOFF Failed, Invalid TroopType") & "\n" & GetTranslated(18,121,"Available Troops: GOLEM|LAVA|PEKKA|BALLOON|HOGS|DRAGON") & "\n" & GetTranslated(18,126,"Example: DONATEOFF GOLEM 1"))
+							$TroopType = StringRight($body2, StringLen($body2) - StringLen("DONATEON "))
+							If StringInStr($TroopType, "GOLEM") Then
+								$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 6)))
+								SetLog("Telegram: Request to Donate Golem has been activated", $COLOR_GREEN)
+								GUICtrlSetData($txtNumGole, $TroopQuantity)
+								$GoleComp = $TroopQuantity
+								GUICtrlSetState($ChkDonateGolems, $GUI_CHECKED)
+								$iChkDonateGolems = 1
+								$DonateAtivated = 1
+							ElseIf StringInStr($TroopType, "LAVA") Then
+								$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 5)))
+								SetLog("Telegram: Request to Donate Lava Hounds has been activated", $COLOR_GREEN)
+								GUICtrlSetData($txtNumLava, $TroopQuantity)
+								$LavaComp = $TroopQuantity
+								GUICtrlSetState($chkDonateLavaHounds, $GUI_CHECKED)
+								$ichkDonateLavaHounds = 1
+								$DonateAtivated = 1
+							ElseIf StringInStr($TroopType, "PEKKA") Then
+								$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 6)))
+								SetLog("Telegram: Request to Donate Pekkas has been activated", $COLOR_GREEN)
+								GUICtrlSetData($txtNumPekk, $TroopQuantity)
+								$PekkComp = $TroopQuantity
+								GUICtrlSetState($ChkDonatePekkas, $GUI_CHECKED)
+								$iChkDonatePekkas = 1
+								$DonateAtivated = 1
+							ElseIf StringInStr($TroopType, "BALLOON") Then
+								$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 5)))
+								SetLog("Telegram: Request to Donate Balloons has been activated", $COLOR_GREEN)
+								GUICtrlSetData($txtNumBall, $TroopQuantity)
+								$BallComp = $TroopQuantity
+								GUICtrlSetState($chkDonateBalloons, $GUI_CHECKED)
+								$ichkDonateBalloons = 1
+								$DonateAtivated = 1
+							ElseIf StringInStr($TroopType, "HOGS") Then
+								$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 4)))
+								SetLog("Telegram: Request to Donate Hog Riders has been activated", $COLOR_GREEN)
+								GUICtrlSetData($txtNumHogs, $TroopQuantity)
+								$HogsComp = $TroopQuantity
+								GUICtrlSetState($ChkDonateHogRiders, $GUI_CHECKED)
+								$iChkDonateHogRiders = 1
+								$DonateAtivated = 1
+							ElseIf StringInStr($TroopType, "DRAGON") Then
+								$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 7)))
+								SetLog("Telegram: Request to Donate Dragons has been activated", $COLOR_GREEN)
+								GUICtrlSetData($txtNumDrag, $TroopQuantity)
+								$DragComp = $TroopQuantity
+								GUICtrlSetState($ChkDonateDragons, $GUI_CHECKED)
+								$iChkDonateDragons = 1
+								$DonateAtivated = 1
+							Else
+								_Push($iOrigPushB & " | " & GetTranslated(18,120,"DONATEON Failed, Invalid TroopType") & "\n" & GetTranslated(18,121,"Available Troops: GOLEM|LAVA|PEKKA|BALLOON|HOGS|DRAGON") & "\n" & GetTranslated(18,122,"Example: DONATEON GOLEM 1"))
+								$DonateAtivated = 0
+							EndIf
+							If $DonateAtivated = 1 Then
+								_Push($iOrigPushB & " | " & GetTranslated(18,123,"DONATE Activated") & "\n" & GetTranslated(18,124,"Troops updated with") & ": " & $TroopType)
+							EndIf
+						ElseIf StringInStr($body2, "DONATEOFF") Then
 							$DonateAtivated = 0
-						EndIf
-						If $DonateAtivated = 1 Then
-							_Push($iOrigPushB & " | " & GetTranslated(18,127,"DONATE Deactivated") & "\n" & GetTranslated(18,124,"Troops updated with") & ": " & $TroopType)
-						EndIf
-					ElseIf StringInStr($body2, "SWITCHPROFILE") Then
-						$VillageSelect = StringRight($body2, StringLen($body2) - StringLen("SWITCHPROFILE "))
-						Local $iIndex = _GUICtrlComboBox_FindString($cmbProfile, $VillageSelect)
-						If $iIndex = -1 Then
-							SetLog("Telegram: Profile Switch failed", $COLOR_RED)
-							$profileString = StringReplace(_GUICtrlComboBox_GetList($cmbProfile), "|", "\n")
-							_Push($iOrigPushB & " | " & GetTranslated(18,128,"Error Switch Profile") & ":\n" & GetTranslated(18,129,"Available Profiles") & ":\n" & $profileString)
+							$TroopType = StringRight($body2, StringLen($body2) - StringLen("DONATEOFF "))
+							If StringInStr($TroopType, "GOLEM") Then
+								$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 6)))
+								SetLog("Telegram: Request to Donate Golems has been de-activated", $COLOR_GREEN)
+								GUICtrlSetData($txtNumGole, $TroopQuantity)
+								$GoleComp = $TroopQuantity
+								GUICtrlSetState($ChkDonateGolems, $GUI_UNCHECKED)
+								$iChkDonateGolems = 0
+								$DonateAtivated = 1
+							ElseIf StringInStr($TroopType, "LAVA") Then
+								$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 5)))
+								SetLog("Telegram: Request to Donate Lava Hounds has been de-activated", $COLOR_GREEN)
+								GUICtrlSetData($txtNumLava, $TroopQuantity)
+								$LavaComp = $TroopQuantity
+								GUICtrlSetState($chkDonateLavaHounds, $GUI_UNCHECKED)
+								$ichkDonateLavaHounds = 0
+								$DonateAtivated = 1
+							ElseIf StringInStr($TroopType, "PEKKA") Then
+								$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 6)))
+								SetLog("Telegram: Request to Donate Pekkas has been de-activated", $COLOR_GREEN)
+								GUICtrlSetData($txtNumPekk, $TroopQuantity)
+								$PekkComp = $TroopQuantity
+								GUICtrlSetState($ChkDonatePekkas, $GUI_UNCHECKED)
+								$iChkDonatePekkas = 0
+								$DonateAtivated = 1
+							ElseIf StringInStr($TroopType, "BALLOON") Then
+								$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 5)))
+								SetLog("Telegram: Request to Donate Balloons has been de-activated", $COLOR_GREEN)
+								GUICtrlSetData($txtNumBall, $TroopQuantity)
+								$BallComp = $TroopQuantity
+								GUICtrlSetState($chkDonateBalloons, $GUI_UNCHECKED)
+								$ichkDonateBalloons = 0
+								$DonateAtivated = 1
+							ElseIf StringInStr($TroopType, "HOGS") Then
+								$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 4)))
+								SetLog("Telegram: Request to Donate Hog Riders has been de-activated", $COLOR_GREEN)
+								GUICtrlSetData($txtNumHogs, $TroopQuantity)
+								$HogsComp = $TroopQuantity
+								GUICtrlSetState($ChkDonateHogRiders, $GUI_UNCHECKED)
+								$iChkDonateHogRiders = 0
+								$DonateAtivated = 1
+							ElseIf StringInStr($TroopType, "DRAGON") Then
+								$TroopQuantity = Number(StringRight($TroopType, (StringLen($TroopType) - 7)))
+								SetLog("Telegram: Request to Donate Dragons has been de-activated", $COLOR_GREEN)
+								GUICtrlSetData($txtNumDrag, $TroopQuantity)
+								$DragComp = $TroopQuantity
+								GUICtrlSetState($ChkDonateDragons, $GUI_UNCHECKED)
+								$iChkDonateDragons = 0
+								$DonateAtivated = 1
+							Else
+								_Push($iOrigPushB & " | " & GetTranslated(18,125,"DONATEOFF Failed, Invalid TroopType") & "\n" & GetTranslated(18,121,"Available Troops: GOLEM|LAVA|PEKKA|BALLOON|HOGS|DRAGON") & "\n" & GetTranslated(18,126,"Example: DONATEOFF GOLEM 1"))
+								$DonateAtivated = 0
+							EndIf
+							If $DonateAtivated = 1 Then
+								_Push($iOrigPushB & " | " & GetTranslated(18,127,"DONATE Deactivated") & "\n" & GetTranslated(18,124,"Troops updated with") & ": " & $TroopType)
+							EndIf
+						ElseIf StringInStr($body2, "SWITCHPROFILE") Then
+							$VillageSelect = StringRight($body2, StringLen($body2) - StringLen("SWITCHPROFILE "))
+							Local $iIndex = _GUICtrlComboBox_FindString($cmbProfile, $VillageSelect)
+							If $iIndex = -1 Then
+								SetLog("Telegram: Profile Switch failed", $COLOR_RED)
+								$profileString = StringReplace(_GUICtrlComboBox_GetList($cmbProfile), "|", "\n")
+								_Push($iOrigPushB & " | " & GetTranslated(18,128,"Error Switch Profile") & ":\n" & GetTranslated(18,129,"Available Profiles") & ":\n" & $profileString)
+							Else
+								btnStop()
+								_GUICtrlComboBox_SetCurSel($cmbProfile, $iIndex)
+								cmbProfile()
+								SetLog("Telegram: Profile Switch success!", $COLOR_GREEN)
+								_Push($iOrigPushB & " | " & GetTranslated(18,130,"Switched to Profile") & ": " & $VillageSelect & GetTranslated(18,131," Success!"))
+								btnStart()
+							EndIf
 						Else
-							btnStop()
-							_GUICtrlComboBox_SetCurSel($cmbProfile, $iIndex)
-							cmbProfile()
-							SetLog("Telegram: Profile Switch success!", $COLOR_GREEN)
-							_Push($iOrigPushB & " | " & GetTranslated(18,130,"Switched to Profile") & ": " & $VillageSelect & GetTranslated(18,131," Success!"))
-							btnStart()
+							SetLog("Telegram: received command '" & $body2 & "' syntax wrong, command ignored.", $COLOR_RED)
+							_Push($iOrigPushB & " | " & GetTranslated(18,46,"Command received '" & $body2 & "' not recognized") & "\n" & GetTranslated(18,47,"Please push BOT HELP to obtain a complete command list."))
 						EndIf
-					Else
-						SetLog("Telegram: received command '" & $body2 & "' syntax wrong, command ignored.", $COLOR_RED)
-						_Push($iOrigPushB & " | " & GetTranslated(18,46,"Command received '" & $body2 & "' not recognized") & "\n" & GetTranslated(18,47,"Please push BOT HELP to obtain a complete command list."))
-					EndIf
-			EndSwitch
+				EndSwitch
 
+			EndIf
 		EndIf
 	EndIf
 EndFunc   ;==>_RemoteControl
@@ -865,21 +868,18 @@ Func GetLastMsg()
 EndFunc
 
 Func Getchatid($msgtitle)
-	$lastmessage = GetLastMsg()
 
-	If $first = 0 Or $lastmessage = "\/start" Then
-        $first = 1
-		$oHTTP2.Open("Post", "https://api.telegram.org/bot"&$access_token2&"/sendmessage", False)
-		$oHTTP2.SetRequestHeader("Content-Type", "application/json")
+	$oHTTP2.Open("Post", "https://api.telegram.org/bot"&$access_token2&"/sendmessage", False)
+	$oHTTP2.SetRequestHeader("Content-Type", "application/json")
 
-		local $pPush3 = '{"text": "' & $msgtitle & '", "chat_id":' & $chat_id2 &', "reply_markup": {"keyboard": [["' & GetTranslated(18,16,"Stop") _
-		& '\n\u23f9","' & GetTranslated(18,3,"Pause") & '\n\u2016","' & GetTranslated(18,15,"Restart") & '\n\u21aa","' & GetTranslated(18,4,"Resume") & '\n\u25b6"],["' _
-		& GetTranslated(18,2,"Help") & '\n\u2753","' & GetTranslated(18,5,"Delete") & '\n\ud83d\udeae","' & GetTranslated(18,102,"Log") & '\n\ud83d\udcd1","' & GetTranslated(18,11,"Lastraid") & '\n\ud83d\udcd1"],["' _
-		& GetTranslated(18,14,"Screenshot") & '\n\ud83c\udfa6","' & GetTranslated(18,12,"Last raid txt") & '\n\ud83d\udcc4","' & GetTranslated(18,6,"Power") & '\n\ud83d\udda5"],["' _
-		& GetTranslated(18,13,"Stats") & '\n\ud83d\udcca","' & GetTranslated(18,98,"T&S_Stats") & '\n\ud83d\udcca","' & GetTranslated(18,99,"ResetStats") & '\n\ud83d\udcca"],["' _
-		& GetTranslated(18,100,"HaltAttackOn") & '\n\u25fb","' & GetTranslated(18,101,"HaltAttackOff") & '\n\u25b6"]],"one_time_keyboard": false,"resize_keyboard":true}}'
-		$oHTTP2.Send($pPush3)
-	EndIf
+	local $pPush3 = '{"text": "' & $msgtitle & '", "chat_id":' & $chat_id2 &', "reply_markup": {"keyboard": [["' & GetTranslated(18,16,"Stop") _
+	& '\n\u23f9","' & GetTranslated(18,3,"Pause") & '\n\u2016","' & GetTranslated(18,15,"Restart") & '\n\u21aa","' & GetTranslated(18,4,"Resume") & '\n\u25b6"],["' _
+	& GetTranslated(18,2,"Help") & '\n\u2753","' & GetTranslated(18,5,"Delete") & '\n\ud83d\udeae","' & GetTranslated(18,102,"Log") & '\n\ud83d\udcd1","' & GetTranslated(18,11,"Lastraid") & '\n\ud83d\udcd1"],["' _
+	& GetTranslated(18,14,"Screenshot") & '\n\ud83c\udfa6","' & GetTranslated(18,12,"Last raid txt") & '\n\ud83d\udcc4","' & GetTranslated(18,6,"Power") & '\n\ud83d\udda5"],["' _
+	& GetTranslated(18,13,"Stats") & '\n\ud83d\udcca","' & GetTranslated(18,98,"T&S_Stats") & '\n\ud83d\udcca","' & GetTranslated(18,99,"ResetStats") & '\n\ud83d\udcca"],["' _
+	& GetTranslated(18,100,"HaltAttackOn") & '\n\u25fb","' & GetTranslated(18,101,"HaltAttackOff") & '\n\u25b6"]],"one_time_keyboard": false,"resize_keyboard":true}}'
+	$oHTTP2.Send($pPush3)
+
 EndFunc   ;==>Getchatid
 
 

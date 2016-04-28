@@ -147,7 +147,7 @@ $tabMOD = GUICtrlCreateTabItem("Mods")
 			$txtTip = "Tick this to enable faster ADB deployment for MEmu and Droid4x in Multi-finger mode." & @CRLF & @CRLF & _ 
 				      "     WARNING:  This is experimental, if you have issues with deployment, disable it."
 			GUICtrlSetTip(-1, $txtTip)
-			GUICtrlSetState(-1, $GUI_CHECKED)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetOnEvent(-1, "chkFastADBClicks")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 GUICtrlCreateTabItem("")

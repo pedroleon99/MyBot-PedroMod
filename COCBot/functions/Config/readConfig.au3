@@ -91,10 +91,10 @@ Func readConfig() ;Reads config and sets it to the variables
 		$ichkAutoStart = IniRead($config, "general", "AutoStart", "0")
 		$ichkAutoStartDelay = IniRead($config, "general", "AutoStartDelay", "10")
 		$restarted = IniRead($config, "general", "Restarted", "0")
-		$ichkBackground = IniRead($config, "general", "Background", "0")
-		$ichkBotStop = IniRead($config, "general", "BotStop", "0")
-		$icmbBotCommand = IniRead($config, "general", "Command", "0")
-		$icmbBotCond = IniRead($config, "general", "Cond", "0")
+		$ichkBackground = IniRead($config, "general", "Background", "1")
+		$ichkBotStop = IniRead($config, "general", "BotStop", "1")
+		$icmbBotCommand = IniRead($config, "general", "Command", "7")
+		$icmbBotCond = IniRead($config, "general", "Cond", "22")
 		$icmbHoursStop = IniRead($config, "general", "Hour", "0")
 
 		$iDisposeWindows = IniRead($config, "general", "DisposeWindows", "0")
@@ -160,12 +160,12 @@ Func readConfig() ;Reads config and sets it to the variables
 		$iChkDeploySettings[$DB] = IniRead($config, "attack", "DBDeploy", "3")
 		$iCmbUnitDelay[$DB] = IniRead($config, "attack", "DBUnitD", "5")
 		$iCmbWaveDelay[$DB] = IniRead($config, "attack", "DBWaveD", "5")
-		$iChkRandomspeedatk[$DB] = IniRead($config, "attack", "DBRandomSpeedAtk", "0")
+		$iChkRandomspeedatk[$DB] = IniRead($config, "attack", "DBRandomSpeedAtk", "1")
 
 		$iChkDeploySettings[$LB] = IniRead($config, "attack", "ABDeploy", "0")
 		$iCmbUnitDelay[$LB] = IniRead($config, "attack", "ABUnitD", "5")
 		$iCmbWaveDelay[$LB] = IniRead($config, "attack", "ABWaveD", "5")
-		$iChkRandomspeedatk[$LB] = IniRead($config, "attack", "ABRandomSpeedAtk", "0")
+		$iChkRandomspeedatk[$LB] = IniRead($config, "attack", "ABRandomSpeedAtk", "1")
 
 		$iCmbSelectTroop[$DB] = IniRead($config, "attack", "DBSelectTroop", "0")
 		$iCmbSelectTroop[$LB] = IniRead($config, "attack", "ABSelectTroop", "0")
@@ -173,16 +173,16 @@ Func readConfig() ;Reads config and sets it to the variables
 		$iChkRedArea[$DB] = IniRead($config, "attack", "DBSmartAttackRedArea", "1")
 		$iCmbSmartDeploy[$DB] = IniRead($config, "attack", "DBSmartAttackDeploy", "0")
 
-		$iChkSmartAttack[$DB][0] = IniRead($config, "attack", "DBSmartAttackGoldMine", "0")
-		$iChkSmartAttack[$DB][1] = IniRead($config, "attack", "DBSmartAttackElixirCollector", "0")
-		$iChkSmartAttack[$DB][2] = IniRead($config, "attack", "DBSmartAttackDarkElixirDrill", "0")
+		$iChkSmartAttack[$DB][0] = IniRead($config, "attack", "DBSmartAttackGoldMine", "1")
+		$iChkSmartAttack[$DB][1] = IniRead($config, "attack", "DBSmartAttackElixirCollector", "1")
+		$iChkSmartAttack[$DB][2] = IniRead($config, "attack", "DBSmartAttackDarkElixirDrill", "1")
 
 		$iChkRedArea[$LB] = IniRead($config, "attack", "ABSmartAttackRedArea", "1")
 		$iCmbSmartDeploy[$LB] = IniRead($config, "attack", "ABSmartAttackDeploy", "0")
 
-		$iChkSmartAttack[$LB][0] = IniRead($config, "attack", "ABSmartAttackGoldMine", "0")
-		$iChkSmartAttack[$LB][1] = IniRead($config, "attack", "ABSmartAttackElixirCollector", "0")
-		$iChkSmartAttack[$LB][2] = IniRead($config, "attack", "ABSmartAttackDarkElixirDrill", "0")
+		$iChkSmartAttack[$LB][0] = IniRead($config, "attack", "ABSmartAttackGoldMine", "1")
+		$iChkSmartAttack[$LB][1] = IniRead($config, "attack", "ABSmartAttackElixirCollector", "1")
+		$iChkSmartAttack[$LB][2] = IniRead($config, "attack", "ABSmartAttackDarkElixirDrill", "1")
 
 		$iHeroAttack[$DB] = BitOR(Int(IniRead($config, "attack", "DBKingAtk", $HERO_NOHERO)), _
 										Int(IniRead($config, "attack", "DBQueenAtk", $HERO_NOHERO)), _
@@ -203,7 +203,7 @@ Func readConfig() ;Reads config and sets it to the variables
 		$ichkNeed1Hero[$DB] = IniRead($config, "attack", "DBNeed1Hero", "1")
 		$ichkNeed1Hero[$LB] = IniRead($config, "attack", "ABNeed1Hero", "1")
 
-		$iChkUseCCBalanced = IniRead($config, "attack", "BalanceCC", "0")
+		$iChkUseCCBalanced = IniRead($config, "attack", "BalanceCC", "1")
 		$iCmbCCDonated = IniRead($config, "attack", "BalanceCCDonated", "1")
 		$iCmbCCReceived = IniRead($config, "attack", "BalanceCCReceived", "1")
 
@@ -266,7 +266,7 @@ Func readConfig() ;Reads config and sets it to the variables
 		;atk their queen
 
 		;End Battle Settings------------------------------------------------------------------------
-		$sTimeStopAtk = IniRead($config, "endbattle", "txtTimeStopAtk", "20")
+		$sTimeStopAtk = IniRead($config, "endbattle", "txtTimeStopAtk", "12")
 		$iChkTimeStopAtk = IniRead($config, "endbattle", "chkTimeStopAtk", "1")
 
 		$sTimeStopAtk2 = IniRead($config, "endbattle", "txtTimeStopAtk2", "7")
@@ -466,7 +466,7 @@ Func readConfig() ;Reads config and sets it to the variables
 		Next
 		$fulltroop = IniRead($config, "troop", "fullTroop", "100")
 
-		$isldTrainITDelay = IniRead($config, "troop", "TrainITDelay", "20")
+		$isldTrainITDelay = IniRead($config, "troop", "TrainITDelay", "40")
 
 		; Boost  -------------------------------------------------------------------------------
 		$iCmbQuantBoostBarracks = IniRead($config, "troop", "QuantBoostBarracks", "0")
@@ -518,24 +518,24 @@ Func readConfig() ;Reads config and sets it to the variables
 		$itxtWallMinGold = IniRead($config, "other", "minwallgold", "0")
 		$itxtWallMinElixir = IniRead($config, "other", "minwallelixir", "0")
 
-		$itxtRestartGold = IniRead($config, "other", "minrestartgold", "10000")
-		$itxtRestartElixir = IniRead($config, "other", "minrestartelixir", "25000")
+		$itxtRestartGold = IniRead($config, "other", "minrestartgold", "100000")
+		$itxtRestartElixir = IniRead($config, "other", "minrestartelixir", "250000")
 		$itxtRestartDark = IniRead($config, "other", "minrestartdark", "500")
 
 		$itxtgainperhours = IniRead($config, "other", "mingainperhours", "100000")
 
 
-		$ichkTrap = IniRead($config, "other", "chkTrap", "0")
+		$ichkTrap = IniRead($config, "other", "chkTrap", "1")
 		$iChkCollect = IniRead($config, "other", "chkCollect", "1")
 $itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
 		$itxtTreasuryElixir = iniRead($config,"other","treasuryElixir","0000")
 		$itxtTreasuryDark = iniRead($config,"other","treasuryDark","0000")
 
-		$ichkTombstones = IniRead($config, "other", "chkTombstones", "0")
-		$ichkCleanYard = IniRead($config, "other", "chkCleanYard", "0")
+		$ichkTombstones = IniRead($config, "other", "chkTombstones", "1")
+		$ichkCleanYard = IniRead($config, "other", "chkCleanYard", "1")
 		$sTimeWakeUp = IniRead($config, "other", "txtTimeWakeUp", "0")
-		$iVSDelay = IniRead($config, "other", "VSDelay", "0")
-		$iMaxVSDelay = IniRead($config, "other", "MaxVSDelay", "0")
+		$iVSDelay = IniRead($config, "other", "VSDelay", "1")
+		$iMaxVSDelay = IniRead($config, "other", "MaxVSDelay", "5")
 
 		$itxtMaxTrophy = IniRead($config, "other", "MaxTrophy", "5000")
 		$itxtdropTrophy = IniRead($config, "other", "MinTrophy", "5000")

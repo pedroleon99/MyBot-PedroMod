@@ -255,7 +255,7 @@ Func cmbBotCond()
 		_GUICtrlComboBox_SetCurSel($cmbHoursStop, 0)
 		GUICtrlSetState($cmbHoursStop, $GUI_DISABLE)
 	EndIf
-	If _GUICtrlComboBox_GetCurSel($cmbBotCond) > 21 Then
+	If _GUICtrlComboBox_GetCurSel($cmbBotCond) > 22 Then
 		GUICtrlSetState($cmbHoursStop, $GUI_HIDE)
 		GUICtrlSetState($txtgainperhours, $GUI_SHOW)
 	Else

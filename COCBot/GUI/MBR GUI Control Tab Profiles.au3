@@ -25,6 +25,9 @@ Func cmbProfile()
 	readConfig()
 	applyConfig()
 	saveConfig()
+	
+	;DonateStats
+	InitDonateStats()
 
 	SetLog(_PadStringCenter("Profile " & $sCurrProfile & " loaded from " & $config, 50, "="), $COLOR_GREEN)
 EndFunc   ;==>cmbProfile
@@ -64,6 +67,8 @@ Func btnAddConfirm()
 
 			If GUICtrlGetState($btnDelete) <> $GUI_ENABLE Then GUICtrlSetState($btnDelete, $GUI_ENABLE)
 			If GUICtrlGetState($btnRename) <> $GUI_ENABLE Then GUICtrlSetState($btnRename, $GUI_ENABLE)
+			;DonateStats
+			InitDonateStats()
 		Case Else
 			SetLog("If you are seeing this log message there is something wrong.", $COLOR_RED)
 	EndSwitch

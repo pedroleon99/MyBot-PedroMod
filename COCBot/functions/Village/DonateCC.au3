@@ -68,10 +68,10 @@ Func DonateCC($Check = False)
 	ClickP($aAway, 1, 0, "#0167") ;Click Away
 	Setlog("Checking for Donate Requests in Clan Chat", $COLOR_BLUE)
 
-	If _CheckPixel($aChatTab, $bCapturePixel) = False Then ClickP($aOpenChat, 1, 0, "#0168") ; Clicks chat tab
+	If _CheckPixel($aChatTab, $bCapturePixel) = False Then ClickZone($aOpenChat[0], $aOpenChat[1], 10) ; ClickP($aOpenChat, 1, 0, "#0168") ; Clicks chat tab
 	If _Sleep($iDelayDonateCC1) Then Return
 
-	ClickP($aClanTab, 1, 0, "#0169") ; clicking clan tab
+	ClickZone($aClanTab[0], $aClanTab[1], 10) ; ClickP($aClanTab, 1, 0, "#0169") ; clicking clan tab
 	If _Sleep($iDelayDonateCC2) Then Return
 
 	Local $Scroll, $offColors[3][3] = [[0x010101, 0, -4], [0xb8e050, 0, 13], [0xb0da49, 0, 16]]; $offColors[3][3] = [[0x000000, 0, -2], [0x262926, 0, 1], [0xF8FCF0, 0, 11]]
@@ -82,58 +82,6 @@ Func DonateCC($Check = False)
 		$DonatePixel = _MultiPixelSearch(202, $y, 203, 660 + $bottomOffsetY, 1, 1, Hex(0xc0e460, 6), $offColors, 15)
 		If IsArray($DonatePixel) Then ; if Donate Button found
 			If $debugSetlog = 1 Then Setlog("$DonatePixel: (" & $DonatePixel[0] & "," & $DonatePixel[1] & ")", $COLOR_PURPLE)
-
-			;DonateStats
-			If $ichkDStats = 1 Then
-			$iPosY = $DonatePixel[1] - 76
-			_CaptureRegion(31, $iPosY, 170, $iPosY + 25, True)
-
-			Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
-			Local $Time = @HOUR & "." & @MIN & "." & @SEC
-
-			$DonateFile = $Date & "__" & $Time & ".bmp"
-			_GDIPlus_ImageSaveToFile($hBitmap, $dirTemp & $DonateFile)
-			If $debugSetlog = 1 Then SetLog("DonateStats: Capture clan member name to file.", $COLOR_PURPLE)
-			_GDIPlus_ImageDispose($hBitmap)
-			_WinAPI_DeleteObject($hBitmap)
-			_GDIPlus_ImageDispose($bm1)
-			_GDIPlus_ImageDispose($bm2)
-
-			Global $iImageCompare = "Not Equal"
-			Global $ImageExist = ""
-			Global $aFileList = _FileListToArray($dirTemp & "DonateStats\", "*.bmp", 1)
-			If Not @error And IsArray($aFileList) Then
-				If $debugSetlog = 1 Then SetLog("DonateStats: ImageCompare Checkpoint.", $COLOR_PURPLE)
-				$bm1 = _GDIPlus_ImageLoadFromFile($dirTemp & $DonateFile)
-				If $bm1 = 0 Then SetLog("DonateStats: Error, unable to load: " & $dirTemp & $DonateFile, $COLOR_PURPLE)
-				For $x = 1 To $aFileList[0]
-					If $debugSetlog = 1 Then SetLog("DonateStats: Loading exiting Image file: " & $dirTemp & "DonateStats\" & $aFileList[$x])
-					$bm2 = _GDIPlus_ImageLoadFromFile($dirTemp & "DonateStats\" & $aFileList[$x])
-					If $bm2 = 0 Then SetLog("DonateStats: Error, unable to load: " & $dirTemp & "DonateStats\" & $aFileList[$x], $COLOR_PURPLE)
-
-					$iImageCompare = CompareBitmaps($bm1, $bm2)
-					If (@error) Then
-							SetLog("DonateStats: Failed to compare the image file:" & $aFileList[$x] & @CRLF & @error & " | " & @extended)
-					Else
-						If $debugSetlog = 1 Then SetLog("DonateStats: $ImageCompare:" & $DonateFile & " with " & $aFileList[$x] & " is " & ($iImageCompare ? "Equal" : "Not equal"))
-					EndIf
-					If $debugSetlog = 1 Then SetLog("DonateStats: $ImageCompare = " & $iImageCompare & " for: " & $aFileList[$x], $COLOR_PURPLE)
-					If $iImageCompare = "Equal" Then
-						$ImageExist = $aFileList[$x]
-						ExitLoop
-					EndIf
-					$ImageExist = $aFileList[$x]
-				Next
-
-			Else
-				If @error = 1 Then
-						SetLog("DonateStats: '" & $dirTemp & "DonateStats\' does not exist! Please create, skipping DonateStats count.", $COLOR_RED)
-				ElseIf @error = 4 Then
-					SetLog("DonateStats: No existing images to compare. Continuing to add new donate counts to Donatestats.", $COLOR_PURPLE)
-				EndIf
-			EndIf
-			EndIf
-			;End DonateStats
 
 			;reset every run
 			$bDonate = False
@@ -357,7 +305,6 @@ Func DonateCC($Check = False)
 
 			;close Donate Window
 			DonateWindow($bClose)
-			FileDelete($dirTemp & "*.bmp")
 
 			$bDonate = True
 			$y = $DonatePixel[1] + 10
@@ -547,14 +494,14 @@ Func DonateTroopType($Type, $Quant = 0, $Custom = False, $bDonateAll = False)
 				$DonatedValue = $Quant
 				If $bDonateAll Then $sTextToAll = " (to all requests)"
 				SetLog("Donating " & $Quant & " " & NameOfTroop($Type, $plural) & $sTextToAll, $COLOR_GREEN)
-				If $debugDetect = 0 Then Click(365 + ($Slot * 68), $DonationWindowY + 100 + $YComp, $Quant, $iDelayDonateCC3, "#0175")
+				If $debugDetect = 0 Then ClickZone(365 + ($Slot * 68), $DonationWindowY + 100 + $YComp, 10, $Quant, $iDelayDonateCC3) ; Click(365 + ($Slot * 68), $DonationWindowY + 100 + $YComp, $Quant, $iDelayDonateCC3, "#0175")
 			Else
 				If $iDonTroopsQuantity > 1 Then $plural = 1
 				;DonateStats
 				$DonatedValue = $iDonTroopsQuantity
 				If $bDonateAll Then $sTextToAll = " (to all requests)"
 				SetLog("Donating " & $iDonTroopsQuantity & " " & NameOfTroop($Type, $plural) & $sTextToAll, $COLOR_GREEN)
-				If $debugDetect = 0 Then Click(365 + ($Slot * 68), $DonationWindowY + 100 + $YComp, $iDonTroopsQuantity, $iDelayDonateCC3, "#0175")
+				If $debugDetect = 0 Then ClickZone(365 + ($Slot * 68), $DonationWindowY + 100 + $YComp, 10, $iDonTroopsQuantity, $iDelayDonateCC3) ;Click(365 + ($Slot * 68), $DonationWindowY + 100 + $YComp, $iDonTroopsQuantity, $iDelayDonateCC3, "#0175")
 			EndIf
 
 			$bDonate = True
@@ -596,7 +543,7 @@ Func DonateTroopType($Type, $Quant = 0, $Custom = False, $bDonateAll = False)
 				_ColorCheck(_GetPixelColor(360 + ($Slot * 68), $DonationWindowY + 107 + $YComp, True), Hex(0x6038B0, 6), 20) Then ; check for 'purple'
 			If $bDonateAll Then $sTextToAll = " (to all requests)"
 			SetLog("Donating " & $iDonSpellsQuantity & " " & NameOfTroop($Type) & $sTextToAll, $COLOR_GREEN)
-			If $debugDetect = 0 Then Click(365 + ($Slot * 68), $DonationWindowY + 100 + $YComp, $iDonSpellsQuantity, $iDelayDonateCC3, "#0175")
+			If $debugDetect = 0 Then ClickZone(365 + ($Slot * 68), $DonationWindowY + 100 + $YComp, 10, $iDonSpellsQuantity, $iDelayDonateCC3) ;Click(365 + ($Slot * 68), $DonationWindowY + 100 + $YComp, $iDonSpellsQuantity, $iDelayDonateCC3, "#0175")
 
 			$bDonate = True
 
@@ -615,9 +562,9 @@ Func DonateTroopType($Type, $Quant = 0, $Custom = False, $bDonateAll = False)
 	EndIf
 
 	;DonateStats
-	If $bDonate And $ichkDStats = 1 And $DonatedValue <> 0 Then
-		If $iImageCompare = "Equal" Then
 
+	If $bDonate And $ichkDStats = 1 And $DonatedValue <> 0 Then
+		If $iImageCompare > 90 And $ImageExist <> "" Then
 			$TroopCol = GetTroopColumn(NameOfTroop($Type, 1))
 			If $debugSetlog = 1 Then SetLog("DonateStats: Found Troop Name:" & NameOfTroop($Type, 1) & " at column: " & $TroopCol, $COLOR_PURPLE)
 
@@ -629,18 +576,24 @@ Func DonateTroopType($Type, $Quant = 0, $Custom = False, $bDonateAll = False)
 				_GUICtrlListView_SetItem($lvDonatedTroops, $DonatedValue + $TroopValue, $iSearch, $TroopCol)
 				SetLog("DonateStats: updated for " & $ImageExist & " with " & $TroopValue & " " & NameOfTroop($Type, 1), $COLOR_GREEN)
 			Else
-				SetLog("DonateStats: Unable to locate existing image file in DonateStats, update failed.", $COLOR_RED)
+				SetLog("DonateStats: Unable to locate " & $ImageExist & " DonateStats, update failed.", $COLOR_RED)
 			EndIf
 
 		Else
+			If FileExists($dirTemp & "DonateStats\" & $DonateFile) Then
+				SetLog("DonateStats: Updating to same clan member with: " & $DonatedValue & " " & NameOfTroop($Type, 1), $COLOR_GREEN)
+			Else
 			FileCopy($dirTemp & $DonateFile, $dirTemp & "DonateStats\", $FC_OVERWRITE + $FC_CREATEPATH)
-			If $debugSetlog = 1 Then SetLog("DonateStats: " & "Adding new Image: " & $dirTemp & "DonateStats\" & $DonateFile & " Troop: " & NameOfTroop($Type, 1) & " Quantity: " & $DonatedValue)
+				SetLog("DonateStats: Adding new clan member with: " & $DonatedValue & " " & NameOfTroop($Type, 1), $COLOR_GREEN)
 
-			_GUIImageList_AddBitmap($hImage, $dirTemp & "DonateStats\" & $DonateFile)
-			_GUICtrlListView_SetImageList($lvDonatedTroops, $hImage, 1)
+				$Index = _GUIImageList_AddBitmap($ImageList, $dirTemp & "DonateStats\" & $DonateFile)
 
-			$iListCount = _GUIImageList_GetImageCount($hImage)
+				$iListCount = _GUIImageList_GetImageCount($ImageList)
+
 			_GUICtrlListView_AddItem($lvDonatedTroops, $DonateFile, $iListCount-1)
+				_GUICtrlListView_SetImageList($lvDonatedTroops, $ImageList, 1)
+
+			EndIf
 
 			$TroopCol = GetTroopColumn(NameOfTroop($Type, 1))
 			If $debugSetlog = 1 Then SetLog("DonateStats: Found Troop Name:" & NameOfTroop($Type, 1) & " at column: " & $TroopCol, $COLOR_PURPLE)
@@ -650,7 +603,7 @@ Func DonateTroopType($Type, $Quant = 0, $Custom = False, $bDonateAll = False)
 				_GUICtrlListView_SetItem($lvDonatedTroops, $DonatedValue, $iSearch, $TroopCol)
 				SetLog("DonateStats: updated for " & $DonateFile & " with " & $DonatedValue & " " & NameOfTroop($Type, 1), $COLOR_GREEN)
 			Else
-				SetLog("DonateStats: Unable to locate existing image file in DonateStats, update failed.", $COLOR_RED)
+				SetLog("DonateStats: Unable to locate existing image in DonateStats, update failed.", $COLOR_RED)
 			EndIf
 
 		EndIf
@@ -663,8 +616,8 @@ Func DonateTroopType($Type, $Quant = 0, $Custom = False, $bDonateAll = False)
 		Else
 			SetLog("DonateStats: There were errors, donated '" & NameOfTroop($Type, 1) & "' counts/totals skipped.", $COLOR_RED)
 		EndIf
-	_GDIPlus_ImageDispose($bm1)
-	_GDIPlus_ImageDispose($bm2)
+
+
 	EndIf
 	;End DonateStats
 
@@ -682,8 +635,60 @@ Func DonateWindow($Open = True)
 	EndIf
 
 	; Click on Donate Button and wait for the window
-	If _ColorCheck(_GetPixelColor($DonatePixel[0] - 44 , $DonatePixel[1] + 14 , True), Hex(0xFFFFFF, 6), 5) Then
-		Click($DonatePixel[0] - 40, $DonatePixel[1] + 10, 1, 0, "#0174")
+	If _ColorCheck(_GetPixelColor($DonatePixel[0] - 44, $DonatePixel[1] + 14, True), Hex(0xFFFFFF, 6), 5) Then
+
+		;DonateStats
+		FileDelete($dirTemp & "*.bmp")
+
+		$iPosY = $DonatePixel[1] - 76
+		_CaptureRegion(31, $iPosY, 170, $iPosY + 25, True)
+
+		Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
+		Local $Time = @HOUR & "." & @MIN & "." & @SEC
+
+		$DonateFile = $Date & "__" & $Time & ".bmp"
+
+		_GDIPlus_ImageSaveToFile($hBitmap, $dirTemp & $DonateFile)
+
+		If $debugSetlog = 1 Then SetLog("DonateStats: Capture clan member name to file " & $DonateFile, $COLOR_PURPLE)
+
+		_GDIPlus_BitmapDispose($hBitmap)
+		_WinAPI_DeleteObject($hBitmap)
+
+		If $ichkDStats = 1 Then
+
+			$iImageCompare = False
+			$ImageExist = ""
+			$DonatedValue = 0
+
+			$bFileList = _FileListToArrayRec($dirTemp & "DonateStats\", "*.bmp", 1, 0, 1)
+			If Not @error And IsArray($bFileList) Then
+				If $debugSetlog = 1 Then SetLog("DonateStats: ImageCompare Checkpoint.", $COLOR_PURPLE)
+
+				For $y = 1 To $bFileList[0]
+
+					$iImageCompare = CompareDBitmaps($DonateFile, $bFileList[$y])
+					If $debugSetlog = 1 Then SetLog("DonateStats: Imagecompare result: " & $iImageCompare & "% match!", $COLOR_PURPLE)
+					If $iImageCompare > 90 Then
+						$ImageExist = $bFileList[$y]
+						If $debugSetlog = 1 Then SetLog("$ImageCompare Success File " & $DonateFile & " = " & $bFileList[$y], $COLOR_GREEN)
+						ExitLoop
+					EndIf
+
+					$ImageExist = ""
+				Next
+
+			Else
+				If @error = 1 Then
+					SetLog("DonateStats: No existing images to compare. Adding new clan member donate counts.")
+				EndIf
+			EndIf
+
+		EndIf
+
+		;End DonateStats
+
+		ClickZone($DonatePixel[0] - 40, $DonatePixel[1] + 10, 10, 1, 0) ;Click($DonatePixel[0] - 40, $DonatePixel[1] + 10, 1, 0, "#0174")
 	Else
 		If $debugSetlog = 1 Then SetLog("Could not find the Donate Button!", $COLOR_PURPLE)
 		Return False

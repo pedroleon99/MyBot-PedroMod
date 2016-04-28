@@ -44,36 +44,21 @@ Local $ImagesToUse[3]
 	SetLog("Collecting Resources", $COLOR_BLUE)
 	If _Sleep($iDelayCollect2) Then Return
 
-	If $listResourceLocation <> "" Then
-		Local $ResourceLocations = StringSplit($listResourceLocation, "|")
-		For $i = 1 To $ResourceLocations[0]
-			If $ResourceLocations[$i] <> "" Then
-				$pixel = StringSplit($ResourceLocations[$i], ";")
-				If isInsideDiamondXY($pixel[1], $pixel[2]) Then
-					If IsMainPage() Then click($pixel[1], $pixel[2], 1, 0, "#0331")
-				Else
-					SetLog("Error in Mines/Collector locations found, finding positions again", $COLOR_RED)
-					IniDelete($building, "other", "listResource")
-					If _Sleep($iDelayCollect2) Then Return
-					$listResourceLocation = ""
-					BotDetectFirstTime()
-					IniWrite($building, "other", "listResource", $listResourceLocation)
-					ExitLoop
-				EndIf
-				If _Sleep($iDelayCollect2) Then Return
-			EndIf
-		Next
-	EndIf
+	Local $aTimes[5] = [1, 2, 3, 5, 7]
+	Local $Randomtemp[6][2] = [[1, 1], [95, 130], [234, 35], [33, 211], [624, 26], [179, 78]]
 
 	While 1
+		Local $i = Random(0, 5, 1)
+		Local $aRandomAway[2] = [$Randomtemp[$i][0], $Randomtemp[$i][1]]
 		If _Sleep($iDelayCollect1) Or $RunState = False Then ExitLoop
 		_CaptureRegion()
 		If _ImageSearch(@ScriptDir & "\images\Resources\collect.png", 1, $collx, $colly, 20) Then
 			If isInsideDiamondXY($collx, $colly) Then
-				If IsMainPage() Then Click($collx, $colly, 1, 0, "#0330") ;Click collector
-				If _Sleep($iDelayCollect1) Then Return
+				If IsMainPage() Then ClickZone($collx, $colly, 20) ;Click collector
+				; Random Sleep from 100ms to 700ms
+				If _Sleep($iDelayCollect1 * $aTimes[Random(0, 4, 1)]) Then Return
 			EndIf
-			ClickP($aAway, 1, 0, "#0329") ;Click Away
+			ClickP($aRandomAway, 1, 0, "#0329") ;Click Away
 		Else
 			ExitLoop
 		EndIf

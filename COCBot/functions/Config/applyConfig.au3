@@ -1048,13 +1048,6 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 		GUICtrlSetState($chkBarrackSpell, $GUI_UNCHECKED)
 	EndIf
 
-	If $stayOfflineWhileTrain = 1 Then
-		GUICtrlSetState($chkStayOfflineWhileTrain, $GUI_CHECKED)
-	Else
-		GUICtrlSetState($chkStayOfflineWhileTrain, $GUI_UNCHECKED)
-	EndIf
-	chkStayOfflineWhileTrain()
-
 	
 	; Boost  -------------------------------------------------------------------------------
 	_GUICtrlComboBox_SetCurSel($cmbQuantBoostBarracks, $iCmbQuantBoostBarracks)
@@ -1066,6 +1059,14 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 	_GUICtrlComboBox_SetCurSel($cmbBoostWarden, $iCmbBoostWarden)
 
 	;barracks boost not saved (no use)
+
+	
+	If $stayOfflineWhileTrain = 1 Then
+		GUICtrlSetState($chkStayOfflineWhileTrain, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkStayOfflineWhileTrain, $GUI_UNCHECKED)
+	EndIf
+	chkStayOfflineWhileTrain()
 
 	; Spells Creation  ---------------------------------------------------------------------
 	GUICtrlSetData($txtNumLightningSpell, $iLightningSpellComp)

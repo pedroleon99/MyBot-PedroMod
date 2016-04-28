@@ -25,8 +25,8 @@ Local $x = 30, $y = 150
 			GUICtrlSetOnEvent(-1, "chkBotStop")
 		$cmbBotCommand = GUICtrlCreateCombo("", $x + 20, $y - 3, 95, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetTip(-1, $txtTip)
-			GUICtrlSetData(-1, GetTranslated(7,4, "Halt Attack") & "|" & GetTranslated(7,155, "Stop Bot") & "|" & GetTranslated(7,156, "Close Bot") & "|" & GetTranslated(7,157, "Close CoC+Bot") & "|" & GetTranslated(7,5, "Shutdown PC") & "|" & GetTranslated(7,6, "Sleep PC") & "|" & GetTranslated(7,7, "Reboot PC"), GetTranslated(7,4, -1))
-			GUICtrlSetState (-1, $GUI_DISABLE)
+			GUICtrlSetData(-1, GetTranslated(7,4, "Halt Attack") & "|" & GetTranslated(7,155, "Stop Bot") & "|" & GetTranslated(7,156, "Close Bot") & "|" & GetTranslated(7,157, "Close CoC+Bot") & "|" & GetTranslated(7,5, "Shutdown PC") & "|" & GetTranslated(7,6, "Sleep PC") & "|" & GetTranslated(7,7, "Reboot PC")& "|" & GetTranslated(7,171, "Random Halt"), GetTranslated(7,171, -1))
+			;GUICtrlSetState (-1, $GUI_DISABLE)
 		$lblBotCond = GUICtrlCreateLabel(GetTranslated(7,88, "When..."), $x + 128, $y, 45, 17)
 		$cmbBotCond = GUICtrlCreateCombo("", $x + 175, $y - 3, 160, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetTip(-1, $txtTip)
@@ -36,9 +36,9 @@ Local $x = 30, $y = 150
 			GetTranslated(7,19, "Elixir Full") & "|" & GetTranslated(7,20, "Reach Max. Trophy") & "|" & GetTranslated(7,153, "Dark Elixir Full") & "|" & GetTranslated(7,154, "All Storage (G+E+DE) Full") & "|" & _
 			GetTranslated(7,21, "Bot running for...") & "|" & GetTranslated(7,89, "Now (Train/Donate Only)") & "|" & _
 			GetTranslated(7,22, "Now (Donate Only)") & "|" & GetTranslated(7,23, "Now (Only stay online)") & "|" & GetTranslated(7,150, "W/Shield (Train/Donate Only)") & "|" & GetTranslated(7,151, "W/Shield (Donate Only)") & "|" & _
-			GetTranslated(7,152, "W/Shield (Only stay online)") & "|" & GetTranslated(7,158, "gain Gold/h is less than") & "|" & GetTranslated(7,159, "gain Elixir/h is less than") & "|" & GetTranslated(7,160, "gain (Gold + Elixir)/h is less than"), GetTranslated(7,89, -1))
+			GetTranslated(7,152, "W/Shield (Only stay online)") & "|" & GetTranslated(7,178, "Random 3 ~ 6 hours") & "|" & GetTranslated(7,158, "gain Gold/h is less than") & "|" & GetTranslated(7,159, "gain Elixir/h is less than") & "|" & GetTranslated(7,160, "gain (Gold + Elixir)/h is less than"), GetTranslated(7,178, -1))
 			GUICtrlSetOnEvent(-1, "cmbBotCond")
-			GUICtrlSetState (-1, $GUI_DISABLE)
+			;GUICtrlSetState (-1, $GUI_DISABLE)
 		$cmbHoursStop = GUICtrlCreateCombo("", $x + 335, $y - 3, 80, 35, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			GUICtrlSetTip(-1, $txtTip)
 			$sTxtHours = GetTranslated(7,25, "Hours")
@@ -220,14 +220,14 @@ $y += 35
 		$y -= 7
 		$lblRestartGold = GUICtrlCreateLabel(">", $x + 112, $y, -1, -1)
 		GUICtrlCreateIcon ($pIconLib, $eIcnGold, $x + 175, $y, 16, 16)
-		$txtRestartGold = GUICtrlCreateInput("10000", $x + 120, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$txtRestartGold = GUICtrlCreateInput("100000", $x + 120, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$txtTip = GetTranslated(7,43, "Minimum Gold value for the bot to resume attacking after halting because of low gold.")
 			GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetLimit(-1, 7)
 		$y += 22
 		$lblRestartElixir = GUICtrlCreateLabel(">", $x + 112, $y, -1, -1)
 		GUICtrlCreateIcon ($pIconLib, $eIcnElixir, $x + 175, $y, 16, 16)
-		$txtRestartElixir = GUICtrlCreateInput("25000", $x + 120, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$txtRestartElixir = GUICtrlCreateInput("250000", $x + 120, $y, 50, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			$txtTip = GetTranslated(7,44, "Minimum Elixir value for the bot to resume attacking after halting because of low elixir.")
 			GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetLimit(-1, 7)
@@ -280,7 +280,7 @@ $y += 35
 		$lblTimeWakeUp = GUICtrlCreateLabel(GetTranslated(7,55, "When 'Another Device' wait") & ":", $x - 10, $y + 2, -1, -1)
 		$txtTip = GetTranslated(7,56, "Enter the time to wait (in seconds) before the Bot reconnects when another device took control.")
 			GUICtrlSetTip(-1, $txtTip)
-		$txtTimeWakeUp = GUICtrlCreateInput("120", $x + 127, $y - 1, 35, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$txtTimeWakeUp = GUICtrlCreateInput("240", $x + 127, $y - 1, 35, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetLimit(-1, 3)
 		$lblTimeWakeUpSec = GUICtrlCreateLabel(GetTranslated(7,57, "sec."), $x + 165, $y + 2, -1, -1)
@@ -291,7 +291,7 @@ $y += 35
 		$txtTip = GetTranslated(7,59, "Use this slider to change the time to wait between Next clicks when searching for a Village to Attack.") & @CRLF & GetTranslated(7,60, "This might compensate for Out of Sync errors on some PC's.") & @CRLF & GetTranslated(7,61, "NO GUARANTEES! This will not always have the same results!")
 		$lblVSDelay0 = GUICtrlCreateLabel(GetTranslated(7,62, "Min"), $x-25, $y-2, 30, 15, $SS_RIGHT)
 			GUICtrlSetTip(-1, $txtTip)
-		$lblVSDelay = GUICtrlCreateLabel("0", $x+7, $y-2, 12, 15, $SS_RIGHT)
+		$lblVSDelay = GUICtrlCreateLabel("1", $x+7, $y-2, 12, 15, $SS_RIGHT)
 			GUICtrlSetTip(-1, $txtTip)
 		$lbltxtVSDelay = GUICtrlCreateLabel(GetTranslated(7,63, "seconds"), $x + 23, $y-2, -1, -1)
 		$sldVSDelay = GUICtrlCreateSlider($x + 62, $y - 4, 118, 25, BITOR($TBS_TOOLTIPS, $TBS_AUTOTICKS)) ;,
@@ -300,13 +300,13 @@ $y += 35
 			_GUICtrlSlider_SetTipSide(-1, $TBTS_BOTTOM)
 			_GUICtrlSlider_SetTicFreq(-1, 1)
 			GUICtrlSetLimit(-1, 10, 0) ; change max/min value
-			GUICtrlSetData(-1, 0) ; default value
+			GUICtrlSetData(-1, 1) ; default value
 			GUICtrlSetOnEvent(-1, "sldVSDelay")
 		$y += 25
 		$lblMaxVSDelay0 = GUICtrlCreateLabel(GetTranslated(7,64, "Max"), $x-23, $y-2, 30, 15, $SS_RIGHT)
 			$txtTip = GetTranslated(7,65, "Enable random village search delay value by setting") & @CRLF & GetTranslated(7,66, "bottom Max slide value higher than the top minimum slide")
 			GUICtrlSetTip(-1, $txtTip)
-		$lblMaxVSDelay = GUICtrlCreateLabel("0", $x+7, $y-2, 12, 15, $SS_RIGHT)
+		$lblMaxVSDelay = GUICtrlCreateLabel("5", $x+7, $y-2, 12, 15, $SS_RIGHT)
 			GUICtrlSetTip(-1, $txtTip)
 		$lbltxtMaxVSDelay = GUICtrlCreateLabel(GetTranslated(7,63, -1), $x + 23, $y-2, 45, -1)
 		$sldMaxVSDelay = GUICtrlCreateSlider($x + 62, $y - 4, 137, 25, BITOR($TBS_TOOLTIPS, $TBS_AUTOTICKS)) ;,
@@ -315,7 +315,7 @@ $y += 35
 			_GUICtrlSlider_SetTipSide(-1, $TBTS_BOTTOM)
 			_GUICtrlSlider_SetTicFreq(-1, 1)
 			GUICtrlSetLimit(-1, 12, 0) ; change max/min value
-			GUICtrlSetData(-1, 0) ; default value
+			GUICtrlSetData(-1, 5) ; default value
 			GUICtrlSetOnEvent(-1, "sldMaxVSDelay")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

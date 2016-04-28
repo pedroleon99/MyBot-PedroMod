@@ -23,7 +23,7 @@ $tabMain = GUICtrlCreateTab(5, 65, 461, 445, $TCS_MULTILINE)
 	;GUICtrlSetOnEvent(-1, "tabMain") ; moved to Func GUIControl()
 	GUICtrlCreateLabel("", 0, 0, 470, 60)
 	GUICtrlSetBkColor(-1, $COLOR_WHITE)
-	GUICtrlCreatePic (@ScriptDir & "\Images\logo.jpg", 60, 0, 352, 60)
+	GUICtrlCreatePic (@ScriptDir & "\Images\logo.jpg", 0, 0, 470, 60)
 
 ;~ ------------------------------------------------------
 ;~ Header Menu

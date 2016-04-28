@@ -143,8 +143,12 @@ SetLog("Android Emulator Configuration: " & $Android & ($AndroidInstance <> "" ?
 AdlibRegister("PushBulletRemoteControl", $PBRemoteControlInterval)
 AdlibRegister("PushBulletDeleteOldPushes", $PBDeleteOldPushesInterval)
 
-
-Getchatid(GetTranslated(18, 48, "select your remote")) ; receive Telegram chat id and send keyboard
+$lastmessage = GetLastMsg()
+If $first = 0 Then
+	$first = 1
+	$lastremote = $lastuid
+	Getchatid(GetTranslated(18, 48, "select your remote")) ; receive Telegram chat id and send keyboard
+EndIf
 
 CheckDisplay() ; verify display size and DPI (Dots Per Inch) setting
 
@@ -177,7 +181,12 @@ WEnd
 BotClose()
 
 Func runBot() ;Bot that runs everything in order
+	Local $maxRandomLoops = 10
+	Local Enum $eCollect, $eCheckTombs, $eReArm, $eReplayShare, $eDonateCC
+	Local Static $randomCounter[$eDonateCC + 1] = [0, 0, 0, 0, 0]
+
 	$TotalTrainedTroops = 0
+	Local $randomize
 	While 1
 		;ModBoju
 		Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
@@ -233,24 +242,54 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($iDelayRunBot5) Then Return
 				checkMainScreen(False)
 				If $Restart = True Then ContinueLoop
+				$randomize = Random(0,1,1)
+			If $randomize = 1 Or $randomCounter[$eCollect] >= $maxRandomLoops then
 			Collect()
+				$randomCounter[$eCollect] = 0
+			Else
+				$randomCounter[$eCollect] += 1			
+			EndIf
 				If _Sleep($iDelayRunBot1) Then Return
 				If $Restart = True Then ContinueLoop
+				$randomize = Random(0,1,1)
+			If $randomize = 1 Or $randomCounter[$eCheckTombs] >= $maxRandomLoops then
 			CheckTombs()
+				$randomCounter[$eCheckTombs] = 0
+			Else
+				$randomCounter[$eCheckTombs] += 1			
+			EndIf
 				If _Sleep($iDelayRunBot3) Then Return
 				If $Restart = True Then ContinueLoop
+				$randomize = Random(0,1,1)
+			If $randomize = 1 Or $randomCounter[$eReArm] >= $maxRandomLoops then
 			ReArm()
+				$randomCounter[$eReArm] = 0
+			Else
+				$randomCounter[$eReArm] += 1			
+			EndIf
 				If _Sleep($iDelayRunBot3) Then Return
 				If $Restart = True Then ContinueLoop
 			If IsToAttack() Or $fullArmy1 = False Then ;ModBoju
+				$randomize = Random(0,1,1)
+			If $randomize = 1 Or $randomCounter[$eReplayShare] >= $maxRandomLoops then
 			ReplayShare($iShareAttackNow)
+				$randomCounter[$eReplayShare] = 0
+			Else
+				$randomCounter[$eReplayShare] += 1			
+			EndIf
 				If _Sleep($iDelayRunBot3) Then Return
 				If $Restart = True Then ContinueLoop
 			ReportPushBullet()
 				If _Sleep($iDelayRunBot3) Then Return
 				If $Restart = True Then ContinueLoop
 			If checkAndroidTimeLag() = True Then ContinueLoop
+				$randomize = Random(0,1,1)
+			If $randomize = 1 Or $randomCounter[$eDonateCC] >= $maxRandomLoops then
 			DonateCC()
+				$randomCounter[$eDonateCC] = 0
+			Else
+				$randomCounter[$eDonateCC] += 1			
+			EndIf
 				If _Sleep($iDelayRunBot1) Then Return
 				checkMainScreen(False) ; required here due to many possible exits
 				If $Restart = True Then ContinueLoop
@@ -377,7 +416,13 @@ Func runBot() ;Bot that runs everything in order
 EndFunc   ;==>runBot
 
 Func Idle() ;Sequence that runs until Full Army
+	Local $maxRandomLoops = 10
+	Local Enum $eCleanYard, $eCollect
+	Local Static $randomCounter[$eCollect + 1] = [0, 0]
+	
 	Local $TimeIdle = 0 ;In Seconds
+	Local $randomize
+
 	;If $debugsetlog = 1 Then SetLog("Func Idle ", $COLOR_PURPLE)
 	While $fullArmy = False Or $bFullArmyHero = False
 		checkAndroidTimeLag()
@@ -399,7 +444,7 @@ Func Idle() ;Sequence that runs until Full Army
 				OpenCOC() ; Open COC
 			EndIf
         EndIf
-
+	
 		Local $hTimer = TimerInit()
 		Local $iReHere = 0
 		While $iReHere < 7
@@ -424,10 +469,22 @@ Func Idle() ;Sequence that runs until Full Army
 		EndIf
 		ReplayShare($iShareAttackNow)
 		If _Sleep($iDelayIdle1) Then Return
+		$randomize = Random(0,1,1)
+		If $randomize = 1 Or Number($randomCounter[$eCleanYard]) >= $maxRandomLoops then
 		CleanYard()
+			$randomCounter[$eCleanYard] = 0
+		Else
+			$randomCounter[$eCleanYard] += 1			
+		EndIf
 		If $Restart = True Then ExitLoop
 		If $iCollectCounter > $COLLECTATCOUNT Then ; This is prevent from collecting all the time which isn't needed anyway
+			$randomize = Random(0,1,1)
+			If $randomize = 1 Or $randomCounter[$eCollect] >= $maxRandomLoops then
 			Collect()
+				$randomCounter[$eCollect] = 0
+			Else
+				$randomCounter[$eCollect] += 1			
+			EndIf
 			If _Sleep($iDelayIdle1) Then Return
  			DonateCC()
  			If $Restart = True Then ExitLoop
@@ -437,6 +494,7 @@ Func Idle() ;Sequence that runs until Full Army
 		$iCollectCounter = $iCollectCounter + 1
 		If $CommandStop = -1 Then
 			Train()
+			RemainTimetroops()
 				If $Restart = True Then ExitLoop
 				If _Sleep($iDelayIdle1) Then ExitLoop
 				checkMainScreen(False)

@@ -19,7 +19,7 @@
 #include <ListViewConstants.au3>
 #include <GuiListView.au3>
 
-Global $hImage, $lvDonatedTroops, $DonateFile, $bm1, $bm2, $iChkDStats, $DonatedValue = 0
+Global $ImageList, $lvDonatedTroops, $DonateFile, $bm1, $bm2, $iChkDStats, $DonatedValue = 0, $iImageCompare = False, $ImageExist = "", $aFileList
 
 Local $tabDonateStats = GUICtrlCreateTabItem("Donate Stats")
 Local $x = 30, $y = 145
@@ -28,7 +28,6 @@ _GUICtrlListView_SetExtendedListViewStyle($lvDonatedTroops, $LVS_EX_GRIDLINES+$L
 _GUICtrlListView_SetColumnWidth($lvDonatedTroops, 0, 139)
 
 Local $chkDStats = GUICtrlCreateCheckbox("Enable", $x + 310, $y - 20, 48, 20)
-GUICtrlSetState(-1, $GUI_UNCHECKED)
 $DonateStatsReset = GUICtrlCreateButton("Reset Stats", $x + 366, $y - 20, 67, 20)
 _GUICtrlListView_SetExtendedListViewStyle(-1, $WS_EX_TOPMOST+$WS_EX_TRANSPARENT)
 GUICtrlSetOnEvent(-1, "InitDonateStats")

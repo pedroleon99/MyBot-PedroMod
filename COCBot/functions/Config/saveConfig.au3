@@ -974,11 +974,13 @@ Func saveConfig() ;Saves the controls settings to the config
 
 	;barracks boost not saved (no use)
 
+	
 	If GUICtrlRead($chkStayOfflineWhileTrain) = $GUI_CHECKED Then
 		IniWrite($config, "troop", "StayOfflineWhileTrain", 1)
 	Else
 		IniWrite($config, "troop", "StayOfflineWhileTrain", 0)
 	EndIf
+
 
 	; Spells Creation  ---------------------------------------------------------------------
 	IniWrite($config, "Spells", "LightningSpell", GUICtrlRead($txtNumLightningSpell))

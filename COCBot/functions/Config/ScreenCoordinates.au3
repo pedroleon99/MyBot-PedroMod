@@ -28,6 +28,7 @@ Global $aReloadButton[4]     = [443, 408 + $midOffsetY, 0x282828, 10] ; Reload C
 Global $aAttackButton[2]     = [ 60, 614 + $bottomOffsetY]               ; Attack Button, Main Screen
 Global $aFindMatchButton[4]  = [195, 480+$bottomOffsetY, 0xF0B028, 10] ; Find Multiplayer Match Button, Attack Screen 860x780 without shield
 Global $aFindMatchButton2[4] = [195, 480+$bottomOffsetY, 0xD84D00, 10] ; Find Multiplayer Match Button, Attack Screen 860x780 with shield
+Global $aClickMatchButton    = [247, 490+ $bottomOffsetY]
 Global $aIsAttackShield[4]   = [250, 415 + $midOffsetY, 0xE8E8E0, 10] ; Attack window, white shield verification window
 Global $aAway[2]             = [  1,  40]               ; Away click, moved from 1,1 to prevent scroll window from top
 Global $aRemoveShldButton[4] = [470,  18, 0xA80408, 10] ; Legacy - Main Screen, Red pixel lower part of Minus sign to remove shield, used to validate latest COC installed
