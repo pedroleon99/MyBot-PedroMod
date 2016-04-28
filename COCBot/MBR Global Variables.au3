@@ -1152,7 +1152,7 @@ Global $hCollectorGUI = 0
 
 ;About GUI - AminTalkin
 Global $hAboutGUI = 0
-Global $chkRemainTrain = 0
+;Global $chkRemainTrain = 0
 
 Global $iDeadBase75percent = 1
 Global $iDeadBase75percentStartLevel = 4

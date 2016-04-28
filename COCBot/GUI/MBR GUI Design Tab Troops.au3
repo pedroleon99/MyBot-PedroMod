@@ -78,7 +78,7 @@ $tabTroops = GUICtrlCreateTabItem(GetTranslated(1,1, "Troops"))
 	$x += 150
 	$y = 150
 
-	$y =375
+	$y =379
 	$grpRaidComp = GUICtrlCreateGroup(GetTranslated(1,27, "Army Strength"), $x - 20, $y - 15, 150, 52)
 		$y += 10
 		GUICtrlCreateIcon ($pIconLib, $eIcnBldgTarget, $x - 10, $y - 8, 24, 24)
@@ -90,13 +90,13 @@ $tabTroops = GUICtrlCreateTabItem(GetTranslated(1,1, "Troops"))
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 
-	$y =410
-	$grpMods = GUICtrlCreateGroup("Barrack && Offline Options", $x - 20, $y + 2, 150, 93)
-		$y +=15
+	$y =419
+	$grpMods = GUICtrlCreateGroup("Barrack && Offline Options", $x - 20, $y + 2, 150, 84)
+		$y +=18
 		$chkDontRemove = GUICtrlCreateCheckbox("Don't Empty Barracks", $x - 15, $y, -1, -1)
 			$txtTip ="The bot will not remove existing troops in the barracks when training."
 			GUICtrlSetTip(-1, $txtTip)
-		$y +=18
+		$y +=21
 		$chkBarrackSpell = GUICtrlCreateCheckbox("Spell Barrack Mode", $x - 15, $y, -1, -1)
 			$txtTip ="Train spells continuously in barrack mode (Lightning, Heal, and Rage only)."
 			GUICtrlSetTip(-1, $txtTip)
@@ -104,7 +104,7 @@ $tabTroops = GUICtrlCreateTabItem(GetTranslated(1,1, "Troops"))
 
 	;$grpRemainTrain = GUICtrlCreateGroup(GetTranslated(1,73, "Closing the Game"), $x - 20, $y + 30, 150, 86)
 	;	$y += 10
-	$y +=18
+	$y +=21
 		;GUICtrlCreateIcon ($pIconLib, $eIcnBldgX, $x - 10, $y , 24, 24)
 		;$chkRemainTrain = GUICtrlCreateCheckbox(GetTranslated(1,74, "Close During Training"),$x - 15, $y, -1, -1)
 ;			GUICtrlSetState(-1, $GUI_UNCHECKED)
@@ -116,10 +116,10 @@ $tabTroops = GUICtrlCreateTabItem(GetTranslated(1,1, "Troops"))
 			GUICtrlSetOnEvent(-1, "chkGoOfflineWhileTrain")
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 
-	$y +=18
-		$chkRemainNight = GUICtrlCreateCheckbox(GetTranslated(1,76, "Closing At Night!"),$x - 15, $y, -1, -1)
-			GUICtrlSetState(-1, $GUI_UNCHECKED)
-			GUICtrlSetTip(-1, GetTranslated(1,77, "Close the Bot between 00~01 to 08~09 am , sleeping time!!"))
+	$y +=21
+;		$chkRemainNight = GUICtrlCreateCheckbox(GetTranslated(1,76, "Closing At Night!"),$x - 15, $y, -1, -1)
+;			GUICtrlSetState(-1, $GUI_UNCHECKED)
+;			GUICtrlSetTip(-1, GetTranslated(1,77, "Close the Bot between 00~01 to 08~09 am , sleeping time!!"))
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	$y = 150
