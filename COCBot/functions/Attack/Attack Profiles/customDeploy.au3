@@ -1,21 +1,15 @@
-; #FUNCTION# ====================================================================================================================
+; #CLASS# ====================================================================================================================
 ; Name ..........: customDeploy
 ; Description ...: Contains functions for custom deployment
-; Syntax ........:
-; Parameters ....:
-; Return values .: None
-; Author ........: LunaEclipse(January, 2016)
+; Author ........: LunaEclipse(May, 2016)
 ; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015
 ;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: No
 ; ===============================================================================================================================
 
 ; Determine which side has the most points, to attack from
 Func determineSideFromPoints($pointsArray)
-	Local $return = Random($sideBottomRight, $sideTopRight, 1), $maxValue = 0, $sidePoints = 0
+	Local $return =  Random($sideTopLeft, $sideBottomLeft, 1), $maxValue = 0, $sidePoints = 0
 
 	If IsArray($pointsArray) Then
 		For $i = 0 To UBound($pointsArray) - 1
@@ -74,7 +68,10 @@ EndFunc   ;==>calculatePoints
 ; Calculate which side to attack from, based on values in the UI for buildings
 Func calculateAttackSide(ByRef $aMines, ByRef $aElixir, ByRef $aDrills, ByRef $aGoldStorage, ByRef $aElixirStorage, ByRef $aDEStorage, ByRef $aTownHall)
 	Local $aSideCount[4] = [0, 0, 0, 0]
-	Local $redlines = ""
+	Local $redlines = "", $result
+
+	; Start the timer for drop point creation
+	Local $hTimer = TimerInit()	
 
 	; Capture the screen to get information about important buildings
 	_CaptureRegion2()
@@ -122,7 +119,11 @@ Func calculateAttackSide(ByRef $aMines, ByRef $aElixir, ByRef $aDrills, ByRef $a
 		SetLog("Dark Elixir full, skipping detection of drills and storage!", $COLOR_BLUE)
 	EndIf
 
-	Return determineSideFromPoints($aSideCount)
+	$result = determineSideFromPoints($aSideCount)
+
+	SetLog("Attacking using a custom deployment on the " & getSideName($result) & " side.", $COLOR_BLUE)
+	SetLog("Deployment side calculated in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds!", $COLOR_PURPLE)	
+	Return $result
 EndFunc   ;==>calculateAttackSide
 
 ; Gets the location of the priority target for use with spells
@@ -146,51 +147,36 @@ Func getSpellTargetLocation(ByRef $aDEStorage, ByRef $aTownHall)
 		$result[2] = $aCoords[1] ; Y Coord
 	EndIf
 
+	SetLog("Target for spells is the " & $result[0] & " located at " & $result[1] & "," & $result[2], $COLOR_BLUE)
 	Return $result
 EndFunc   ;==>getSpellTargetLocation
 
-Func customDeployMulti($dropVectors, $waveNumber, $dropAmount, $slotsPerEdge = 0)
-	Local $troopsLeft = Ceiling($dropAmount / 2)
+; Deploys the troops for the specified wave
+Func customDeployTroops($dropVectors, $waveNumber, $barPosition, $dropAmount, $position = 0)
+	If $dropAmount = 0 Or isProblemAffect(True) Then Return False
+
+	If $position = 0 Or $dropAmount < $position Then $position = $dropAmount
+
+	Local $troopsLeft = $dropAmount
 	Local $troopsPerSlot = 0
 
-	If $slotsPerEdge = 0 Or $troopsLeft < $slotsPerEdge Then $slotsPerEdge = $troopsLeft
+	If _SleepAttack($iDelayLaunchTroop21) Then Return
+	SelectDropTroop($barPosition) ; Select Troop
+	If _SleepAttack($iDelayLaunchTroop23) Then Return
 
-	For $i = 0 To $slotsPerEdge - 1
-		$troopsPerSlot = Ceiling($troopsLeft / ($slotsPerEdge - $i)) ; progressively adapt the number of drops to fill at the best
+	For $i = 0 To $position - 1
+		$troopsPerSlot = Ceiling($troopsLeft / ($position - $i)) ; progressively adapt the number of drops to fill at the best
 
-		standardSideTwoFingerDrop($dropVectors, $waveNumber, 0, $i, $troopsPerSlot, True)
+		standardSideDrop($dropVectors, $waveNumber, 0, $i, $troopsPerSlot, True)
 
 		$troopsLeft -= ($troopsLeft < $troopsPerSlot) ? $troopsLeft : $troopsPerSlot
 	Next
-EndFunc   ;==>customDeployMulti
+	
+	Return True
+EndFunc   ;==>customDeployTroops
 
-Func customDeployDropOnEdge($sideCoords, $dropVectors, $waveNumber, $kind, $dropAmount, $position = 0)
-	Local $troopsPerEdge = $dropAmount
-
-	If $dropAmount = 0 Or isProblemAffect(True) Then Return
-
-	If _SleepAttack($iDelayDropOnEdge1) Then Return
-	SelectDropTroop($kind) ; Select Troop
-	If _SleepAttack($iDelayDropOnEdge2) Then Return
-
-	Switch $position
-		Case 1
-			sideSingle($sideCoords, $troopsPerEdge)
-		Case 2
-			sideDouble($sideCoords, $troopsPerEdge)
-		Case Else
-			Switch $troopsPerEdge
-				Case 1
-					sideSingle($sideCoords, $troopsPerEdge)
-				Case 2
-					sideDouble($sideCoords, $troopsPerEdge)
-				Case Else
-					customDeployMulti($dropVectors, $waveNumber, $troopsPerEdge, $position)
-			EndSwitch
-	EndSwitch
-EndFunc   ;==>customDeployDropOnEdge
-
-Func launchCustomDeploy($listInfoDeploy, $CC, $King, $Queen, $Warden, $overrideSmartDeploy = -1)
+; Main function for processing Custom Deploy attack
+Func launchCustomDeploy($listInfoDeploy, $CC, $King, $Queen, $Warden)
 	; Arrays to store positions of all important buildings, used for calculating attack side
 	Local $aMines, $aElixir, $aDrills, $aGoldStorage, $aElixirStorage, $aDEStorage, $aTownHall
 	Local $dropVectors[0][0]
@@ -200,14 +186,11 @@ Func launchCustomDeploy($listInfoDeploy, $CC, $King, $Queen, $Warden, $overrideS
 	Local $spellTarget = getSpellTargetLocation($aDEStorage, $aTownHall)
 
 	; Setup the attack vectors for the troops
-	SetLog("Calculating attack vectors for all troop deployments, please be patient...", $COLOR_PURPLE)
-	customDeployVectors($dropVectors, $listInfoDeploy, $deploySide)
+	customDeployVectors($dropVectors, $listInfoDeploy, $side)
 
 	Local $kind, $nbSides, $waveNumber, $waveCount, $position, $remainingWaves
-	Local $deployX, $deployY, $dropAmount, $positionSide
+	Local $dropPoints, $dropPoint, $deployPoint, $dropAmount, $positionSide
 
-	SetLog("Attacking using a custom deployment on the " & getSideName($side) & " side.", $COLOR_BLUE)
-	SetLog("Target for spells is the " & $spellTarget[0] & " located at " & $spellTarget[1] & "," & $spellTarget[2], $COLOR_BLUE)
 	If $debugSetLog = 1 Then SetLog("Launch Custom Deploy with CC " & $CC & ", K " & $King & ", Q " & $Queen & ", W " & $Warden , $COLOR_PURPLE)
 
 	Local $aDeployButtonPositions = getUnitLocationArray()
@@ -236,31 +219,32 @@ Func launchCustomDeploy($listInfoDeploy, $CC, $King, $Queen, $Warden, $overrideS
 
 				Switch $positionSide
 					Case "L"
-						$deployX = $deploySide[0][0]
-						$deployY = $deploySide[0][1]
+						$deployPoint = convertToPoint($deploySide[0][0], $deploySide[0][1])
 					Case "R"
-						$deployX = $deploySide[4][0]
-						$deployY = $deploySide[4][1]
+						$deployPoint = convertToPoint($deploySide[4][0], $deploySide[4][1])
 					Case Else
-						$deployX = $deploySide[2][0]
-						$deployY = $deploySide[2][1]
+						$deployPoint = convertToPoint($deploySide[2][0], $deploySide[2][1])
 				EndSwitch
 
+				If $kind >= $eKing And $kind <= $eCastle Then
+					$dropPoints = $dropVectors[$i][0]
+					$dropPoint = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
+				EndIf
+				
 				Switch $kind
 					Case $eKing
-						dropHeroes($deployX, $deployY, $King, -1, -1)
+						dropHeroes($dropPoint[0], $dropPoint[1], $King, -1, -1)
 					Case $eQueen
-						dropHeroes($deployX, $deployY, -1, $Queen, -1)
+						dropHeroes($dropPoint[0], $dropPoint[1], -1, $Queen, -1)
 					Case $eWarden
-						dropHeroes($deployX, $deployY, -1, -1, $Warden)
+						dropHeroes($dropPoint[0], $dropPoint[1], -1, -1, $Warden)
 					Case $eCastle
-						dropCC($deployX, $deployY, $CC)
+						dropCC($dropPoint[0], $dropPoint[1], $CC)
 					Case $eRSpell, $eHSpell, $eJSpell, $eHaSpell, $eFSpell, $ePSpell, $eESpell
 						If ($kind <> $eESpell) Or ($kind = $eESpell And $King <> -1) Then
 							; Drop spell towards the target or center if no target
-							dropSpell(Ceiling((((100 - $position) * $deployX) + ($position * $spellTarget[1])) / 100), _
-									  Ceiling((((100 - $position) * $deployY) + ($position * $spellTarget[2])) / 100), _
-									  $kind, $minTroopsPerPosition[$kind])
+							$dropPoint = convertToPoint(Ceiling((((100 - $position) * $deployPoint[0]) + ($position * $spellTarget[1])) / 100), Ceiling((((100 - $position) * $deployPoint[1]) + ($position * $spellTarget[2])) / 100))
+							dropSpell($dropPoint, $kind, $minTroopsPerPosition[$kind])
 
 							If $unitCount[$kind] >= $minTroopsPerPosition[$kind] Then $unitCount[$kind] -= $minTroopsPerPosition[$kind]
 						ElseIf $kind = $eESpell And $King = -1 Then
@@ -273,13 +257,14 @@ Func launchCustomDeploy($listInfoDeploy, $CC, $King, $Queen, $Warden, $overrideS
 						If $dropAmount > 0 Then
 							Switch $positionSide
 								Case "L", "R"
-									SetLog("Pixel Dropping " & $kind & " at " & $deployX & "," & $deployY, $COLOR_BLUE)
-									If dropUnit($deployX, $deployY, $kind, $dropAmount) Then
+									SetLog("Dropping " & $dropAmount & " " & getTranslatedTroopName($kind) & " at random location near " & $deployPoint[0] & "," & $deployPoint[1], $COLOR_BLUE)
+									If dropUnit($deployPoint, $kind, $dropAmount) Then
 										If _SleepAttack(SetSleep(1)) Then Return
 									EndIf
 								Case Else
 									SetLog("Dropping " & getWaveName($waveNumber, $waveCount) & " wave of " & $dropAmount & " " & getTranslatedTroopName($kind), $COLOR_GREEN)
-									If customDeployDropOnEdge($deploySide, $dropVectors, $i, $barPosition, $dropAmount, $position) Then
+
+									If customDeployTroops($dropVectors, $i, $barPosition, $dropAmount, $position) Then
 										If _SleepAttack(SetSleep(1)) Then Return
 									EndIf
 							EndSwitch
@@ -291,7 +276,7 @@ Func launchCustomDeploy($listInfoDeploy, $CC, $King, $Queen, $Warden, $overrideS
 
 	If _SleepAttack($iDelayalgorithm_AllTroops4) Then Return
 
-	dropRemainingTroops($nbSides) ; Use remaining troops
+	dropRemainingTroopsCustom($side) ; Use remaining troops
 	useHeroesAbility() ; Use heroes abilities
 
 	SetLog("Finished Attacking, waiting for the battle to end")

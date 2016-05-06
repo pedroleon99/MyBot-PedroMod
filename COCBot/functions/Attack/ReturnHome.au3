@@ -19,114 +19,118 @@ Func ReturnHome($TakeSS = 1, $GoldChangeCheck = True) ; Return main screen
 	Local $hBitmap_Scaled
 	Local $i
 
-	; Modified by LunaEclipse
-	If $DisableOtherEBO = 1 And $iMatchMode = $LB And $iChkDeploySettings[$LB] = $eCustomDeploy And Number($DESideEB) = 1 And ($dropQueen Or $dropKing) Then
-		SaveandDisableEBO()
-		SetLog("Disabling Normal End Battle Options", $COLOR_GREEN)
-	EndIf
-	If $GoldChangeCheck = True Then
-		If Not IsReturnHomeBattlePage(True, False) Then ; if already in return home battle page do not wait and try to activate Hero Ability and close battle
-			SetLog("Checking if the battle has finished", $COLOR_BLUE)
-			While GoldElixirChangeEBO()
-				If _SleepAttack($iDelayReturnHome1) Then Return
-			WEnd
-
-			; Check to see if we should zap the DE Drills
-			If IsAttackPage() Then smartZap()
-
-			; If Heroes were not activated: Hero Ability activation before End of Battle to restore health
-			If ($checkKPower = True Or $checkQPower = True) And $iActivateKQCondition = "Auto" Then
-				; _CaptureRegion()
-				If _ColorCheck(_GetPixelColor($aRtnHomeCheck1[0], $aRtnHomeCheck1[1], True), Hex($aRtnHomeCheck1[2], 6), $aRtnHomeCheck1[3]) = False And _ColorCheck(_GetPixelColor($aRtnHomeCheck2[0], $aRtnHomeCheck2[1], True), Hex($aRtnHomeCheck2[2], 6), $aRtnHomeCheck2[3]) = False Then ; If not already at Return Homescreen
-					If $checkKPower = True Then
-						SetLog("Activating King's power to restore some health before EndBattle", $COLOR_BLUE)
-						If IsAttackPage() Then SelectDropTroop($King) ; If King was not activated: Boost King before EndBattle to restore some health
-					EndIf
-					If $checkQPower = True Then
-						SetLog("Activating Queen's power to restore some health before EndBattle", $COLOR_BLUE)
-						If IsAttackPage() Then SelectDropTroop($Queen) ; If Queen was not activated: Boost Queen before EndBattle to restore some health
-					EndIf
-				EndIf
-			EndIf
-		Else
-			If $DebugSetLog = 1 Then Setlog("Battle already over", $COLOR_PURPLE)
+	If Not $skipReturnHome Then
+		; Modified by LunaEclipse
+		If $DisableOtherEBO = 1 And $iMatchMode = $LB And $iChkDeploySettings[$LB] = $eCustomDeploy And Number($DESideEB) = 1 And ($dropQueen Or $dropKing) Then
+			SaveandDisableEBO()
+			SetLog("Disabling Normal End Battle Options", $COLOR_GREEN)
 		EndIf
-	EndIf
+		If $GoldChangeCheck = True Then
+			If Not IsReturnHomeBattlePage(True, False) Then ; if already in return home battle page do not wait and try to activate Hero Ability and close battle
+				SetLog("Checking if the battle has finished", $COLOR_BLUE)
+				While GoldElixirChangeEBO()
+					If _SleepAttack($iDelayReturnHome1) Then Return
+				WEnd
 
-	; Modified by LunaEclipse
-	If $DisableOtherEBO And $iMatchMode = $LB And $iChkDeploySettings[$LB] = $eCustomDeploy And Number($DESideEB) = 1 And ($dropQueen Or $dropKing) Then
-		RevertEBO()
-	EndIf
+				; Check to see if we should zap the DE Drills
+				If IsAttackPage() Then smartZap()
 
-	$checkKPower = False
-	$checkQPower = False
-	$checkWPower = False
-
-	If $iMatchMode = $TS And $icmbTroopComp <> 8 Then $FirstStart = True ; reset barracks upon return when TH sniping w/custom army
-
-	SetLog("Returning Home", $COLOR_BLUE)
-	If $RunState = False Then Return
-
-	checkAndroidTimeLag(False)
-
-	If Not IsReturnHomeBattlePage(True, False) Then
-		; ---- CLICK SURRENDER BUTTON ----
-		$i = 0 ; Reset Loop counter
-		While 1
-			If _CheckPixel($aSurrenderButton, $bCapturePixel) Then
-				If IsAttackPage() Then
-					ClickP($aSurrenderButton, 1, 0, "#0099") ;Click Surrender
-					If _SleepAttack($iDelayReturnHome2) Then Return ; short wait for confirm button to appear
-					If IsEndBattlePage(False) Then
-						ClickOkay("SurrenderOkay") ; Click Okay to Confirm surrender
-						ExitLoop
+				; If Heroes were not activated: Hero Ability activation before End of Battle to restore health
+				If ($checkKPower = True Or $checkQPower = True) And $iActivateKQCondition = "Auto" Then
+					; _CaptureRegion()
+					If _ColorCheck(_GetPixelColor($aRtnHomeCheck1[0], $aRtnHomeCheck1[1], True), Hex($aRtnHomeCheck1[2], 6), $aRtnHomeCheck1[3]) = False And _ColorCheck(_GetPixelColor($aRtnHomeCheck2[0], $aRtnHomeCheck2[1], True), Hex($aRtnHomeCheck2[2], 6), $aRtnHomeCheck2[3]) = False Then ; If not already at Return Homescreen
+						If $checkKPower = True Then
+							SetLog("Activating King's power to restore some health before EndBattle", $COLOR_BLUE)
+							If IsAttackPage() Then SelectDropTroop($King) ; If King was not activated: Boost King before EndBattle to restore some health
+						EndIf
+						If $checkQPower = True Then
+							SetLog("Activating Queen's power to restore some health before EndBattle", $COLOR_BLUE)
+							If IsAttackPage() Then SelectDropTroop($Queen) ; If Queen was not activated: Boost Queen before EndBattle to restore some health
+						EndIf
 					EndIf
 				EndIf
 			Else
-				$i += 1
+				If $DebugSetLog = 1 Then Setlog("Battle already over", $COLOR_PURPLE)
 			EndIf
-			If $i > 5 Then ExitLoop ; if end battle or surrender button are not found in 5*(200+200)ms or 2 seconds, then give up.
-			If _SleepAttack($iDelayReturnHome5) Then Return
-		WEnd
-	Else
-		If $DebugSetLog = 1 Then Setlog("Battle already over.", $COLOR_PURPLE)
-	EndIf
-
-	If _SleepAttack($iDelayReturnHome2) Then Return ; short wait for return
-
-	TrayTip($sBotTitle, "", BitOR($TIP_ICONASTERISK, $TIP_NOSOUND)) ; clear village search match found message
-
-	If $GoldChangeCheck = True Then
-		$counter = 0
-		While _ColorCheck(_GetPixelColor($aRtnHomeCheck1[0], $aRtnHomeCheck1[1], True), Hex($aRtnHomeCheck1[2], 6), $aRtnHomeCheck1[3]) = False And _ColorCheck(_GetPixelColor($aRtnHomeCheck2[0], $aRtnHomeCheck2[1], True), Hex($aRtnHomeCheck2[2], 6), $aRtnHomeCheck2[3]) = False ; test for Return Home Button
-			If _SleepAttack($iDelayReturnHome2) Then ExitLoop
-			$counter += 1
-			If $counter > 40 Then ExitLoop
-		WEnd
-		If _SleepAttack($iDelayReturnHome3) Then Return ; wait for all report details
-		_CaptureRegion(0, 0, $DEFAULT_WIDTH, $DEFAULT_HEIGHT - 45)
-		AttackReport()
-	EndIf
-
-	If $TakeSS = 1 And $GoldChangeCheck = True Then
-		SetLog("Taking snapshot of your loot", $COLOR_GREEN)
-		Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
-		Local $Time = @HOUR & "." & @MIN
-		_CaptureRegion(0, 0, $DEFAULT_WIDTH, $DEFAULT_HEIGHT - 45)
-		$hBitmap_Scaled = _GDIPlus_ImageResize($hBitmap, _GDIPlus_ImageGetWidth($hBitmap) / 2, _GDIPlus_ImageGetHeight($hBitmap) / 2) ;resize image
-		; screenshot filename according with new options around filenames
-		If $ScreenshotLootInfo = 1 Then
-			$LootFileName = $Date & "_" & $Time & " G" & $iGoldLast & " E" & $iElixirLast & " DE" & $iDarkLast & " T" & $iTrophyLast & " S" & StringFormat("%3s", $SearchCount) & ".jpg"
-		Else
-			$LootFileName = $Date & "_" & $Time & ".jpg"
 		EndIf
-		_GDIPlus_ImageSaveToFile($hBitmap_Scaled, $dirLoots & $LootFileName)
-		_GDIPlus_ImageDispose($hBitmap_Scaled)
-	EndIf
 
-	;push images if requested..
-	If $GoldChangeCheck = True Then
-		PushMsg("LastRaid")
+		; Modified by LunaEclipse
+		If $DisableOtherEBO And $iMatchMode = $LB And $iChkDeploySettings[$LB] = $eCustomDeploy And Number($DESideEB) = 1 And ($dropQueen Or $dropKing) Then
+			RevertEBO()
+		EndIf
+
+		$checkKPower = False
+		$checkQPower = False
+		$checkWPower = False
+
+		If $iMatchMode = $TS And $icmbTroopComp <> 8 Then $FirstStart = True ; reset barracks upon return when TH sniping w/custom army
+
+		SetLog("Returning Home", $COLOR_BLUE)
+		If $RunState = False Then Return
+
+		checkAndroidTimeLag(False)
+
+		If Not IsReturnHomeBattlePage(True, False) Then
+			; ---- CLICK SURRENDER BUTTON ----
+			$i = 0 ; Reset Loop counter
+			While 1
+				If _CheckPixel($aSurrenderButton, $bCapturePixel) Then
+					If IsAttackPage() Then
+						ClickP($aSurrenderButton, 1, 0, "#0099") ;Click Surrender
+						If _SleepAttack($iDelayReturnHome2) Then Return ; short wait for confirm button to appear
+						If IsEndBattlePage(False) Then
+							ClickOkay("SurrenderOkay") ; Click Okay to Confirm surrender
+							ExitLoop
+						EndIf
+					EndIf
+				Else
+					$i += 1
+				EndIf
+				If $i > 5 Then ExitLoop ; if end battle or surrender button are not found in 5*(200+200)ms or 2 seconds, then give up.
+				If _SleepAttack($iDelayReturnHome5) Then Return
+			WEnd
+		Else
+			If $DebugSetLog = 1 Then Setlog("Battle already over.", $COLOR_PURPLE)
+		EndIf
+
+		If _SleepAttack($iDelayReturnHome2) Then Return ; short wait for return
+
+		TrayTip($sBotTitle, "", BitOR($TIP_ICONASTERISK, $TIP_NOSOUND)) ; clear village search match found message
+
+		If $GoldChangeCheck = True Then
+			$counter = 0
+			While _ColorCheck(_GetPixelColor($aRtnHomeCheck1[0], $aRtnHomeCheck1[1], True), Hex($aRtnHomeCheck1[2], 6), $aRtnHomeCheck1[3]) = False And _ColorCheck(_GetPixelColor($aRtnHomeCheck2[0], $aRtnHomeCheck2[1], True), Hex($aRtnHomeCheck2[2], 6), $aRtnHomeCheck2[3]) = False ; test for Return Home Button
+				If _SleepAttack($iDelayReturnHome2) Then ExitLoop
+				$counter += 1
+				If $counter > 40 Then ExitLoop
+			WEnd
+			If _SleepAttack($iDelayReturnHome3) Then Return ; wait for all report details
+			_CaptureRegion(0, 0, $DEFAULT_WIDTH, $DEFAULT_HEIGHT - 45)
+			AttackReport()
+		EndIf
+
+		If $TakeSS = 1 And $GoldChangeCheck = True Then
+			SetLog("Taking snapshot of your loot", $COLOR_GREEN)
+			Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
+			Local $Time = @HOUR & "." & @MIN
+			_CaptureRegion(0, 0, $DEFAULT_WIDTH, $DEFAULT_HEIGHT - 45)
+			$hBitmap_Scaled = _GDIPlus_ImageResize($hBitmap, _GDIPlus_ImageGetWidth($hBitmap) / 2, _GDIPlus_ImageGetHeight($hBitmap) / 2) ;resize image
+			; screenshot filename according with new options around filenames
+			If $ScreenshotLootInfo = 1 Then
+				$LootFileName = $Date & "_" & $Time & " G" & $iGoldLast & " E" & $iElixirLast & " DE" & $iDarkLast & " T" & $iTrophyLast & " S" & StringFormat("%3s", $SearchCount) & ".jpg"
+			Else
+				$LootFileName = $Date & "_" & $Time & ".jpg"
+			EndIf
+			_GDIPlus_ImageSaveToFile($hBitmap_Scaled, $dirLoots & $LootFileName)
+			_GDIPlus_ImageDispose($hBitmap_Scaled)
+		EndIf
+
+		;push images if requested..
+		If $GoldChangeCheck = True Then
+			PushMsg("LastRaid")
+		EndIf
+	Else
+		$skipReturnHome = False
 	EndIf
 
 	$i = 0 ; Reset Loop counter

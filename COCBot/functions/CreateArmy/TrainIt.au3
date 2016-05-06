@@ -20,6 +20,7 @@ Func TrainIt($troopKind, $howMuch = 1, $iSleep = 200)
 	_CaptureRegion()
 	Local $pos = GetTrainPos($troopKind)
 	If IsArray($pos) Then
+
 		If _CheckPixel($pos, $bNoCapturePixel) Then
 			Local $GemName = GetGemName($troopKind)
 			If IsArray($GemName) Then

@@ -161,8 +161,7 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 		If _Sleep($iDelayRespond) Then Return
 		Switch $iCmbSearchMode
 			Case 0 ; check Dead Base only
-;				If $iHeroWait[$DB] = 0 Or ($iHeroWait[$DB] > 0 And BitAND($iHeroAttack[$DB], $iHeroWait[$DB], $iHeroAvailable) = $iHeroWait[$DB]) Then ; check hero wait/avail
-				If AreHeroesAvailable($DB) Then ; check hero wait/avail
+				If $iHeroWait[$DB] = 0 Or ($iHeroWait[$DB] > 0 And BitAND($iHeroAttack[$DB], $iHeroWait[$DB], $iHeroAvailable) = $iHeroWait[$DB]) Then ; check hero wait/avail
 					$isModeActive[$DB] = True
 					$match[$DB] = CompareResources($DB)
 					;$noMatchTxt &= ", DB compare " & BitAND($iHeroAttack[$DB], $iHeroWait[$DB], $iHeroAvailable)  ; use for debug
@@ -170,8 +169,7 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 					$noMatchTxt &= ", DB Hero Not Ready, "
 				EndIf
 			Case 1 ; Check Live Base only
-;				If $iHeroWait[$LB] = 0 Or ($iHeroWait[$LB] > 0 And BitAND($iHeroAttack[$LB], $iHeroWait[$LB], $iHeroAvailable) = $iHeroWait[$LB]) Then ; check hero wait/avail
-				If AreHeroesAvailable($LB) Then ; check hero wait/avail
+				If $iHeroWait[$LB] = 0 Or ($iHeroWait[$LB] > 0 And BitAND($iHeroAttack[$LB], $iHeroWait[$LB], $iHeroAvailable) = $iHeroWait[$LB]) Then ; check hero wait/avail
 					$isModeActive[$LB] = True
 					$match[$LB] = CompareResources($LB)
 					;$noMatchTxt &= ", LB compare " & BitAND($iHeroAttack[$LB], $iHeroWait[$LB], $iHeroAvailable) ; use for debug
@@ -180,8 +178,7 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 				EndIf
 			Case 2
 				For $i = 0 To $iModeCount - 2
-;					If $iHeroWait[$i] = 0 Or ($iHeroWait[$i] > 0 And BitAND($iHeroAttack[$i], $iHeroWait[$i], $iHeroAvailable) = $iHeroWait[$i]) Then ; check hero wait/avail
-				If AreHeroesAvailable($i) Then ; check hero wait/avail
+					If $iHeroWait[$i] = 0 Or ($iHeroWait[$i] > 0 And BitAND($iHeroAttack[$i], $iHeroWait[$i], $iHeroAvailable) = $iHeroWait[$i]) Then ; check hero wait/avail
 						$isModeActive[$i] = IsSearchModeActive($i)
 						If $isModeActive[$i] Then
 							$match[$i] = CompareResources($i)
@@ -251,12 +248,17 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 		ResumeAndroid()
 
 		If _Sleep($iDelayRespond) Then Return
-
-		If $match[$DB] And $dbBase Then
+		If $match[$LB] and $iChkDeploySettings[$LB]=6  and StringLen($MilkFarmObjectivesSTR) >0  Then
+					SetLog($GetResourcesTXT, $COLOR_GREEN, "Lucida Console", 7.5)
+					SetLog("      " & "Milking Attack! ", $COLOR_GREEN, "Lucida Console", 7.5)
+					$logwrited = True
+					$iMatchMode = $LB
+					ExitLoop
+		ElseIf $match[$DB] And $dbBase Then
 			SetLog($GetResourcesTXT, $COLOR_GREEN, "Lucida Console", 7.5)
 			SetLog("      " & "Dead Base Found! ", $COLOR_GREEN, "Lucida Console", 7.5)
 			$logwrited = True
-			$iMatchMode = $DB
+			
 			If $debugDeadBaseImage = 1 Then
 				_CaptureRegion()
 				_GDIPlus_ImageSaveToFile($hBitmap, @ScriptDir & "\Zombies\" & $Date & " at " & $Time & ".png")
@@ -275,7 +277,6 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 			EndIf
 			If $match[$DB] Then
 				$iMatchMode = $DB
-
 			ExitLoop
 			EndIf
 		; Modified by LunaEclipse
@@ -302,7 +303,6 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 				EndIf
 			EndIf
 			If $match[$LB] Then
-
 			$iMatchMode = $LB
 			ExitLoop
 			EndIf
@@ -350,7 +350,7 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 		If $noMatchTxt <> "" Then
 			;SetLog(_PadStringCenter(" " & StringMid($noMatchTxt, 3) & " ", 50, "~"), $COLOR_PURPLE)
 			SetLog($GetResourcesTXT, $COLOR_BLACK, "Lucida Console", 7.5)
-			SetLog("      " & StringMid($noMatchTxt, 3), $COLOR_BLACK, "Lucida Console", 7.5)
+			SetLog("      " & StringMid($noMatchTxt, 3), $COLOR_RED, "Lucida Console", 7.5)
 			$logwrited = True
 		EndIf
 
@@ -497,14 +497,6 @@ Func IsWeakBase($pMode)
 		Return False
 	EndIf
 EndFunc   ;==>IsWeakBase
-
-Func AreHeroesAvailable($searchType)
-	If $ichkNeed1Hero[$searchType] = 1 Then 
-		Return $iHeroWait[$searchType] = 0 Or ($iHeroWait[$searchType] > 0 And $iHeroAvailable > 0)
-	Else
-		Return $iHeroWait[$searchType] = 0 Or ($iHeroWait[$searchType] > 0 And BitAND($iHeroAttack[$searchType], $iHeroWait[$searchType], $iHeroAvailable) = $iHeroWait[$searchType])
-	EndIf
-EndFunc
 
 Func SearchLimit($iSkipped)
 	If $iChkRestartSearchLimit = 1 And $iSkipped >= Number($iRestartSearchlimit) Then

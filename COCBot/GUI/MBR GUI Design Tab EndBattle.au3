@@ -148,7 +148,7 @@ Local $x = 30, $y = 375
 		$y -=5
 		$chkTakeLootSS = GUICtrlCreateCheckbox(GetTranslated(5,44, "Take Loot Snapshot"), $x, $y, -1, -1)
 			GUICtrlSetTip(-1, GetTranslated(5,31, "Check this if you want to save a Loot snapshot of the Village that was attacked."))
-			GUICtrlSetState(-1, $GUI_CHECKED)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
 		$chkScreenshotLootInfo = GUICtrlCreateCheckbox(GetTranslated(5,32, "Include loot info in filename"), $x + 200 , $y , -1, -1)
 			GUICtrlSetTip(-1, GetTranslated(5,33, "Include loot info in the screenshot filename"))
 	GUICtrlCreateGroup("", -99, -99, 1, 1)

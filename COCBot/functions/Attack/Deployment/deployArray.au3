@@ -1,3 +1,12 @@
+; #CLASS# ====================================================================================================================
+; Name ..........: deployArray
+; Description ...: This file contains all functions relating to deployment arrays, including custom deployment
+; Author ........: LunaEclipse(May, 2016)
+; Modified ......:
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015
+;                  MyBot is distributed under the terms of the GNU GPL
+; ===============================================================================================================================
+
 Func isDeployEmpty()
 	Local $result = True
 

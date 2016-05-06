@@ -305,6 +305,7 @@ Func DonateCC($Check = False)
 
 			;close Donate Window
 			DonateWindow($bClose)
+			FileDelete($dirTemp & "*.bmp")
 
 			$bDonate = True
 			$y = $DonatePixel[1] + 10
@@ -558,7 +559,6 @@ Func DonateTroopType($Type, $Quant = 0, $Custom = False, $bDonateAll = False)
 		Else
 			SetLog("No " & NameOfTroop($Type) & " available to donate..", $COLOR_RED)
 		EndIf
-
 	EndIf
 
 	;DonateStats
@@ -583,14 +583,14 @@ Func DonateTroopType($Type, $Quant = 0, $Custom = False, $bDonateAll = False)
 			If FileExists($dirTemp & "DonateStats\" & $DonateFile) Then
 				SetLog("DonateStats: Updating to same clan member with: " & $DonatedValue & " " & NameOfTroop($Type, 1), $COLOR_GREEN)
 			Else
-			FileCopy($dirTemp & $DonateFile, $dirTemp & "DonateStats\", $FC_OVERWRITE + $FC_CREATEPATH)
+				FileCopy($dirTemp & $DonateFile, $dirTemp & "DonateStats\", $FC_OVERWRITE + $FC_CREATEPATH)
 				SetLog("DonateStats: Adding new clan member with: " & $DonatedValue & " " & NameOfTroop($Type, 1), $COLOR_GREEN)
 
 				$Index = _GUIImageList_AddBitmap($ImageList, $dirTemp & "DonateStats\" & $DonateFile)
 
 				$iListCount = _GUIImageList_GetImageCount($ImageList)
 
-			_GUICtrlListView_AddItem($lvDonatedTroops, $DonateFile, $iListCount-1)
+				_GUICtrlListView_AddItem($lvDonatedTroops, $DonateFile, $iListCount-1)
 				_GUICtrlListView_SetImageList($lvDonatedTroops, $ImageList, 1)
 
 			EndIf
@@ -635,7 +635,7 @@ Func DonateWindow($Open = True)
 	EndIf
 
 	; Click on Donate Button and wait for the window
-	If _ColorCheck(_GetPixelColor($DonatePixel[0] - 44, $DonatePixel[1] + 14, True), Hex(0xFFFFFF, 6), 5) Then
+	If _ColorCheck(_GetPixelColor($DonatePixel[0] - 44 , $DonatePixel[1] + 14 , True), Hex(0xFFFFFF, 6), 5) Then
 
 		;DonateStats
 		FileDelete($dirTemp & "*.bmp")
@@ -1009,3 +1009,4 @@ Func DetectSlotTroop($Type)
 	EndIf
 
 EndFunc   ;==>DetectSlotTroop
+

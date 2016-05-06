@@ -1,16 +1,10 @@
-; #FUNCTION# ====================================================================================================================
+; #CLASS# ====================================================================================================================
 ; Name ..........: attackFunctions
 ; Description ...: Contains misc functions used by attack profiles, and other attack functions
-; Syntax ........:
-; Parameters ....:
-; Return values .: None
-; Author ........: LunaEclipse(March, 2016)
+; Author ........: LunaEclipse(May, 2016)
 ; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015
 ;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: No
 ; ===============================================================================================================================
 
 ; Returns whether the DE Storage is full when in battle
@@ -23,6 +17,7 @@ Func getDarkElixirStorageFull()
 	Return $return
 EndFunc   ;==>getDarkElixirStorageFull
 
+; Returns whether the Elixir Storage is full when in battle
 Func getElixirStorageFull()
 	Local $return = False
 	Local $aElixirStorageFull[4] = [709, 62, 0xAE1AB3, 6] ; Elixir Resource Bar when in combat
@@ -32,6 +27,7 @@ Func getElixirStorageFull()
 	Return $return
 EndFunc   ;==>getElixirStorageFull
 
+; Returns whether the Gold Storage is full when in battle
 Func getGoldStorageFull()
 	Local $return = False
 	Local $aGoldStorageFull[4] = [709, 30, 0xD4B100, 6] ; Gold Resource Bar when in combat

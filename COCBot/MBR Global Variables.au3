@@ -303,7 +303,7 @@ Global Enum $eIcnArcher = 1, $eIcnDonArcher, $eIcnBalloon, $eIcnDonBalloon, $eIc
 		$eIcnBarrack, $eIcnSpellFactory, $eIcnDonBlacklist, $eIcnSpellFactoryBoost, $eIcnMortar, $eIcnWizTower, $eIcnPayPal, $eIcnPushBullet, $eIcnGreenLight, $eIcnLaboratory, $eIcnRedLight, $eIcnBlank, $eIcnYellowLight, $eIcnDonCustom, $eIcnTombstone, $eIcnSilverStar, $eIcnGoldStar, $eIcnDarkBarrack, _
 		$eIcnCollectorLocate, $eIcnDrillLocate, $eIcnMineLocate, $eIcnBarrackLocate, $eIcnDarkBarrackLocate, $eIcnDarkSpellFactoryLocate, $eIcnDarkSpellFactory, $eIcnEarthQuakeSpell, $eIcnHasteSpell, $eIcnPoisonSpell, $eIcnBldgTarget, $eIcnBldgX, $eIcnRecycle, $eIcnHeroes, _
 		$eIcnBldgElixir, $eIcnBldgGold, $eIcnMagnifier, $eIcnWallElixir, $eIcnWallGold, $eIcnQueen, $eIcnKing, $eIcnDarkSpellBoost, $eIcnQueenBoostLocate, $eIcnKingBoostLocate, $eIcnKingUpgr, $eIcnQueenUpgr, $eIcnWardenAbility, $eIcnWarden, $eIcnWardenBoostLocate, $eIcnKingBoost, _
-		$eIcnQueenBoost, $eIcnWardenBoost, $eIcnWardenUpgr, $eIcnReload, $eIcnCopy, $eIcnAddcvs, $eIcnEdit, $eIcnCleanYard, $eIcnSleepingQueen, $eIcnSleepingKing, $eIcnGoldElixir
+		$eIcnQueenBoost, $eIcnWardenBoost, $eIcnWardenUpgr, $eIcnReload, $eIcnCopy, $eIcnAddcvs, $eIcnEdit, $eIcnCleanYard, $eIcnSleepingQueen, $eIcnSleepingKing, $eIcnGoldElixir, $eIcnDaily , $eIcnSleep, $eIcnTraining
 
 Global $eIcnDonBlank = $eIcnDonBlacklist
 Global $aDonIcons[17] = [$eIcnDonBarbarian, $eIcnDonArcher, $eIcnDonGiant, $eIcnDonGoblin, $eIcnDonWallBreaker, $eIcnDonBalloon, $eIcnDonWizard, $eIcnDonHealer, $eIcnDonDragon, $eIcnDonPekka, $eIcnDonMinion, $eIcnDonHogRider, $eIcnDonValkyrie, $eIcnDonGolem, $eIcnDonWitch, $eIcnDonLavaHound, $eIcnDonBlank]
@@ -367,7 +367,7 @@ Global $chkDeleteAllPushes
 Global $ichkAlertPBCampFull
 Global $ichkAlertPBCampFullTest = 0
 Global $cmbTroopComp ;For Event change on ComboBox Troop Compositions
-Global $iCollectCounter = 0 ; Collect counter, when reaches $COLLECTATCOUNT, it will collect
+Global $iCollectCounter = 11 ; Collect counter, when reaches $COLLECTATCOUNT, it will collect.  Set to 11 so it collects immediately on first start
 Global $COLLECTATCOUNT = 10 ; Run Collect() after this amount of times before actually collect
 Global $ichkAlertBuilderIdle
 Global $iReportIdleBuilder = 0
@@ -413,7 +413,6 @@ Global $ReduceCount, $ReduceGold, $ReduceElixir, $ReduceGoldPlusElixir, $ReduceD
 ;Global $icmbTH
 Global $iChkEnableAfter[$iModeCount], $iCmbMeetGE[$iModeCount], $iChkMeetDE[$iModeCount], $iChkMeetTrophy[$iModeCount], $iChkMeetTH[$iModeCount], $iChkMeetTHO[$iModeCount], $iChkMeetOne[$iModeCount], $iCmbTH[$iModeCount], $iChkWeakBase[$iModeCount]
 Global $chkDBMeetTHO, $chkABMeetTHO, $chkATH
-Global $ichkNeed1Hero[$iModeCount]
 Global $chkDBNoLeague, $chkABNoLeague, $iChkNoLeague[$iModeCount]
 Global $THLocation
 Global $THx = 0, $THy = 0
@@ -478,10 +477,6 @@ Global $THusedWarden = 0
 
 
 Global $TrainSpecial = 1 ;0=Only trains after atk. Setting is automatic
-
-Global $stayOfflineWhileTrain = 1
-Global $stayOfflineTime = 0
-
 Global $cBarbarian = 0, $cArcher = 0, $cGoblin = 0, $cGiant = 0, $cWallbreaker = 0, $cWizard = 0, $cBalloon = 0, $cDragon = 0, $cPekka = 0, $cMinion = 0, $cHogs = 0, $cValkyrie = 0, $cGolem = 0, $cWitch = 0, $cLavaHound = 0
 ;Troop types
 Global Enum $eBarb, $eArch, $eGiant, $eGobl, $eWall, $eBall, $eWiza, $eHeal, $eDrag, $ePekk, $eMini, $eHogs, $eValk, $eGole, $eWitc, $eLava, $eKing, $eQueen, $eWarden, $eCastle, $eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $ePSpell, $eESpell, $eHaSpell
@@ -512,7 +507,7 @@ Global $atkTroops[12][2] ;11 Slots of troops -  Name, Amount
 Global $fullArmy ;Check for full army or not
 
 Global $iChkDeploySettings[$iModeCount] ;Method of deploy found in attack settings
-Global $iChkRedArea[$iModeCount], $iCmbSmartDeploy[$iModeCount], $iChkSmartAttack[$iModeCount][3], $iCmbSelectTroop[$iModeCount]
+Global $iChkRedArea[$iModeCount] = [1, 1, 1], $iCmbSmartDeploy[$iModeCount], $iChkSmartAttack[$iModeCount][3], $iCmbSelectTroop[$iModeCount]
 
 Global $troopsToBeUsed[11]
 Global $useAllTroops[28] = [$eBarb, $eArch, $eGiant, $eGobl, $eWall, $eBall, $eWiza, $eHeal, $eDrag, $ePekk, $eMini, $eHogs, $eValk, $eGole, $eWitc, $eLava, $eKing, $eQueen, $eWarden, $eCastle, $eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $ePSpell, $eESpell, $eHaSpell]
@@ -1152,7 +1147,6 @@ Global $hCollectorGUI = 0
 
 ;About GUI - AminTalkin
 Global $hAboutGUI = 0
-;Global $chkRemainTrain = 0
 
 Global $iDeadBase75percent = 1
 Global $iDeadBase75percentStartLevel = 4
@@ -1190,23 +1184,6 @@ Global $ichkMultyFarming
 Global $iAccount, $OkLoc, $AccFourthLoc, $AccThirdLoc, $AccSecondLoc, $AccmainLoc
 
 Global $iRadClickSpeedFast, $radClickSpeedFast, $radClickSpeedNormal
-
-Global $cmbQuantBoostBarracks
-Global $cmbBoostBarracks
-Global $cmbBoostSpellFactory
-Global $cmbBoostDarkSpellFactory
-Global $cmbBoostBarbarianKing
-Global $cmbBoostArcherQueen
-Global $cmbBoostWarden
-
-Global $iCmbQuantBoostBarracks
-Global $iCmbBoostBarracks
-Global $iCmbBoostSpellFactory
-Global $iCmbBoostDarkSpellFactory
-Global $iCmbBoostBarbarianKing
-Global $iCmbBoostArcherQueen
-Global $iCmbBoostWarden
-
 Global $dbBase
 Global $TroopDropNumber = 0
 Global $remainingTroops[12][2]
@@ -1231,6 +1208,22 @@ Global $ToleranceImgLoc = 0.95
 ; Randomization of functions
 Global $RandomTimer = True
 Global $sTimerRandomHalt
+
+
+; Close while training variables
+Global $ichkCloseTraining = 1
+Global $minTrainAddition = 10, $maxTrainAddition = 20
+
+
+; Sleep at night variables
+Global $ichkCloseNight = 1
+Global $sleepStart = 0, $sleepEnd = 8
+Global $nextSleepStart = -999, $nextSleepEnd = -999
+
+; Daily attack variables
+Global $ichkLimitAttacks = 1
+Global $rangeAttacksStart = 20, $rangeAttacksEnd = 25
+Global $dailyAttacks = 0, $dailyAttackLimit = 0
 
 ;Mod AttackHour
 Global $iplannedattackhoursenable
@@ -1258,6 +1251,9 @@ Global $iPlannedAttackWeekDays[7] ; 0= Sunday , 1= Monday , 2= Tuesday, 3= Wedne
 
 ; Attack Variables, constants and enums - Added by LunaEclipse
 ;
+; Variable to allow skipping ReturnHome, for attacks that just exit no matter what.
+Global $skipReturnHome = False
+
 ; Troop types - Added CC Spell as a type, so clan castle spell can be reported.
 Global Enum  $eCCSpell = $eHaSpell + 1
 
@@ -1269,8 +1265,10 @@ Global Const $centerX = 430
 Global Const $centerY = 335
 
 ; Attack settings
-Global Enum $eOneSide, $eTwoSides, $eThreeSides, $eAllSides, $eMultiFinger, $eSmartSave
-Global Enum $eCustomDeploy = $eMultiFinger + 1, $eMilking
+Global Enum $eOneSide, $eTwoSides, $eThreeSides, $eAllSides, $eSmartSave
+Global Enum $eCustomDeploy = $eAllSides + 1, $eMilking
+Global Enum $directionLeft, $directionRight
+Global Enum $sideBottomRight, $sideTopLeft, $sideBottomLeft, $sideTopRight
 
 ; Deployment Array Constants
 Global Const $DEPLOY_COLUMNS = 5
@@ -1307,6 +1305,24 @@ Global $ctrlDeployHeadings[3][$DEPLOY_NUMBER_CONTROLS] ; 3 - Specifies the numbe
 Global $maxSaveTroopsPerCollector = [3, 5, 1, 5, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $minTroopsPerPosition = [1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1]
 
+; Default Deployment for Remaining Troops
+Global Const $DEFAULT_REMAINING_TROOPS_DEPLOY[16][5] = [[$eBarb, 0, 1, 1, 0], _
+														[$eArch, 0, 1, 1, 0], _
+														[$eGiant, 0, 1, 1, 0], _
+														[$eGobl, 0, 1, 1, 0], _
+														[$eWall, 0, 1, 1, 0], _
+														[$eBall, 0, 1, 1, 0], _
+														[$eWiza, 0, 1, 1, 0], _
+														[$eHeal, 0, 1, 1, 0], _
+														[$eDrag, 0, 1, 1, 0], _
+														[$ePekk, 0, 1, 1, 0], _
+														[$eMini, 0, 1, 1, 0], _
+														[$eHogs, 0, 1, 1, 0], _
+														[$eValk, 0, 1, 1, 0], _
+														[$eGole, 0, 1, 1, 0], _
+														[$eWitc, 0, 1, 1, 0], _
+														[$eLava, 0, 1, 1, 0]]
+
 ; Default Deployment for Save Troops for Collectors
 Global Const $DEFAULT_SAVE_TROOPS_DEPLOY[6][5] = [[$eGiant, 0, 1, 1, 0], _
 												  [$eBarb, 0, 1, 1, 0], _
@@ -1329,19 +1345,6 @@ Global Const $DEFAULT_ORIGINAL_DEPLOY[13][$DEPLOY_COLUMNS] = [[$eGiant, 0, 1, 1,
 															  [$eArch, 0, 2, 2, 0], _
 															  [$eGobl, 0, 2, 2, 0], _
 															  ["HEROES", 1, 2, 1, 1]]
-
-; Default Deployment for Four Finger Array
-Global Const $DEFAULT_FOUR_FINGER_DEPLOY[11][$DEPLOY_COLUMNS] = [[$eGiant, 0, 1, 1, 2], _
-																 [$eBarb, 0, 1, 1, 0], _
-																 [$eWall, 0, 1, 1, 2], _
-																 [$eArch, 0, 1, 1, 0], _
-																 [$eGobl, 0, 1, 2, 0], _
-																 ["CC", 1, 1, 1, 1], _
-																 [$eHogs, 0, 1, 1, 1], _
-																 [$eWiza, 0, 1, 1, 0], _
-																 [$eMini, 0, 1, 1, 0], _
-																 [$eGobl, 0, 2, 2, 0], _
-																 ["HEROES", 1, 2, 1, 1]]
 
 ; Default Deployment for Custom Deployment
 Global Const $DEFAULT_CUSTOM_DEPLOY[$DEPLOY_MAX_WAVES][$DEPLOY_COLUMNS] = [[$eESpell, 0, 1, 1, 80], _
@@ -1368,19 +1371,11 @@ Global Const $DEFAULT_CUSTOM_DEPLOY[$DEPLOY_MAX_WAVES][$DEPLOY_COLUMNS] = [[$eES
 																		   [$eWarden, 1, 1, 1, 0], _
 																		   [$eDeployUnused, 0, 0, 0, 0], _
 																		   [$eDeployUnused, 0, 0, 0, 0]]
-																		
-; Multi Finger Attack Style Setting
-Global Enum $directionLeft, $directionRight
-Global Enum $sideBottomRight, $sideTopLeft, $sideBottomLeft, $sideTopRight
-Global Enum $mfRandom, $mfFFStandard, $mfFFSpiralLeft, $mfFFSpiralRight, $mf8FBlossom, $mf8FImplosion, $mf8FPinWheelLeft, $mf8FPinWheelRight
-
-Global $iMultiFingerStyle[3] = [0, 0, 0]
 
 ; Save Troops Variables and Constants
-Global $useFFBarchST = 1
+Global $useAllSides = 1
 Global $percentCollectors = 80
 Global $redlineDistance = 50
-Global $usingMultiFinger = False
 
 ; SmartZap GUI variables - Added by LunaEclipse
 Global $ichkSmartZap = 1
@@ -1423,3 +1418,7 @@ Global $ichkGoldSwitchMax, $itxtMaxGoldAmount, $icmbGoldMaxProfile, $ichkGoldSwi
 Global $ichkElixirSwitchMax, $itxtMaxElixirAmount, $icmbElixirMaxProfile, $ichkElixirSwitchMin, $itxtMinElixirAmount, $icmbElixirMinProfile
 Global $ichkDESwitchMax, $itxtMaxDEAmount, $icmbDEMaxProfile, $ichkDESwitchMin, $itxtMinDEAmount, $icmbDEMinProfile
 Global $ichkTrophySwitchMax, $itxtMaxTrophyAmount, $icmbTrophyMaxProfile, $ichkTrophySwitchMin, $itxtMinTrophyAmount, $icmbTrophyMinProfile
+
+; CoCStats
+Global $ichkCoCStats = 0
+Global $MyApiKey = ""

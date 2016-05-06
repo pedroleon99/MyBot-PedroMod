@@ -264,13 +264,7 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 	_GUICtrlComboBox_SetCurSel($cmbDBSelectTroop, $iCmbSelectTroop[$DB])
 	_GUICtrlComboBox_SetCurSel($cmbABSelectTroop, $iCmbSelectTroop[$LB])
 
-	If $iChkRedArea[$DB] = 1 Then
-		GUICtrlSetState($chkDBSmartAttackRedArea, $GUI_CHECKED)
-	Else
-		GUICtrlSetState($chkDBSmartAttackRedArea, $GUI_UNCHECKED)
-	EndIf
 	chkDBSmartAttackRedArea()
-
 	_GUICtrlComboBox_SetCurSel($cmbDBSmartDeploy, $iCmbSmartDeploy[$DB])
 
 	If $iChkSmartAttack[$DB][0] = 1 Then
@@ -291,13 +285,7 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 		GUICtrlSetState($chkDBAttackNearDarkElixirDrill, $GUI_UNCHECKED)
 	EndIf
 
-	If $iChkRedArea[$LB] = 1 Then
-		GUICtrlSetState($chkABSmartAttackRedArea, $GUI_CHECKED)
-	Else
-		GUICtrlSetState($chkABSmartAttackRedArea, $GUI_UNCHECKED)
-	EndIf
 	chkABSmartAttackRedArea()
-
 	_GUICtrlComboBox_SetCurSel($cmbABSmartDeploy, $iCmbSmartDeploy[$LB])
 
 	If $iChkSmartAttack[$LB][0] = 1 Then
@@ -396,17 +384,6 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 	EndIf
 	chkDBHeroWait()
 	chkABHeroWait()
-	
-	If $ichkNeed1Hero[$DB] = 1 Then
-		GUICtrlSetState($chkDBNeed1Hero, $GUI_CHECKED)
-	Else
-		GUICtrlSetState($chkDBNeed1Hero, $GUI_UNCHECKED)
-	EndIf	
-	If $ichkNeed1Hero[$LB] = 1 Then
-		GUICtrlSetState($chkABNeed1Hero, $GUI_CHECKED)
-	Else
-		GUICtrlSetState($chkABNeed1Hero, $GUI_UNCHECKED)
-	EndIf
 
 	If $iChkUseCCBalanced = 1 Then
 		GUICtrlSetState($chkUseCCBalanced, $GUI_CHECKED)
@@ -567,6 +544,7 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 	ElseIf $ichkAlertPBCampFull = 0 Then
 		GUICtrlSetState($chkAlertPBCampFull, $GUI_UNCHECKED)
 	EndIf
+
 
 	If $ichkAlertBuilderIdle = 1 Then
 		GUICtrlSetState($chkAlertBuilderIdle, $GUI_CHECKED)
@@ -1035,6 +1013,7 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 	GUICtrlSetData($txtFullTroop, $fulltroop)
 	GUICtrlSetData($sldTrainITDelay, $isldTrainITDelay)
 	GUICtrlSetData($lbltxtTrainITDelay, "delay " & $isldTrainITDelay & " ms.")
+	;barracks boost not saved (no use)
 
 	If $iChkDontRemove = 1 Then
 		GUICtrlSetState($chkDontRemove, $GUI_CHECKED)
@@ -1047,26 +1026,6 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 	Else
 		GUICtrlSetState($chkBarrackSpell, $GUI_UNCHECKED)
 	EndIf
-
-	
-	; Boost  -------------------------------------------------------------------------------
-	_GUICtrlComboBox_SetCurSel($cmbQuantBoostBarracks, $iCmbQuantBoostBarracks)
-	_GUICtrlComboBox_SetCurSel($cmbBoostBarracks, $iCmbBoostBarracks)
-	_GUICtrlComboBox_SetCurSel($cmbBoostSpellFactory, $iCmbBoostSpellFactory)
-	_GUICtrlComboBox_SetCurSel($cmbBoostDarkSpellFactory, $iCmbBoostDarkSpellFactory)
-	_GUICtrlComboBox_SetCurSel($cmbBoostBarbarianKing, $iCmbBoostBarbarianKing)
-	_GUICtrlComboBox_SetCurSel($cmbBoostArcherQueen, $iCmbBoostArcherQueen)
-	_GUICtrlComboBox_SetCurSel($cmbBoostWarden, $iCmbBoostWarden)
-
-	;barracks boost not saved (no use)
-
-	
-	If $stayOfflineWhileTrain = 1 Then
-		GUICtrlSetState($chkStayOfflineWhileTrain, $GUI_CHECKED)
-	Else
-		GUICtrlSetState($chkStayOfflineWhileTrain, $GUI_UNCHECKED)
-	EndIf
-	chkStayOfflineWhileTrain()
 
 	; Spells Creation  ---------------------------------------------------------------------
 	GUICtrlSetData($txtNumLightningSpell, $iLightningSpellComp)
@@ -1083,7 +1042,7 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 
 	;PushBullet-----------------------------------------------------------------------------
 	GUICtrlSetData($PushBTokenValue2, $PushToken2)
-	
+
 	If $pEnabled2 = 1 Then
 		GUICtrlSetState($chkPBenabled2, $GUI_CHECKED)
 		chkPBenabled2()
@@ -1900,27 +1859,14 @@ EndIf
     EndIf
     GUICtrlSetData($txtMinDark, $itxtMinDE)
 
-	; Multi Finger Attack Style Settings - Added by LunaEclipse
-	_GUICtrlComboBox_SetCurSel($cmbDBMultiFinger, $iMultiFingerStyle[$DB])
-	_GUICtrlComboBox_SetCurSel($cmbABMultiFinger, $iMultiFingerStyle[$LB])
-
 	; Save Troops for Collector Settings - Added by LunaEclipse
-	If $useFFBarchST = 1 Then
-		GUICtrlSetState($chkChangeFF, $GUI_CHECKED)
+	If $useAllSides = 1 Then
+		GUICtrlSetState($chkChangeAllSides, $GUI_CHECKED)
 	Else
-		GUICtrlSetState($chkChangeFF, $GUI_UNCHECKED)
+		GUICtrlSetState($chkChangeAllSides, $GUI_UNCHECKED)
 	EndIf
 	GUICtrlSetData($txtPercentCollectors, $percentCollectors)
 	GUICtrlSetData($txtDistance, $redlineDistance)
-
-	; Misc Battle Settings - Added by LunaEclipse
-	If $AndroidAdbClicksEnabled = 1 Then
-		GUICtrlSetState($chkFastADBClicks, $GUI_CHECKED)
-		$AndroidAdbClicksEnabled = True
-	Else
-		GUICtrlSetState($chkFastADBClicks, $GUI_UNCHECKED)
-		$AndroidAdbClicksEnabled = False
-	EndIf
 
 	; Custom Deployment Settings - Added by LunaEclipse
 	GUICtrlSetData($txtTownHall, $valueTownHall)
@@ -1948,6 +1894,50 @@ EndIf
 
 	;chat bot
 	GUICtrlSetData($chkchatdelay, $ichkchatdelay)
+
+	; CoCStats -------------------------------------------------------------
+	If $ichkCoCStats = 1 Then
+		GUICtrlSetState($chkCoCStats, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkCoCStats, $GUI_UNCHECKED)
+	EndIf
+	GUICtrlSetData($txtAPIKey, $MyApiKey)
+	chkCoCStats()
+
+	; Close When Training Settings
+	If $ichkCloseTraining = 1 Then
+		GUICtrlSetState($chkUseTrainingClose, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkUseTrainingClose, $GUI_UNCHECKED)
+	EndIf
+	chkUseTrainingClose()
+	GUICtrlSetData($sldExtraTimeMin, $minTrainAddition)
+	GUICtrlSetData($sldExtraTimeMax, $maxTrainAddition)
+	sldExtraTimeMin()
+	sldExtraTimeMax()
+	
+	; Daily Settings
+	If $ichkLimitAttacks = 1 Then
+		GUICtrlSetState($chkUseAttackLimit, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkUseAttackLimit, $GUI_UNCHECKED)
+	EndIf
+	chkUseAttackLimit()
+	GUICtrlSetData($sldAttacksMin, $rangeAttacksStart)
+	GUICtrlSetData($sldAttacksMax, $rangeAttacksEnd)
+	sldAttacksMin()
+	sldAttacksMax()
+	
+	; Simulate Sleep Settings
+	If $ichkCloseNight = 1 Then
+		GUICtrlSetState($chkUseSleep, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkUseSleep, $GUI_UNCHECKED)
+	EndIf
+	chkUseSleep()
+	_GUICtrlComboBox_SetCurSel($cmbStartSleep, $sleepStart)
+	_GUICtrlComboBox_SetCurSel($cmbEndSleep, $sleepEnd)
+	calculateSleepTime($sleepStart, $sleepEnd)
 
 	; Reenabling window redraw
 	If $bRedrawAtExit Then SetRedrawBotWindow(True)

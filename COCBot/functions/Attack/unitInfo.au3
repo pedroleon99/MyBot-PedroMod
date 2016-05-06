@@ -1,22 +1,16 @@
-; #FUNCTION# ====================================================================================================================
-; Name ..........: unitInfo.au3
+; #CLASS# ====================================================================================================================
+; Name ..........: unitInfo
 ; Description ...: Gets various information about units such as the number, location on the bar, clan castle spell type etc...
-; Syntax ........:
-; Parameters ....:
-; Return values .:
-; Author ........: @LunaEclipse
+; Author ........: LunaEclipse(May, 2016)
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015
 ;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: No
 ; ===============================================================================================================================
 
 Func getDeploymentFileTroopName($kind)
     ; Troop string as an array
 	; This order must exactly match the troops enum from MBR Global Variables.au3
-    Local $result[$eDeployUnused + 1] = ["$eBarb", _
+	Local $result[$eDeployUnused + 1] = ["$eBarb", _
 										 "$eArch", _
 										 "$eGiant", _
 										 "$eGobl", _
@@ -53,7 +47,7 @@ EndFunc   ;==>getDeploymentFileTroopName
 Func getTranslatedTroopName($kind)
     ; Troop string as an array
 	; This order must exactly match the troops enum from MBR Global Variables.au3
-    Local $result[$eDeployUnused + 1] = [GetTranslated(1, 17, "Barbarians"), _
+	Local $result[$eDeployUnused + 1] = [GetTranslated(1, 17, "Barbarians"), _
 										 GetTranslated(1, 18, "Archers"), _
 										 GetTranslated(1, 19, "Giants"), _
 										 GetTranslated(1, 20, "Goblins"), _

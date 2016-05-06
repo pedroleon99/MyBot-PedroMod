@@ -1,41 +1,11 @@
-; #FUNCTION# ====================================================================================================================
+; #CLASS# ====================================================================================================================
 ; Name ..........: troopDeployment
-; Description ...: Contains functions for various troop deployments
-; Syntax ........:
-; Parameters ....:
-; Return values .: None
-; Author ........: LunaEclipse(March, 2016)
+; Description ...: Contains various utility functions used for troop deployments
+; Author ........: LunaEclipse(May, 2016)
 ; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015
 ;                  MyBot is distributed under the terms of the GNU GPL
-; Related .......:
-; Link ..........: https://github.com/MyBotRun/MyBot/wiki
-; Example .......: No
 ; ===============================================================================================================================
-
-; Randomize a drop point based on which side its on
-Func calculateRandomDropPoint($dropPoint, $randomX = 0, $randomY = 0)
-	Local $aResult[2] = [$dropPoint[0], $dropPoint[1]]
-
-	Switch calculateSideFromXY($dropPoint[0], $dropPoint[1])
-		Case $sideBottomRight
-			$aResult[0] = $dropPoint[0] + Random(0, Abs($randomX), 1)
-			$aResult[1] = $dropPoint[1] + Random(0, Abs($randomY), 1)
-		Case $sideTopLeft
-			$aResult[0] = $dropPoint[0] - Random(0, Abs($randomX), 1)
-			$aResult[1] = $dropPoint[1] - Random(0, Abs($randomY), 1)
-		Case $sideBottomLeft
-			$aResult[0] = $dropPoint[0] - Random(0, Abs($randomX), 1)
-			$aResult[1] = $dropPoint[1] + Random(0, Abs($randomY), 1)
-		Case $sideTopRight
-			$aResult[0] = $dropPoint[0] + Random(0, Abs($randomX), 1)
-			$aResult[1] = $dropPoint[1] - Random(0, Abs($randomY), 1)
-		Case Else
-	EndSwitch
-
-	If $debugSetLog = 1 Then SetLog("Coordinate (x,y): " & $aResult[0] & "," & $aResult[1])
-	Return $aResult
-EndFunc   ;==>calculateRandomDropPoint
 
 ; Convert X,Y coords to a point array
 Func convertToPoint($x = 0, $y = 0)
@@ -47,31 +17,185 @@ Func convertToPoint($x = 0, $y = 0)
 	Return $aResult
 EndFunc   ;==>convertToPoint
 
-; Adds a new drop vector to the list of already existing vectors
-Func addVector(ByRef $vectorArray, $waveNumber, $sideNumber, $startPoint, $endPoint, $dropPoints)
-	Local $aDropPoints[$dropPoints][2]
+; Moves a point a set number of pixels in a direction based on its side
+Func movePointBasedOnSide($dropPoint, $deltaX, $deltaY)
+	Local $result[2] = [-1, -1]
+	
+	If Not IsArray($dropPoint) Then Return $result ; Exit for safety
 
-	Local $m = ($endPoint[1] - $startPoint[1]) / ($endPoint[0] - $startPoint[0])
-	Local $c = $startPoint[1] - ($m * $startPoint[0])
-	Local $stepX = ($endPoint[0] - $startPoint[0]) / ($dropPoints - 1)
+	Switch calculateSideFromXY($dropPoint[0], $dropPoint[1])
+		Case $sideTopLeft
+			$result[0] = $dropPoint[0] - $deltaX
+			$result[1] = $dropPoint[1] - $deltaY
+		Case $sideTopRight
+			$result[0] = $dropPoint[0] + $deltaX
+			$result[1] = $dropPoint[1] - $deltaY
+		Case $sideBottomRight
+			$result[0] = $dropPoint[0] + $deltaX
+			$result[1] = $dropPoint[1] + $deltaY
+		Case $sideBottomLeft
+			$result[0] = $dropPoint[0] - $deltaX
+			$result[1] = $dropPoint[1] + $deltaY
+		Case Else
+			; Should never get here unless there is something wrong with the code
+			$result[0] = -1
+			$result[1] = -1			
+	EndSwitch
+	
+	Return $result
+EndFunc   ;==>movePointBasedOnSide
 
-	$aDropPoints[0][0] = $startPoint[0]
-	$aDropPoints[0][1] = $startPoint[1]
+; Adds randomness to attack clicks for safety
+Func randomAttackClick($dropPoint, $numClicks = 1, $clickSpeed = 0, $delayAfter = 0, $debugText = "", $deltaX = 0, $deltaY = 0)
+	If Not IsArray($dropPoint) Then Return ; Exit for safety
 
-	For $i = 1 to $dropPoints - 2
-		$aDropPoints[$i][0] = Round($startPoint[0] + ($i * $stepX))
-		$aDropPoints[$i][1] = Round(($m * $aDropPoints[$i][0]) + $c)
+	Local $randomDropPoint[2] = [0, 0]
+
+	If $debugSetLog = 1 Then SetLog("Randomized Click Coordinate (x,y): " & $dropPoint[0] & "," & $dropPoint[1])
+	
+	For $i = 0 To $numClicks - 1
+		$randomDropPoint = movePointBasedOnSide($dropPoint, Random(0, $deltaX, 1), Random(0, $deltaY, 1))
+		; Calculate which quadrant the click is in and adjust randomness accordingly
+
+		If isInsideDiamond($randomDropPoint) Then
+			AttackClick($randomDropPoint[0], $randomDropPoint[1], 1, $clickSpeed, $delayAfter, $debugText)
+		Else
+			AttackClick($dropPoint[0], $dropPoint[1], 1, $clickSpeed, $delayAfter, $debugText)
+		EndIf
 	Next
+EndFunc   ;==>randomAttackClick
 
-	$aDropPoints[$dropPoints - 1][0] = $endPoint[0]
-	$aDropPoints[$dropPoints - 1][1] = $endPoint[1]
+; Calculate drop lines for sides based on Redline data
+Func calculateRedLine()
+	; Capture the screen and get redline data
+	_CaptureRegion2()
+	_GetRedArea()
+	
+	; Clean redline points
+	CleanRedArea($PixelTopLeft)
+	CleanRedArea($PixelTopRight)
+	CleanRedArea($PixelBottomRight)
+	CleanRedArea($PixelBottomLeft)
+EndFunc   ;==>calculateRedLine
 
+; Gets redline drop points for the specified side
+Func getSideDropLine($side)
+	Local $result
+	
+	If $side < $sideBottomRight Or $side > $sideTopRight Then $side = Random($sideBottomRight, $sideTopRight, 1)
+		
+	Switch $side
+		Case $sideTopLeft
+			$result = $PixelTopLeft
+		Case $sideTopRight
+			$result = $PixelTopRight
+		Case $sideBottomRight
+			$result = $PixelBottomRight
+		Case $sideBottomLeft
+			$result = $PixelBottomLeft
+		Case Else
+			; Should not get here unless there is a problem with the code
+	EndSwitch
+	
+	Return $result
+EndFunc   ;==>getSideDropLine
+
+; Not used, redline data is not accurate enough and the point can end up inside a red area
+Func getTroopOffset($kind)
+	Local $result = 0
+	
+	Switch $kind
+		; Tank units, only offset 1 tile
+		Case $eGiant, $eGole, $eLava
+			$result = 1
+		; Melee dps units, offset 2 tiles
+		Case $eBarb, $ePekk, $eHogs, $eValk, $eKing
+			$result = 2
+		; All other units, offset 3 tiles
+		Case Else
+			$result = 3
+	EndSwitch
+
+	Return $result
+EndFunc   ;==>getTroopOffset
+
+; Create a series of drop points for troops
+Func addVector(ByRef $vectorArray, $waveNumber, $sideNumber, $side, $direction, $addTiles, $dropPoints)
+	If Not IsArray($vectorArray) Then Return ; Exit for safety
+
+	Local $aDropPoints[$dropPoints], $aDropPoint[2], $indexCounter = 0, $loopCounter = 0
+	
+	; Get the redline data for the side
+	Local $redlines = getSideDropLine($side)
+	; Modify drop points because for 1 or 2 drop points, we wish to ignore the two end points
+	Local $modifiedDropPoints = ($dropPoints > 2) ? ($dropPoints - 1) : ($dropPoints + 1)
+	; Calculate the number of differnce in indexes between each point
+	Local $stepRight = ((UBound($redlines) - 1) / $modifiedDropPoints > 0) ? ((UBound($redlines) - 1) / $modifiedDropPoints) : 1
+	; Convert it to a negative number because we need to decrease index when deploying to the left
+	Local $stepLeft = 0 - $stepRight
+	
+	Switch $direction
+		Case $directionLeft
+			; Loop throught the array from the end to the start
+			For $i = UBound($redlines) To 1 Step $stepLeft
+				; Get the current point in the redline array, round $i because index has to be a whole number
+				$aDropPoint = $redlines[Round($i) - 1]
+
+				; Loop through points starting at the max add tiles distance until we get a valid point
+				For $pixelMove = 8 * Abs(Int($addtiles)) To 0 Step -1
+					; Get the new point
+					$movedDropPoint = movePointBasedOnSide($aDropPoint, $pixelMove, $pixelMove)
+
+					; Check to make sure its a valid point
+					If isInsideDiamondRedArea($movedDropPoint) Then ExitLoop
+				Next
+
+				; Store the point when necessary, skips storing the end points if there is only 1 or 2 points
+				If $indexCounter < UBound($aDropPoints) And ($dropPoints > 2 Or ($dropPoints <= 2 And $loopCounter > 0)) Then
+					; Store the point and increase the counter
+					$aDropPoints[$indexCounter] = $movedDropPoint
+					$indexCounter += 1
+				EndIf
+				
+				; Increase the loop counter
+				$loopCounter += 1
+			Next
+		Case $directionRight
+			; Loop throught the array from the beginning to the end
+			For $i = 1 To UBound($redlines) Step $stepRight
+				; Get the current point in the redline array, round $i because index has to be a whole number
+				$aDropPoint = $redlines[Round($i) - 1]
+
+				; Loop through points starting at the max add tiles distance until we get a valid point
+				For $pixelMove = 8 * Abs(Int($addtiles)) To 0 Step -1
+					; Get the new point
+					$movedDropPoint = movePointBasedOnSide($aDropPoint, $pixelMove, $pixelMove)
+
+					; Check to make sure its a valid point
+					If isInsideDiamondRedArea($movedDropPoint) Then ExitLoop
+				Next
+
+				; Store the point when necessary, skips storing the end points if there is only 1 or 2 points
+				If $indexCounter < UBound($aDropPoints) And ($dropPoints > 2 Or ($dropPoints <= 2 And $loopCounter > 0)) Then
+					; Store the point and increase the counter
+					$aDropPoints[$indexCounter] = $movedDropPoint
+					$indexCounter += 1
+				EndIf
+
+				; Increase the loop counter
+				$loopCounter += 1
+			Next			
+		Case Else
+			; Should not get here unless there is a problem with the code			
+	EndSwitch
+
+	; Store the drop data in the array, it was passed ByRef, so it changes the variable in the calling function
 	$vectorArray[$waveNumber][$sideNumber] = $aDropPoints
 EndFunc   ;==>addVector
 
 ; Drop the number of spells specified on the specified location, will use clan castle spells if you have it.
-Func dropSpell($x, $y, $spell = -1, $number = 1) ; Drop Spell
-	If $spell = -1 Then Return False
+Func dropSpell($dropPoint, $spell = -1, $number = 1)
+	If Not IsArray($dropPoint) Or $spell = -1 Then Return False ; Exit for safety
 
 	Local $result = False
 	Local $aDeployButtonPositions = getUnitLocationArray()
@@ -90,18 +214,24 @@ Func dropSpell($x, $y, $spell = -1, $number = 1) ; Drop Spell
 	If $barCCSpell <> -1 And getCCSpellType() = $spell And $totalSpells >= $number Then
 		If _SleepAttack(100) Then Return
 
+		If _SleepAttack($iDelayLaunchTroop21) Then Return
 		SelectDropTroop($barCCSpell) ; Select Clan Castle Spell
+		If _SleepAttack($iDelayLaunchTroop23) Then Return
+
 		SetLog("Dropping " & getTranslatedTroopName($spell) & " in the Clan Castle" & " on button " & ($barCCSpell + 1) & " at " & $x & "," & $y, $COLOR_BLUE)
-		AttackClick($x, $y, $ccSpellCount, 100, 0)
+		randomAttackClick($dropPoint, $ccSpellCount, 100, 0, "")
 		$number -= $ccSpellCount
 
 		If $barPosition <> -1 And $number > 0 And $spellCount >= $number Then ; Need to use standard spells as well as clan castle spell.
 			If _SleepAttack(100) Then Return
 			If $debugSetlog = 1 Then SetLog("Dropping " & getTranslatedTroopName($spell) & " in slot " & $barPosition, $COLOR_BLUE)
 
+			If _SleepAttack($iDelayLaunchTroop21) Then Return
 			SelectDropTroop($barPosition) ; Select Spell
+			If _SleepAttack($iDelayLaunchTroop23) Then Return
+
 			SetLog("Dropping " & $number & " " & getTranslatedTroopName($spell) & " on button " & ($barPosition + 1) & " at " & $x & "," & $y, $COLOR_BLUE)
-			AttackClick($x, $y, $number, 100, 0)
+			randomAttackClick($dropPoint, $number, 100, 0, "")
 		EndIf
 
 		$result = True
@@ -110,7 +240,7 @@ Func dropSpell($x, $y, $spell = -1, $number = 1) ; Drop Spell
 
 		SelectDropTroop($barPosition) ; Select Spell
 		SetLog("Dropping " & $number & " " & getTranslatedTroopName($spell) & " on button " & ($barPosition + 1) & " at " & $x & "," & $y, $COLOR_BLUE)
-		AttackClick($x, $y, $number, 100, 0)
+		randomAttackClick($dropPoint, $number, 100, 0, "")
 
 		$result = True
 	EndIf
@@ -119,26 +249,23 @@ Func dropSpell($x, $y, $spell = -1, $number = 1) ; Drop Spell
 EndFunc   ;==>dropSpell
 
 ; Drop the number of units specified on the specified location, even allows for random variation if specified.
-Func dropUnit($x, $y, $unit = -1, $number = 1, $randomX = 0, $randomY = 0) ; Drop Unit
-	If $unit = -1 Then Return False
+Func dropUnit($dropPoint, $unit = -1, $number = 1)
+	If Not IsArray($dropPoint) Or $unit = -1 Then Return False ; Exit for safety
 
 	Local $result = False
 	Local $barPosition = unitLocation($unit)
 	Local $unitCount = unitCount($unit)
-	Local $currentDropPoint[2] = [$x, $y]
-	Local $dropPoint
 
 	If $barPosition <> -1 And $unitCount >= $number Then ; Check to see if we have any units to drop
 		If _SleepAttack(100) Then Return
 		If $unitCount < $number Then $number = $unitCount
 
+		If _SleepAttack($iDelayLaunchTroop21) Then Return
 		SelectDropTroop($barPosition) ; Select Troop
-		SetLog("Dropping " & $number & " " & getTranslatedTroopName($unit) & " at " & $x & "," & $y, $COLOR_BLUE)
+		If _SleepAttack($iDelayLaunchTroop23) Then Return
 
-		For $i = 1 to $number
-			$dropPoint = calculateRandomDropPoint($currentDropPoint, $randomX, $randomY)
-			AttackClick($dropPoint[0], $dropPoint[1], 1, SetSleep(0), 0)
-		Next
+		SetLog("Dropping " & $number & " " & getTranslatedTroopName($unit) & " at " & $x & "," & $y, $COLOR_BLUE)
+		randomAttackClick($dropPoint, $number, SetSleep(0), 0)
 
 		$result = True
 	EndIf
@@ -146,77 +273,20 @@ Func dropUnit($x, $y, $unit = -1, $number = 1, $randomX = 0, $randomY = 0) ; Dro
 	Return $result
 EndFunc   ;==>dropUnit
 
-; Drop the troops from a single point on a single side
-Func sideSingle($dropSide, $dropAmount, $useDelay = False)
-	Local $delay = ($useDelay = True) ? SetSleep(0): 0
-
-	AttackClick($dropSide[2][0], $dropSide[2][1], $dropAmount, $delay, 0)
-EndFunc   ;==>sideSingle
-
-; Drop the troops from two points on a single side
-Func sideDouble($dropSide, $dropAmount, $useDelay = False)
-	Local $delay = ($useDelay = True) ? SetSleep(0): 0
-	Local $half = Ceiling($dropAmount / 2)
-
-	AttackClick($dropSide[1][0], $dropSide[1][1], $half, 0, 0)
-	AttackClick($dropSide[3][0], $dropSide[3][1], $dropAmount - $half, $delay, 0)
-EndFunc   ;==>sideDouble
-
-; Drop the troops from a single point on all sides at once
-Func multiSingle($totalDrop, $useDelay = False)
-	Local $dropAmount = Ceiling($totalDrop / 4)
-
-	; Progressively adjust the drop amount
-	sideSingle($TopLeft, $dropAmount)
-	$totalDrop -= $dropAmount
-	$dropAmount = Ceiling($totalDrop / 3)
-
-	; Progressively adjust the drop amount
-	sideSingle($TopRight, $dropAmount)
-	$totalDrop -= $dropAmount
-	$dropAmount = Ceiling($totalDrop / 2)
-
-	; Progressively adjust the drop amount
-	sideSingle($BottomRight, $dropAmount)
-	$totalDrop -= $dropAmount
-
-	; Drop whatever is left
-	sideSingle($BottomLeft, $totalDrop, True)
-EndFunc   ;==>multiSingle
-
-; Drop the troops from two points on all sides at once
-Func multiDouble($totalDrop, $useDelay = False)
-	Local $dropAmount = Ceiling($totalDrop / 4)
-
-	; Progressively adjust the drop amount
-	sideDouble($TopLeft, $dropAmount)
-	$totalDrop -= $dropAmount
-	$dropAmount = Ceiling($totalDrop / 3)
-
-	; Progressively adjust the drop amount
-	sideDouble($TopRight, $dropAmount)
-	$totalDrop -= $dropAmount
-	$dropAmount = Ceiling($totalDrop / 2)
-
-	; Progressively adjust the drop amount
-	sideDouble($BottomRight, $dropAmount)
-	$totalDrop -= $dropAmount
-
-	; Drop whatever is left
-	sideDouble($BottomLeft, $totalDrop, True)
-EndFunc   ;==>multiDouble
-
 ; Drop the troops in a standard drop along a vector
-Func standardSideDrop($dropVectors, $waveNumber, $sideIndex, $currentSlot, $troopsPerSlot, $useDelay = False)
-	Local $delay = ($useDelay = True) ? SetSleep(0): 0
-	Local $dropPoints
+Func standardSideDrop($dropVectors, $waveNumber, $sideNumber, $currentSlot, $troopsPerSlot, $useDelay = False)
+	If Not IsArray($dropVectors) Then Return
+	
+	Local $delay = ($useDelay = True) ? SetSleep(0) : 0
+	Local $dropPoints = $dropVectors[$waveNumber][$sideNumber]
 
-	$dropPoints = $dropVectors[$waveNumber][$sideIndex]
-	If $currentSlot < UBound($dropPoints) Then AttackClick($dropPoints[$currentSlot][0], $dropPoints[$currentSlot][1], $troopsPerSlot, 0, 0)
+	If $currentSlot < UBound($dropPoints) Then randomAttackClick($dropPoints[$currentSlot], $troopsPerSlot, $delay, 0, "")
 EndFunc   ;==>standardSideDrop
 
 ; Drop the troops in a standard drop from two points along vectors at once
-Func standardSideTwoFingerDrop($dropVectors, $waveNumber, $sideIndex, $currentSlot, $troopsPerSlot, $useDelay = False)
-	standardSideDrop($dropVectors, $waveNumber, $sideIndex, $currentSlot, $troopsPerSlot)
-	standardSideDrop($dropVectors, $waveNumber, $sideIndex + 1, $currentSlot + 1, $troopsPerSlot, $useDelay)
+Func standardSideTwoFingerDrop($dropVectors, $waveNumber, $sideNumber, $currentSlot, $troopsPerSlot, $useDelay = False)
+	If Not IsArray($dropVectors) Then Return
+	
+	standardSideDrop($dropVectors, $waveNumber, $sideNumber, $currentSlot, $troopsPerSlot)
+	standardSideDrop($dropVectors, $waveNumber, $sideNumber + 1, $currentSlot + 1, $troopsPerSlot, $useDelay)
 EndFunc   ;==>twoFingerStandardSideDrop

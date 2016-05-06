@@ -162,4 +162,3 @@ Func RevertEBO()
 	$ichkTimeStopAtk = $saveichkTimeStopAtk
 	$iChkTimeStopAtk2 = $saveiChkTimeStopAtk2
 EndFunc   ;==>RevertEBO
-

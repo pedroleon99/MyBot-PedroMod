@@ -68,7 +68,9 @@ $bm5 = _GDIPlus_ImageLoadFromFile (@ScriptDir & "\images\Multyfarming\Fourth.bmp
 		_GUICtrlComboBox_SetCurSel($cmbProfile, 3)
 		cmbProfile()
 	Else
-		SetLog("Temprory account Detected...", $COLOR_Gray)
+	;IceCube change start	
+		SetLog("Temporary account Detected...", $COLOR_Gray)
+	;IceCube change end	
 	EndIf
 
 _GDIPlus_ImageDispose($bm1)
@@ -189,3 +191,88 @@ Func MakeAccount()
 	EndIf
 EndFunc
 
+;IceCube change start
+; Validate the account before switch
+ Func DetectCurrentAccount($CheckAccountID)
+
+	While 1
+		ZoomOut()
+	ExitLoop
+	WEnd
+	Sleep (2000)
+
+	_CaptureRegion()
+
+	Local $hBMP_Cropped = _GDIPlus_BitmapCloneArea($hBitmap, 0, 0,  200, 18)
+	Local $hHBMP_Cropped = _GDIPlus_BitmapCreateHBITMAPFromBitmap($hBMP_Cropped)
+
+	if $CheckAccountID = 1 AND Not FileExists(@ScriptDir & "\images\Multyfarming\main.bmp") Then
+		SetLog("Multy-farming not configured correctly. File \images\Multyfarming\main.bmp is missing.", $COLOR_BLUE)
+		Return False
+	Elseif  $CheckAccountID = 2 AND Not FileExists(@ScriptDir & "\images\Multyfarming\Second.bmp") Then
+		SetLog("Multy-farming not configured correctly. File \images\Multyfarming\Second.bmp is missing.", $COLOR_BLUE)
+		Return False
+	Elseif  $CheckAccountID = 3 AND Not FileExists(@ScriptDir & "\images\Multyfarming\Third.bmp") And ($iAccount = "3" Or $iAccount = "4") Then
+		SetLog("Multy-farming not configured correctly. File \images\Multyfarming\Third.bmp is missing.", $COLOR_BLUE)
+		Return False
+	Elseif  $CheckAccountID = 4 AND Not FileExists(@ScriptDir & "\images\Multyfarming\Fourth.bmp") And $iAccount = "4" Then
+		SetLog("Multy-farming not configured correctly. File \images\Multyfarming\Fourth.bmp is missing.", $COLOR_BLUE)
+		Return False
+	EndIf
+
+	if FileExists(@ScriptDir & "\images\Multyfarming\temp.bmp") Then
+	   FileDelete(@ScriptDir & "\images\Multyfarming\temp.bmp")
+	EndIf
+
+	  _GDIPlus_ImageSaveToFile($hBMP_Cropped, @ScriptDir & "\images\Multyfarming\temp.bmp")
+	  _GDIPlus_ImageDispose($hBitmap)
+
+	$bm1 = _GDIPlus_ImageLoadFromFile (@ScriptDir & "\images\Multyfarming\main.bmp")
+	$bm3 = _GDIPlus_ImageLoadFromFile (@ScriptDir & "\images\Multyfarming\Second.bmp")
+	$bm2 = _GDIPlus_ImageLoadFromFile (@ScriptDir & "\images\Multyfarming\temp.bmp")
+	$bm4 = _GDIPlus_ImageLoadFromFile (@ScriptDir & "\images\Multyfarming\Third.bmp")
+	$bm5 = _GDIPlus_ImageLoadFromFile (@ScriptDir & "\images\Multyfarming\Fourth.bmp")
+
+	If $CheckAccountID = 1 AND CompareBitmaps($bm1, $bm2) Then
+		SetLog("Main account Detected. No switch is required.", $COLOR_RED)
+		_GDIPlus_ImageDispose($bm1)
+		_GDIPlus_ImageDispose($bm2)
+		_GDIPlus_ImageDispose($bm3)
+		_GDIPlus_ImageDispose($bm4)
+		_GDIPlus_ImageDispose($bm5)
+		Return False
+	ElseIf $CheckAccountID = 2 AND CompareBitmaps($bm3, $bm2) Then
+		SetLog("Second account Detected. No switch is required.", $COLOR_RED)
+		_GDIPlus_ImageDispose($bm1)
+		_GDIPlus_ImageDispose($bm2)
+		_GDIPlus_ImageDispose($bm3)
+		_GDIPlus_ImageDispose($bm4)
+		_GDIPlus_ImageDispose($bm5)
+		Return False
+	ElseIf $CheckAccountID = 3 AND ($iAccount = "3" Or $iAccount = "4") And CompareBitmaps($bm4, $bm2) Then
+		SetLog("Third account Detected. No switch is required.", $COLOR_RED)
+		_GDIPlus_ImageDispose($bm1)
+		_GDIPlus_ImageDispose($bm2)
+		_GDIPlus_ImageDispose($bm3)
+		_GDIPlus_ImageDispose($bm4)
+		_GDIPlus_ImageDispose($bm5)
+		Return False
+	ElseIf $CheckAccountID = 4 AND $iAccount = "4" And CompareBitmaps($bm5, $bm2) Then
+		SetLog("Fourth account Detected. No switch is required.", $COLOR_RED)
+		_GDIPlus_ImageDispose($bm1)
+		_GDIPlus_ImageDispose($bm2)
+		_GDIPlus_ImageDispose($bm3)
+		_GDIPlus_ImageDispose($bm4)
+		_GDIPlus_ImageDispose($bm5)
+		Return False
+	EndIf
+
+	_GDIPlus_ImageDispose($bm1)
+	_GDIPlus_ImageDispose($bm2)
+	_GDIPlus_ImageDispose($bm3)
+	_GDIPlus_ImageDispose($bm4)
+	_GDIPlus_ImageDispose($bm5)
+
+	Return True
+EndFunc
+;IceCube change end

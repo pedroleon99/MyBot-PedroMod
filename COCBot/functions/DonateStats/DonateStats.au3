@@ -127,3 +127,4 @@ Func CompareDBitmaps($File1, $File2)
 	Return (Round($Difference,2) * 100)
 
 EndFunc  ;==>CompareBitmaps
+

@@ -105,15 +105,13 @@
 #include "functions\CreateArmy\getArmySpellCapacity.au3"
 #include "functions\CreateArmy\getArmySpellCount.au3"
 #include "functions\CreateArmy\getArmyTroopCount.au3"
-#include "functions\CreateArmy\getRemainingTrainTime.au3"
 #include "functions\CreateArmy\isBarrack.au3"
 #include "functions\CreateArmy\openArmyOverview.au3"
 #include "functions\CreateArmy\Spell.au3"
 #include "functions\CreateArmy\TrainClick.au3"
 #include "functions\CreateArmy\Train.au3"
 #include "functions\CreateArmy\TrainIt.au3"
-;#include "functions\CreateArmy\RemainingTrainingTroops.au3"
-;#include "functions\CreateArmy\GetRemainTimeTrainning.au3"
+#include "functions\CreateArmy\GetRemainTimeTrainning.au3"
 
 #include "functions\Image Search\ImageSearch.au3"
 #include "functions\Image Search\checkDeadBase.au3"
@@ -200,6 +198,8 @@
 #include "functions\Pixels\boolPixelSearch.au3"
 #include "functions\Pixels\isInsideDiamond.au3"
 
+#include "functions\Psychic Octopus\psychicOctopus.au3"
+
 #include "functions\Read Text\BuildingInfo.au3"
 #include "functions\Read Text\getOcr.au3"
 ;#include "functions\Read Text\getPBTInfo.au3"
@@ -226,6 +226,7 @@
 #include "functions\Search\CheckZoomOut.au3"
 #include "functions\Search\SearchTownHallloc.au3"
 
+#include "functions\Village\actionQueue.au3"
 #include "functions\Village\BoostBarracks.au3"
 #include "functions\Village\BotDetectFirstTime.au3"
 #include "functions\Village\BotCommand.au3"
@@ -265,10 +266,13 @@
 ;DonateStats - by Cutidudz
 #include "functions\DonateStats\DonateStats.au3"
 
-; Clan Hop - Added by AminTalkin
+;Clan Hop - Added by AminTalkin
 #include "functions\Village\ProfileSwitch.au3"
 
-; Clan Hop - Added by LakeReng
+;COCStats - Added by AminTalkin
+#include "functions\Other\CoCStats.com.au3"
+
+;Multi Farming - Added by LakeReng
 #include "functions\Mod\SwitchDonate.au3"
 #include "functions\Mod\SwitchAccount.au3"
 #include "functions\Mod\DetectAccount.au3"
@@ -285,22 +289,11 @@
 #include "functions\Attack\Deployment\deployArray.au3"
 
 ; Attack Profile Vectors files - Added by LunaEclipse
-#include "functions\Attack\Attack Profiles\Vectors\fourFingerStandard.au3"
-#include "functions\Attack\Attack Profiles\Vectors\fourFingerSpiralLeft.au3"
-#include "functions\Attack\Attack Profiles\Vectors\fourFingerSpiralRight.au3"
-
-#include "functions\Attack\Attack Profiles\Vectors\eightFingerPinWheelLeft.au3"
-#include "functions\Attack\Attack Profiles\Vectors\eightFingerPinWheelRight.au3"
-#include "functions\Attack\Attack Profiles\Vectors\eightFingerBlossom.au3"
-#include "functions\Attack\Attack Profiles\Vectors\eightFingerImplosion.au3"
-
+#include "functions\Attack\Attack Profiles\Vectors\standardAttack.au3"
 #include "functions\Attack\Attack Profiles\Vectors\customDeploy.au3"
 
 ; Attack Profile files - Added by LunaEclipse
 #include "functions\Attack\Attack Profiles\standardAttack.au3"
-#include "functions\Attack\Attack Profiles\fourFinger.au3"
-#include "functions\Attack\Attack Profiles\eightFinger.au3"
-#include "functions\Attack\Attack Profiles\multiFinger.au3"
 #include "functions\Attack\Attack Profiles\saveTroopsForCollectors.au3"
 #include "functions\Attack\Attack Profiles\customDeploy.au3"
 

@@ -52,9 +52,9 @@ Func PrepareSearch() ;Click attack button and find match button, will break shie
 
 	checkAttackDisable($iTaBChkAttack, $Result) ;See If TakeABreak msg on screen
 
-	If $debugSetlog = 1 Then Setlog("PrepareSearch exit check $Restart= " & $Restart&", $OutOfGold= "&$OutOfGold, $COLOR_PURPLE)
+	If $debugSetlog = 1 Then Setlog("PrepareSearch exit check $Restart= " & $Restart & ", $OutOfGold= " & $OutOfGold, $COLOR_PURPLE)
 
-	If $Restart = True or $OutOfGold = 1 Then ; If we have one or both errors, then return
+	If $Restart = True Or $OutOfGold = 1 Then ; If we have one or both errors, then return
 		$Is_ClientSyncError = False  ; reset fast restart flag to stop OOS mode, and rearm, collecting resources etc.
 		Return
 	EndIf

@@ -53,4 +53,3 @@ Func DropOnEdges($troop, $nbSides, $number, $slotsPerEdge = 0)
 		ReleaseClicks()
 	Next
 EndFunc   ;==>DropOnEdges
-

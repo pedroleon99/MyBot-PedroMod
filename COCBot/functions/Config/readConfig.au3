@@ -200,8 +200,6 @@ Func readConfig() ;Reads config and sets it to the variables
 
 		$iDropCC[$DB] = IniRead($config, "attack", "DBDropCC", "0")
 		$iDropCC[$LB] = IniRead($config, "attack", "ABDropCC", "0")
-		$ichkNeed1Hero[$DB] = IniRead($config, "attack", "DBNeed1Hero", "1")
-		$ichkNeed1Hero[$LB] = IniRead($config, "attack", "ABNeed1Hero", "1")
 
 		$iChkUseCCBalanced = IniRead($config, "attack", "BalanceCC", "1")
 		$iCmbCCDonated = IniRead($config, "attack", "BalanceCCDonated", "1")
@@ -467,21 +465,12 @@ Func readConfig() ;Reads config and sets it to the variables
 		$fulltroop = IniRead($config, "troop", "fullTroop", "100")
 
 		$isldTrainITDelay = IniRead($config, "troop", "TrainITDelay", "40")
-
-		; Boost  -------------------------------------------------------------------------------
-		$iCmbQuantBoostBarracks = IniRead($config, "troop", "QuantBoostBarracks", "0")
-		$iCmbBoostBarracks = IniRead($config, "troop", "BoostBarracks", "0")
-		$iCmbBoostSpellFactory = IniRead($config, "troop", "BoostSpellFactory", "0")
-		$iCmbBoostDarkSpellFactory = IniRead($config, "troop", "BoostDarkSpellFactory", "0")
-		$iCmbBoostBarbarianKing = IniRead($config, "troop", "BoostBarbarianKing", "0")
-		$iCmbBoostArcherQueen = IniRead($config, "troop", "BoostArcherQueen", "0")
-		$iCmbBoostWarden = IniRead($config, "troop", "BoostWarden", "0")
+		$ichkCloseTraining = IniRead($config, "troop", "CloseWhenTraining", "1")
+		$ichkCloseNight = IniRead($config, "troop", "CloseAtNight", "1")
+		;barracks boost not saved (no use)
+		
 		$iChkDontRemove = IniRead($config, "troop", "DontRemove", "0")
 		$iChkBarrackSpell = IniRead($config, "Spells", "BarrackSpell", "0")
-
-		;barracks boost not saved (no use)
-
-		$stayOfflineWhileTrain = IniRead($config, "troop", "StayOfflineWhileTrain", "1")
 
 		; Spells Creation  ---------------------------------------------------------------------
 		$iLightningSpellComp = Int(IniRead($config, "Spells", "LightningSpell", "0"))
@@ -524,7 +513,6 @@ Func readConfig() ;Reads config and sets it to the variables
 
 		$itxtgainperhours = IniRead($config, "other", "mingainperhours", "100000")
 
-
 		$ichkTrap = IniRead($config, "other", "chkTrap", "1")
 		$iChkCollect = IniRead($config, "other", "chkCollect", "1")
 $itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
@@ -548,7 +536,7 @@ $itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
 
 		;PushBullet Settings ---------------------------------------------
 		$PushToken2 = IniRead($config, "pushbullet", "AccountToken2", "")
-		$pEnabled2 = IniRead($config, "pushbullet", "PBEnabled2", "0")		
+		$pEnabled2 = IniRead($config, "pushbullet", "PBEnabled2", "0")
 		$PushToken = IniRead($config, "pushbullet", "AccountToken", "")
 		$iOrigPushB = IniRead($config, "pushbullet", "OrigPushB", $sCurrProfile)
 
@@ -570,7 +558,7 @@ $itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
 		$ichkDeleteOldPushes = IniRead($config, "pushbullet", "DeleteOldPushes", "0")
 		$ichkAlertPBCampFull = IniRead($config, "pushbullet", "AlertCampFull", "0")
 		$ichkAlertBuilderIdle = IniRead($config, "pushbullet", "AlertBuilderIdle", "0")
-		
+
 
 
 		$ichkDeleteLogs = IniRead($config, "deletefiles", "DeleteLogs", "0")
@@ -734,32 +722,25 @@ $itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
 	$itxtMinTrophyAmount = IniRead($config, "profiles", "txtMinTrophyAmount", "1000")
 
         ; SmartZap Settings - Added by LunaEclipse
-        $ichkSmartZap = IniRead($config, "SmartZap", "UseSmartZap", "1")
-        $ichkSmartZapDB = IniRead($config, "SmartZap", "ZapDBOnly", "1")
-        $ichkSmartZapSaveHeroes = IniRead($config, "SmartZap", "THSnipeSaveHeroes", "1")
-        $itxtMinDE = IniRead($config, "SmartZap", "MinDE", "250")
-
-		; Multi Finger Attack Style Settings - Added by LunaEclipse
-		$iMultiFingerStyle[$DB] = IniRead($config, "MultiFinger", "DeadBaseStyle", "0")
-		$iMultiFingerStyle[$LB] = IniRead($config, "MultiFinger", "LiveBaseStyle", "0")
+        $ichkSmartZap = Number(IniRead($config, "SmartZap", "UseSmartZap", "1"))
+        $ichkSmartZapDB = Number(IniRead($config, "SmartZap", "ZapDBOnly", "1"))
+        $ichkSmartZapSaveHeroes = Number(IniRead($config, "SmartZap", "THSnipeSaveHeroes", "1"))
+        $itxtMinDE = Number(IniRead($config, "SmartZap", "MinDE", "250"))
 
 		; Save Troops for Collector Settings - Added by LunaEclipse
-		$useFFBarchST = IniRead($config, "SaveTroops", "ChangeFF", "1")
-		$percentCollectors = IniRead($config, "SaveTroops", "PercentCollectors", "80")
-		$redlineDistance = IniRead($config, "SaveTroops", "MaxDistance", "50")
-
-		; Misc Battle Settings - Added by LunaEclipse
-		$AndroidAdbClicksEnabled = IniRead($config, "Fast Clicks", "UseADBFastClicks", "0")
+		$useAllSides = Number(IniRead($config, "SaveTroops", "ChangeAllSides", "1"))
+		$percentCollectors = Number(IniRead($config, "SaveTroops", "PercentCollectors", "80"))
+		$redlineDistance = Number(IniRead($config, "SaveTroops", "MaxDistance", "50"))
 
 		; Custom Deployment Settings - Added by LunaEclipse
 		$deployValues = deployStringToArray(IniRead($config, "Custom Deployment", "Deployment", ""))
-		$valueTownHall = IniRead($config, "Custom Deployment", "TownHallPoints", "5")
-		$valueDEStorage = IniRead($config, "Custom Deployment", "DEStoragePoints", "10")
-		$valueGoldStorage = IniRead($config, "Custom Deployment", "GoldStoragePoints", "3")
-		$valueElixirStorage = IniRead($config, "Custom Deployment", "ElixirStoragePoints", "3")
-		$valueGoldMine = IniRead($config, "Custom Deployment", "GoldMinePoints", "1")
-		$valueElixirCollector = IniRead($config, "Custom Deployment", "ElixirCollectorPoints", "1")
-		$valueDEDrill = IniRead($config, "Custom Deployment", "DEDrillPoints", "2")
+		$valueTownHall = Number(IniRead($config, "Custom Deployment", "TownHallPoints", "5"))
+		$valueDEStorage = Number(IniRead($config, "Custom Deployment", "DEStoragePoints", "10"))
+		$valueGoldStorage = Number(IniRead($config, "Custom Deployment", "GoldStoragePoints", "3"))
+		$valueElixirStorage = Number(IniRead($config, "Custom Deployment", "ElixirStoragePoints", "3"))
+		$valueGoldMine = Number(IniRead($config, "Custom Deployment", "GoldMinePoints", "1"))
+		$valueElixirCollector = Number(IniRead($config, "Custom Deployment", "ElixirCollectorPoints", "1"))
+		$valueDEDrill = Number(IniRead($config, "Custom Deployment", "DEDrillPoints", "2"))
 
 		; Android Settings - Added by LunaEclipse
 		$sAndroid = IniRead($config, "Android", "Emulator", "<No Emulators>")
@@ -785,6 +766,30 @@ $itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
 		$iPlannedBoostWeekDays = StringSplit(IniRead($config, "planned", "BoostWeekDays", "1|1|1|1|1|1|1"),"|", $STR_NOCOUNT)
 		$iPlannedAttackWeekDaysEnable = IniRead($config, "planned", "AttackWeekDaysEnable", "0")
 		$iPlannedAttackWeekDays = StringSplit(IniRead($config, "planned", "AttackWeekDays", "1|1|1|1|1|1|1"),"|", $STR_NOCOUNT)
+
+	; CoCStats -----------------------------------------------------------------------
+	$ichkCoCStats = IniRead($config, "Stats", "chkCoCStats", "0")
+	$MyApiKey = IniRead($config, "Stats", "txtAPIKey", "")
+
+		; Close When Training Settings
+		$ichkCloseTraining = Number(IniRead($config, "Close When Training", "Enabled", "1"))
+		$minTrainAddition = Number(IniRead($config, "Close When Training", "AdditionMin", "10"))
+		$maxTrainAddition = Number(IniRead($config, "Close When Training", "AdditionMax", "20"))
+
+		; Daily Attack Settings
+		$ichkLimitAttacks = Number(IniRead($config, "Daily Attacks", "Enabled", "1"))
+		$rangeAttacksStart = Number(IniRead($config, "Daily Attacks", "RangeStart", "20"))
+		$rangeAttacksEnd = Number(IniRead($config, "Daily Attacks", "RangeEnd", "25"))
+		$dailyAttackLimit = Number(IniRead($config, "Daily Attacks", "AttackLimit", "0"))
+		$dailyAttacks = Number(IniRead($config, "Daily Attacks", "Attacks", "0"))	
+
+		; Simulate Sleep Settings
+		$ichkCloseNight = Number(IniRead($config, "Simulate Sleep", "Enabled", "1"))
+		$sleepStart = Number(IniRead($config, "Simulate Sleep", "StartHour", "0"))
+		$sleepEnd = Number(IniRead($config, "Simulate Sleep", "EndHour", "8"))
+		$nextSleepStart = IniRead($config, "Simulate Sleep", "SleepStart", "-999")
+		$nextSleepEnd = IniRead($config, "Simulate Sleep", "SleepEnd", "-999")
+		checkSleep()
 
 	Else
 		Return False

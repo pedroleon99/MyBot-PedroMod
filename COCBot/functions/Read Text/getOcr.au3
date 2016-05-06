@@ -10,9 +10,9 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-;Func getRemainTrainingTimer($x_start, $y_start);48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
-;	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 70, 11, True)
-;EndFunc   ;==>getRemainTrainTimer
+Func getRemainTrainingTimer($x_start, $y_start);48, 69 -> Gets complete value of gold xxx,xxx while searching, top left, Getresources.au3
+	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 50, 12, True)
+EndFunc   ;==>getRemainTrainTimer
 
 Func getNameBuilding($x_start, $y_start); getNameBuilding(242,520) -> Gets complete name and level of the buildings, bottom of screen
 	Return getOcrAndCapture("coc-build", $x_start, $y_start, 377, 27)
@@ -171,14 +171,6 @@ EndFunc   ;==>getOcrGuardShield
 Func getOcrPBTtime($x_start, $y_start);  -> Get the Time until PBT starts from PBT info window
 	Return getOcrAndCapture("coc-pbttime", $x_start, $y_start, 59, 15)
 EndFunc   ;==>getOcrPBTtime
-
-Func getOcrTroopsTime($x_start, $y_start) ; -> Get the remaining Time until troops are finished --> getRemainingTrainTime.au3
-	Return getOcrAndCapture("coc-RemainTrain", $x_start, $y_start, 70, 11, True)
-EndFunc   ;==>getOcrTroopsTime
-
-Func getOcrLaboratoryTime($x_start, $y_start) ; -> Get the remaining Time until spells are finished --> getRemainingTrainTime.au3
-	Return getOcrAndCapture("coc-RemainLaboratory", $x_start, $y_start, 192, 22, True)
-EndFunc   ;==>getRemainTLaboratory
 
 
 Func getOcrAndCapture($language, $x_start, $y_start, $width, $height, $removeSpace = False)

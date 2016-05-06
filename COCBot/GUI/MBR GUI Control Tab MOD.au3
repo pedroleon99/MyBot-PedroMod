@@ -47,13 +47,13 @@ Func txtMinDark()
 	$itxtMinDE = GUICtrlRead($txtMinDark)
 EndFunc   ;==>txtMinDark
 
-Func chkChangeFF()
-	If GUICtrlRead($chkChangeFF) = $GUI_CHECKED Then
-		$useFFBarchST = 1
+Func chkChangeAllSides()
+	If GUICtrlRead($chkChangeAllSides) = $GUI_CHECKED Then
+		$useAllSides = 1
 	Else
-		$useFFBarchST = 0
+		$useAllSides = 0
 	EndIf
- EndFunc   ;==>chkChangeFF
+ EndFunc   ;==>chkChangeAllSides
 
 Func txtPercentCollectors()
 	$percentCollectors = GUICtrlRead($txtPercentCollectors)
@@ -62,14 +62,6 @@ EndFunc   ;==>txtPercentCollectors
 Func txtDistance()
 	$redlineDistance = GUICtrlRead($txtDistance)
 EndFunc   ;==>txtDistance
-
-Func chkFastADBClicks()
-	If GUICtrlRead($chkFastADBClicks) = $GUI_CHECKED Then
-		$AndroidAdbClicksEnabled = True
-	Else
-		$AndroidAdbClicksEnabled = False
-	EndIf
-EndFunc   ;==>chkFastADBClicks
 
 ;MBR GUI_MOD CONTROLS
 
@@ -94,6 +86,24 @@ Func MultiFarming()
 		If GUICtrlRead($chkBotStop) = $GUI_CHECKED Then
 			GUICtrlSetState($chkBotStop, $GUI_UNCHECKED)
 		EndIf
+		; IceCube change start
+		GUICtrlSetState($btnmultyAcc1, $GUI_DISABLE)
+		GUICtrlSetState($btnmultyAcc2, $GUI_DISABLE)
+		GUICtrlSetState($btnmultyAcc3, $GUI_DISABLE)
+		GUICtrlSetState($btnmultyAcc4, $GUI_DISABLE)
+		If  FileExists(@ScriptDir & "\images\Multyfarming\Accmain.bmp") Then
+			GUICtrlSetState($btnmultyAcc1, $GUI_ENABLE)
+		EndIf
+		If  FileExists(@ScriptDir & "\images\Multyfarming\AccSecond.bmp") Then
+			GUICtrlSetState($btnmultyAcc2, $GUI_ENABLE)
+		EndIf
+		If  FileExists(@ScriptDir & "\images\Multyfarming\AccThird.bmp") Then
+			GUICtrlSetState($btnmultyAcc3, $GUI_ENABLE)
+		EndIf
+		If  FileExists(@ScriptDir & "\images\Multyfarming\AccFourth.bmp") Then
+			GUICtrlSetState($btnmultyAcc4, $GUI_ENABLE)
+		EndIf
+		; IceCube change end
 	Else
 		$ichkMultyFarming = 0
 		GUICtrlSetState($Account, $GUI_DISABLE)
@@ -101,6 +111,12 @@ Func MultiFarming()
 		For $i = $grpControls To $cmbHoursStop
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
+		; IceCube change start
+		GUICtrlSetState($btnmultyAcc1, $GUI_DISABLE)
+		GUICtrlSetState($btnmultyAcc2, $GUI_DISABLE)
+		GUICtrlSetState($btnmultyAcc3, $GUI_DISABLE)
+		GUICtrlSetState($btnmultyAcc4, $GUI_DISABLE)
+		; IceCube change end
 	EndIf
 EndFunc   ;==>MultiFarming
 
@@ -108,6 +124,185 @@ Func Account()
 	$iAccount = GUICtrlRead($Account)
 	IniWrite($config, "MOD", "Account", $iAccount)
 EndFunc
+
+;IceCube change start
+;Main Account
+Func btnmultyAcc1()
+	LockGUI()
+	SetLog("Multy-farming Main account switch requested ...", $COLOR_BLUE)
+	SetLog("DO NOT STOP OR PAUSE BOT", $COLOR_RED)
+	ResumeAndroid()
+	SetLog("Multy-farming Main account switch in progress ...", $COLOR_BLUE)
+	if DetectCurrentAccount(1) Then	
+	$RunState = True
+	checkMainScreen()
+	$iSwCount = 0
+	SwitchMain()
+	checkMainScreen()	
+	$RunState = False
+	DetectAccount()
+		SetLog("Multy-farming Main account switch completed", $COLOR_BLUE)
+	Else
+		SetLog("Multy-farming account switch canceled", $COLOR_RED)
+	EndIf
+	UnLockGUI()
+EndFunc
+;Second Account
+Func btnmultyAcc2()
+	LockGUI()
+	SetLog("Multy-farming Second account switch requested ...", $COLOR_BLUE)
+	SetLog("DO NOT STOP OR PAUSE BOT", $COLOR_RED)
+	ResumeAndroid()
+	SetLog("Multy-farming Second account switch in progress ...", $COLOR_BLUE)
+	if DetectCurrentAccount(2) Then
+	$RunState = True
+	checkMainScreen()
+	$iSwCount = 0
+	SwitchSecond()
+	checkMainScreen()
+	$RunState = False
+	DetectAccount()
+		SetLog("Multy-farming Second account switch completed", $COLOR_BLUE)
+	Else
+		SetLog("Multy-farming account switch canceled", $COLOR_RED)
+	EndIf
+	UnLockGUI()
+EndFunc
+;Third Account
+Func btnmultyAcc3()
+	LockGUI()
+	SetLog("Multy-farming Third account switch requested ...", $COLOR_BLUE)
+	SetLog("DO NOT STOP OR PAUSE BOT", $COLOR_RED)
+	ResumeAndroid()
+	SetLog("Multy-farming Third account switch in progress ...", $COLOR_BLUE)
+	if DetectCurrentAccount(3) Then
+	$RunState = True
+	checkMainScreen()
+	$iSwCount = 0
+	SwitchThird()
+	checkMainScreen()
+	$RunState = False
+	DetectAccount()
+		SetLog("Multy-farming Third account switch completed", $COLOR_BLUE)
+	Else
+		SetLog("Multy-farming account switch canceled", $COLOR_RED)
+	EndIf
+	UnLockGUI()
+EndFunc
+;Fourth Account
+Func btnmultyAcc4()
+	LockGUI()
+	SetLog("Multy-farming Fourth account switch requested ...", $COLOR_BLUE)
+	SetLog("DO NOT STOP OR PAUSE BOT", $COLOR_RED)
+	ResumeAndroid()
+	SetLog("Multy-farming Fourth account switch in progress ...", $COLOR_BLUE)
+	if DetectCurrentAccount(1) Then
+	$RunState = True
+	checkMainScreen()
+	$iSwCount = 0
+	SwitchFourth()
+	checkMainScreen()
+	$RunState = False
+	DetectAccount()
+		SetLog("Multy-farming Fourth account switch completed", $COLOR_BLUE)
+	Else
+		SetLog("Multy-farming account switch canceled", $COLOR_RED)
+	EndIf
+	UnLockGUI()
+EndFunc
+;Lock GUI
+Func LockGUI()
+
+		GUICtrlSetState($btnStart, $GUI_HIDE)
+		GUICtrlSetState($btnStop, $GUI_SHOW)
+		GUICtrlSetState($btnPause, $GUI_SHOW)
+		GUICtrlSetState($btnResume, $GUI_HIDE)
+		GUICtrlSetState($btnSearchMode, $GUI_HIDE)
+		;GUICtrlSetState($btnMakeScreenshot, $GUI_DISABLE)
+		;$FirstAttack = 0
+
+		$bTrainEnabled = True
+		$bDonationEnabled = True
+		$MeetCondStop = False
+		$Is_ClientSyncError = False
+		$bDisableBreakCheck = False  ; reset flag to check for early warning message when bot start/restart in case user stopped in middle
+		$bDisableDropTrophy = False ; Reset Disabled Drop Trophy because the user has no Tier 1 or 2 Troops
+
+		_GUICtrlEdit_SetText($txtLog, _PadStringCenter(" BOT LOG ", 71, "="))
+		_GUICtrlRichEdit_SetFont($txtLog, 6, "Lucida Console")
+		_GUICtrlRichEdit_AppendTextColor($txtLog, "" & @CRLF, _ColorConvert($Color_Black))
+
+	    SaveConfig()
+		readConfig()
+		applyConfig(False) ; bot window redraw stays disabled!
+
+		GUICtrlSetState($chkBackground, $GUI_DISABLE)
+
+		For $i = $FirstControlToHide To $LastControlToHide ; Save state of all controls on tabs
+			; Added $tabMOD to the list - Added by LunaEclipse
+			If $i = $tabGeneral Or $i = $tabSearch Or $i = $tabAttack Or $i = $tabAttackAdv Or $i = $tabDonate Or $i = $tabTroops Or $i = $tabMisc Or $i = $tabNotify Or $i = $tabUpgrades Or $i = $tabEndBattle Or $i = $tabExpert Or $i= $tabAttackCSV Or $i = $tabDeploy Or $i = $tabMOD Or $i = $tabProfiles Or $i= $tabScheduler Or $i = $tabDocOc Then ContinueLoop ; exclude tabs
+			If $pEnabled And $i = $btnDeletePBmessages Then ContinueLoop ; exclude the DeleteAllMesages button when PushBullet is enabled
+			If $i = $btnMakeScreenshot Then ContinueLoop ; exclude
+			If $i = $divider Then ContinueLoop ; exclude divider
+			$iPrevState[$i] = GUICtrlGetState($i)
+		Next
+		For $i = $FirstControlToHide To $LastControlToHide ; Disable all controls in 1 go on all tabs
+			; Added $tabMOD to the list - Added by LunaEclipse
+			If $i = $tabGeneral Or $i = $tabSearch Or $i = $tabAttack Or $i = $tabAttackAdv Or $i = $tabDonate Or $i = $tabTroops Or $i = $tabMisc Or $i = $tabNotify Or $i = $tabUpgrades Or $i = $tabEndBattle Or $i = $tabExpert Or $i=$tabAttackCSV Or $i = $tabDeploy Or $i = $tabMOD Or $i = $tabProfiles Or $i= $tabScheduler Or $i = $tabDocOc Then ContinueLoop ; exclude tabs
+			If $pEnabled And $i = $btnDeletePBmessages Then ContinueLoop ; exclude the DeleteAllMesages button when PushBullet is enabled
+			If $i = $btnMakeScreenshot Then ContinueLoop ; exclude
+			If $i = $divider Then ContinueLoop ; exclude divider
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+		
+		ChatGuiCheckboxDisableAT()
+
+		SetRedrawBotWindow(True)
+EndFunc
+;UnLock GUI
+Func UnLockGUI()
+
+		GUICtrlSetState($chkBackground, $GUI_ENABLE)
+		GUICtrlSetState($btnStart, $GUI_SHOW)
+		GUICtrlSetState($btnStop, $GUI_HIDE)
+		GUICtrlSetState($btnPause, $GUI_HIDE)
+		GUICtrlSetState($btnResume, $GUI_HIDE)
+		If $iTownHallLevel > 2 Then GUICtrlSetState($btnSearchMode, $GUI_ENABLE)
+		GUICtrlSetState($btnSearchMode, $GUI_SHOW)
+		;GUICtrlSetState($btnMakeScreenshot, $GUI_ENABLE)
+
+		; hide attack buttons if show
+		GUICtrlSetState($btnAttackNowDB, $GUI_HIDE)
+		GUICtrlSetState($btnAttackNowLB, $GUI_HIDE)
+		GUICtrlSetState($btnAttackNowTS, $GUI_HIDE)
+		GUICtrlSetState($sBotTitleAT, $GUI_SHOW)
+		GUICtrlSetState($pic2arrow, $GUI_SHOW)
+		GUICtrlSetState($lblVersion, $GUI_SHOW)
+
+	    ;$FirstStart = true
+		EnableBS($HWnD, $SC_MINIMIZE)
+		EnableBS($HWnD, $SC_MAXIMIZE)
+		;EnableBS($HWnD, $SC_CLOSE) ; no need to re-enable close button
+
+		SetRedrawBotWindow(False)
+
+		For $i = $FirstControlToHide To $LastControlToHide ; Restore previous state of controls
+			; Added $tabMOD to the list - Added by LunaEclipse
+			If $i = $tabGeneral Or $i = $tabSearch Or $i = $tabAttack Or $i = $tabAttackAdv Or $i = $tabDonate Or $i = $tabTroops Or $i = $tabMisc Or $i = $tabNotify Or $i = $tabEndBattle Or $i = $tabExpert Or $i = $tabDeploy Or $i = $tabMOD Or $i = $tabProfiles Or $i= $tabScheduler Or $i = $tabDocOc Then ContinueLoop ; exclude tabs
+			If $pEnabled And $i = $btnDeletePBmessages Then ContinueLoop ; exclude the DeleteAllMesages button when PushBullet is enabled
+			If $i = $btnMakeScreenshot Then ContinueLoop ; exclude
+			If $i = $divider Then ContinueLoop ; exclude divider
+			GUICtrlSetState($i, $iPrevState[$i])
+		Next
+
+		ChatGuiCheckboxEnableAT()
+		
+		AndroidBotStopEvent() ; signal android that bot is now stopping
+
+		_BlockInputEx(0, "", "", $HWnD)
+		SetRedrawBotWindow(True) ; must be here at bottom, after SetLog, so Log refreshes. You could also use SetRedrawBotWindow(True, False) and let the events handle the refresh.
+EndFunc
+;IceCube change end
 
 
 	; Android Settings
@@ -139,3 +334,12 @@ Func HideTaskbar()
 		$ichkHideTaskBar = 0
 	EndIf
 EndFunc   ;==>HideTaskbar
+
+;CocStats
+Func chkCoCStats()
+    If GUICtrlRead($chkCoCStats) = $GUI_CHECKED Then
+	  GUICtrlSetState($txtAPIKey, $GUI_ENABLE)
+    Else
+	  GUICtrlSetState($txtAPIKey, $GUI_DISABLE)
+	EndIf
+EndFunc ;==> chkCoCStats

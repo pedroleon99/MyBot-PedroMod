@@ -84,9 +84,9 @@ Func AttackTHGrid($troopKind, $iNbOfSpots = 1, $iAtEachSpot = 1, $Sleep = Random
 				Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
 				If $iPlannedDropCCHours[$hour[0]] = 0 Then
 					SetLog("Drop Clan Castle not Planned, Skipped..", $COLOR_GREEN)
-							Return ; exit func if no planned donate checkmarks
-						EndIf
-					EndIf
+					Return ; exit func if no planned donate checkmarks
+				EndIf
+			EndIf
 				Else
 					SetLog("Drop CC not planned to: " & _DateDayOfWeek(@WDAY), $COLOR_ORANGE)
 					Return ; exit func if no planned donate checkmarks

@@ -158,7 +158,6 @@ Func AttackReport()
 	$AtkLogTxt &= StringFormat("%7d", $searchGold) & "|"
 	$AtkLogTxt &= StringFormat("%7d", $searchElixir) & "|"
 	$AtkLogTxt &= StringFormat("%7d", $searchDark) & "|"
-
 	Local $AtkLogTxtExtend
 	$AtkLogTxtExtend = "|"
 	$AtkLogTxtExtend &= $CurCamp & "/" & $TotalCamp & "|"
@@ -178,6 +177,8 @@ Func AttackReport()
 			$iShareAttackNow = 0
 		EndIf
 	EndIf
+
+	CoCStats($starsearned)
 
 	If $FirstAttack = 0 Then $FirstAttack = 1
 	$iGoldTotal += $iGoldLast + $iGoldLastBonus

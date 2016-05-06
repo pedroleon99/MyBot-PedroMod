@@ -168,3 +168,4 @@ Func _Restart_()
 
 	Return SetError(2, 0, 0)
 EndFunc   ;==>_Restart
+

@@ -222,13 +222,6 @@ Func saveConfig() ;Saves the controls settings to the config
 	IniWrite($config, "attack", "DBWaveD", _GUICtrlComboBox_GetCurSel($cmbDBWaveDelay))
 	IniWrite($config, "attack", "DBRandomSpeedAtk", GUICtrlRead($chkDBRandomSpeedAtk))
 	IniWrite($config, "attack", "DBSelectTroop", _GUICtrlComboBox_GetCurSel($cmbDBSelectTroop))
-
-	If GUICtrlRead($chkDBSmartAttackRedArea) = $GUI_CHECKED Then
-		IniWrite($config, "attack", "DBSmartAttackRedArea", 1)
-	Else
-		IniWrite($config, "attack", "DBSmartAttackRedArea", 0)
-	EndIf
-
 	IniWrite($config, "attack", "DBSmartAttackDeploy", _GUICtrlComboBox_GetCurSel($cmbDBSmartDeploy))
 
 	If GUICtrlRead($chkDBAttackNearGoldMine) = $GUI_CHECKED Then
@@ -254,13 +247,6 @@ Func saveConfig() ;Saves the controls settings to the config
 	IniWrite($config, "attack", "ABWaveD", _GUICtrlComboBox_GetCurSel($cmbABWaveDelay))
 	IniWrite($config, "attack", "ABRandomSpeedAtk", GUICtrlRead($chkABRandomSpeedAtk))
 	IniWrite($config, "attack", "ABSelectTroop", _GUICtrlComboBox_GetCurSel($cmbABSelectTroop))
-
-	If GUICtrlRead($chkABSmartAttackRedArea) = $GUI_CHECKED Then
-		IniWrite($config, "attack", "ABSmartAttackRedArea", 1)
-	Else
-		IniWrite($config, "attack", "ABSmartAttackRedArea", 0)
-	EndIf
-
 	IniWrite($config, "attack", "ABSmartAttackDeploy", _GUICtrlComboBox_GetCurSel($cmbABSmartDeploy))
 
 	If GUICtrlRead($chkABAttackNearGoldMine) = $GUI_CHECKED Then
@@ -330,12 +316,6 @@ Func saveConfig() ;Saves the controls settings to the config
 		IniWrite($config, "attack", "DBDropCC", 0)
 	EndIf
 
-	If GUICtrlRead($chkDBNeed1Hero) = $GUI_CHECKED Then
-		IniWrite($config, "attack", "DBNeed1Hero", 1)
-	Else
-		IniWrite($config, "attack", "DBNeed1Hero", 0)
-	EndIf
-
 	If GUICtrlRead($chkDBWardenAttack) = $GUI_CHECKED Then
 		IniWrite($config, "attack", "DBWardenAtk", $HERO_WARDEN)
 	Else
@@ -362,12 +342,6 @@ Func saveConfig() ;Saves the controls settings to the config
 		IniWrite($config, "attack", "ABDropCC", 1)
 	Else
 		IniWrite($config, "attack", "ABDropCC", 0)
-	EndIf
-
-	If GUICtrlRead($chkABNeed1Hero) = $GUI_CHECKED Then
-		IniWrite($config, "attack", "ABNeed1Hero", 1)
-	Else
-		IniWrite($config, "attack", "ABNeed1Hero", 0)
 	EndIf
 
 	If GUICtrlRead($chkUseCCBalanced) = $GUI_CHECKED Then
@@ -575,7 +549,6 @@ Func saveConfig() ;Saves the controls settings to the config
 	Else
 		IniWrite($config, "pushbullet", "AlertCampFull", 0)
 	EndIf
-
 	If GUICtrlRead($chkAlertBuilderIdle) = $GUI_CHECKED Then
 		IniWrite($config, "pushbullet", "AlertBuilderIdle", 1)
 	Else
@@ -951,14 +924,7 @@ Func saveConfig() ;Saves the controls settings to the config
 	IniWrite($config, "troop", "fulltroop", GUICtrlRead($txtFullTroop))
 	IniWrite($config, "troop", "TrainITDelay", GUICtrlRead($sldTrainITDelay))
 
-	; Boost  -------------------------------------------------------------------------------
-	IniWrite($config, "troop", "QuantBoostBarracks", _GUICtrlComboBox_GetCurSel($cmbQuantBoostBarracks))
-	IniWrite($config, "troop", "BoostBarracks", _GUICtrlComboBox_GetCurSel($cmbBoostBarracks))
-	IniWrite($config, "troop", "BoostSpellFactory", _GUICtrlComboBox_GetCurSel($cmbBoostSpellFactory))
-	IniWrite($config, "troop", "BoostDarkSpellFactory", _GUICtrlComboBox_GetCurSel($cmbBoostDarkSpellFactory))
-	IniWrite($config, "troop", "BoostBarbarianKing", _GUICtrlComboBox_GetCurSel($cmbBoostBarbarianKing))
-	IniWrite($config, "troop", "BoostArcherQueen", _GUICtrlComboBox_GetCurSel($cmbBoostArcherQueen))
-	IniWrite($config, "troop", "BoostWarden", _GUICtrlComboBox_GetCurSel($cmbBoostWarden))
+	;barracks boost not saved (no use)
 	
 	If GUICtrlRead($chkDontRemove) = $GUI_CHECKED Then
 		IniWrite($config, "troop", "DontRemove", 1)
@@ -971,16 +937,6 @@ Func saveConfig() ;Saves the controls settings to the config
 	Else
 		IniWrite($config, "Spells", "BarrackSpell", 0)
 	EndIf
-
-	;barracks boost not saved (no use)
-
-	
-	If GUICtrlRead($chkStayOfflineWhileTrain) = $GUI_CHECKED Then
-		IniWrite($config, "troop", "StayOfflineWhileTrain", 1)
-	Else
-		IniWrite($config, "troop", "StayOfflineWhileTrain", 0)
-	EndIf
-
 
 	; Spells Creation  ---------------------------------------------------------------------
 	IniWrite($config, "Spells", "LightningSpell", GUICtrlRead($txtNumLightningSpell))
@@ -1180,12 +1136,12 @@ EndIf
 	IniWrite($config, "pushbullet", "AccountToken2", GUICtrlRead($PushBTokenValue2))
 	IniWrite($config, "advanced", "AccountToken", GUICtrlRead($PushBTokenValue))
 	IniWrite($config, "advanced", "AccountToken2", GUICtrlRead($PushBTokenValue2))
-	
+
 	If GUICtrlRead($chkPBenabled2) = $GUI_CHECKED Then
 		IniWrite($config, "pushbullet", "PBEnabled2", 1)
 	Else
 		IniWrite($config, "pushbullet", "PBEnabled2", 0)
-	EndIf	
+	EndIf
 	IniWrite($config, "pushbullet", "AccountToken", GUICtrlRead($PushBTokenValue))
 	IniWrite($config, "pushbullet", "OrigPushB", $sCurrProfile)
 
@@ -1676,7 +1632,6 @@ EndIf
 
 	IniWrite($config, "MOD", "Account", GUICtrlRead($Account))
 
-
     ;MilkingAttack Options
     IniWrite($config, "MilkingAttack", "LocateMine", $MilkFarmLocateMine)
     IniWrite($config, "MilkingAttack", "LocateElixir", $MilkFarmLocateElixir)
@@ -1791,25 +1746,14 @@ EndIf
     EndIf
     IniWrite($config, "SmartZap", "MinDE", GUICtrlRead($txtMinDark))
 
-	; Multi Finger Attack Style Settings - Added by LunaEclipse
-	IniWrite($config, "MultiFinger", "DeadBaseStyle", _GUICtrlComboBox_GetCurSel($cmbDBMultiFinger))
-	IniWrite($config, "MultiFinger", "LiveBaseStyle", _GUICtrlComboBox_GetCurSel($cmbABMultiFinger))
-
 	; Save Troops for Collector Settings - Added by LunaEclipse
-	If GUICtrlRead($chkChangeFF) = $GUI_CHECKED Then
-		IniWrite($config, "SaveTroops", "ChangeFF", 1)
+	If GUICtrlRead($chkChangeAllSides) = $GUI_CHECKED Then
+		IniWrite($config, "SaveTroops", "ChangeAllSides", 1)
 	Else
-		IniWrite($config, "SaveTroops", "ChangeFF", 0)
+		IniWrite($config, "SaveTroops", "ChangeAllSides", 0)
 	EndIf
 	IniWrite($config, "SaveTroops", "PercentCollectors", GUICtrlRead($txtPercentCollectors))
 	IniWrite($config, "SaveTroops", "MaxDistance", GUICtrlRead($txtDistance))
-
-	; Misc Battle Settings - Added by LunaEclipse
-	If GUICtrlRead($chkFastADBClicks) = $GUI_CHECKED Then
-		IniWrite($config, "Fast Clicks", "UseADBFastClicks", 1)
-	Else
-		IniWrite($config, "Fast Clicks", "UseADBFastClicks", 0)
-	EndIf
 
 	; Custom Deployment Settings - Added by LunaEclipse
 	IniWrite($config, "Custom Deployment", "Deployment", deployArrayToString($deployValues))
@@ -1832,6 +1776,14 @@ EndIf
 
 	;Chat bot
 	IniWrite($config, "global", "chdelay",  GUICtrlRead($chkchatdelay))
+
+	; CoCStats ----------------------------------------------------------------
+	If GUICtrlRead($chkCoCStats) = $GUI_CHECKED Then
+		IniWrite($config, "Stats", "chkCoCStats", "1")
+	Else
+		IniWrite($config, "Stats", "chkCoCStats", "0")
+	EndIf
+	IniWrite($config, "Stats", "txtAPIKey", GUICtrlRead($txtAPIKey))
 
 	;Mod AttackHour
 
@@ -1927,6 +1879,37 @@ EndIf
 		EndIf
 	Next
 	IniWrite($config, "planned", "AttackWeekDays", $string)
+
+	; Close When Training Settings
+	If GUICtrlRead($chkUseTrainingClose) = $GUI_CHECKED Then
+		IniWrite($config, "Close When Training", "Enabled", 1)
+	Else
+		IniWrite($config, "Close When Training", "Enabled", 0)
+	EndIf
+	IniWrite($config, "Close When Training", "AdditionMin", GUICtrlRead($sldExtraTimeMin))
+	IniWrite($config, "Close When Training", "AdditionMax", GUICtrlRead($sldExtraTimeMax))
+
+	; Daily Attack Settings
+	If GUICtrlRead($chkUseAttackLimit) = $GUI_CHECKED Then
+		IniWrite($config, "Daily Attacks", "Enabled", 1)
+	Else
+		IniWrite($config, "Daily Attacks", "Enabled", 0)
+	EndIf
+	IniWrite($config, "Daily Attacks", "RangeStart", $rangeAttacksStart)
+	IniWrite($config, "Daily Attacks", "RangeEnd", $rangeAttacksEnd)
+	IniWrite($config, "Daily Attacks", "AttackLimit", $dailyAttackLimit)
+	IniWrite($config, "Daily Attacks", "Attacks", $dailyAttacks)
+
+	; Simulate Sleep Settings
+	If GUICtrlRead($chkUseSleep) = $GUI_CHECKED Then
+		IniWrite($config, "Simulate Sleep", "Enabled", 1)
+	Else
+		IniWrite($config, "Simulate Sleep", "Enabled", 0)
+	EndIf
+	IniWrite($config, "Simulate Sleep", "StartHour", $sleepStart)
+	IniWrite($config, "Simulate Sleep", "EndHour", $sleepEnd)
+	IniWrite($config, "Simulate Sleep", "SleepStart", $nextSleepStart)
+	IniWrite($config, "Simulate Sleep", "SleepEnd", $nextSleepEnd)
 
 	If $hFile <> -1 Then FileClose($hFile)
 

@@ -5,7 +5,7 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: GkevinOD (2014)
-; Modified ......: Hervidero (2015), LunaEclipse (April, 2016)
+; Modified ......: Hervidero (2015), LunaEclipse(April, 2016)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -14,59 +14,35 @@
 ; ===============================================================================================================================
 
 Func chkDBSmartAttackRedArea()
-    Switch _GUICtrlComboBox_GetCurSel($cmbDBDeploy)
-		Case $eMultiFinger, $eSmartSave
-			GUICtrlSetState($chkDBSmartAttackRedArea, $GUI_UNCHECKED)
-			GUICtrlSetState($chkDBSmartAttackRedArea, $GUI_HIDE)			
-			GUICtrlSetState($lblDBMultiFinger, $GUI_SHOW)
-			GUICtrlSetState($cmbDBMultiFinger, $GUI_SHOW)
-		Case Else
-			GUICtrlSetState($lblDBMultiFinger, $GUI_HIDE)
-			GUICtrlSetState($cmbDBMultiFinger, $GUI_HIDE)
-			GUICtrlSetState($chkDBSmartAttackRedArea, $GUI_SHOW)
-	EndSwitch
-
-	If _GUICtrlComboBox_GetCurSel($cmbDBDeploy) <> $eMultiFinger Then
-		$iChkRedArea[$DB] = 1
-		
-		If _GUICtrlComboBox_GetCurSel($cmbDBDeploy) <> $eSmartSave Then
+	Switch _GUICtrlComboBox_GetCurSel($cmbDBDeploy)
+		Case $eOneSide, $eTwoSides, $eThreeSides, $eAllSides
 			GUICtrlSetState($lblDBSmartDeploy, $GUI_SHOW)
 			GUICtrlSetState($cmbDBSmartDeploy, $GUI_SHOW)
-		Else
+
+			For $i = $chkDBAttackNearGoldMine To $picDBAttackNearDarkElixirDrill
+				GUICtrlSetState($i, $GUI_HIDE)
+			Next
+		Case $eSmartSave
 			GUICtrlSetState($lblDBSmartDeploy, $GUI_HIDE)
 			GUICtrlSetState($cmbDBSmartDeploy, $GUI_HIDE)
-		EndIf
-				
-		For $i = $chkDBAttackNearGoldMine To $picDBAttackNearDarkElixirDrill
-			GUICtrlSetState($i, $GUI_SHOW)
-		Next
-	Else
-		$iChkRedArea[$DB] = 0		
-		For $i = $lblDBSmartDeploy To $picDBAttackNearDarkElixirDrill
-			GUICtrlSetState($i, $GUI_HIDE)
-		Next
-	EndIf
-EndFunc   ;==>chkDBSmartAttackRedArea
 
-Func cmbDBMultiFinger()
-	$iMultiFingerStyle[$DB] = _GUICtrlComboBox_GetCurSel($cmbDBMultiFinger)
-EndFunc   ;==>cmbDBMultiFinger
+			For $i = $chkDBAttackNearGoldMine To $picDBAttackNearDarkElixirDrill
+				GUICtrlSetState($i, $GUI_SHOW)
+			Next
+		Case Else
+			; Should never get here unless there is a problem with the code
+	EndSwitch
+EndFunc   ;==>chkDBSmartAttackRedArea
 
 Func chkABSmartAttackRedArea()
 	chkDESideEB()
  	Switch _GUICtrlComboBox_GetCurSel($cmbABDeploy)
-		Case $eMultiFinger
-			GUICtrlSetState($btnMilkingOptions, $GUI_HIDE)
-			GUICtrlSetState($chkABSmartAttackRedArea, $GUI_UNCHECKED)
-			GUICtrlSetState($chkABSmartAttackRedArea, $GUI_HIDE)
-			GUICtrlSetState($lblABMultiFinger, $GUI_SHOW)
-			GUICtrlSetState($cmbABMultiFinger, $GUI_SHOW)
 		Case $eCustomDeploy
 			GUICtrlSetState($btnMilkingOptions, $GUI_HIDE)
-			GUICtrlSetState($chkABSmartAttackRedArea, $GUI_UNCHECKED)
-			GUICtrlSetState($chkABSmartAttackRedArea, $GUI_HIDE)
-			GUICtrlSetState($lblABMultiFinger, $GUI_HIDE)
-			GUICtrlSetState($cmbABMultiFinger, $GUI_HIDE)
+
+			For $i = $lblABSmartDeploy To $picABAttackNearDarkElixirDrill
+				GUICtrlSetState($i, $GUI_HIDE)
+			Next
 
 			For $i = 0 to $DEPLOY_MAX_WAVES - 1
 				GUICtrlSetState($ctrlDeploy[$i][1], $GUI_ENABLE)
@@ -74,32 +50,21 @@ Func chkABSmartAttackRedArea()
 			Next
 		Case $eMilking
 			GUICtrlSetState($btnMilkingOptions, $GUI_SHOW)
-			GUICtrlSetState($lblABMultiFinger, $GUI_HIDE)
-			GUICtrlSetState($cmbABMultiFinger, $GUI_HIDE)
-			GUICtrlSetState($chkABSmartAttackRedArea, $GUI_SHOW)			
+
+			For $i = $lblABSmartDeploy To $picABAttackNearDarkElixirDrill
+				GUICtrlSetState($i, $GUI_SHOW)
+			Next
 		Case Else
 			GUICtrlSetState($btnMilkingOptions, $GUI_HIDE)
-			GUICtrlSetState($lblABMultiFinger, $GUI_HIDE)
-			GUICtrlSetState($cmbABMultiFinger, $GUI_HIDE)
-			GUICtrlSetState($chkABSmartAttackRedArea, $GUI_SHOW)			
+
+			GUICtrlSetState($lblABSmartDeploy, $GUI_SHOW)
+			GUICtrlSetState($cmbABSmartDeploy, $GUI_SHOW)
+
+			For $i = $chkABAttackNearGoldMine To $picDBAttackNearDarkElixirDrill
+				GUICtrlSetState($i, $GUI_HIDE)
+			Next
 	EndSwitch
-
-	If GUICtrlRead($chkABSmartAttackRedArea) = $GUI_CHECKED Then
-		$iChkRedArea[$LB] = 1
-		For $i = $lblABSmartDeploy To $picABAttackNearDarkElixirDrill
-			GUICtrlSetState($i, $GUI_SHOW)
-		 Next
-     Else
-		$iChkRedArea[$LB] = 0
-		For $i = $lblABSmartDeploy To $picABAttackNearDarkElixirDrill
-			GUICtrlSetState($i, $GUI_HIDE)
-		 Next
-	EndIf
 EndFunc  ;==>chkABSmartAttackRedArea
-
-Func cmbABMultiFinger()
-	$iMultiFingerStyle[$LB] = _GUICtrlComboBox_GetCurSel($cmbABMultiFinger)
-EndFunc   ;==>cmbDBMultiFinger
 
 Func chkBalanceDR()
 	If GUICtrlRead($chkUseCCBalanced) = $GUI_CHECKED Then

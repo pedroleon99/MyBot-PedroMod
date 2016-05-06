@@ -41,8 +41,8 @@ If Not FileExists(@ScriptDir & "\License.txt") Then
 EndIf
 
 ;~ ProcessSetPriority(@AutoItPID, $PROCESS_ABOVENORMAL)
-#include "COCBot\functions\Chatbot\Chatbot.au3"
 #include "COCBot\MBR Global Variables.au3"
+#include "COCBot\functions\Chatbot\Chatbot.au3"
 
 $sBotVersion = "v5.3.2" ;~ Don't add more here, but below. Version can't be longer than vX.y.z because it it also use on Checkversion()
 $sBotTitle = "My Bot " & $sBotVersion & " MOD by Pedro " ;~ Don't use any non file name supported characters like \ / : * ? " < > |
@@ -181,13 +181,27 @@ WEnd
 BotClose()
 
 Func runBot() ;Bot that runs everything in order
-	Local $maxRandomLoops = 10
-	Local Enum $eCollect, $eCheckTombs, $eReArm, $eReplayShare, $eDonateCC
-	Local Static $randomCounter[$eDonateCC + 1] = [0, 0, 0, 0, 0]
-
 	$TotalTrainedTroops = 0
-	Local $randomize
 	While 1
+		If checkSleep() And $ichkCloseNight = 1 Then
+			If $debugSetLog = 1 Then SetLog("Sleep Start: " & $nextSleepStart & " - Sleep End: " & $nextSleepEnd, $COLOR_MAROON)
+			SetLog("Time to log out for sleep period...", $COLOR_GREEN)
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd))
+			; Set Collector counter to 11 so it collects immediately after attacking
+			$iCollectCounter = 11
+			$RandomTimer = true
+			$FirstStart = true
+			RandomAttack()
+		ElseIf $ichkLimitAttacks = 1 And $dailyAttacks >= $dailyAttackLimit Then
+			If $debugSetLog = 1 Then SetLog("Attacks: " & $dailyAttacks & " - Limit: " & $dailyAttackLimit, $COLOR_MAROON)
+			SetLog("Already reached today's quota of attacks...", $COLOR_GREEN)
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd))
+			; Set Collector counter to 11 so it collects immediately after attacking
+			$iCollectCounter = 11
+			$RandomTimer = true
+			$FirstStart = true
+			RandomAttack()
+		EndIf
 		;ModBoju
 		Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
 		If $hourAttack <> $hour[0] Then
@@ -242,54 +256,24 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($iDelayRunBot5) Then Return
 				checkMainScreen(False)
 				If $Restart = True Then ContinueLoop
-				$randomize = Random(0,1,1)
-			If $randomize = 1 Or $randomCounter[$eCollect] >= $maxRandomLoops then
 			Collect()
-				$randomCounter[$eCollect] = 0
-			Else
-				$randomCounter[$eCollect] += 1			
-			EndIf
 				If _Sleep($iDelayRunBot1) Then Return
 				If $Restart = True Then ContinueLoop
-				$randomize = Random(0,1,1)
-			If $randomize = 1 Or $randomCounter[$eCheckTombs] >= $maxRandomLoops then
 			CheckTombs()
-				$randomCounter[$eCheckTombs] = 0
-			Else
-				$randomCounter[$eCheckTombs] += 1			
-			EndIf
 				If _Sleep($iDelayRunBot3) Then Return
 				If $Restart = True Then ContinueLoop
-				$randomize = Random(0,1,1)
-			If $randomize = 1 Or $randomCounter[$eReArm] >= $maxRandomLoops then
 			ReArm()
-				$randomCounter[$eReArm] = 0
-			Else
-				$randomCounter[$eReArm] += 1			
-			EndIf
 				If _Sleep($iDelayRunBot3) Then Return
 				If $Restart = True Then ContinueLoop
 			If IsToAttack() Or $fullArmy1 = False Then ;ModBoju
-				$randomize = Random(0,1,1)
-			If $randomize = 1 Or $randomCounter[$eReplayShare] >= $maxRandomLoops then
 			ReplayShare($iShareAttackNow)
-				$randomCounter[$eReplayShare] = 0
-			Else
-				$randomCounter[$eReplayShare] += 1			
-			EndIf
 				If _Sleep($iDelayRunBot3) Then Return
 				If $Restart = True Then ContinueLoop
 			ReportPushBullet()
 				If _Sleep($iDelayRunBot3) Then Return
 				If $Restart = True Then ContinueLoop
 			If checkAndroidTimeLag() = True Then ContinueLoop
-				$randomize = Random(0,1,1)
-			If $randomize = 1 Or $randomCounter[$eDonateCC] >= $maxRandomLoops then
 			DonateCC()
-				$randomCounter[$eDonateCC] = 0
-			Else
-				$randomCounter[$eDonateCC] += 1			
-			EndIf
 				If _Sleep($iDelayRunBot1) Then Return
 				checkMainScreen(False) ; required here due to many possible exits
 				If $Restart = True Then ContinueLoop
@@ -416,35 +400,33 @@ Func runBot() ;Bot that runs everything in order
 EndFunc   ;==>runBot
 
 Func Idle() ;Sequence that runs until Full Army
-	Local $maxRandomLoops = 10
-	Local Enum $eCleanYard, $eCollect
-	Local Static $randomCounter[$eCollect + 1] = [0, 0]
-	
 	Local $TimeIdle = 0 ;In Seconds
-	Local $randomize
-
 	;If $debugsetlog = 1 Then SetLog("Func Idle ", $COLOR_PURPLE)
 	While $fullArmy = False Or $bFullArmyHero = False
+		If checkSleep() And $ichkCloseNight = 1 Then
+			If $debugSetLog = 1 Then SetLog("Sleep Start: " & $nextSleepStart & " - Sleep End: " & $nextSleepEnd, $COLOR_MAROON)
+			SetLog("Time to log out for sleep period...", $COLOR_GREEN)
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd))
+			; Set Collector counter to 11 so it collects immediately after attacking
+			$iCollectCounter = 11
+			$RandomTimer = true
+			$FirstStart = true
+			RandomAttack()
+		ElseIf $ichkLimitAttacks = 1 And $dailyAttacks >= $dailyAttackLimit Then
+			If $debugSetLog = 1 Then SetLog("Attacks: " & $dailyAttacks & " - Limit: " & $dailyAttackLimit, $COLOR_MAROON)
+			SetLog("Already reached today's quota of attacks...", $COLOR_GREEN)
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd))
+			; Set Collector counter to 11 so it collects immediately after attacking
+			$iCollectCounter = 11
+			$RandomTimer = true
+			$FirstStart = true
+			RandomAttack()
+		EndIf
 		checkAndroidTimeLag()
 
 		If $RequestScreenshot = 1 Then PushMsg("RequestScreenshot")
 		If _Sleep($iDelayIdle1) Then Return
 		If $CommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLOR_GREEN)
-		
-		; stay offline mode
-		If $stayOfflineWhileTrain = 1 Then
-			If $stayOfflineTime > 3 Then ; go offline if remaining training time takes more than 3 minutes
-				CloseCOC() ; Close COC
-				
-				; Sleeping until troops are training
-				$timewait = ($stayOfflineTime - 1) * 60000				   
-				SetLog("====== Sleeping for " & ($stayOfflineTime - 1) & " Minutes ======", $COLOR_GREEN)                 					
-				If _Sleep($timewait) Then Return				
-						
-				OpenCOC() ; Open COC
-			EndIf
-        EndIf
-	
 		Local $hTimer = TimerInit()
 		Local $iReHere = 0
 		While $iReHere < 7
@@ -469,22 +451,10 @@ Func Idle() ;Sequence that runs until Full Army
 		EndIf
 		ReplayShare($iShareAttackNow)
 		If _Sleep($iDelayIdle1) Then Return
-		$randomize = Random(0,1,1)
-		If $randomize = 1 Or Number($randomCounter[$eCleanYard]) >= $maxRandomLoops then
 		CleanYard()
-			$randomCounter[$eCleanYard] = 0
-		Else
-			$randomCounter[$eCleanYard] += 1			
-		EndIf
 		If $Restart = True Then ExitLoop
 		If $iCollectCounter > $COLLECTATCOUNT Then ; This is prevent from collecting all the time which isn't needed anyway
-			$randomize = Random(0,1,1)
-			If $randomize = 1 Or $randomCounter[$eCollect] >= $maxRandomLoops then
 			Collect()
-				$randomCounter[$eCollect] = 0
-			Else
-				$randomCounter[$eCollect] += 1			
-			EndIf
 			If _Sleep($iDelayIdle1) Then Return
  			DonateCC()
  			If $Restart = True Then ExitLoop
@@ -494,7 +464,7 @@ Func Idle() ;Sequence that runs until Full Army
 		$iCollectCounter = $iCollectCounter + 1
 		If $CommandStop = -1 Then
 			Train()
-;			RemainTimetroops()
+					checkRemainingTraining()
 				If $Restart = True Then ExitLoop
 				If _Sleep($iDelayIdle1) Then ExitLoop
 				checkMainScreen(False)
@@ -537,7 +507,7 @@ Func AttackMain() ;Main control for attack functions
 
 	If IsToAttack() Then;ModBoju
 		$fullArmy1 = False;ModBoju
-	If $iChkUseCCBalanced = 1 Or $iChkUseCCBalancedCSV = 1 Then ;launch profilereport() only if option balance D/R it's activated
+		If $iChkUseCCBalanced = 1 Or $iChkUseCCBalancedCSV = 1 Then ;launch profilereport() only if option balance D/R it's activated
 		ProfileReport()
 		If _Sleep($iDelayAttackMain1) Then Return
 		checkMainScreen(False)
@@ -592,6 +562,10 @@ Func AttackMain() ;Main control for attack functions
 	Attack()
 		If $Restart = True Then Return
 	ReturnHome($TakeLootSnapShot)
+		; Set Collector counter to 11 so it collects immediately after attacking
+		$iCollectCounter = 11
+		; Increase the counter for the number of attacks today
+		$dailyAttacks += 1
 		If _Sleep($iDelayAttackMain2) Then Return
 	Return True
 
@@ -602,9 +576,9 @@ EndFunc   ;==>AttackMain
 
 Func Attack() ;Selects which algorithm
 	SetLog(" ====== Start Attack ====== ", $COLOR_GREEN)
-	If ($iMatchMode = $DB And $ichkUseAttackDBCSV = 1) Or ($iMatchMode = $LB And $ichkUseAttackABCSV = 1) Then
+	If  ($iMatchMode = $DB and $ichkUseAttackDBCSV = 1) or ($iMatchMode = $LB and $ichkUseAttackABCSV = 1) Then
 		Algorithm_AttackCSV()
-	ElseIf $iMatchMode = $LB And $iChkDeploySettings[$LB] = $eMilking Then
+	Elseif $iMatchMode= $LB and  $iChkDeploySettings[$LB] = $eMilking Then
 	    Alogrithm_MilkingAttack()
 		; check if can snipe external TH
 		If $OptTrophyMode = 1 Then ;Enables Combo Mode Settings

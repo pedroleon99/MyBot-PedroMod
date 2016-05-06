@@ -13,30 +13,28 @@
 ; Example .......: No
 ; ===============================================================================================================================
 Func SetSleep($type)
-	If IsKeepClicksActive() = True Or ($iMatchMode = $DB And $iChkDeploySettings[$iMatchMode] = $eSmartSave And $usingMultiFinger = True) Then Return 0 ; Fast Bulk Deploy
-
-    Local $factor0 = 10
+	If IsKeepClicksActive() = True Then Return 0 ; fast bulk deploy
+	Local $factor0 = 10
 	Local $factor1 = 100
-
 	If $AndroidAdbClick = True Then
-	   ; adjust for slow ADB clicks the delay factor
-	   $factor0 = 10
-	   $factor1 = 100
-    EndIf
-	Local $temp[8] = [1, 5, 10, 11, 12, 13, 14, 15]
-	Local $temp1[4] = [5, 10 , 20 , 25]
+		; adjust for slow ADB clicks the delay factor
+		$factor0 = 10
+		$factor1 = 100
+	EndIf
+	Local $aUnitDelay[8] = [1, 5, 10, 11, 12, 13, 14, 15]
+	Local $aWaveDelay[4] = [5, 10 , 20 , 25]
 	Switch $type
 		Case 0
 			If $iChkRandomspeedatk[$iMatchMode] = 1 Then
-				Return $temp[Random(0, 7, 1)] * $factor0 ; random deploying click [10ms to 200ms]
+				Return Number($aUnitDelay[Random(0, UBound($aUnitDelay) - 1, 1)]) * $factor0 ; random deploying click [10ms to 150ms]
 			Else
-				Return ($iCmbUnitDelay[$iMatchMode]) * $factor0
+				Return Number($aUnitDelay[$iCmbUnitDelay[$iMatchMode]]) * $factor0
 			EndIf
 		Case 1
 			If $iChkRandomspeedatk[$iMatchMode] = 1 Then
-				Return $temp1[Random(0, 3, 1)] * $factor1 ; random delay between waves [500ms to 2500ms]
+				Return Number($aWaveDelay[Random(0, UBound($aWaveDelay) - 1, 1)]) * $factor1 ; random delay between waves [500ms to 2500ms]
 			Else
-				Return ($iCmbWaveDelay[$iMatchMode]) * $factor1
+				Return Number($aWaveDelay[$iCmbWaveDelay[$iMatchMode]]) * $factor1
 			EndIf
 	EndSwitch
 EndFunc   ;==>SetSleep
@@ -56,10 +54,10 @@ EndFunc   ;==>SetSleep
 ; Example .......: No
 ; ===============================================================================================================================
 Func _SleepAttack($iDelay, $iSleep = True)
-   If $RunState = False Then
-	  ResumeAndroid()
-	  Return True
-   EndIf
-   If IsKeepClicksActive() = True Then Return False
-   Return _Sleep($iDelay, $iSleep)
-EndFunc
+	If $RunState = False Then
+		ResumeAndroid()
+		Return True
+	EndIf
+	If IsKeepClicksActive() = True Then Return False
+	Return _Sleep($iDelay, $iSleep)
+EndFunc   ;==>_SleepAttack

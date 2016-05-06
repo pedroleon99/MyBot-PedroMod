@@ -22,30 +22,42 @@ Func getRemainingTraining($Troops = True, $Spells = True)
 		Local $aRemainTrainTroopTimer = 0
 		Local $aRemainTrainSpellsTimer = 0
 		Local $ResultTroopsHour, $ResultTroopsMinutes
-		Local $ResultSpellsHour, $ResultTroopsMinutes
+		Local $ResultSpellsHour, $ResultSpellsMinutes
 
 		Local $ResultTroops = getRemainTrainingTimer(680, 176)
 		Local $ResultSpells = getRemainTrainingTimer(360, 423)
 
 		If $Troops = True Then
+			SetLog(" Total time train troop(s): " & $ResultTroops)
 			If StringInStr($ResultTroops, "h") > 1 Then
 				$ResultTroopsHour = StringSplit($ResultTroops, "h", $STR_NOCOUNT)
 				; $ResultTroopsHour[0] will be the Hour and the $ResultTroopsHour[1] will be the Minutes with the "m" at end
 				$ResultTroopsMinutes = StringTrimRight($ResultTroopsHour[1], 1) ; removing the "m"
 				$aRemainTrainTroopTimer = (Number($ResultTroopsHour[0]) * 60) + Number($ResultTroopsMinutes)
 			Else
-				$aRemainTrainTroopTimer = Number(StringTrimRight($ResultTroops, 1)) ; removing the "m"
+				; Verify if exist "s" for seconds or "m" for minutes
+				If StringInStr($ResultTroops, "s") > 1 Then
+					$aRemainTrainTroopTimer = 1
+				Else
+					$aRemainTrainTroopTimer = Number(StringTrimRight($ResultTroops, 1)) ; removing the "m"
+				EndIf
 			EndIf
 		EndIf
 
 		If $Spells = True Then
+			SetLog(" Total time brew Spell(s): " & $ResultSpells)
 			If StringInStr($ResultSpells, "h") > 1 Then
 				$ResultSpellsHour = StringSplit($ResultSpells, "h", $STR_NOCOUNT)
 				; $ResultSpellsHour[0] will be the Hour and the $ResultSpellsHour[1] will be the Minutes with the "m" at end
-				$ResultTroopsMinutes = StringTrimRight($ResultSpellsHour[1], 1) ; removing the "m"
-				$aRemainTrainSpellsTimer = (Number($ResultSpellsHour[0]) * 60) + Number($ResultTroopsMinutes)
+				$ResultSpellsMinutes = StringTrimRight($ResultSpellsHour[1], 1) ; removing the "m"
+				$aRemainTrainSpellsTimer = (Number($ResultSpellsHour[0]) * 60) + Number($ResultSpellsMinutes)
 			Else
-				$aRemainTrainSpellsTimer = Number(StringTrimRight($ResultSpells, 1)) ; removing the "m"
+				; Verify if exist "s" for seconds or "m" for minutes
+				If StringInStr($ResultSpells, "s") > 1 Then
+					$aRemainTrainSpellsTimer = 1
+				Else
+					$aRemainTrainSpellsTimer = Number(StringTrimRight($ResultSpells, 1)) ; removing the "m"
+				EndIf
 			EndIf
 		EndIf
 
@@ -60,5 +72,5 @@ Func getRemainingTraining($Troops = True, $Spells = True)
 		Return 0
 	EndIf
 
-EndFunc   ;==>RemainTrainTime
+EndFunc   ;==>getRemainingTraining
 

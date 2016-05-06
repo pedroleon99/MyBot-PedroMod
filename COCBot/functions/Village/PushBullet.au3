@@ -880,6 +880,8 @@ Func Getchatid($msgtitle)
 	& GetTranslated(18,100,"HaltAttackOn") & '\n\u25fb","' & GetTranslated(18,101,"HaltAttackOff") & '\n\u25b6"]],"one_time_keyboard": false,"resize_keyboard":true}}'
 	$oHTTP2.Send($pPush3)
 
+	$lastremote = $lastuid
+
 EndFunc   ;==>Getchatid
 
 

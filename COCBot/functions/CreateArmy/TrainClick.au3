@@ -40,7 +40,7 @@ Func TrainClick($x, $y, $iTimes, $iSpeed, $aWatchSpot, $aLootSpot, $sdebugtxt = 
 					   If IsGemOpen(True) = True Then ClickP($aAway) ;Click Away
 					   ExitLoop
 				   EndIf
-				   ClickZone($x, $y, 10) ;Click once.
+				   ClickZone($x, $y, 5) ;Click once.
 				   If _Sleep($iSpeed * Random(1,5,1) , False) Then ExitLoop
 			   Next
 			Else
@@ -54,7 +54,7 @@ Func TrainClick($x, $y, $iTimes, $iSpeed, $aWatchSpot, $aLootSpot, $sdebugtxt = 
 					If IsGemOpen(False) = True Then ClickP($aAway) ;Click Away
 					Return
 				EndIf
-				ClickZone($x, $y, 10, $iTimes) ;Click $iTimes.
+				ClickZone($x, $y, 5, $iTimes) ;Click $iTimes.
 				If _Sleep($iSpeed * Random(1,5,1), False) Then Return
 			EndIf
 		Else
@@ -69,7 +69,7 @@ Func TrainClick($x, $y, $iTimes, $iSpeed, $aWatchSpot, $aLootSpot, $sdebugtxt = 
 				Return
 			EndIf
 
-			ClickZone($x, $y, 10)
+			ClickZone($x, $y, 5)
 
 			If _Sleep($iSpeed * Random(1,5,1), False) Then Return
 			If _CheckPixel($aLootSpot, True) = True Then ; Check to see if out of Elixir

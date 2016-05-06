@@ -331,7 +331,6 @@ Func UpdateStats()
 	Local $iAttackedCount = 0
 
 	For $i = 0 To $iModeCount
-
 		If $iOldAttackedVillageCount[$i] <> $iAttackedVillageCount[$i] Then
 			GUICtrlSetData($lblAttacked[$i], _NumberFormat($iAttackedVillageCount[$i], True))
 			$iOldAttackedVillageCount[$i] = $iAttackedVillageCount[$i]
@@ -357,7 +356,6 @@ Func UpdateStats()
 			GUICtrlSetData($lblTotalTrophyGain[$i], _NumberFormat($iTotalTrophyGain[$i], True))
 			$iOldTotalTrophyGain[$i] = $iTotalTrophyGain[$i]
 		EndIf
-
 	Next
 
 	If $iOldAttackedCount <> $iAttackedCount Then
@@ -367,7 +365,6 @@ Func UpdateStats()
 	EndIf
 
 	For $i = 0 To $iModeCount
-
 		If $i = $TS Then ContinueLoop
 
 		If $iOldNbrOfDetectedMines[$i] <> $iNbrOfDetectedMines[$i] Then
@@ -384,7 +381,6 @@ Func UpdateStats()
 			GUICtrlSetData($lblNbrOfDetectedDrills[$i], $iNbrOfDetectedDrills[$i])
 			$iOldNbrOfDetectedDrills[$i] = $iNbrOfDetectedDrills[$i]
 		EndIf
-
 	Next
 
 	If $FirstAttack = 2 Then
@@ -427,7 +423,6 @@ Func UpdateStats()
 	If $ResetStats = 1 Then
 		$ResetStats = 0
 	EndIf
-
 EndFunc
 
 Func ResetStats()

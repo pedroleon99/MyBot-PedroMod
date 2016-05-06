@@ -29,8 +29,8 @@ Func _GetRedArea()
 	Local $ySkip = 5
 
 	; Removed check for old DE side and TH side attacks - LunaEclipse
-		Local $result = DllCall($hFuncLib, "str", "getRedArea", "ptr", $hHBitmap2, "int", $xSkip, "int", $ySkip, "int", $colorVariation)
-		If $debugSetlog Then Setlog("Debug: Redline chosen")
+	Local $result = DllCall($hFuncLib, "str", "getRedArea", "ptr", $hHBitmap2, "int", $xSkip, "int", $ySkip, "int", $colorVariation)
+	If $debugSetlog Then Setlog("Debug: Redline chosen")
 
 	Local $listPixelBySide = StringSplit($result[0], "#")
 	$PixelTopLeft = GetPixelSide($listPixelBySide, 1)
