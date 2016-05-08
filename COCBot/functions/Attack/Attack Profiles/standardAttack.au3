@@ -84,22 +84,40 @@ Func launchStandardBySides($dropVectors, $listInfoDeploy, $CC, $King, $Queen, $W
 			$remainingWaves = ($waveCount - $waveNumber) + 1
 
 			If IsString($kind) Then
-				If $kind = "CC" Then
+				If $CC <> -1 And $kind = "CC" Then
 					$dropPoints = $dropVectors[$i][Random(0, $nbSides - 1, 1)]
 					$dropPointCC = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
 					
-					dropCC($dropPointCC[0], $dropPointCC[1], $CC)
-					$isCCDropped = True
+					If IsArray($dropPointCC) And UBound($dropPointCC) >=2 Then
+						dropCC($dropPointCC[0], $dropPointCC[1], $CC)
+						$isCCDropped = True
+					EndIf
 				ElseIf $kind = "HEROES" Then
 					$dropPoints = $dropVectors[$i][Random(0, $nbSides - 1, 1)]
-					$dropPointKing = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
-					$dropPointQueen = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
-					$dropPointWarden = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
 
-					dropHeroes($dropPointKing[0], $dropPointKing[1], $King, -1, -1)
-					dropHeroes($dropPointQueen[0], $dropPointQueen[1], -1, $Queen, -1)
-					dropHeroes($dropPointWarden[0], $dropPointWarden[1], -1, -1, $Warden)
-					$isHeroesDropped = True
+					If $King <> -1 Then
+						$dropPointKing = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
+						If IsArray($dropPointKing) And UBound($dropPointKing) >=2 Then 
+							dropHeroes($dropPointKing[0], $dropPointKing[1], $King, -1, -1)
+							$isHeroesDropped = True
+						EndIf
+					EndIf
+
+					If $Queen <> -1 Then
+						$dropPointQueen = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
+						If IsArray($dropPointQueen) And UBound($dropPointQueen) >=2 Then 
+							dropHeroes($dropPointQueen[0], $dropPointQueen[1], -1, $Queen, -1)
+							$isHeroesDropped = True
+						EndIf
+					EndIf
+					
+					If $Warden <> -1 Then
+						$dropPointWarden = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
+						If IsArray($dropPointWarden) And UBound($dropPointWarden) >=2 Then
+							dropHeroes($dropPointWarden[0], $dropPointWarden[1], -1, -1, $Warden)
+							$isHeroesDropped = True
+						EndIf
+					EndIf
 				EndIf
 			ElseIf $kind < $eKing Then
 				$barPosition = $aDeployButtonPositions[$kind]
@@ -132,29 +150,46 @@ Func launchStandardByTroops($dropVectors, $listInfoDeploy, $CC, $King, $Queen, $
 
 	For $i = 0 To UBound($listInfoDeploy) - 1
 		$kind = $listInfoDeploy[$i][0]
-		$nbSides = $listInfoDeploy[$i][1]
 		$waveNumber = $listInfoDeploy[$i][2]
 		$waveCount = $listInfoDeploy[$i][3]
 		$position = $listInfoDeploy[$i][4]
 		$remainingWaves = ($waveCount - $waveNumber) + 1
 
 		If IsString($kind) Then
-			If $kind = "CC" Then
+			If $CC <> -1 And $kind = "CC" Then
 				$dropPoints = $dropVectors[$i][Random(0, $nbSides - 1, 1)]
 				$dropPointCC = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
 				
-				dropCC($dropPointCC[0], $dropPointCC[1], $CC)
-				$isCCDropped = True
+				If IsArray($dropPointCC) And UBound($dropPointCC) >=2 Then
+					dropCC($dropPointCC[0], $dropPointCC[1], $CC)
+					$isCCDropped = True
+				EndIf
 			ElseIf $kind = "HEROES" Then
 				$dropPoints = $dropVectors[$i][Random(0, $nbSides - 1, 1)]
-				$dropPointKing = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
-				$dropPointQueen = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
-				$dropPointWarden = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
 
-				dropHeroes($dropPointKing[0], $dropPointKing[1], $King, -1, -1)
-				dropHeroes($dropPointQueen[0], $dropPointQueen[1], -1, $Queen, -1)
-				dropHeroes($dropPointWarden[0], $dropPointWarden[1], -1, -1, $Warden)
-				$isHeroesDropped = True
+				If $King <> -1 Then
+					$dropPointKing = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
+					If IsArray($dropPointKing) And UBound($dropPointKing) >=2 Then 
+						dropHeroes($dropPointKing[0], $dropPointKing[1], $King, -1, -1)
+						$isHeroesDropped = True
+					EndIf
+				EndIf
+
+				If $Queen <> -1 Then
+					$dropPointQueen = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
+					If IsArray($dropPointQueen) And UBound($dropPointQueen) >=2 Then 
+						dropHeroes($dropPointQueen[0], $dropPointQueen[1], -1, $Queen, -1)
+						$isHeroesDropped = True
+					EndIf
+				EndIf
+				
+				If $Warden <> -1 Then
+					$dropPointWarden = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
+					If IsArray($dropPointWarden) And UBound($dropPointWarden) >=2 Then
+						dropHeroes($dropPointWarden[0], $dropPointWarden[1], -1, -1, $Warden)
+						$isHeroesDropped = True
+					EndIf
+				EndIf
 			EndIf
 		ElseIf $kind < $eKing Then
 			$barPosition = $aDeployButtonPositions[$kind]
@@ -202,6 +237,8 @@ Func launchStandard($listInfoDeploy, $CC, $King, $Queen, $Warden, $nbSides = 1)
 
 	dropRemainingTroopsStandard($sides, $nbSides) ; Use remaining troops
 	useHeroesAbility() ; Use heroes abilities
+
+	If $usingAllSides Then $usingAllSides = False
 
 	SetLog("Finished Attacking, waiting for the battle to end")
 	Return True

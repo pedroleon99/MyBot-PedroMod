@@ -71,7 +71,7 @@ Func standardAttackVectors(ByRef $dropVectors, $listInfoDeploy, $sides, $nbSides
 		$position = $listInfoDeploy[$i][4]
 		$remainingWaves = ($waveCount - $waveNumber) + 1
 
-		If IsString($kind) Then
+		If IsString($kind) And ($kind = "CC" Or $kind = "HEROES") Then
 			For $j = 0 To $nbSides - 1
 				addVector($dropVectors, $i, $j, $sides[$j], $directionRight, 0, 10)
 			Next			

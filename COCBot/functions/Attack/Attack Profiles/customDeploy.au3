@@ -188,7 +188,7 @@ Func launchCustomDeploy($listInfoDeploy, $CC, $King, $Queen, $Warden)
 	; Setup the attack vectors for the troops
 	customDeployVectors($dropVectors, $listInfoDeploy, $side)
 
-	Local $kind, $nbSides, $waveNumber, $waveCount, $position, $remainingWaves
+	Local $kind, $waveNumber, $waveCount, $position, $remainingWaves
 	Local $dropPoints, $dropPoint, $deployPoint, $dropAmount, $positionSide
 
 	If $debugSetLog = 1 Then SetLog("Launch Custom Deploy with CC " & $CC & ", K " & $King & ", Q " & $Queen & ", W " & $Warden , $COLOR_PURPLE)
@@ -199,7 +199,6 @@ Func launchCustomDeploy($listInfoDeploy, $CC, $King, $Queen, $Warden)
 
 	For $i = 0 To UBound($listInfoDeploy) - 1
 		$kind = $listInfoDeploy[$i][0]
-		$nbSides = $listInfoDeploy[$i][1]
 		$waveNumber = $listInfoDeploy[$i][2]
 		$waveCount = $listInfoDeploy[$i][3]
 		$position = $listInfoDeploy[$i][4]
@@ -216,59 +215,74 @@ Func launchCustomDeploy($listInfoDeploy, $CC, $King, $Queen, $Warden)
 			If $barPosition <> -1 Then
 				$positionSide = StringUpper(StringRight($position, 1))
 				$position = Number($position)
-
-				Switch $positionSide
-					Case "L"
-						$deployPoint = convertToPoint($deploySide[0][0], $deploySide[0][1])
-					Case "R"
-						$deployPoint = convertToPoint($deploySide[4][0], $deploySide[4][1])
-					Case Else
-						$deployPoint = convertToPoint($deploySide[2][0], $deploySide[2][1])
-				EndSwitch
-
-				If $kind >= $eKing And $kind <= $eCastle Then
-					$dropPoints = $dropVectors[$i][0]
-					$dropPoint = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
-				EndIf
 				
 				Switch $kind
-					Case $eKing
-						dropHeroes($dropPoint[0], $dropPoint[1], $King, -1, -1)
-					Case $eQueen
-						dropHeroes($dropPoint[0], $dropPoint[1], -1, $Queen, -1)
-					Case $eWarden
-						dropHeroes($dropPoint[0], $dropPoint[1], -1, -1, $Warden)
-					Case $eCastle
-						dropCC($dropPoint[0], $dropPoint[1], $CC)
-					Case $eRSpell, $eHSpell, $eJSpell, $eHaSpell, $eFSpell, $ePSpell, $eESpell
-						If ($kind <> $eESpell) Or ($kind = $eESpell And $King <> -1) Then
-							; Drop spell towards the target or center if no target
-							$dropPoint = convertToPoint(Ceiling((((100 - $position) * $deployPoint[0]) + ($position * $spellTarget[1])) / 100), Ceiling((((100 - $position) * $deployPoint[1]) + ($position * $spellTarget[2])) / 100))
-							dropSpell($dropPoint, $kind, $minTroopsPerPosition[$kind])
+					Case $eKing To $eCastle
+						$dropPoints = $dropVectors[$i][0]						
+						Switch $positionSide
+							Case "L"
+								$deployPoint = $dropPoints[0]
+							Case "R"
+								$deployPoint = $dropPoints[UBound($dropPoints) - 1]
+							Case Else
+								$deployPoint = $dropPoints[Random(0, UBound($dropPoints) - 1, 1)]
+						EndSwitch
 
-							If $unitCount[$kind] >= $minTroopsPerPosition[$kind] Then $unitCount[$kind] -= $minTroopsPerPosition[$kind]
-						ElseIf $kind = $eESpell And $King = -1 Then
-							SetLog("Saving earthquake for when the king is present", $COLOR_BLUE)
-						EndIf
-					Case Else
-						$dropAmount = calculateDropAmount($unitCount[$kind], $remainingWaves, $position, $minTroopsPerPosition[$kind])
-						$unitCount[$kind] -= $dropAmount
-
-						If $dropAmount > 0 Then
-							Switch $positionSide
-								Case "L", "R"
-									SetLog("Dropping " & $dropAmount & " " & getTranslatedTroopName($kind) & " at random location near " & $deployPoint[0] & "," & $deployPoint[1], $COLOR_BLUE)
-									If dropUnit($deployPoint, $kind, $dropAmount) Then
-										If _SleepAttack(SetSleep(1)) Then Return
-									EndIf
-								Case Else
-									SetLog("Dropping " & getWaveName($waveNumber, $waveCount) & " wave of " & $dropAmount & " " & getTranslatedTroopName($kind), $COLOR_GREEN)
-
-									If customDeployTroops($dropVectors, $i, $barPosition, $dropAmount, $position) Then
-										If _SleepAttack(SetSleep(1)) Then Return
-									EndIf
+						If IsArray($deployPoint) And UBound($deployPoint) >=2 Then
+							Switch $kind
+								Case $eKing
+									dropHeroes($deployPoint[0], $deployPoint[1], $King, -1, -1)
+								Case $eQueen
+									dropHeroes($deployPoint[0], $deployPoint[1], -1, $Queen, -1)
+								Case $eWarden
+									dropHeroes($deployPoint[0], $deployPoint[1], -1, -1, $Warden)
+								Case $eCastle
+									dropCC($deployPoint[0], $deployPoint[1], $CC)
 							EndSwitch
 						EndIf
+					Case Else
+						Switch $positionSide
+							Case "L"
+								$deployPoint = convertToPoint($deploySide[0][0], $deploySide[0][1])
+							Case "R"
+								$deployPoint = convertToPoint($deploySide[4][0], $deploySide[4][1])
+							Case Else
+								$deployPoint = convertToPoint($deploySide[2][0], $deploySide[2][1])
+						EndSwitch
+						
+						Switch $kind
+							Case $eLSpell To $eHaSpell
+								If ($kind <> $eESpell) Or ($kind = $eESpell And $King <> -1) Then
+									; Drop spell towards the target or center if no target
+									$dropPoint = convertToPoint(Ceiling((((100 - $position) * $deployPoint[0]) + ($position * $spellTarget[1])) / 100), Ceiling((((100 - $position) * $deployPoint[1]) + ($position * $spellTarget[2])) / 100))
+									dropSpell($dropPoint, $kind, $minTroopsPerPosition[$kind])
+
+									If $unitCount[$kind] >= $minTroopsPerPosition[$kind] Then $unitCount[$kind] -= $minTroopsPerPosition[$kind]
+								ElseIf $kind = $eESpell And $King = -1 Then
+									SetLog("Saving earthquake for when the king is present", $COLOR_BLUE)
+								EndIf
+							Case Else
+								$dropAmount = calculateDropAmount($unitCount[$kind], $remainingWaves, $position, $minTroopsPerPosition[$kind])
+								$unitCount[$kind] -= $dropAmount
+
+								If $dropAmount > 0 Then
+									Switch $positionSide
+										Case "L", "R"
+											If IsArray($deployPoint) And UBound($deployPoint) >=2 Then
+												SetLog("Dropping " & $dropAmount & " " & getTranslatedTroopName($kind) & " at random location near " & $deployPoint[0] & "," & $deployPoint[1], $COLOR_BLUE)
+												If dropUnit($deployPoint, $kind, $dropAmount) Then
+													If _SleepAttack(SetSleep(1)) Then Return
+												EndIf
+											EndIf
+										Case Else
+											SetLog("Dropping " & getWaveName($waveNumber, $waveCount) & " wave of " & $dropAmount & " " & getTranslatedTroopName($kind), $COLOR_GREEN)
+
+											If customDeployTroops($dropVectors, $i, $barPosition, $dropAmount, $position) Then
+												If _SleepAttack(SetSleep(1)) Then Return
+											EndIf
+									EndSwitch
+								EndIf
+						EndSwitch
 				EndSwitch
 			EndIf
 		EndIf

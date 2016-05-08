@@ -1376,6 +1376,7 @@ Global Const $DEFAULT_CUSTOM_DEPLOY[$DEPLOY_MAX_WAVES][$DEPLOY_COLUMNS] = [[$eES
 Global $useAllSides = 1
 Global $percentCollectors = 80
 Global $redlineDistance = 50
+Global $usingAllSides = False
 
 ; SmartZap GUI variables - Added by LunaEclipse
 Global $ichkSmartZap = 1

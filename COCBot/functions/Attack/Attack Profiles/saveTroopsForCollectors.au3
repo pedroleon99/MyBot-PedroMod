@@ -211,10 +211,11 @@ Func launchSaveTroopsForCollectors($listInfoDeploy, $CC, $King, $Queen, $Warden)
 
 			If _SleepAttack(500) Then Return
 
-			; Change settings needed for multi finger mode
+			; Change settings needed for all sides mode
 			$nbSides = 4
+			$usingAllSides = True
 
-			; Change to the multi finger List Deploy
+			; Change to the All Sides List Deploy
 			Local $allSidesDeploy = getDeploymentInfo($nbSides, $eAllSides)
 			launchStandard($allSidesDeploy, $CC, $King, $Queen, $Warden, 4)
 
