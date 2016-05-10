@@ -359,6 +359,11 @@ Global $sLogFName
 Global $sAttackLogFName
 Global $AttackFile
 Global $RequestScreenshot = 0
+; IceCube (PushBullet Revamp v1.0)	
+Global $RequestScreenshotHD = 0
+Global $RequestBuilderInfo = 0
+Global $RequestShieldInfo = 0
+; IceCube (PushBullet Revamp v1.0)	
 Global $iDeleteAllPushes = 0
 Global $iDeleteAllPushesNow = False
 Global $ichkDeleteOldPushes
@@ -1181,7 +1186,9 @@ EndIf
 Global $iSwCount
 Global $ichkSwitchDonate
 Global $ichkMultyFarming
-Global $iAccount, $OkLoc, $AccFourthLoc, $AccThirdLoc, $AccSecondLoc, $AccmainLoc
+Global $iAccount, $OkLoc, $AccountLoc
+Global $iconfirm
+Global $bAccount[4] = ["Main", "Second", "Third", "Fourth"]
 
 Global $iRadClickSpeedFast, $radClickSpeedFast, $radClickSpeedNormal
 Global $dbBase

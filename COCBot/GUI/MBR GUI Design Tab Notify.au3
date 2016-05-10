@@ -107,12 +107,19 @@ $tabNotify = GUICtrlCreateTabItem(GetTranslated(9,1, "Notify"))
 		GUICtrlSetState(-1, $GUI_DISABLE)
 	$y = 352
 	$lblgrppushbullet = GUICtrlCreateGroup(GetTranslated(9,41, "Remote Control Functions"), $x - 10, $y - 20, 430, 165)
-		$lblPBdesc = GUICtrlCreateLabel(GetTranslated(9,42, "BOT HELP - send this help message") & @CRLF & GetTranslated(9,43, "BOT DELETE  - delete all your previous PushBullet messages") & @CRLF & _
-			GetTranslated(9,44, "BOT <Village Name> RESTART - restart the bot named <Village Name> and BlueStacks") & @CRLF & GetTranslated(9,45, "BOT <Village Name> STOP - stop the bot named <Village Name>") & @CRLF & _
-			GetTranslated(9,46, "BOT <Village Name> PAUSE - pause the bot named <Village Name>") & @CRLF & GetTranslated(9,47, "BOT <Village Name> RESUME   - resume the bot named <Village Name>") & @CRLF & _
-			GetTranslated(9,48, "BOT <Village Name> STATS - send Village Statistics of <Village Name>") & @CRLF & GetTranslated(9,49, "BOT <Village Name> LOG - send the current log file of <Village Name>") & @CRLF & _
-			GetTranslated(9,50, "BOT <Village Name> LASTRAID -  send the last raid loot screenshot of <Village Name>") & @CRLF & GetTranslated(9,51, "BOT <Village Name> LASTRAIDTXT - send the last raid loot values of <Village Name>") & @CRLF & _
-			GetTranslated(9,52, "BOT <Village Name> SCREENSHOT - send a screenshot of <Village Name>"), $x, $y - 5, -1, -1, $SS_LEFT)
+	; IceCube (PushBullet Revamp v1.0)	
+	;	$lblPBdesc = GUICtrlCreateLabel(GetTranslated(9,42, "BOT HELP - send this help message") & @CRLF & GetTranslated(9,43, "BOT DELETE  - delete all your previous PushBullet messages") & @CRLF & _
+	;		GetTranslated(9,44, "BOT <Village Name> RESTART - restart the bot named <Village Name> and BlueStacks") & @CRLF & GetTranslated(9,45, "BOT <Village Name> STOP - stop the bot named <Village Name>") & @CRLF & _
+	;		GetTranslated(9,46, "BOT <Village Name> PAUSE - pause the bot named <Village Name>") & @CRLF & GetTranslated(9,47, "BOT <Village Name> RESUME   - resume the bot named <Village Name>") & @CRLF & _
+	;		GetTranslated(9,48, "BOT <Village Name> STATS - send Village Statistics of <Village Name>") & @CRLF & GetTranslated(9,49, "BOT <Village Name> LOG - send the current log file of <Village Name>") & @CRLF & _
+	;		GetTranslated(9,50, "BOT <Village Name> LASTRAID -  send the last raid loot screenshot of <Village Name>") & @CRLF & GetTranslated(9,51, "BOT <Village Name> LASTRAIDTXT - send the last raid loot values of <Village Name>") & @CRLF & _
+	;		GetTranslated(9,52, "BOT <Village Name> SCREENSHOT - send a screenshot of <Village Name>" & @CRLF & _
+	;		"BOT <Village Name> SCREENSHOTHD - send a screenshot in high resolution of <Village Name>" & @CRLF & _
+	;		"BOT <Village Name> BUILDER - send builder information of <Village Name>" & @CRLF & _
+	;		"BOT <Village Name> SHIELD - send shield information of <Village Name>" & @CRLF & _
+	;		"BOT <Village Name> GAIN - send top gain && zap information of <Village Name>", $x, $y - 5, -1, -1, $SS_LEFT)
+			$lblPBdesc = GUICtrlCreateLabel(GetTranslated(9,42, "BOT HELP - send this help message"), $x, $y - 5, -1, -1, $SS_LEFT)
+	; IceCube (PushBullet Revamp v1.0)	
 		GUICtrlCreateGroup("", -99, -99, 1, 1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 GUICtrlCreateTabItem("")

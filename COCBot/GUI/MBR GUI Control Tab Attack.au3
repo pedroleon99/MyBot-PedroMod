@@ -38,9 +38,6 @@ Func chkDBSmartAttackRedArea()
 		Case Else
 			; Should never get here unless there is a problem with the code
 	EndSwitch
-
-	_GUICtrlComboBox_SetCurSel($cmbDBUnitDelay, $iCmbUnitDelay[$DB])
-	_GUICtrlComboBox_SetCurSel($cmbDBWaveDelay, $iCmbWaveDelay[$DB])
 EndFunc   ;==>chkDBSmartAttackRedArea
 
 Func chkABSmartAttackRedArea()

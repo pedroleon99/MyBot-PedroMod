@@ -550,6 +550,7 @@ Func btnWalls()
  Func btnVillageStat()
 		 GUICtrlSetState( $lblVillageReportTemp , $GUI_HIDE)
 
+; IceCube (Top Gain Info v1.1)
 		 If GUICtrlGetState($lblResultGoldNow) = $GUI_ENABLE + $GUI_SHOW Then
 			 ;hide normal values
 			 GUICtrlSetState( $lblResultGoldNow , $GUI_ENABLE +$GUI_HIDE)
@@ -558,6 +559,13 @@ Func btnWalls()
 			 GUICtrlSetState( $lblResultTrophyNow , $GUI_ENABLE +$GUI_HIDE)
 			 GUICtrlSetState( $lblResultBuilderNow , $GUI_ENABLE +$GUI_HIDE)
 			 GUICtrlSetState( $lblResultGemNow , $GUI_ENABLE +$GUI_HIDE)
+			 ;hide Top Gain & Zap values
+			 GUICtrlSetState( $lblResultGoldTop , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultElixirTop , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultDETop , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultTrophyTop , $GUI_ENABLE +$GUI_HIDE)			 
+			 GUICtrlSetState( $lblResultDEDrillZapTop , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultLSpellTop , $GUI_ENABLE +$GUI_HIDE)
 			 ;show stats values
 			 GUICtrlSetState( $lblResultGoldHourNow , $GUI_ENABLE +$GUI_SHOW)
 			 GUICtrlSetState( $lblResultElixirHourNow , $GUI_ENABLE +$GUI_SHOW)
@@ -565,16 +573,59 @@ Func btnWalls()
 			 GUICtrlSetState( $lblResultRuntimeNow , $GUI_ENABLE +$GUI_SHOW)
 			 GUICtrlSetState( $lblResultAttackedHourNow , $GUI_ENABLE +$GUI_SHOW)
 			 GUICtrlSetState( $lblResultSkippedHourNow , $GUI_ENABLE +$GUI_SHOW)
-			; hide normal pics
+			 ;hide normal pics
 			 GUICtrlSetState( $picResultTrophyNow , $GUI_ENABLE +$GUI_HIDE)
 			 GUICtrlSetState( $picResultBuilderNow , $GUI_ENABLE +$GUI_HIDE)
 			 GUICtrlSetState( $picResultGemNow , $GUI_ENABLE +$GUI_HIDE)
+			 ;Hide Top Gain & Zap pics
+			 GUICtrlSetState( $picResultDEDrillZapTop , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $picResultLSpellTop , $GUI_ENABLE +$GUI_HIDE)
+			 
 			 ;show stats pics
+			 GUICtrlSetState( $picResultDENow , $GUI_ENABLE +$GUI_SHOW)
 			 GUICtrlSetState( $picResultRuntimeNow , $GUI_ENABLE +$GUI_SHOW)
 			 GUICtrlSetState( $picResultAttackedHourNow , $GUI_ENABLE +$GUI_SHOW)
 			 GUICtrlSetState( $picResultSkippedHourNow , $GUI_ENABLE +$GUI_SHOW)
+			 
 			 ;change text
 			 GUICtrlSetData($btnQuickStats,  GetTranslated(13,29, "Vill."))
+			 
+		ElseIf GUICtrlGetState($lblResultGoldHourNow) = $GUI_ENABLE + $GUI_SHOW Then
+			 ;hide normal values
+			 GUICtrlSetState( $lblResultGoldNow , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultElixirNow , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultDENow , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultTrophyNow , $GUI_ENABLE +$GUI_HIDE)
+			 ;Show Top Gain & Zap values
+			 GUICtrlSetState( $lblResultGoldTop , $GUI_ENABLE +$GUI_SHOW)
+			 GUICtrlSetState( $lblResultElixirTop , $GUI_ENABLE +$GUI_SHOW)
+			 GUICtrlSetState( $lblResultDETop , $GUI_ENABLE +$GUI_SHOW)			 
+			 GUICtrlSetState( $lblResultTrophyTop , $GUI_ENABLE +$GUI_SHOW)
+			 GUICtrlSetState( $lblResultDEDrillZapTop , $GUI_ENABLE +$GUI_SHOW)			 
+			 GUICtrlSetState( $lblResultLSpellTop , $GUI_ENABLE +$GUI_SHOW)			 
+			 ;hide stats values
+			 GUICtrlSetState( $lblResultGoldHourNow , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultElixirHourNow , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultDEHourNow , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultRuntimeNow , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultAttackedHourNow , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultSkippedHourNow , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultBuilderNow , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultGemNow , $GUI_ENABLE +$GUI_HIDE)
+			 ; show normal pics
+			 GUICtrlSetState( $picResultDENow , $GUI_ENABLE +$GUI_SHOW)
+			 GUICtrlSetState( $picResultTrophyNow , $GUI_ENABLE +$GUI_SHOW)
+			 GUICtrlSetState( $picResultBuilderNow , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $picResultGemNow , $GUI_ENABLE +$GUI_HIDE)
+			 ;hide stats pics
+			 GUICtrlSetState( $picResultRuntimeNow , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $picResultAttackedHourNow , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $picResultSkippedHourNow , $GUI_ENABLE +$GUI_HIDE)
+			 ;Show Top Gain & Zap Pics
+			 GUICtrlSetState( $picResultDEDrillZapTop , $GUI_ENABLE +$GUI_SHOW)			 
+			 GUICtrlSetState( $picResultLSpellTop , $GUI_ENABLE +$GUI_SHOW)					 
+ 			 ;change text
+			 GUICtrlSetData($btnQuickStats,  GetTranslated(13,30, "Top"))
 		 Else
 			 ;show normal values
 			 GUICtrlSetState( $lblResultGoldNow , $GUI_ENABLE +$GUI_SHOW)
@@ -590,7 +641,15 @@ Func btnWalls()
 			 GUICtrlSetState( $lblResultRuntimeNow , $GUI_ENABLE +$GUI_HIDE)
 			 GUICtrlSetState( $lblResultAttackedHourNow , $GUI_ENABLE +$GUI_HIDE)
 			 GUICtrlSetState( $lblResultSkippedHourNow , $GUI_ENABLE +$GUI_HIDE)
+			 ;hide Top Gain & Zap values	
+			 GUICtrlSetState( $lblResultGoldTop , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultElixirTop , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultDETop , $GUI_ENABLE +$GUI_HIDE)			 
+			 GUICtrlSetState( $lblResultTrophyTop , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $lblResultDEDrillZapTop , $GUI_ENABLE +$GUI_HIDE)			 
+			 GUICtrlSetState( $lblResultLSpellTop , $GUI_ENABLE +$GUI_HIDE)			 
 			; show normal pics
+			 GUICtrlSetState( $picResultDENow , $GUI_ENABLE +$GUI_SHOW)
 			 GUICtrlSetState( $picResultTrophyNow , $GUI_ENABLE +$GUI_SHOW)
 			 GUICtrlSetState( $picResultBuilderNow , $GUI_ENABLE +$GUI_SHOW)
 			 GUICtrlSetState( $picResultGemNow , $GUI_ENABLE +$GUI_SHOW)
@@ -598,11 +657,14 @@ Func btnWalls()
 			 GUICtrlSetState( $picResultRuntimeNow , $GUI_ENABLE +$GUI_HIDE)
 			 GUICtrlSetState( $picResultAttackedHourNow , $GUI_ENABLE +$GUI_HIDE)
 			 GUICtrlSetState( $picResultSkippedHourNow , $GUI_ENABLE +$GUI_HIDE)
+			 ;Hide Top Gain & Zap pics
+			 GUICtrlSetState( $picResultDEDrillZapTop , $GUI_ENABLE +$GUI_HIDE)
+			 GUICtrlSetState( $picResultLSpellTop , $GUI_ENABLE +$GUI_HIDE)
  			 ;change text
 			 GUICtrlSetData($btnQuickStats,GetTranslated(13,28, -1))
 
 		EndIf
-
+; IceCube (Top Gain Info v1.1)
 EndFunc
 
 Func btnTestDeadBase()

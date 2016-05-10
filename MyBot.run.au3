@@ -231,6 +231,10 @@ Func runBot() ;Bot that runs everything in order
 			;EndIf
 			If $ichkMultyFarming = 1 Then DetectAccount()
 			If $RequestScreenshot = 1 Then PushMsg("RequestScreenshot")
+			; IceCube (PushBullet Revamp v1.0)	
+			If $RequestBuilderInfo = 1 Then PushMsg("BuilderInfo")
+			If $RequestShieldInfo = 1 Then PushMsg("ShieldInfo")
+			; IceCube (PushBullet Revamp v1.0)	
 			If _Sleep($iDelayRunBot3) Then Return
 			VillageReport()
 			ProfileSwitch()
@@ -374,26 +378,26 @@ Func runBot() ;Bot that runs everything in order
 				$RunState = True
 				$iSwCount = 0
 				If $sCurrProfile = "[01] Main" Then
-					SwitchSecond()
+					SwitchAccount("Second")
 				ElseIf $sCurrProfile = "[02] Second" Then
 					If $iAccount = "3" Or $iAccount = "4" Then
-						SwitchThird()
-;						DetectAccount()
+						SwitchAccount("Third")
+;
 					Else
-						SwitchMain()
-;						DetectAccount()
+						SwitchAccount("Main")
+
 					EndIf
 				ElseIf $sCurrProfile = "[03] Third" Then
 					If $iAccount = "4" Then
-						SwitchFourth()
-;						DetectAccount()
+						SwitchAccount("Fourth")
+
 					ElseIf $iAccount = "3" Then
-						SwitchMain()
-;						DetectAccount()
+						SwitchAccount("Main")
+;
 					EndIf
 				ElseIf $sCurrProfile = "[04] Fourth" Then
-					SwitchMain()
-;					DetectAccount()
+					SwitchAccount("Main")
+;
 				EndIf
 			EndIf
 	WEnd
@@ -425,6 +429,10 @@ Func Idle() ;Sequence that runs until Full Army
 		checkAndroidTimeLag()
 
 		If $RequestScreenshot = 1 Then PushMsg("RequestScreenshot")
+		; IceCube (PushBullet Revamp v1.0)	
+		If $RequestBuilderInfo = 1 Then PushMsg("BuilderInfo")		
+		If $RequestShieldInfo = 1 Then PushMsg("ShieldInfo")
+		; IceCube (PushBullet Revamp v1.0)	
 		If _Sleep($iDelayIdle1) Then Return
 		If $CommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLOR_GREEN)
 		Local $hTimer = TimerInit()

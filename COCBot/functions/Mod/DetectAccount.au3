@@ -68,9 +68,9 @@ $bm5 = _GDIPlus_ImageLoadFromFile (@ScriptDir & "\images\Multyfarming\Fourth.bmp
 		_GUICtrlComboBox_SetCurSel($cmbProfile, 3)
 		cmbProfile()
 	Else
-	;IceCube change start	
+	; IceCube (Multy-Farming Fast Switch v1.3)
 		SetLog("Temporary account Detected...", $COLOR_Gray)
-	;IceCube change end	
+	; IceCube (Multy-Farming Fast Switch v1.3)
 	EndIf
 
 _GDIPlus_ImageDispose($bm1)
@@ -191,7 +191,7 @@ Func MakeAccount()
 	EndIf
 EndFunc
 
-;IceCube change start
+; IceCube (Multy-Farming Fast Switch v1.3)
 ; Validate the account before switch
  Func DetectCurrentAccount($CheckAccountID)
 
@@ -275,4 +275,4 @@ EndFunc
 
 	Return True
 EndFunc
-;IceCube change end
+; IceCube (Multy-Farming Fast Switch v1.3)

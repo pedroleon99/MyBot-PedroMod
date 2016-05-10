@@ -97,7 +97,7 @@ $tabMOD = GUICtrlCreateTabItem("Mods")
     ;;; Mult-Farming
     ;;;;;;;;;;;;;;;;;
 	Local $x = 35, $y = 335
-	; IceCube change start
+	; IceCube (Multy-Farming Fast Switch v1.3)
 	$grpMultyFarming = GUICtrlCreateGroup(GetTranslated(17,1, "Multy-Farming"), $x - 20, $y - 20, 440, 60)
 	;$x -= 10
 		$chkMultyFarming = GUICtrlCreateCheckbox(GetTranslated(17,1, "Multy-Farming"), $x - 10, $y -7, -1 , -1)
@@ -139,7 +139,7 @@ $tabMOD = GUICtrlCreateTabItem("Mods")
 			GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetOnEvent(-1, "btnmultyAcc4")
 			GUICtrlSetState(-1, $GUI_DISABLE)	
-	; IceCube change end
+	; IceCube (Multy-Farming Fast Switch v1.3)
 					GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	; Android Settings

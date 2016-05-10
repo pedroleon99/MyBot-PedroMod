@@ -19,7 +19,7 @@ Func SwitchDonate()
 		SetLog("Switching account For Donate", $COLOR_blue)
 		DetectAccount()
 		If $sCurrProfile = "[01] Main" Then
-			SwitchSecond()
+			SwitchAccount("Second")
 			$RunState = True
 			While 1
 				Collect()
@@ -28,12 +28,12 @@ Func SwitchDonate()
 				RequestCC()
 				ExitLoop
 			WEnd
-			SwitchMain()
+			SwitchAccount("Main")
 		ElseIf $sCurrProfile = "[02] Second" Then
 			If $iAccount = "3" Or $iAccount = "4" Then
-				SwitchThird()
+				SwitchAccount("Third")
 			Else
-				SwitchMain()
+				SwitchAccount("Main")
 			EndIf
 			$RunState = True
 			While 1
@@ -42,12 +42,12 @@ Func SwitchDonate()
 				RequestCC()
 				ExitLoop
 			WEnd
-			SwitchSecond()
+			SwitchAccount("Second")
 		ElseIf $sCurrProfile = "[03] Third" Then
 			If $iAccount = "4" Then
-				SwitchFourth()
+				SwitchAccount("Fourth")
 			ElseIf $iAccount = "3" Then
-				SwitchMain()
+				SwitchAccount("Main")
 			EndIf
 			$RunState = True
 			While 1
@@ -56,17 +56,17 @@ Func SwitchDonate()
 				RequestCC()
 				ExitLoop
 			WEnd
-			SwitchThird()
+			SwitchAccount("Third")
 		ElseIf $sCurrProfile = "[04] Fourth" Then
 			$RunState = True
-			SwitchMain()
+			SwitchAccount("Main")
 			While 1
 				Train()
 				DonateCC()
 				RequestCC()
 				ExitLoop
 			WEnd
-			SwitchFourth()
+			SwitchAccount("Fourth")
 		EndIf
 		If _Sleep(1000) Then Return
 	EndIf

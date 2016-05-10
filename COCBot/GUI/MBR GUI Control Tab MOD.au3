@@ -86,7 +86,7 @@ Func MultiFarming()
 		If GUICtrlRead($chkBotStop) = $GUI_CHECKED Then
 			GUICtrlSetState($chkBotStop, $GUI_UNCHECKED)
 		EndIf
-		; IceCube change start
+		; IceCube (Multy-Farming Fast Switch v1.3)
 		GUICtrlSetState($btnmultyAcc1, $GUI_DISABLE)
 		GUICtrlSetState($btnmultyAcc2, $GUI_DISABLE)
 		GUICtrlSetState($btnmultyAcc3, $GUI_DISABLE)
@@ -103,7 +103,7 @@ Func MultiFarming()
 		If  FileExists(@ScriptDir & "\images\Multyfarming\AccFourth.bmp") Then
 			GUICtrlSetState($btnmultyAcc4, $GUI_ENABLE)
 		EndIf
-		; IceCube change end
+		; IceCube (Multy-Farming Fast Switch v1.3)
 	Else
 		$ichkMultyFarming = 0
 		GUICtrlSetState($Account, $GUI_DISABLE)
@@ -111,12 +111,12 @@ Func MultiFarming()
 		For $i = $grpControls To $cmbHoursStop
 			GUICtrlSetState($i, $GUI_ENABLE)
 		Next
-		; IceCube change start
+		; IceCube (Multy-Farming Fast Switch v1.3)
 		GUICtrlSetState($btnmultyAcc1, $GUI_DISABLE)
 		GUICtrlSetState($btnmultyAcc2, $GUI_DISABLE)
 		GUICtrlSetState($btnmultyAcc3, $GUI_DISABLE)
 		GUICtrlSetState($btnmultyAcc4, $GUI_DISABLE)
-		; IceCube change end
+		; IceCube (Multy-Farming Fast Switch v1.3)
 	EndIf
 EndFunc   ;==>MultiFarming
 
@@ -125,7 +125,7 @@ Func Account()
 	IniWrite($config, "MOD", "Account", $iAccount)
 EndFunc
 
-;IceCube change start
+; IceCube (Multy-Farming Fast Switch v1.3)
 ;Main Account
 Func btnmultyAcc1()
 	LockGUI()
@@ -137,7 +137,7 @@ Func btnmultyAcc1()
 	$RunState = True
 	checkMainScreen()
 	$iSwCount = 0
-	SwitchMain()
+	SwitchAccount("Main")
 	checkMainScreen()	
 	$RunState = False
 	DetectAccount()
@@ -158,7 +158,7 @@ Func btnmultyAcc2()
 	$RunState = True
 	checkMainScreen()
 	$iSwCount = 0
-	SwitchSecond()
+	SwitchAccount("Second")
 	checkMainScreen()
 	$RunState = False
 	DetectAccount()
@@ -179,7 +179,7 @@ Func btnmultyAcc3()
 	$RunState = True
 	checkMainScreen()
 	$iSwCount = 0
-	SwitchThird()
+	SwitchAccount("Third")
 	checkMainScreen()
 	$RunState = False
 	DetectAccount()
@@ -200,7 +200,7 @@ Func btnmultyAcc4()
 	$RunState = True
 	checkMainScreen()
 	$iSwCount = 0
-	SwitchFourth()
+	SwitchAccount("Fourth")
 	checkMainScreen()
 	$RunState = False
 	DetectAccount()
@@ -302,7 +302,7 @@ Func UnLockGUI()
 		_BlockInputEx(0, "", "", $HWnD)
 		SetRedrawBotWindow(True) ; must be here at bottom, after SetLog, so Log refreshes. You could also use SetRedrawBotWindow(True, False) and let the events handle the refresh.
 EndFunc
-;IceCube change end
+; IceCube(Multy-Farming Fast Switch v1.2)
 
 
 	; Android Settings

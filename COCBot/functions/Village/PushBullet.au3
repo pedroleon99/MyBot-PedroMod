@@ -79,7 +79,13 @@ Func _RemoteControl()
 						$txtHelp &= '\n' & "BOT <Village Name> LOG - send the current log file of <Village Name>"
 						$txtHelp &= '\n' & "BOT <Village Name> LASTRAID - send the last raid loot screenshot of <Village Name>"
 						$txtHelp &= '\n' & "BOT <Village Name> LASTRAIDTXT - send the last raid loot values of <Village Name>"
+						; IceCube (PushBullet Revamp v1.0)	
 						$txtHelp &= '\n' & "BOT <Village Name> SCREENSHOT - send a screenshot of <Village Name>"
+						$txtHelp &= '\n' & "BOT <Village Name> SCREENSHOTHD - send a screenshot in high resolution of <Village Name>"
+						$txtHelp &= '\n' & "BOT <Village Name> BUILDER - send a screenshot of builder status of <Village Name>"
+						$txtHelp &= '\n' & "BOT <Village Name> SHIELD - send a screenshot of shield status of <Village Name>"
+						$txtHelp &= '\n' & "BOT <Village Name> GAIN - send a top gain & zap statistics of <Village Name>"
+						; IceCube (PushBullet Revamp v1.0)	
 						$txtHelp &= '\n' & "BOT <Village Name> SENDCHAT <TEXT> - send TEXT in clan chat of <Village Name>"
 						$txtHelp &= '\n' & "BOT <Village Name> GETCHATS <STOP|NOW|INTERVAL> - select any of this three option to do"
 						$txtHelp &= '\n' & "BOT <Village Name> START - start the bot named <Village Name>"
@@ -177,6 +183,28 @@ Func _RemoteControl()
 						SetLog("Pushbullet: ScreenShot request received", $COLOR_GREEN)
 						$RequestScreenshot = 1
 						_DeleteMessage($iden[$x])
+					; IceCube (PushBullet Revamp v1.0)	
+					Case "BOT " & StringUpper($iOrigPushB) & " SCREENSHOTHD"
+						SetLog("Pushbullet: ScreenShot HD request received", $COLOR_GREEN)
+						$RequestScreenshot = 1
+						$RequestScreenshotHD = 1
+						_DeleteMessage($iden[$x])
+					Case "BOT " & StringUpper($iOrigPushB) & " BUILDER"
+						SetLog("Pushbullet: Builder Status request received", $COLOR_GREEN)
+						$RequestBuilderInfo = 1
+						_DeleteMessage($iden[$x])						
+					Case "BOT " & StringUpper($iOrigPushB) & " SHIELD"
+						SetLog("Pushbullet: Shield Status request received", $COLOR_GREEN)
+						$RequestShieldInfo = 1
+						_DeleteMessage($iden[$x])
+					Case "BOT " & StringUpper($iOrigPushB) & " GAIN"									
+						SetLog("Pushbullet: Your request has been received. Top Gain & Zap Statistics sent", $COLOR_GREEN)
+						Local $txtStats = " | Top Gain & Zap Stats Village Report" & "\n" & "\n[G]: " & _NumberFormat($topgoldloot) & "\n[E]: "
+							  $txtStats &= _NumberFormat($topelixirloot) & "\n[D]: " & _NumberFormat($topdarkloot) & "\n[T]: " & $toptrophyloot
+							  $txtStats &= "\n[Z]: " & _NumberFormat($smartZapGain) & "\n[S]: " & _NumberFormat($numLSpellsUsed)
+						_Push($iOrigPushB & $txtStats)
+						_DeleteMessage($iden[$x])
+						; IceCube (PushBullet Revamp v1.0)	
 					Case "BOT " & StringUpper($iOrigPushB) & " RESTART"
 						_DeleteMessage($iden[$x])
 						SetLog("Your request has been received. Bot and BS restarting...", $COLOR_GREEN)
@@ -1065,14 +1093,23 @@ Func PushMsg($Message, $Source = "")
 		Case "RequestScreenshot"
 			Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
 			Local $Time = @HOUR & "." & @MIN
-			_CaptureRegion(0, 0, $DEFAULT_WIDTH, $DEFAULT_HEIGHT)
+			_CaptureRegion(0, 0, $DEFAULT_WIDTH, $DEFAULT_HEIGHT - 45)
+			; IceCube (PushBullet Revamp v1.0)	
+			If $RequestScreenshotHD = 1 Then
+				$hBitmap_Scaled = $hBitmap
+			Else
 			$hBitmap_Scaled = _GDIPlus_ImageResize($hBitmap, _GDIPlus_ImageGetWidth($hBitmap) / 2, _GDIPlus_ImageGetHeight($hBitmap) / 2) ;resize image
+			EndIf
+			; IceCube (PushBullet Revamp v1.0)	
 			Local $Screnshotfilename = "Screenshot_" & $Date & "_" & $Time & ".jpg"
 			_GDIPlus_ImageSaveToFile($hBitmap_Scaled, $dirTemp & $Screnshotfilename)
 			_GDIPlus_ImageDispose($hBitmap_Scaled)
 			_PushFile($Screnshotfilename, "Temp", "image/jpeg", $iOrigPushB & " | " &  GetTranslated(18,91,"Screenshot of your village") & "\n" & $Screnshotfilename)
 			SetLog("Pushbullet/Telegram: Screenshot sent!", $COLOR_GREEN)
 			$RequestScreenshot = 0
+			; IceCube (PushBullet Revamp v1.0)	
+			$RequestScreenshotHD = 0
+			; IceCube (PushBullet Revamp v1.0)	
 			;wait a second and then delete the file
 			If _Sleep($iDelayPushMsg2) Then Return
 			Local $iDelete = FileDelete($dirTemp & $Screnshotfilename)
@@ -1101,6 +1138,42 @@ Func PushMsg($Message, $Source = "")
 					$iReportIdleBuilder = 0
 				EndIf
 			EndIf
+		; IceCube (PushBullet Revamp v1.0)
+		Case "BuilderInfo"
+			Click(0,0, 5)
+			Click(274,8)
+			_Sleep (500)
+			Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
+			Local $Time = @HOUR & "." & @MIN
+			_CaptureRegion(234, 74, 434, 260)
+			Local $Screnshotfilename = "Screenshot_" & $Date & "_" & $Time & ".jpg"
+			_GDIPlus_ImageSaveToFile($hBitmap, $dirTemp & $Screnshotfilename)
+			_PushFile($Screnshotfilename, "Temp", "image/jpeg", $iOrigPushB & " | " &  "Buider Information" & "\n" & $Screnshotfilename)
+			SetLog("Pushbullet/Telegram: Builder Information sent!", $COLOR_GREEN)
+			$RequestBuilderInfo = 0
+			;wait a second and then delete the file
+			If _Sleep($iDelayPushMsg2) Then Return
+			Local $iDelete = FileDelete($dirTemp & $Screnshotfilename)
+			If Not ($iDelete) Then SetLog("Pushbullet/Telegram: An error occurred deleting the temporary screenshot file.", $COLOR_RED)
+			Click(0,0, 5)	
+		Case "ShieldInfo"
+			Click(0,0, 5)
+			Click(435,8)
+			_Sleep (500)
+			Local $Date = @YEAR & "-" & @MON & "-" & @MDAY
+			Local $Time = @HOUR & "." & @MIN
+			_CaptureRegion(200, 165, 660, 568)
+			Local $Screnshotfilename = "Screenshot_" & $Date & "_" & $Time & ".jpg"
+			_GDIPlus_ImageSaveToFile($hBitmap, $dirTemp & $Screnshotfilename)
+			_PushFile($Screnshotfilename, "Temp", "image/jpeg", $iOrigPushB & " | " &  "Shield Information" & "\n" & $Screnshotfilename)
+			SetLog("Pushbullet/Telegram: Shield Information sent!", $COLOR_GREEN)
+			$RequestShieldInfo = 0
+			;wait a second and then delete the file
+			If _Sleep($iDelayPushMsg2) Then Return
+			Local $iDelete = FileDelete($dirTemp & $Screnshotfilename)
+			If Not ($iDelete) Then SetLog("Pushbullet/Telegram: An error occurred deleting the temporary screenshot file.", $COLOR_RED)
+			Click(0,0, 5)
+			; IceCube (PushBullet Revamp v1.0)
 	EndSwitch
 
 EndFunc   ;==>PushMsg
