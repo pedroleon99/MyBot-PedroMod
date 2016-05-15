@@ -67,6 +67,13 @@ Func checkAttackDisable($iSource, $Result = "")
 				If StringInStr($Result, "been") <> 0 Or StringInStr($Result, "after") <> 0 Or StringInStr($Result, "have") <> 0 Then ; verify we have right text string, 'after' added for Personal Break
 					Setlog("Online too long, Personal Break detected....", $COLOR_RED)
 					checkMainScreen()
+				; IceCube (Misc v1.0)					
+				ElseIf StringInStr($Result, "banned") <> 0 Then ; Banned detection
+					Setlog("BANNED message detected.\nPlease check your account ASAP.\n\nBOT will enter in full stop mode now!", $COLOR_RED)
+					$iForceNotify = 1
+					_Push("BANNED message detected.\nPlease check your account ASAP.\n\nBOT will enter in full stop mode now!")
+					btnStop()
+				; IceCube (Misc v1.0)
 				Else
 					If $debugSetlog = 1 Then Setlog("wrong text string", $COLOR_PURPLE)
 					Return ; exit function, wrong string found
@@ -119,38 +126,121 @@ Func checkAttackDisable($iSource, $Result = "")
 	$Is_SearchLimit = False ; reset search limit flag
 	$Restart = True ; Set flag to restart the process at the bot main code when it returns
 
-	Setlog("Time for break, exit now..", $COLOR_BLUE)
+	; IceCube (Multy-Farming Revamp v1.5)	
+	If $ichkMultyFarming = 1 Then
+		SetLog("Multy-Farming Mode Active...", $COLOR_RED)
+		SetLog("Please don't PAUSE/STOP BOT during profile change", $COLOR_RED)
+		$canRequestCC = True
+		$bDonationEnabled = True
+		RequestCC()
+		$FirstStart = True
+		$RunState = True
+		$iSwCount = 0
+		If $sCurrProfile = "[01] Main" Then
+			If IniRead($sProfilePath & "\[02] Second\config.ini", "MOD", "MultyFarming", "0") = "1" Then
+				SwitchAccount("Second")
+			ElseIf IniRead($sProfilePath & "\[03] Third\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+				SwitchAccount("Third")
+			ElseIf IniRead($sProfilePath & "\[04] Fourth\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+				SwitchAccount("Fourth")
+			Else
+				SetLog("You don't have other profiles configured for multy-farming. Swithing accounts canceled.", $COLOR_RED)
+				PrepareForPersonalBreak()
+			EndIF
+			
+		ElseIf $sCurrProfile = "[02] Second" Then
+			If $iAccount = "3" Or $iAccount = "4" Then
+				If IniRead($sProfilePath & "\[03] Third\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+					SwitchAccount("Third")
+				ElseIf IniRead($sProfilePath & "\[04] Fourth\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+					SwitchAccount("Fourth")
+				ElseIf IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+					SwitchAccount("Main")							
+				Else
+					SetLog("You don't have other profiles configured for multy-farming. Swithing accounts canceled.", $COLOR_RED)
+					PrepareForPersonalBreak()
+				EndIF
+			Else
+				If IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+					SwitchAccount("Main")	
+				Else					
+					PrepareForPersonalBreak()
+				EndIF
+			EndIf
+			
+		ElseIf $sCurrProfile = "[03] Third" Then
+			If $iAccount = "4" Then
+				If IniRead($sProfilePath & "\[04] Fourth\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+					SwitchAccount("Fourth")
+				ElseIf IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+					SwitchAccount("Main")		
+				ElseIf IniRead($sProfilePath & "\[02] Second\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+					SwitchAccount("Second")
+				Else
+					SetLog("You don't have other profiles configured for multy-farming. Swithing accounts canceled.", $COLOR_RED)
+					PrepareForPersonalBreak()
+				EndIf
 
-	; Find and wait for the confirmation of exit "okay" button
-	Local $i = 0 ; Reset Loop counter
-	While 1
-		checkObstacles()
-		BS1BackButton()
-		If _Sleep($iDelayAttackDisable1000) Then Return ; wait for window to open
-		If ClickOkay("ExitCoCokay", True) = True Then ExitLoop ; Confirm okay to exit
-		If $i > 10 Then
-			Setlog("Can not find Okay button to exit CoC, Forcefully Closing CoC", $COLOR_RED)
-			If $debugImageSave = 1 Then DebugImageSave("CheckAttackDisableFailedButtonCheck_")
-			CloseCoC()
-			ExitLoop
+			ElseIf $iAccount = "3" Then
+				If IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+					SwitchAccount("Main")							
+				Else					
+					PrepareForPersonalBreak()
+				EndIF
+
+			EndIf
+		ElseIf $sCurrProfile = "[04] Fourth" Then
+			If IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+				SwitchAccount("Main")		
+			ElseIf IniRead($sProfilePath & "\[02] Second\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+				SwitchAccount("Second")
+			ElseIf IniRead($sProfilePath & "\[03] Third\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+				SwitchAccount("Third")
+			Else
+				SetLog("You don't have other profiles configured for multy-farming. Swithing accounts canceled.", $COLOR_RED)
+				PrepareForPersonalBreak()
+			EndIf
 		EndIf
-		$i += 1
-	WEnd
-
-	If _Sleep(1000) Then Return ; short wait for CoC to exit
-	PushMsg("TakeBreak")
-
-	; CoC is closed >>
-	If $iModSource = $iTaBChkTime And $aShieldStatus[0] <> "guard" Then
-		Setlog("Personal Break Reset log off: " & $iValueSinglePBTimeForced & " Minutes", $COLOR_BLUE)
-		WaitnOpenCoC($iValueSinglePBTimeForced * 60 * 1000, True) ; Log off CoC for user set time in expert tab
 	Else
-		WaitnOpenCoC(20000, True) ; close CoC for 20 seconds to ensure server logoff, True=call checkmainscreen to clean up if needed
+		PrepareForPersonalBreak()
 	EndIf
-	$sPBStartTime = "" ; reset Personal Break global time value to get update
-	For $i = 0 To UBound($aShieldStatus) - 1
-		$aShieldStatus[$i] = "" ; reset global shield info array
-	Next
-
+	; IceCube (Multy-Farming Revamp v1.5)
+	
 EndFunc   ;==>checkAttackDisable
 
+; IceCube (Multy-Farming Revamp v1.5)
+Func PrepareForPersonalBreak()
+		Setlog("Time for break, exit now..", $COLOR_BLUE)
+
+		; Find and wait for the confirmation of exit "okay" button
+		Local $i = 0 ; Reset Loop counter
+		While 1
+			checkObstacles()
+			BS1BackButton()
+			If _Sleep($iDelayAttackDisable1000) Then Return ; wait for window to open
+			If ClickOkay("ExitCoCokay", True) = True Then ExitLoop ; Confirm okay to exit
+			If $i > 10 Then
+				Setlog("Can not find Okay button to exit CoC, Forcefully Closing CoC", $COLOR_RED)
+				If $debugImageSave = 1 Then DebugImageSave("CheckAttackDisableFailedButtonCheck_")
+				CloseCoC()
+				ExitLoop
+			EndIf
+			$i += 1
+		WEnd
+
+		If _Sleep(1000) Then Return ; short wait for CoC to exit
+		PushMsg("TakeBreak")
+
+		; CoC is closed >>
+		If $iModSource = $iTaBChkTime And $aShieldStatus[0] <> "guard" Then
+			Setlog("Personal Break Reset log off: " & $iValueSinglePBTimeForced & " Minutes", $COLOR_BLUE)
+			WaitnOpenCoC($iValueSinglePBTimeForced * 60 * 1000, True) ; Log off CoC for user set time in expert tab
+		Else
+			WaitnOpenCoC(20000, True) ; close CoC for 20 seconds to ensure server logoff, True=call checkmainscreen to clean up if needed
+		EndIf
+		$sPBStartTime = "" ; reset Personal Break global time value to get update
+		For $i = 0 To UBound($aShieldStatus) - 1
+			$aShieldStatus[$i] = "" ; reset global shield info array
+		Next
+EndFunc   ;==>PrepareForPersonalBreak
+; IceCube (Multy-Farming Revamp v1.5)

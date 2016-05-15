@@ -50,10 +50,10 @@ Local $x = 30, $y = 30
 						"Cosote, Hervidero, Kaganus, LunaEclipse, MonkeyHunter, ProMac, Rumbla, Sardo, Trlopes, Zengzeng"  &  @CRLF & @CRLF & _
                         "Developers no longer active: "  &  @CRLF & _
 						"Antidote, AtoZ, Barracoda, Didipe, Dinobot, DixonHill, DkEd, GkevinOD, HungLe, Knowjack, Safar46, Saviart, TheMaster1st, and others"
-		$lbltxtCredits1 = GUICtrlCreateLabel($txtCredits, $x+5, $y, 410,95, BITOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT),0)
+		$lbltxtCredits1 = GUICtrlCreateLabel($txtCredits, $x+5, $y, 410,115, BITOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT),0)
 			GUICtrlSetFont(-1,9, $FW_MEDIUM)
 			GUICtrlSetBkColor(-1, $COLOR_WHITE)
-		$y += 100
+		$y += 115
 		$txtCredits = "Special thanks to all contributing forum members helping " & @CRLF & "to make this software better! "
 		$lbltxtCredits2 = GUICtrlCreateLabel($txtCredits, $x+5, $y, 390,30, BITOR($WS_VISIBLE, $ES_AUTOVSCROLL, $ES_CENTER),0)
 					GUICtrlSetBkColor(-1, $COLOR_WHITE)

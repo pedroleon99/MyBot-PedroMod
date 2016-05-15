@@ -30,6 +30,11 @@ Func cmbProfile()
 	InitDonateStats()
 
 	SetLog(_PadStringCenter("Profile " & $sCurrProfile & " loaded from " & $config, 50, "="), $COLOR_GREEN)
+	; IceCube (PushBullet Revamp v1.1)
+	If $RunState AND $pAlertMFSwitch Then
+		_Push("Multy-Farming account switched to " & $sCurrProfile)
+	EndIf
+	; IceCube (PushBullet Revamp v1.1)
 EndFunc   ;==>cmbProfile
 
 Func btnAddConfirm()
@@ -43,6 +48,9 @@ Func btnAddConfirm()
 			GUICtrlSetState($btnCancel, $GUI_SHOW)
 			GUICtrlSetState($btnConfirmRename, $GUI_HIDE)
 			GUICtrlSetState($btnRename, $GUI_HIDE)
+			; IceCube (Misc v1.0)
+			GUICtrlSetState($btnRecycle, $GUI_HIDE)
+			; IceCube (Misc v1.0)
 		Case $btnConfirmAdd
 			Local $newProfileName = StringRegExpReplace(GUICtrlRead($txtVillageName), '[/:*?"<>|]', '_')
 			If FileExists($sProfilePath & "\" & $newProfileName) Then
@@ -64,9 +72,15 @@ Func btnAddConfirm()
 			GUICtrlSetState($btnCancel, $GUI_HIDE)
 			GUICtrlSetState($btnConfirmRename, $GUI_HIDE)
 			GUICtrlSetState($btnRename, $GUI_SHOW)
+			; IceCube (Misc v1.0)
+			GUICtrlSetState($btnRecycle, $GUI_SHOW)
+			; IceCube (Misc v1.0)
 
 			If GUICtrlGetState($btnDelete) <> $GUI_ENABLE Then GUICtrlSetState($btnDelete, $GUI_ENABLE)
 			If GUICtrlGetState($btnRename) <> $GUI_ENABLE Then GUICtrlSetState($btnRename, $GUI_ENABLE)
+			; IceCube (Misc v1.0)
+			If GUICtrlGetState($btnRecycle) <> $GUI_ENABLE Then GUICtrlSetState($btnRecycle, $GUI_ENABLE)
+			; IceCube (Misc v1.0)
 			;DonateStats
 			InitDonateStats()
 		Case Else
@@ -94,6 +108,9 @@ Func btnDeleteCancel()
 			GUICtrlSetState($btnDelete, $GUI_SHOW)
 			GUICtrlSetState($btnConfirmRename, $GUI_HIDE)
 			GUICtrlSetState($btnRename, $GUI_SHOW)
+			; IceCube (Misc v1.0)
+			GUICtrlSetState($btnRecycle, $GUI_SHOW)
+			; IceCube (Misc v1.0)
 		Case Else
 			SetLog("If you are seeing this log message there is something wrong.", $COLOR_RED)
 	EndSwitch
@@ -101,8 +118,20 @@ Func btnDeleteCancel()
 	If GUICtrlRead($cmbProfile) = "<No Profiles>" Then
 		GUICtrlSetState($btnDelete, $GUI_DISABLE)
 		GUICtrlSetState($btnRename, $GUI_DISABLE)
+		; IceCube (Misc v1.0)
+		GUICtrlSetState($btnRecycle, $GUI_DISABLE)
+		; IceCube (Misc v1.0)
 	EndIf
 EndFunc   ;==>btnDeleteCancel
+
+; IceCube (Misc v1.0)
+Func btnRecycle()
+	FileDelete($config)
+	SaveConfig()
+	SetLog("Profile " & $sCurrProfile & " was recycled with success", $COLOR_GREEN)
+	SetLog("All unused settings were removed", $COLOR_GREEN)
+EndFunc   ;==>btnRecycle
+; IceCube (Misc v1.0)
 
 Func btnRenameConfirm()
 	Switch @GUI_CtrlId
@@ -116,6 +145,9 @@ Func btnRenameConfirm()
 			GUICtrlSetState($btnCancel, $GUI_SHOW)
 			GUICtrlSetState($btnRename, $GUI_HIDE)
 			GUICtrlSetState($btnConfirmRename, $GUI_SHOW)
+			; IceCube (Misc v1.0)
+			GUICtrlSetState($btnRecycle, $GUI_HIDE)
+			; IceCube (Misc v1.0)
 		Case $btnConfirmRename
 			Local $newProfileName = StringRegExpReplace(GUICtrlRead($txtVillageName), '[/:*?"<>|]', '_')
 			If FileExists($sProfilePath & "\" & $newProfileName) Then
@@ -138,6 +170,9 @@ Func btnRenameConfirm()
 			GUICtrlSetState($btnDelete, $GUI_SHOW)
 			GUICtrlSetState($btnConfirmRename, $GUI_HIDE)
 			GUICtrlSetState($btnRename, $GUI_SHOW)
+			; IceCube (Misc v1.0)
+			GUICtrlSetState($btnRecycle, $GUI_SHOW)
+			; IceCube (Misc v1.0)
 		Case Else
 			SetLog("If you are seeing this log message there is something wrong.", $COLOR_RED)
 	EndSwitch

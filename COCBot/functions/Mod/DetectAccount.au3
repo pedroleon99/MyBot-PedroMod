@@ -68,9 +68,9 @@ $bm5 = _GDIPlus_ImageLoadFromFile (@ScriptDir & "\images\Multyfarming\Fourth.bmp
 		_GUICtrlComboBox_SetCurSel($cmbProfile, 3)
 		cmbProfile()
 	Else
-	; IceCube (Multy-Farming Fast Switch v1.3)
+	; IceCube (Multy-Farming Revamp v1.5)
 		SetLog("Temporary account Detected...", $COLOR_Gray)
-	; IceCube (Multy-Farming Fast Switch v1.3)
+	; IceCube (Multy-Farming Revamp v1.5)
 	EndIf
 
 _GDIPlus_ImageDispose($bm1)
@@ -191,7 +191,8 @@ Func MakeAccount()
 	EndIf
 EndFunc
 
-; IceCube (Multy-Farming Fast Switch v1.3)
+
+; IceCube (Multy-Farming Revamp v1.5)
 ; Validate the account before switch
  Func DetectCurrentAccount($CheckAccountID)
 
@@ -206,17 +207,8 @@ EndFunc
 	Local $hBMP_Cropped = _GDIPlus_BitmapCloneArea($hBitmap, 0, 0,  200, 18)
 	Local $hHBMP_Cropped = _GDIPlus_BitmapCreateHBITMAPFromBitmap($hBMP_Cropped)
 
-	if $CheckAccountID = 1 AND Not FileExists(@ScriptDir & "\images\Multyfarming\main.bmp") Then
+	if Not FileExists(@ScriptDir & "\images\Multyfarming\" & $CheckAccountID & ".bmp") Then
 		SetLog("Multy-farming not configured correctly. File \images\Multyfarming\main.bmp is missing.", $COLOR_BLUE)
-		Return False
-	Elseif  $CheckAccountID = 2 AND Not FileExists(@ScriptDir & "\images\Multyfarming\Second.bmp") Then
-		SetLog("Multy-farming not configured correctly. File \images\Multyfarming\Second.bmp is missing.", $COLOR_BLUE)
-		Return False
-	Elseif  $CheckAccountID = 3 AND Not FileExists(@ScriptDir & "\images\Multyfarming\Third.bmp") And ($iAccount = "3" Or $iAccount = "4") Then
-		SetLog("Multy-farming not configured correctly. File \images\Multyfarming\Third.bmp is missing.", $COLOR_BLUE)
-		Return False
-	Elseif  $CheckAccountID = 4 AND Not FileExists(@ScriptDir & "\images\Multyfarming\Fourth.bmp") And $iAccount = "4" Then
-		SetLog("Multy-farming not configured correctly. File \images\Multyfarming\Fourth.bmp is missing.", $COLOR_BLUE)
 		Return False
 	EndIf
 
@@ -233,7 +225,7 @@ EndFunc
 	$bm4 = _GDIPlus_ImageLoadFromFile (@ScriptDir & "\images\Multyfarming\Third.bmp")
 	$bm5 = _GDIPlus_ImageLoadFromFile (@ScriptDir & "\images\Multyfarming\Fourth.bmp")
 
-	If $CheckAccountID = 1 AND CompareBitmaps($bm1, $bm2) Then
+	If $CheckAccountID = "Main" AND CompareBitmaps($bm1, $bm2) Then
 		SetLog("Main account Detected. No switch is required.", $COLOR_RED)
 		_GDIPlus_ImageDispose($bm1)
 		_GDIPlus_ImageDispose($bm2)
@@ -241,7 +233,7 @@ EndFunc
 		_GDIPlus_ImageDispose($bm4)
 		_GDIPlus_ImageDispose($bm5)
 		Return False
-	ElseIf $CheckAccountID = 2 AND CompareBitmaps($bm3, $bm2) Then
+	ElseIf $CheckAccountID = "Second" AND CompareBitmaps($bm3, $bm2) Then
 		SetLog("Second account Detected. No switch is required.", $COLOR_RED)
 		_GDIPlus_ImageDispose($bm1)
 		_GDIPlus_ImageDispose($bm2)
@@ -249,7 +241,7 @@ EndFunc
 		_GDIPlus_ImageDispose($bm4)
 		_GDIPlus_ImageDispose($bm5)
 		Return False
-	ElseIf $CheckAccountID = 3 AND ($iAccount = "3" Or $iAccount = "4") And CompareBitmaps($bm4, $bm2) Then
+	ElseIf $CheckAccountID = "Third" AND ($iAccount = "3" Or $iAccount = "4") And CompareBitmaps($bm4, $bm2) Then
 		SetLog("Third account Detected. No switch is required.", $COLOR_RED)
 		_GDIPlus_ImageDispose($bm1)
 		_GDIPlus_ImageDispose($bm2)
@@ -257,7 +249,7 @@ EndFunc
 		_GDIPlus_ImageDispose($bm4)
 		_GDIPlus_ImageDispose($bm5)
 		Return False
-	ElseIf $CheckAccountID = 4 AND $iAccount = "4" And CompareBitmaps($bm5, $bm2) Then
+	ElseIf $CheckAccountID = "Fourth" AND $iAccount = "4" And CompareBitmaps($bm5, $bm2) Then
 		SetLog("Fourth account Detected. No switch is required.", $COLOR_RED)
 		_GDIPlus_ImageDispose($bm1)
 		_GDIPlus_ImageDispose($bm2)
@@ -274,5 +266,5 @@ EndFunc
 	_GDIPlus_ImageDispose($bm5)
 
 	Return True
-EndFunc
-; IceCube (Multy-Farming Fast Switch v1.3)
+EndFunc  ;==>DetectCurrentAccount
+; IceCube (Multy-Farming Revamp v1.5)

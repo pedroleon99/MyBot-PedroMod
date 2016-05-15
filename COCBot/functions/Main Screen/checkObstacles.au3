@@ -52,6 +52,17 @@ Func checkObstacles() ;Checks if something is in the way for mainscreen
 			If $ichkSinglePBTForced = 1 Then $bGForcePBTUpdate = True
 			Return True
 		EndIf
+		; IceCube (Misc v1.0)
+		;;;;;;;##### BANNED #####;;;;;;;
+		If _ImageSearchArea($banned, 0, 165, 257 + $midOffsetY, 335, 295 + $midOffsetY, $x, $y, 100) Then  
+			Setlog("BANNED message detected.\nPlease check your account ASAP.\n\nBOT will enter in full stop mode now!", $COLOR_RED)
+			$iForceNotify = 1
+			_Push("BANNED message detected.\nPlease check your account ASAP.\n\nBOT will enter in full stop mode now!")
+			btnStop()
+			Return True
+		EndIf
+		; IceCube (Misc v1.0)
+
 		;;;;;;;##### Connection Lost & OoS & Inactive & Maintenance #####;;;;;;;
 		Select
 			Case _CheckPixel($aIsInactive, $bNoCapturePixel) ; Inactive only

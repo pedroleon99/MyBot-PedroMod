@@ -33,9 +33,9 @@ Global $iOldsmartZapGain = 0, $iOldNumLTSpellsUsed = 0 ; Used to Update Smart Za
 
 Func UpdateStats()
 	If $FirstRun = 1 Then
-		; IceCube (Top Gain Info v1.1)
+		; IceCube (Misc v1.0)
 		GUICtrlSetState($btnQuickStats, $GUI_SHOW)	
-		; IceCube (Top Gain Info v1.1)	
+		; IceCube (Misc v1.0)	
 		GUICtrlSetState($lblResultStatsTemp, $GUI_HIDE)
 		GUICtrlSetState($lblVillageReportTemp, $GUI_HIDE)
 		GUICtrlSetState($picResultGoldTemp, $GUI_HIDE)
@@ -319,11 +319,16 @@ Func UpdateStats()
 
 	; SmartZap DE Gain - Added by LunaEclipse
 	If $iOldSmartZapGain <> $smartZapGain Then
+		; IceCube (PushBullet Revamp v1.1)		
+		If $iOldSmartZapGain > 0 Then
+			_Push("New Top Smart Zap Gain: " & _NumberFormat($smartZapGain) & " on profile " & $sCurrProfile)
+		EndIf
+		; IceCube (PushBullet Revamp v1.1)
 		GUICtrlSetData($lblSmartZap, _NumberFormat($smartZapGain, True))
 		GUICtrlSetData($lblSmartZapStat, _NumberFormat($smartZapGain, True))
-		; IceCube (Top Gain Info v1.1)
+		; IceCube (Misc v1.0)
 		GUICtrlSetData($lblResultDEDrillZapTop, _NumberFormat($smartZapGain, True))
-		; IceCube (Top Gain Info v1.1)
+		; IceCube (Misc v1.0)
 		$iOldSmartZapGain = $smartZapGain
 	EndIf
 
@@ -331,9 +336,9 @@ Func UpdateStats()
 	If $iOldNumLTSpellsUsed <> $numLSpellsUsed Then
 		GUICtrlSetData($lblLightningUsed, _NumberFormat($numLSpellsUsed, True))
 		GUICtrlSetData($lblLightningUsedStat, _NumberFormat($numLSpellsUsed, True))
-		; IceCube (Top Gain Info v1.1)
+		; IceCube (Misc v1.0)
 		GUICtrlSetData($lblResultLSpellTop, _NumberFormat($numLSpellsUsed, True))
-		; IceCube (Top Gain Info v1.1)		
+		; IceCube (Misc v1.0)		
 		$iOldNumLTSpellsUsed = $numLSpellsUsed
  	EndIf
 
@@ -410,35 +415,55 @@ Func UpdateStats()
 	EndIf
 
 	If Number($iGoldLast) > Number($topgoldloot) Then
+		; IceCube (PushBullet Revamp v1.1)		
+		If $topgoldloot > 0 Then
+			_Push("New Top Gold Gain: " & _NumberFormat($topgoldloot) & " on profile " & $sCurrProfile)
+		EndIf		
+		; IceCube (PushBullet Revamp v1.1)		
 		$topgoldloot = $iGoldLast
 		GUICtrlSetData($lbltopgoldloot,_NumberFormat($topgoldloot))
-		; IceCube (Top Gain Info v1.1)
+		; IceCube (Misc v1.0)
 		GUICtrlSetData($lblResultGoldTop, _NumberFormat($topgoldloot, True))
-		; IceCube (Top Gain Info v1.1)			
+		; IceCube (Misc v1.0)	
 	EndIf
 
 	If Number($iElixirLast) > Number($topelixirloot) Then
+		; IceCube (PushBullet Revamp v1.1)		
+		If $topelixirloot > 0 Then
+			_Push("New Top Elixir Gain: " & _NumberFormat($topelixirloot) & " on profile " & $sCurrProfile)
+		EndIf			
+		; IceCube (PushBullet Revamp v1.1)
 		$topelixirloot = $iElixirLast
 		GUICtrlSetData($lbltopelixirloot,_NumberFormat($topelixirloot))
-		; IceCube (Top Gain Info v1.1)
+		; IceCube (Misc v1.0)
 		GUICtrlSetData($lblResultElixirTop, _NumberFormat($topelixirloot, True))
-		; IceCube (Top Gain Info v1.1)				
+		; IceCube (Misc v1.0)				
 	EndIf
 
 	If Number($iDarkLast) > Number($topdarkloot) Then
+		; IceCube (PushBullet Revamp v1.1)		
+		If $topdarkloot > 0 Then
+			_Push("New Top Dark Elixir Gain: " & _NumberFormat($topdarkloot) & " on profile " & $sCurrProfile)
+		EndIf			
+		; IceCube (PushBullet Revamp v1.1)
 		$topdarkloot = $iDarkLast
 		GUICtrlSetData($lbltopdarkloot,_NumberFormat($topdarkloot))
-		; IceCube (Top Gain Info v1.1)
+		; IceCube (Misc v1.0)
 		GUICtrlSetData($lblResultDETop, _NumberFormat($topdarkloot, True))
-		; IceCube (Top Gain Info v1.1)				
+		; IceCube (Misc v1.0)				
 	EndIf
 	
 	If Number($iTrophyLast) > Number($toptrophyloot) Then
+		; IceCube (PushBullet Revamp v1.1)		
+		If $toptrophyloot > 0 Then
+			_Push("New Top Trophy Gain: " & _NumberFormat($toptrophyloot) & " on profile " & $sCurrProfile)
+		EndIf		
+		; IceCube (PushBullet Revamp v1.1)
 		$toptrophyloot = $iTrophyLast
 		GUICtrlSetData($lbltoptrophyloot,_NumberFormat($toptrophyloot))
-		; IceCube (Top Gain Info v1.1)
+		; IceCube (Misc v1.0)
 		GUICtrlSetData($lblResultTrophyTop, _NumberFormat($toptrophyloot, True))
-		; IceCube (Top Gain Info v1.1)			
+		; IceCube (Misc v1.0)			
 	EndIf
 
 	If $ResetStats = 1 Then

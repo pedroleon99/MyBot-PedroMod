@@ -1218,7 +1218,51 @@ EndIf
 	Else
 		IniWrite($config, "pushbullet", "DeleteOldPushes", 0)
 	EndIf
+	; IceCube (PushBullet Revamp v1.1)
+	;Remote Control
+	If GUICtrlRead($chkAlertTopGain) = $GUI_CHECKED Then
+		IniWrite($config, "pushbullet", "AlertTopGain", 1)
+	Else
+		IniWrite($config, "pushbullet", "AlertTopGain", 0)
+	EndIf
+	If GUICtrlRead($chkAlertMFSwitch) = $GUI_CHECKED Then
+		IniWrite($config, "pushbullet", "AlertMFSwitch", 1)
+	Else
+		IniWrite($config, "pushbullet", "AlertMFSwitch", 0)
+	EndIf
+	
+	;Scheduler
+	If GUICtrlRead($chkNotifyWeekDays) = $GUI_CHECKED Then
+		IniWrite($config, "pushbullet", "NotifyWeekDaysEnable", 1)
+	Else
+		IniWrite($config, "pushbullet", "NotifyWeekDaysEnable", 0)
+	EndIf
+	Local $string = ""
+	For $i = 0 To 6
+		If GUICtrlRead(Eval("chkNotifyWeekdays" & $i)) = $GUI_CHECKED Then
+			$string &= "1|"
+		Else
+			$string &= "0|"
+		EndIf
+	Next
+	IniWrite($config, "pushbullet", "NotifyWeekDays", $string)
+	If GUICtrlRead($chkNotifyHours) = $GUI_CHECKED Then
+		IniWrite($config, "pushbullet", "NotifyHoursEnable", 1)
+	Else
+		IniWrite($config, "pushbullet", "NotifyHoursEnable", 0)
+	EndIf
 
+	Local $string = ""
+	For $i = 0 To 23
+		If GUICtrlRead(Eval("chkNotifyHours" & $i)) = $GUI_CHECKED Then
+			$string &= "1|"
+		Else
+			$string &= "0|"
+		EndIf
+	Next
+	IniWrite($config, "pushbullet", "NotifyHours", $string)
+	; IceCube (PushBullet Revamp v1.1)
+	
 	IniWrite($config, "other", "WAOffsetX", GUICtrlRead($txtWAOffsetX))
 	IniWrite($config, "other", "WAOffsetY", GUICtrlRead($txtWAOffsetY))
 

@@ -61,7 +61,15 @@ Local $x = 30, $y = 150
 			_GUIImageList_AddBitmap($bIconEdit, @ScriptDir & "\images\Button\iconEdit_2.bmp")
 			_GUIImageList_AddBitmap($bIconEdit, @ScriptDir & "\images\Button\iconEdit_4.bmp")
 			_GUIImageList_AddBitmap($bIconEdit, @ScriptDir & "\images\Button\iconEdit.bmp")
-
+		; IceCube (Misc v1.0)
+		$bIconRecycle = _GUIImageList_Create(22, 22, 4)
+			_GUIImageList_AddBitmap($bIconRecycle, @ScriptDir & "\images\Button\iconRecycle.bmp")
+			_GUIImageList_AddBitmap($bIconRecycle, @ScriptDir & "\images\Button\iconRecycle_2.bmp")
+			_GUIImageList_AddBitmap($bIconRecycle, @ScriptDir & "\images\Button\iconRecycle_2.bmp")
+			_GUIImageList_AddBitmap($bIconRecycle, @ScriptDir & "\images\Button\iconRecycle.bmp")
+			_GUIImageList_AddBitmap($bIconRecycle, @ScriptDir & "\images\Button\iconRecycle.bmp")
+		; IceCube (Misc v1.0)
+			
 		$btnAdd = GUICtrlCreateButton("", $x + 310, $y - 5, 22, 22)
 			_GUICtrlButton_SetImageList($btnAdd, $bIconAdd, 4)
 			GUICtrlSetOnEvent(-1, "btnAddConfirm")
@@ -87,6 +95,7 @@ Local $x = 30, $y = 150
 			Else
 				GUICtrlSetState(-1, $GUI_ENABLE)
 			EndIf
+
 		$btnCancel = GUICtrlCreateButton("", $x + 337, $y - 5, 22, 22)
 			_GUICtrlButton_SetImageList($btnCancel, $bIconCancel, 4)
 			GUICtrlSetOnEvent(-1, "btnDeleteCancel")
@@ -101,6 +110,18 @@ Local $x = 30, $y = 150
 			Else
 				GUICtrlSetState(-1, $GUI_ENABLE)
 			EndIf
+		; IceCube (Misc v1.0)
+		$btnRecycle = GUICtrlCreateButton("", $x + 393, $y - 5, 22, 22)
+			_GUICtrlButton_SetImageList($btnRecycle, $bIconRecycle, 4)
+			GUICtrlSetOnEvent(-1, "btnRecycle")
+			GUICtrlSetState(-1, $GUI_SHOW)
+			GUICtrlSetTip(-1, "Recycle Profile by removing all settings no longer suported that could lead to bad behaviour")
+			If GUICtrlRead($cmbProfile) = "<No Profiles>" Then
+				GUICtrlSetState(-1, $GUI_DISABLE)
+			Else
+				GUICtrlSetState(-1, $GUI_ENABLE)
+			EndIf			
+		; IceCube (Misc v1.0)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 		$y -= 5

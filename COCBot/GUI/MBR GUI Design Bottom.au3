@@ -87,7 +87,7 @@ $txtTip = $sBotTitleDefault
 GUICtrlSetTip(-1, $txtTip)
 	GUICtrlSetColor(-1, $COLOR_MEDGRAY)
 
-; IceCube (Top Gain Info v1.1)
+; IceCube (Misc v1.0)
 ;~ Village
 Local $x = 290, $y = 535
 $grpVillage = GUICtrlCreateGroup(GetTranslated(13,21, "Village"), $x - 20, $y - 20, 190, 85)
@@ -150,16 +150,16 @@ $grpVillage = GUICtrlCreateGroup(GetTranslated(13,21, "Village"), $x - 20, $y - 
 	GUICtrlSetState(-1, $GUI_HIDE)
 	$picResultLSpellTop = GUICtrlCreateIcon ($pIconLib, $eIcnLightSpell, $x + 59, $y + 40, 16, 16)
 	GUICtrlSetState(-1, $GUI_HIDE)	
-; IceCube (Top Gain Info v1.1)
+; IceCube (Misc v1.0)
 
 	$x = 290
 	$lblVillageReportTemp = GUICtrlCreateLabel(GetTranslated(13,22, "Village Report") & @CRLF & GetTranslated(13,23, "will appear here") & @CRLF & GetTranslated(13,24, "on first run."), $x + 27, $y + 5, 100, 45, BITOR($SS_CENTER, $BS_MULTILINE))
 
 	$btnQuickStats = GUICtrlCreateButton(GetTranslated(13,28, "Stats"), $x + 125 , $y -25, 40, -1)
 		GUICtrlSetOnEvent(-1, "btnVillageStat")
-; IceCube (Top Gain Info v1.1)
+; IceCube (Misc v1.0)
 		GUICtrlSetState(-1, $GUI_HIDE)	
-; IceCube (Top Gain Info v1.1)		
+; IceCube (Misc v1.0)		
  	$btnTestVillage = GUICtrlCreateButton("TEST BUTTON", $x + 25 , $y + 54, 100, 18)
  		GUICtrlSetOnEvent(-1, "ButtonBoost")
 		GUICtrlSetState(-1, $GUI_HIDE)

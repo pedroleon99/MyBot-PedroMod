@@ -550,7 +550,7 @@ Func btnWalls()
  Func btnVillageStat()
 		 GUICtrlSetState( $lblVillageReportTemp , $GUI_HIDE)
 
-; IceCube (Top Gain Info v1.1)
+; IceCube (Misc v1.0)
 		 If GUICtrlGetState($lblResultGoldNow) = $GUI_ENABLE + $GUI_SHOW Then
 			 ;hide normal values
 			 GUICtrlSetState( $lblResultGoldNow , $GUI_ENABLE +$GUI_HIDE)
@@ -664,7 +664,7 @@ Func btnWalls()
 			 GUICtrlSetData($btnQuickStats,GetTranslated(13,28, -1))
 
 		EndIf
-; IceCube (Top Gain Info v1.1)
+; IceCube (Misc v1.0)
 EndFunc
 
 Func btnTestDeadBase()

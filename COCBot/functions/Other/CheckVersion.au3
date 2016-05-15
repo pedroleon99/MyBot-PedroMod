@@ -33,7 +33,7 @@ Func CheckVersion()
 			SetLog(" ")
 			_PrintLogVersion($lastmessage)
 		EndIf
-		
+
 		CheckMODVersion()
 	EndIf
 EndFunc   ;==>CheckVersion
@@ -44,13 +44,13 @@ Func CheckVersionHTML()
 		FileCopy(@ScriptDir & "\TestVersion.txt", $versionfile, 1)
 	Else
 		;download page from site contains last bot version
-		$hDownload = InetGet("https://raw.githubusercontent.com/MyBotRun/MyBot/master/LastVersion.txt", $versionfile, 0, 1)
+		$hDownload = InetGet("https://raw.githubusercontent.com/MyBotRun/MyBot/master/LastVersion.txt", $versionfile,0,1)
 
 		; Wait for the download to complete by monitoring when the 2nd index value of InetGetInfo returns True.
-		Local $i = 0
+		Local $i=0
 		Do
 			Sleep($iDelayCheckVersionHTML1)
-			$i += 1
+			$i +=1
 		Until InetGetInfo($hDownload, $INET_DOWNLOADCOMPLETE) or $i > 25
 
 		InetClose($hDownload)
@@ -68,13 +68,13 @@ Func CheckVersionHTML()
 			FileCopy(@ScriptDir & "\TestVersion_" & $sLanguage & ".txt", $versionfilelocalized, 1)
 		Else
 			;download page from site contains last bot version localized messages
-			$hDownload = InetGet("https://raw.githubusercontent.com/MyBotRun/MyBot/master/LastVersion_" & $sLanguage & ".txt", $versionfilelocalized, 0, 1)
+			$hDownload = InetGet("https://raw.githubusercontent.com/MyBotRun/MyBot/master/LastVersion_" & $sLanguage & ".txt", $versionfilelocalized,0,1)
 
 			; Wait for the download to complete by monitoring when the 2nd index value of InetGetInfo returns True.
-			Local $i = 0
+			Local $i=0
 			Do
 				Sleep($iDelayCheckVersionHTML1)
-				$i += 1
+				$i +=1
 			Until InetGetInfo($hDownload, $INET_DOWNLOADCOMPLETE) or $i > 25
 
 			InetClose($hDownload)
@@ -115,26 +115,20 @@ Func CheckMODVersion()
 	Local $fileContent = FileRead($file)
 	Local $decodedArray = _JSONDecode($fileContent)
 	For $i = 0 To Ubound($decodedArray) - 1
-		If $decodedArray[$i][0] = "pushed_at" Then 
-			$lastPushedDatetime = $decodedArray[$i][1]			
+		If $decodedArray[$i][0] = "name" Then
+			$LatestVersion = $decodedArray[$i][1]
 			ExitLoop
 		EndIf
 	Next
 	FileClose($file)
 	FileDelete($tempJson)
-	
-	; convert UTC time to local time
-	Local $utcPushedTime = _Date_Time_EncodeSystemTime(StringMid($lastPushedDatetime, 6, 2), StringMid($lastPushedDatetime, 9, 2), StringMid($lastPushedDatetime, 1, 4), StringMid($lastPushedDatetime, 12, 2), StringMid($lastPushedDatetime, 15, 2), StringMid($lastPushedDatetime, 18, 2))
-	Local $localPushedTime = _Date_Time_SystemTimeToTzSpecificLocalTime(DllStructGetPtr($utcPushedTime))
-	$lastPushed = StringRegExpReplace(_Date_Time_SystemTimeToDateTimeStr($localPushedTime, 1), "[^[:digit:]]", "")
-	
-	If $lastModified And $lastPushed Then
-		If Number($lastModified) + 500 < Number($lastPushed) Then ; check if last modified timestamp of local bot is within 5 mins of latest upload timestamp
-			MsgBox(0, "", "A new version of the MOD has been uploaded(" & _Date_Time_SystemTimeToDateTimeStr($localPushedTime, 1) & ") , your version might be outdated." & @CRLF & _
-			"Check and download latest version from Update Menu")
+
+ 		If $LatestVersion <> $LatestVersionExpected Then ; check if last modified timestamp of local bot is within 5 mins of latest upload timestamp
+			MsgBox(0, "", "A New Version Of Mod AIO Has Been Uploaded (" & $LatestVersion & "), Your Version Might Be Outdated." & @CRLF & _
+			"Check And Download Latest Version From Help Menu")
 			Return False
 		EndIf
-	EndIf
+ 
 	Return True
 EndFunc
 

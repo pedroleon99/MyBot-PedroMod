@@ -48,6 +48,10 @@
 #include <IE.au3>
 #include <Process.au3>
 
+
+Global Const $LatestVersionExpected = "Merged-MyBot-5.3.2-AIO-v1.3.5-B8"
+Global $LatestVersion
+
 Global Const $DEFAULT_HEIGHT = 780
 Global Const $DEFAULT_WIDTH = 860
 Global Const $midOffsetY = ($DEFAULT_HEIGHT - 720) / 2
@@ -359,11 +363,13 @@ Global $sLogFName
 Global $sAttackLogFName
 Global $AttackFile
 Global $RequestScreenshot = 0
-; IceCube (PushBullet Revamp v1.0)	
+; IceCube (PushBullet Revamp v1.1)	
+Global $pAlertTopGain
+Global $pAlertMFSwitch
 Global $RequestScreenshotHD = 0
 Global $RequestBuilderInfo = 0
 Global $RequestShieldInfo = 0
-; IceCube (PushBullet Revamp v1.0)	
+; IceCube (PushBullet Revamp v1.1)	
 Global $iDeleteAllPushes = 0
 Global $iDeleteAllPushesNow = False
 Global $ichkDeleteOldPushes
@@ -376,7 +382,13 @@ Global $iCollectCounter = 11 ; Collect counter, when reaches $COLLECTATCOUNT, it
 Global $COLLECTATCOUNT = 10 ; Run Collect() after this amount of times before actually collect
 Global $ichkAlertBuilderIdle
 Global $iReportIdleBuilder = 0
-
+; IceCube (PushBullet Revamp v1.1)	
+Global $iplannedNotifyhoursenable		;Notify Scheduler
+Global $iPlannedNotifyWeekDaysEnable	;Notify Scheduler
+Global $iPlannedNotifyHours[24]			;Notify Scheduler
+Global $iPlannedNotifyWeekDays[7] ; 0= Sunday , 1= Monday , 2= Tuesday, 3= Wednesday, 4= Thursday, 5= Friday, 6= Saturday
+Global $iForceNotify = 0				;Force notify even Notify Scheduler is not active
+; IceCube (PushBullet Revamp v1.1)	
 ;---------------------------------------------------------------------------------------------------
 Global $BSpos[2] ; Inside Android window positions relative to the screen, [x,y]
 Global $BSrpos[2] ; Inside Android window positions relative to the window, [x,y]
@@ -735,6 +747,9 @@ Global $ichkBackground ; Background mode enabled disabled
 Global $collectorPos[17][2] ;Positions of each collectors
 Global $D[4] = [99, 111, 109, 47]
 
+; IceCube (Misc v1.0)
+Global $banned = @ScriptDir & "\images\banned.bmp"
+; IceCube (Misc v1.0)
 Global $break = @ScriptDir & "\images\break.bmp"
 Global $device = @ScriptDir & "\images\device.bmp"
 Global $CocStopped = @ScriptDir & "\images\CocStopped.bmp"
@@ -1182,7 +1197,7 @@ If $aCmdLine[0] > 1 Then
 	Next
 EndIf
 
-;Multy Farming
+;Multy-Farming
 Global $iSwCount
 Global $ichkSwitchDonate
 Global $ichkMultyFarming

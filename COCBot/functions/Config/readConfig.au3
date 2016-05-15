@@ -558,8 +558,16 @@ $itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
 		$ichkDeleteOldPushes = IniRead($config, "pushbullet", "DeleteOldPushes", "0")
 		$ichkAlertPBCampFull = IniRead($config, "pushbullet", "AlertCampFull", "0")
 		$ichkAlertBuilderIdle = IniRead($config, "pushbullet", "AlertBuilderIdle", "0")
-
-
+		; IceCube (PushBullet Revamp v1.1)
+		;Remote Control
+		$pAlertTopGain = IniRead($config, "pushbullet", "AlertTopGain", "0")
+		$pAlertMFSwitch = IniRead($config, "pushbullet", "AlertMFSwitch", "0")
+		;Scheduler		
+		$iPlannedNotifyWeekDaysEnable = IniRead($config, "pushbullet", "NotifyWeekDaysEnable", "0")
+		$iPlannedNotifyWeekDays = StringSplit(IniRead($config, "pushbullet", "NotifyWeekDays", "1|1|1|1|1|1|1"),"|", $STR_NOCOUNT)
+		$iPlannedNotifyHoursEnable = IniRead($config, "pushbullet", "NotifyHoursEnable", "0")
+		$iPlannedNotifyHours = StringSplit(IniRead($config, "pushbullet", "NotifyHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"),"|", $STR_NOCOUNT)
+		; IceCube (PushBullet Revamp v1.1)
 
 		$ichkDeleteLogs = IniRead($config, "deletefiles", "DeleteLogs", "0")
 		$iDeleteLogsDays = IniRead($config, "deletefiles", "DeleteLogsDays", "7")

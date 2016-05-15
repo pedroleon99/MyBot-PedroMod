@@ -41,6 +41,10 @@ Func chkPBenabled()
 		GUICtrlSetState($btnDeletePBmessages, $GUI_ENABLE)
 		GUICtrlSetState($chkAlertPBCampFull, $GUI_ENABLE)
 		GUICtrlSetState($chkAlertBuilderIdle, $GUI_ENABLE)
+		; IceCube (PushBullet Revamp v1.1)
+		GUICtrlSetState($chkAlertTopGain, $GUI_ENABLE)
+		GUICtrlSetState($chkAlertMFSwitch, $GUI_ENABLE)
+		; IceCube (PushBullet Revamp v1.1)
 
 		If $ichkDeleteOldPushes = 1 Then
 			GUICtrlSetState($cmbHoursPushBullet, $GUI_ENABLE)
@@ -52,20 +56,25 @@ Func chkPBenabled()
 		 GUICtrlSetState($chkDeleteOldPushes, $GUI_DISABLE)
 		 GUICtrlSetState($btnDeletePBmessages, $GUI_DISABLE)
 		 GUICtrlSetState($cmbHoursPushBullet, $GUI_DISABLE)
+		 
 		If $pEnabled2 = 0 Then
 			 GUICtrlSetState($chkPBRemote, $GUI_DISABLE)
-		GUICtrlSetState($OrigPushB, $GUI_DISABLE)
-		GUICtrlSetState($chkAlertPBVMFound, $GUI_DISABLE)
-		GUICtrlSetState($chkAlertPBLastRaid, $GUI_DISABLE)
-		GUICtrlSetState($chkAlertPBWallUpgrade, $GUI_DISABLE)
-		GUICtrlSetState($chkAlertPBLastRaidTxt, $GUI_DISABLE)
-		GUICtrlSetState($chkAlertPBOOS, $GUI_DISABLE)
-		GUICtrlSetState($chkAlertPBVBreak, $GUI_DISABLE)
-		GUICtrlSetState($chkAlertPBVillage, $GUI_DISABLE)
-		GUICtrlSetState($chkAlertPBLastAttack, $GUI_DISABLE)
-		GUICtrlSetState($chkAlertPBOtherDevice, $GUI_DISABLE)
-		GUICtrlSetState($chkAlertPBCampFull, $GUI_DISABLE)
-		GUICtrlSetState($chkAlertBuilderIdle, $GUI_DISABLE)
+			GUICtrlSetState($OrigPushB, $GUI_DISABLE)
+			GUICtrlSetState($chkAlertPBVMFound, $GUI_DISABLE)
+			GUICtrlSetState($chkAlertPBLastRaid, $GUI_DISABLE)
+			GUICtrlSetState($chkAlertPBWallUpgrade, $GUI_DISABLE)
+			GUICtrlSetState($chkAlertPBLastRaidTxt, $GUI_DISABLE)
+			GUICtrlSetState($chkAlertPBOOS, $GUI_DISABLE)
+			GUICtrlSetState($chkAlertPBVBreak, $GUI_DISABLE)
+			GUICtrlSetState($chkAlertPBVillage, $GUI_DISABLE)
+			GUICtrlSetState($chkAlertPBLastAttack, $GUI_DISABLE)
+			GUICtrlSetState($chkAlertPBOtherDevice, $GUI_DISABLE)
+			GUICtrlSetState($chkAlertPBCampFull, $GUI_DISABLE)
+			GUICtrlSetState($chkAlertBuilderIdle, $GUI_DISABLE)
+			; IceCube (PushBullet Revamp v1.1)
+			GUICtrlSetState($chkAlertTopGain, $GUI_DISABLE)
+			GUICtrlSetState($chkAlertMFSwitch, $GUI_DISABLE)
+			; IceCube (PushBullet Revamp v1.1)
 	    EndIf
 
 	EndIf
@@ -87,6 +96,10 @@ Func chkPBenabled2()
 		GUICtrlSetState($chkAlertPBOtherDevice, $GUI_ENABLE)
 		GUICtrlSetState($chkAlertPBCampFull, $GUI_ENABLE)
 		GUICtrlSetState($chkAlertBuilderIdle, $GUI_ENABLE)
+		; IceCube (PushBullet Revamp v1.1)
+		GUICtrlSetState($chkAlertTopGain, $GUI_ENABLE)
+		GUICtrlSetState($chkAlertMFSwitch, $GUI_ENABLE)
+		; IceCube (PushBullet Revamp v1.1)
    Else
 	    $pEnabled2 = 0
 	    GUICtrlSetState($PushBTokenValue2, $GUI_DISABLE)
@@ -103,7 +116,11 @@ Func chkPBenabled2()
 			 GUICtrlSetState($chkAlertPBLastAttack, $GUI_DISABLE)
 			 GUICtrlSetState($chkAlertPBOtherDevice, $GUI_DISABLE)
 			 GUICtrlSetState($chkAlertPBCampFull, $GUI_DISABLE)
-		GUICtrlSetState($chkAlertBuilderIdle, $GUI_DISABLE)
+			GUICtrlSetState($chkAlertBuilderIdle, $GUI_DISABLE)
+			; IceCube (PushBullet Revamp v1.1)
+			GUICtrlSetState($chkAlertTopGain, $GUI_DISABLE)
+			GUICtrlSetState($chkAlertMFSwitch, $GUI_DISABLE)
+			; IceCube (PushBullet Revamp v1.1)		
 		 Endif
 	EndIf
 EndFunc   ;==>chkPBenabled2
@@ -169,3 +186,80 @@ Func _Restart_()
 	Return SetError(2, 0, 0)
 EndFunc   ;==>_Restart
 
+
+
+; IceCube (PushBullet Revamp v1.1)	
+Func chkNotifyHours()
+	If GUICtrlRead($chkNotifyHours) = $GUI_CHECKED Then
+		For $i = $lbNotifyHours1 To $lbNotifyHoursPM
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		GUICtrlSetState($chkNotifyWeekDays, $GUI_UNCHECKED)
+		For $i = $lbNotifyHours1 To $lbNotifyHoursPM
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+EndFunc   ;==>chkNotifyHours
+
+Func chkNotifyhoursE1()
+	If GUICtrlRead($chkNotifyhoursE1) = $GUI_CHECKED And GUICtrlRead($chkNotifyhours0) = $GUI_CHECKED Then
+		For $i = $chkNotifyhours0 To $chkNotifyhours11
+			GUICtrlSetState($i, $GUI_UNCHECKED)
+		Next
+	Else
+		For $i = $chkNotifyhours0 To $chkNotifyhours11
+			GUICtrlSetState($i, $GUI_CHECKED)
+		Next
+	EndIf
+	Sleep(300)
+	GUICtrlSetState($chkNotifyhoursE1, $GUI_UNCHECKED)
+EndFunc   ;==>chkNotifyhoursE1
+Func chkNotifyhoursE2()
+	If GUICtrlRead($chkNotifyhoursE2) = $GUI_CHECKED And GUICtrlRead($chkNotifyhours12) = $GUI_CHECKED Then
+		For $i = $chkNotifyhours12 To $chkNotifyhours23
+			GUICtrlSetState($i, $GUI_UNCHECKED)
+		Next
+	Else
+		For $i = $chkNotifyhours12 To $chkNotifyhours23
+			GUICtrlSetState($i, $GUI_CHECKED)
+		Next
+	EndIf
+	Sleep(300)
+	GUICtrlSetState($chkNotifyhoursE2, $GUI_UNCHECKED)
+EndFunc		;==>chkNotifyhoursE2
+Func chkNotifyWeekDays()
+
+	If GUICtrlRead($chkNotifyWeekDays) = $GUI_CHECKED Then
+		GUICtrlSetState($chkNotifyHours, $GUI_ENABLE)
+		GUICtrlSetState($chkNotifyHours, $GUI_CHECKED)
+		For $i = $lbNotifyWeekdays1 To $lbNotifyWeekdays7
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		GUICtrlSetState($chkNotifyHours, $GUI_UNCHECKED)
+		GUICtrlSetState($chkNotifyHours, $GUI_DISABLE)
+		For $i = $lbNotifyWeekdays1 To $lbNotifyWeekdays7
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+	If GUICtrlRead($chkNotifyWeekDays) = $GUI_CHECKED Then
+		For $i = $chkNotifyWeekDays0 To $chkNotifyWeekDays6
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		For $i = $chkNotifyWeekDays0 To $chkNotifyWeekDays6
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+	chkNotifyHours()
+
+EndFunc	;==>chkNotifyWeekDays
+;Help
+Func btnHelpPushBullet()
+Run("cmd.exe /c start """" Help\PushBulletHelp.htm", $WorkingDir, @SW_HIDE)
+EndFunc	;==>btnHelpPushBullet
+Func btnHelpTelegram()
+Run("cmd.exe /c start """" Help\TelegramHelp.htm", $WorkingDir, @SW_HIDE)
+EndFunc	;==>btnHelpPushBullet
+; IceCube (PushBullet Revamp v1.1)	
