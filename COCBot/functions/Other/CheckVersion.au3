@@ -123,12 +123,12 @@ Func CheckMODVersion()
 	FileClose($file)
 	FileDelete($tempJson)
 
- 		If $LatestVersion <> $LatestVersionExpected Then ; check if last modified timestamp of local bot is within 5 mins of latest upload timestamp
-			MsgBox(0, "", "A New Version Of Mod AIO Has Been Uploaded (" & $LatestVersion & "), Your Version Might Be Outdated." & @CRLF & _
+ 		If $LatestVersion < $LatestVersionExpected Then ; check if last modified timestamp of local bot is  older of latest upload timestamp
+			MsgBox(0, "", "A New Version Of(" & $LatestVersion & ")has been uploaded, Your Version Might Be Outdated." & @CRLF & _
 			"Check And Download Latest Version From Help Menu")
 			Return False
 		EndIf
- 
+
 	Return True
 EndFunc
 
