@@ -60,7 +60,7 @@ Func Train()
 
 	EndIf
 
-	If $iChkDeploySettings[$LB] <> 6 Then
+	If $iChkDeploySettings[$LB] <> $eMilking Then
 		; 3 diferrents training order
 		Local $TempTroopGroup0[10][3] = [["Giant", 2, 5], ["Wall", 4, 2], ["Barb", 0, 1], ["Gobl", 3, 1], ["Arch", 1, 1], ["Heal", 7, 14], ["Pekk", 9, 25], ["Ball", 5, 5], ["Wiza", 6, 4], ["Drag", 8, 20]]
 		Local $tempTroopGroup1[10][3] = [["Arch", 1, 1], ["Barb", 0, 1], ["Giant", 2, 5], ["Wall", 4, 2], ["Gobl", 3, 1], ["Heal", 7, 14], ["Pekk", 9, 25], ["Ball", 5, 5], ["Wiza", 6, 4], ["Drag", 8, 20]]

@@ -143,10 +143,10 @@ Func AttackReport()
 	SetLog("Stars earned: " & $starsearned)
 
 	Local $AtkLogTxt
-	; IceCube (Multy-Farming Revamp v1.5)
+	; IceCube (Multy-Farming Revamp v1.6)
 	$AtkLogTxt = StringFormat("%1d", _GUICtrlComboBox_GetCurSel($cmbProfile) + 1) & "|"
 	$AtkLogTxt &= "" & _NowTime(4) & "|"
-	; IceCube (Multy-Farming Revamp v1.5)
+	; IceCube (Multy-Farming Revamp v1.6)
 	$AtkLogTxt &= StringFormat("%5d", $iTrophyCurrent) & "|"
 	$AtkLogTxt &= StringFormat("%6d", $SearchCount) & "|"
 	$AtkLogTxt &= StringFormat("%7d", $iGoldLast) & "|"

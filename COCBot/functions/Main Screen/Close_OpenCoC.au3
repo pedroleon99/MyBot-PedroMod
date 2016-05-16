@@ -98,7 +98,7 @@ EndFunc  ;==>OpenCoC
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func WaitnOpenCoC($iWaitTime, $bFullRestart = False)
+Func WaitnOpenCoC($iWaitTime, $bFullRestart = False, $CloseCoC = True )
     ResumeAndroid()
     If Not $RunState Then Return
 
@@ -108,7 +108,7 @@ Func WaitnOpenCoC($iWaitTime, $bFullRestart = False)
 	WinGetAndroidHandle()
 	;WinActivate($HWnD) ; ensure bot has window focus
 	;PureClick(126, 700, 2, 250, "#0126") ; click on BS home button twice to clear error and go home.
-	BS1HomeButton()
+	If $CloseCoC then BS1HomeButton()
 	$iWaitSec = Round($iWaitTime/1000)
 	$iHour = Floor(Floor($iWaitSec / 60) / 60)
 	$iMin = Floor(Mod(Floor($iWaitSec / 60), 60))

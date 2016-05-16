@@ -119,7 +119,8 @@ Global $TrainGiant[4]       = [ 442, 310 + $midOffsetY, 0xFFCB8A,     40] ;  Don
 Global $TrainGobl[4]        = [ 546, 310 + $midOffsetY, 0xA8F468,     40] ;  Done A0F263
 Global $TrainWall[4]        = [ 646, 310 + $midOffsetY, 0x78D4F0,     40] ;  Done 72D4EA
 
-Global $TrainBall[4]        = [ 220, 459 + $midOffsetY, 0x1C150C,     40] ;  Done
+;Global $TrainBall[4]        = [ 220, 459 + $midOffsetY, 0x1C150C,     40] ;  Done
+Global $TrainBall[4]        = [ 218, 465 + $midOffsetY, 0x66452D,     40] ;  Done
 Global $TrainWiza[4]        = [ 319, 447 + $midOffsetY, 0x000000,     40] ;  Done
 Global $TrainHeal[4]        = [ 442, 459 + $midOffsetY, 0xD77E57,     40] ;  Done D0724B
 Global $TrainDrag[4]        = [ 546, 459 + $midOffsetY, 0xD04428,     40] ;  Done

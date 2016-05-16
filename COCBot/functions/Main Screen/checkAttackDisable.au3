@@ -126,7 +126,7 @@ Func checkAttackDisable($iSource, $Result = "")
 	$Is_SearchLimit = False ; reset search limit flag
 	$Restart = True ; Set flag to restart the process at the bot main code when it returns
 
-	; IceCube (Multy-Farming Revamp v1.5)	
+	; IceCube (Multy-Farming Revamp v1.6)	
 	If $ichkMultyFarming = 1 Then
 		SetLog("Multy-Farming Mode Active...", $COLOR_RED)
 		SetLog("Please don't PAUSE/STOP BOT during profile change", $COLOR_RED)
@@ -145,7 +145,7 @@ Func checkAttackDisable($iSource, $Result = "")
 				SwitchAccount("Fourth")
 			Else
 				SetLog("You don't have other profiles configured for multy-farming. Swithing accounts canceled.", $COLOR_RED)
-				PrepareForPersonalBreak()
+				PrepareForPersonalBreak($iModSource)
 			EndIF
 			
 		ElseIf $sCurrProfile = "[02] Second" Then
@@ -158,13 +158,13 @@ Func checkAttackDisable($iSource, $Result = "")
 					SwitchAccount("Main")							
 				Else
 					SetLog("You don't have other profiles configured for multy-farming. Swithing accounts canceled.", $COLOR_RED)
-					PrepareForPersonalBreak()
+					PrepareForPersonalBreak($iModSource)
 				EndIF
 			Else
 				If IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
 					SwitchAccount("Main")	
 				Else					
-					PrepareForPersonalBreak()
+					PrepareForPersonalBreak($iModSource)
 				EndIF
 			EndIf
 			
@@ -178,14 +178,14 @@ Func checkAttackDisable($iSource, $Result = "")
 					SwitchAccount("Second")
 				Else
 					SetLog("You don't have other profiles configured for multy-farming. Swithing accounts canceled.", $COLOR_RED)
-					PrepareForPersonalBreak()
+					PrepareForPersonalBreak($iModSource)
 				EndIf
 
 			ElseIf $iAccount = "3" Then
 				If IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
 					SwitchAccount("Main")							
 				Else					
-					PrepareForPersonalBreak()
+					PrepareForPersonalBreak($iModSource)
 				EndIF
 
 			EndIf
@@ -198,18 +198,18 @@ Func checkAttackDisable($iSource, $Result = "")
 				SwitchAccount("Third")
 			Else
 				SetLog("You don't have other profiles configured for multy-farming. Swithing accounts canceled.", $COLOR_RED)
-				PrepareForPersonalBreak()
+				PrepareForPersonalBreak($iModSource)
 			EndIf
 		EndIf
 	Else
-		PrepareForPersonalBreak()
+		PrepareForPersonalBreak($iModSource)
 	EndIf
-	; IceCube (Multy-Farming Revamp v1.5)
+	; IceCube (Multy-Farming Revamp v1.6)
 	
 EndFunc   ;==>checkAttackDisable
 
-; IceCube (Multy-Farming Revamp v1.5)
-Func PrepareForPersonalBreak()
+; IceCube (Multy-Farming Revamp v1.6)
+Func PrepareForPersonalBreak($iModSource)
 		Setlog("Time for break, exit now..", $COLOR_BLUE)
 
 		; Find and wait for the confirmation of exit "okay" button
@@ -243,4 +243,4 @@ Func PrepareForPersonalBreak()
 			$aShieldStatus[$i] = "" ; reset global shield info array
 		Next
 EndFunc   ;==>PrepareForPersonalBreak
-; IceCube (Multy-Farming Revamp v1.5)
+; IceCube (Multy-Farming Revamp v1.6)

@@ -186,7 +186,7 @@ Func runBot() ;Bot that runs everything in order
 		If checkSleep() And $ichkCloseNight = 1 Then
 			If $debugSetLog = 1 Then SetLog("Sleep Start: " & $nextSleepStart & " - Sleep End: " & $nextSleepEnd, $COLOR_MAROON)
 			SetLog("Time to log out for sleep period...", $COLOR_GREEN)
-			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd))
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd), True)
 			; Set Collector counter to 11 so it collects immediately after attacking
 			$iCollectCounter = 11
 			$RandomTimer = true
@@ -195,7 +195,7 @@ Func runBot() ;Bot that runs everything in order
 		ElseIf $ichkLimitAttacks = 1 And $dailyAttacks >= $dailyAttackLimit Then
 			If $debugSetLog = 1 Then SetLog("Attacks: " & $dailyAttacks & " - Limit: " & $dailyAttackLimit, $COLOR_MAROON)
 			SetLog("Already reached today's quota of attacks...", $COLOR_GREEN)
-			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd))
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd), True)
 			; Set Collector counter to 11 so it collects immediately after attacking
 			$iCollectCounter = 11
 			$RandomTimer = true
@@ -369,7 +369,7 @@ Func runBot() ;Bot that runs everything in order
 			If $Restart = True Then ContinueLoop
 		EndIf
 			
-		; IceCube (Multy-Farming Revamp v1.5)	
+		; IceCube (Multy-Farming Revamp v1.6)	
 		If $ichkMultyFarming = 1 Then
 			SetLog("Multy-Farming Mode Active...", $COLOR_RED)
 			SetLog("Please don't PAUSE/STOP BOT during profile change", $COLOR_RED)
@@ -437,18 +437,20 @@ Func runBot() ;Bot that runs everything in order
 				EndIf
 			EndIf
 		EndIf
-		; IceCube (Multy-Farming Revamp v1.5)
+		; IceCube (Multy-Farming Revamp v1.6)
 	WEnd
 EndFunc   ;==>runBot
 
 Func Idle() ;Sequence that runs until Full Army
 	Local $TimeIdle = 0 ;In Seconds
+	Local $hTimer, $iReHere
+
 	;If $debugsetlog = 1 Then SetLog("Func Idle ", $COLOR_PURPLE)
 	While $fullArmy = False Or $bFullArmyHero = False
 		If checkSleep() And $ichkCloseNight = 1 Then
 			If $debugSetLog = 1 Then SetLog("Sleep Start: " & $nextSleepStart & " - Sleep End: " & $nextSleepEnd, $COLOR_MAROON)
 			SetLog("Time to log out for sleep period...", $COLOR_GREEN)
-			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd))
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd), True)
 			; Set Collector counter to 11 so it collects immediately after attacking
 			$iCollectCounter = 11
 			$RandomTimer = true
@@ -457,7 +459,7 @@ Func Idle() ;Sequence that runs until Full Army
 		ElseIf $ichkLimitAttacks = 1 And $dailyAttacks >= $dailyAttackLimit Then
 			If $debugSetLog = 1 Then SetLog("Attacks: " & $dailyAttacks & " - Limit: " & $dailyAttackLimit, $COLOR_MAROON)
 			SetLog("Already reached today's quota of attacks...", $COLOR_GREEN)
-			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd))
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd), True)
 			; Set Collector counter to 11 so it collects immediately after attacking
 			$iCollectCounter = 11
 			$RandomTimer = true
@@ -542,6 +544,7 @@ Func Idle() ;Sequence that runs until Full Army
 
 		If $canRequestCC = True Then RequestCC()
 
+			$TimeIdle += Round(TimerDiff($hTimer) / 1000, 2) ; In Seconds
 		SetLog("Time Idle: " & StringFormat("%02i", Floor(Floor($TimeIdle / 60) / 60)) & ":" & StringFormat("%02i", Floor(Mod(Floor($TimeIdle / 60), 60))) & ":" & StringFormat("%02i", Floor(Mod($TimeIdle, 60))))
 
 		If $OutOfGold = 1 Or $OutOfElixir = 1 Then Return  ; Halt mode due low resources, only 1 idle loop

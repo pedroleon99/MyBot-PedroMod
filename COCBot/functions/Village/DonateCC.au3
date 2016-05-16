@@ -927,6 +927,9 @@ Func DetectSlotTroop($Type)
 				If $Type = $eGole And $FullTemp = "golem" Then
 					Return $Slot
 				EndIf
+				If $Type = $eLava And $FullTemp = "lava" Then
+					Return $Slot
+				EndIf
 			EndIf
 		Next
 

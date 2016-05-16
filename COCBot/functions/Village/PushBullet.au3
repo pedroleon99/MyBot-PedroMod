@@ -528,7 +528,7 @@ Func _RemoteControl()
 					Case GetTranslated(18,6,"Power") & "\n\ud83d\udda5"
 						SetLog("Telegram: Your request has been received from " & $iOrigPushB & ". POWER option now sent", $COLOR_GREEN)
 						$oHTTP2.Open("Post", "https://api.telegram.org/bot"&$access_token2&"/sendmessage", False)
-						$oHTTP2.SetRequestHeader("Content-Type", "application/json")
+						$oHTTP2.SetRequestHeader("Content-Type", "application/json; charset=ISO-8859-1,utf-8")
 						local $pPush3 = '{"text": "' & GetTranslated(18,49,"select POWER option") & '", "chat_id":' & $chat_id2 &', "reply_markup": {"keyboard": [["'&GetTranslated(18,7,"Hibernate")&'\n\u26a0\ufe0f","'&GetTranslated(18,8,"Shut down")&'\n\u26a0\ufe0f","'&GetTranslated(18,9,"Standby")&'\n\u26a0\ufe0f"],["'&GetTranslated(18,10,"Cancel")&'"]],"one_time_keyboard": true,"resize_keyboard":true}}'
 						$oHTTP2.Send($pPush3)
 					Case GetTranslated(18,7,"Hibernate") & "\n\u26a0\ufe0f"
@@ -796,7 +796,7 @@ EndFunc   ;==>_RemoteControl
 Func _PushBullet($pMessage = "")
     If ($pEnabled = 0 and $pEnabled2 = 0)  Or ($PushToken = "" and $PushToken2 = "") Then Return
 	
-	; IceCube (Multy-Farming Revamp v1.5)
+	; IceCube (Multy-Farming Revamp v1.6)
 	If $iForceNotify = 0 Then
 		If $iPlannedNotifyWeekdaysEnable = 1 Then
 			If $iPlannedNotifyWeekdays[@WDAY - 1] = 1 Then
@@ -817,7 +817,7 @@ Func _PushBullet($pMessage = "")
 	EndIf	
 	
 	$iForceNotify = 0
-	; IceCube (Multy-Farming Revamp v1.5)
+	; IceCube (Multy-Farming Revamp v1.6)
 
 	
     If $pEnabled = 1 Then
@@ -848,7 +848,7 @@ Func _PushBullet($pMessage = "")
 		 local $chat_id = _StringBetween($Result, 'm":{"id":', ',"f')
 		 $chat_id2 = _Arraypop($chat_id)
 		 $oHTTP2.Open("Post", "https://api.telegram.org/bot" & $access_token2&"/sendmessage", False)
-		 $oHTTP2.SetRequestHeader("Content-Type", "application/json")
+		 $oHTTP2.SetRequestHeader("Content-Type", "application/json; charset=ISO-8859-1,utf-8")
 	     Local $Date = @YEAR & '-' & @MON & '-' & @MDAY
 		 Local $Time = @HOUR & '.' & @MIN
 		 local $pPush3 = '{"text":"' & $pmessage & '\n' & $Date & '__' & $Time & '", "chat_id":' & $chat_id2 & '}}'
@@ -859,7 +859,7 @@ EndFunc   ;==>_PushBullet
 Func _Push($pMessage)
     If ($pEnabled = 0 and $pEnabled2 = 0)  Or ($PushToken = "" and $PushToken2 = "") Then Return
 	
-	; IceCube (Multy-Farming Revamp v1.5)
+	; IceCube (Multy-Farming Revamp v1.6)
 	If $iForceNotify = 0 Then
 		If $iPlannedNotifyWeekdaysEnable = 1 Then
 			If $iPlannedNotifyWeekdays[@WDAY - 1] = 1 Then
@@ -880,7 +880,7 @@ Func _Push($pMessage)
 	EndIf	
 	
 	$iForceNotify = 0
-	; IceCube (Multy-Farming Revamp v1.5)
+	; IceCube (Multy-Farming Revamp v1.6)
 	
 	If $pEnabled = 1 Then
 		$oHTTP = ObjCreate("WinHTTP.WinHTTPRequest.5.1")
@@ -898,7 +898,7 @@ Func _Push($pMessage)
 	   $oHTTP2 = ObjCreate("WinHTTP.WinHTTPRequest.5.1")
 	   $url= "https://api.telegram.org/bot"
 	   $oHTTP2.Open("Post",  $url & $access_token2 & "/sendMessage", False)
-	   $oHTTP2.SetRequestHeader("Content-Type", "application/json")
+	   $oHTTP2.SetRequestHeader("Content-Type", "application/json; charset=ISO-8859-1,utf-8")
 	   Local $Date = @YEAR & '-' & @MON & '-' & @MDAY
 	   Local $Time = @HOUR & '.' & @MIN
 	   local $pPush3 = '{"text":"' & $pmessage & '\n' & $Date & '__' & $Time & '", "chat_id":' & $chat_id2 & '}}'
@@ -965,7 +965,7 @@ EndFunc
 Func Getchatid($msgtitle)
 
 	$oHTTP2.Open("Post", "https://api.telegram.org/bot"&$access_token2&"/sendmessage", False)
-	$oHTTP2.SetRequestHeader("Content-Type", "application/json")
+	$oHTTP2.SetRequestHeader("Content-Type", "application/json; charset=ISO-8859-1,utf-8")
 
 	local $pPush3 = '{"text": "' & $msgtitle & '", "chat_id":' & $chat_id2 &', "reply_markup": {"keyboard": [["' & GetTranslated(18,16,"Stop") _
 	& '\n\u23f9","' & GetTranslated(18,3,"Pause") & '\n\u2016","' & GetTranslated(18,15,"Restart") & '\n\u21aa","' & GetTranslated(18,4,"Resume") & '\n\u25b6"],["' _
@@ -1027,7 +1027,7 @@ Func _PushFile($File, $Folder, $FileType, $body)
 			Local $telegram_url = "https://api.telegram.org/bot" & $access_token2 & "/sendPhoto"
 			$Result = RunWait($pCurl & " -i -X POST " & $telegram_url & ' -F chat_id="' & $chat_id2 &' " -F photo=@"' & $sProfilePath & "\" & $sCurrProfile & '\' & $Folder & '\' & $File  & '"', "", @SW_HIDE)
 			$oHTTP2.Open("Post", "https://api.telegram.org/bot" & $access_token2 & "/sendPhoto", False)
-			$oHTTP2.SetRequestHeader("Content-Type", "application/json")
+			$oHTTP2.SetRequestHeader("Content-Type", "application/json; charset=ISO-8859-1,utf-8")
 			Local $pPush = '{"type": "file", "file_name": "' & $File & '", "file_type": "' & $FileType & '", "file_url": "' & $telegram_url & '", "body": "' & $body & '"}'
 			$oHTTP2.Send($pPush)
 		Else
@@ -1044,7 +1044,7 @@ Func _PushFile2($File, $Folder, $FileType, $body)
 		Local $telegram_url = "https://api.telegram.org/bot" & $access_token2 & "/SendDocument"
 		$Result = RunWait($pCurl & " -i -X POST " & $telegram_url & ' -F chat_id="' & $chat_id2 &' " -F document=@"' & $sProfilePath & "\" & $sCurrProfile & '\' & $Folder & '\' & $File & '";filename="' & StringTrimRight($File, 3) & 'txt"', "", @SW_HIDE)
 		$oHTTP2.Open("Post", $telegram_url, False)
-		$oHTTP2.SetRequestHeader("Content-Type", "application/json")
+		$oHTTP2.SetRequestHeader("Content-Type", "application/json; charset=ISO-8859-1,utf-8")
 		Local $pPush2 = '{"type": "file", "file_name": "' & $File & '", "file_type": "' & $FileType & '", "file_url": "' & $telegram_url & '"}'
 		$oHTTP2.Send($pPush2)
 	 Else

@@ -119,7 +119,7 @@ Func GUIControl($hWind, $iMsg, $wParam, $lParam)
 				Case $DonateConfig
 					ShellExecute("https://mybot.run/forums/index.php?/donate/make-donation/")
 				Case $CheckVersionConfig
-					If CheckMODVersion() Then MsgBox(0, "", "Your Pedro MOD is updated to latest")
+					If CheckMODVersion() Then MsgBox(0, "", "Your "& $LatestVersion &" is updated to latest")
 				Case $DownloadLatestConfig
 					ShellExecute("https://github.com/pedroleon99/MyBot-PedroMod/archive/master.zip")
 				Case $AboutConfig
