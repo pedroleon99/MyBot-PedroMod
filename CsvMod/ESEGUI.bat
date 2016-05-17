@@ -16,15 +16,14 @@ echo Created By Pedro
 echo Per evitare possibili problemi eseguire sempre il file come amministratore
 echo .
 CHOICE /c CD /M "Seleziona il disco principale di sistema?"
-IF ERRORLEVEL 2 goto dick
-IF ERRORLEVEL 1 goto cock
+IF ERRORLEVEL 2 goto d
+IF ERRORLEVEL 1 goto c
 
-:cock
+:c
 echo off
 set drive=drive C:
 del /Q C:\ProgramData\BlueStacks\UserData\SharedFolder\*.*
 mkdir C:\ProgramData\BlueStarks\UserData\SharedFolder
-copy "%~dp0\conf\logic\*.*" C:\ProgramData\BlueStacks\UserData\SharedFolder\
 copy "%~dp0\conf\csv\*.*" C:\ProgramData\BlueStacks\UserData\SharedFolder\
 copy "%~dp0\conf\sc\*.*" C:\ProgramData\BlueStacks\UserData\SharedFolder\
 cd "%prgf%"\BlueStacks"
@@ -46,22 +45,36 @@ taskkill /f /im Hd-Adb.exe
 "%prgf%"\BlueStacks\hd-adb shell su -c "mkdir /data/data/com.supercell.clashofclans/update/sc"
 "%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/sc"
 cls
-choice /c sn /m "Copiare i file direttamente in COC?"
-"%prgf%"\BlueStacks\hd-adb shell su -c "cp /storage/sdcard/windows/BstSharedFolder/buildings.csv /data/data/com.supercell.clashofclans/update/logic"
-"%prgf%"\BlueStacks\hd-adb shell su -c "cp /storage/sdcard/windows/BstSharedFolder/traps.csv /data/data/com.supercell.clashofclans/update/logic"
+choice /c sn /m "Villaggio zoomato?"
+IF ERRORLEVEL 2 goto cclouds
+IF ERRORLEVEL 1 goto zoom
+
+:zoom
 "%prgf%"\BlueStacks\hd-adb shell su -c "cp /storage/sdcard/windows/BstSharedFolder/client_globals.csv /data/data/com.supercell.clashofclans/update/csv"
-"%prgf%"\BlueStacks\hd-adb shell su -c "cp /storage/sdcard/windows/BstSharedFolder/texts.csv /data/data/com.supercell.clashofclans/update/csv"
-"%prgf%"\BlueStacks\hd-adb shell su -c "cp /storage/sdcard/windows/BstSharedFolder/clouds.sc /data/data/com.supercell.clashofclans/update/sc"
-
-"%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/csv/texts.csv"
 "%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/csv/client_globals.csv"
-"%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/logic/traps.csv"
-"%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/logic/buildings.csv"
-"%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/sc/clouds.sc"
+goto cclouds
 
+:cclouds
 choice /c sn /m "Nuvole nere?"
+IF ERRORLEVEL 2 goto ctext
+IF ERRORLEVEL 1 goto clouds
+
+:clouds
 "%prgf%"\BlueStacks\hd-adb shell su -c "cp /storage/sdcard/windows/BstSharedFolder/clouds.sc /data/data/com.supercell.clashofclans/update/sc"
 "%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/sc/clouds.sc"
+goto ctext
+
+:ctext
+choice /c sn /m "Testo CONFERMA rimosso?"
+IF ERRORLEVEL 2 goto end
+IF ERRORLEVEL 1 goto text
+
+:text
+"%prgf%"\BlueStacks\hd-adb shell su -c "cp /storage/sdcard/windows/BstSharedFolder/texts.csv /data/data/com.supercell.clashofclans/update/csv"
+"%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/csv/texts.csv"
+goto end
+
+:end
 echo.
 echo Installazione completata.
 echo Se sei arrivato qui le MOD sono state installate correttamente.
@@ -69,21 +82,19 @@ echo.
 pause
 exit
 
-:dick
+:d
 echo off
-set drive=drive D:
-del /Q D:\ProgramData\BlueStacks\UserData\SharedFolder\*.*
-mkdir D:\ProgramData\BlueStarks\UserData\SharedFolder
-copy "%~dp0\conf\logic\*.*" D:\ProgramData\BlueStacks\UserData\SharedFolder\
-copy "%~dp0\conf\csv\*.*" D:\ProgramData\BlueStacks\UserData\SharedFolder\
-copy "%~dp0\conf\sc\*.*" D:\ProgramData\BlueStacks\UserData\SharedFolder\
-echo.
+set drive=drive C:
+del /Q C:\ProgramData\BlueStacks\UserData\SharedFolder\*.*
+mkdir C:\ProgramData\BlueStarks\UserData\SharedFolder
+copy "%~dp0\conf\csv\*.*" C:\ProgramData\BlueStacks\UserData\SharedFolder\
+copy "%~dp0\conf\sc\*.*" C:\ProgramData\BlueStacks\UserData\SharedFolder\
 cd "%prgf%"\BlueStacks"
 start HD-StartLauncher.exe
 echo Attendere che Bluestacks sia aperto correttamente...
 pause
 
-echo Installazione MOD in corso...
+echo Installazione MOD in corso
 echo.
 @echo off 
 taskkill /f /im Hd-Adb.exe
@@ -97,26 +108,39 @@ taskkill /f /im Hd-Adb.exe
 "%prgf%"\BlueStacks\hd-adb shell su -c "mkdir /data/data/com.supercell.clashofclans/update/sc"
 "%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/sc"
 cls
-choice /c sn /m "Copiare i file direttamente in COC?"
-"%prgf%"\BlueStacks\hd-adb shell su -c "cp /storage/sdcard/windows/BstSharedFolder/buildings.csv /data/data/com.supercell.clashofclans/update/logic"
-"%prgf%"\BlueStacks\hd-adb shell su -c "cp /storage/sdcard/windows/BstSharedFolder/traps.csv /data/data/com.supercell.clashofclans/update/logic"
+choice /c sn /m "Villaggio zoomato?"
+IF ERRORLEVEL 2 goto cclouds
+IF ERRORLEVEL 1 goto zoom
+
+:zoom
 "%prgf%"\BlueStacks\hd-adb shell su -c "cp /storage/sdcard/windows/BstSharedFolder/client_globals.csv /data/data/com.supercell.clashofclans/update/csv"
-"%prgf%"\BlueStacks\hd-adb shell su -c "cp /storage/sdcard/windows/BstSharedFolder/texts.csv /data/data/com.supercell.clashofclans/update/csv"
-"%prgf%"\BlueStacks\hd-adb shell su -c "cp /storage/sdcard/windows/BstSharedFolder/clouds.sc /data/data/com.supercell.clashofclans/update/sc"
-
-"%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/csv/texts.csv"
 "%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/csv/client_globals.csv"
-"%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/logic/traps.csv"
-"%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/logic/buildings.csv"
-"%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/sc/clouds.sc"
+goto cclouds
 
+:cclouds
 choice /c sn /m "Nuvole nere?"
+IF ERRORLEVEL 2 goto ctext
+IF ERRORLEVEL 1 goto clouds
+
+:clouds
 "%prgf%"\BlueStacks\hd-adb shell su -c "cp /storage/sdcard/windows/BstSharedFolder/clouds.sc /data/data/com.supercell.clashofclans/update/sc"
 "%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/sc/clouds.sc"
+goto ctext
+
+:ctext
+choice /c sn /m "Testo CONFERMA rimosso?"
+IF ERRORLEVEL 2 goto end
+IF ERRORLEVEL 1 goto text
+
+:text
+"%prgf%"\BlueStacks\hd-adb shell su -c "cp /storage/sdcard/windows/BstSharedFolder/texts.csv /data/data/com.supercell.clashofclans/update/csv"
+"%prgf%"\BlueStacks\hd-adb shell su -c "chmod -R 777 /data/data/com.supercell.clashofclans/update/csv/texts.csv"
+goto end
+
+:end
 echo.
 echo Installazione completata.
 echo Se sei arrivato qui le MOD sono state installate correttamente.
 echo.
-
-Pause
+pause
 exit

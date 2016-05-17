@@ -1,3 +1,5 @@
+*.ini
+*.log
 Profiles/**/building.ini
 Profiles/**/Stats/
 Profiles/**/Logs/
