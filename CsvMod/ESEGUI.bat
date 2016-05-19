@@ -84,11 +84,11 @@ exit
 
 :d
 echo off
-set drive=drive C:
-del /Q C:\ProgramData\BlueStacks\UserData\SharedFolder\*.*
-mkdir C:\ProgramData\BlueStarks\UserData\SharedFolder
-copy "%~dp0\conf\csv\*.*" C:\ProgramData\BlueStacks\UserData\SharedFolder\
-copy "%~dp0\conf\sc\*.*" C:\ProgramData\BlueStacks\UserData\SharedFolder\
+set drive=drive D:
+del /Q D:\ProgramData\BlueStacks\UserData\SharedFolder\*.*
+mkdir D:\ProgramData\BlueStarks\UserData\SharedFolder
+copy "%~dp0\conf\csv\*.*" D:\ProgramData\BlueStacks\UserData\SharedFolder\
+copy "%~dp0\conf\sc\*.*" D:\ProgramData\BlueStacks\UserData\SharedFolder\
 cd "%prgf%"\BlueStacks"
 start HD-StartLauncher.exe
 echo Attendere che Bluestacks sia aperto correttamente...

@@ -362,13 +362,13 @@ Global $sLogFName
 Global $sAttackLogFName
 Global $AttackFile
 Global $RequestScreenshot = 0
-; IceCube (PushBullet Revamp v1.1)
+; IceCube (PushBullet Revamp v1.1)	
 Global $pAlertTopGain
 Global $pAlertMFSwitch
 Global $RequestScreenshotHD = 0
 Global $RequestBuilderInfo = 0
 Global $RequestShieldInfo = 0
-; IceCube (PushBullet Revamp v1.1)
+; IceCube (PushBullet Revamp v1.1)	
 Global $iDeleteAllPushes = 0
 Global $iDeleteAllPushesNow = False
 Global $ichkDeleteOldPushes
@@ -381,13 +381,13 @@ Global $iCollectCounter = 11 ; Collect counter, when reaches $COLLECTATCOUNT, it
 Global $COLLECTATCOUNT = 10 ; Run Collect() after this amount of times before actually collect
 Global $ichkAlertBuilderIdle
 Global $iReportIdleBuilder = 0
-; IceCube (PushBullet Revamp v1.1)
+; IceCube (PushBullet Revamp v1.1)	
 Global $iplannedNotifyhoursenable		;Notify Scheduler
 Global $iPlannedNotifyWeekDaysEnable	;Notify Scheduler
 Global $iPlannedNotifyHours[24]			;Notify Scheduler
 Global $iPlannedNotifyWeekDays[7] ; 0= Sunday , 1= Monday , 2= Tuesday, 3= Wednesday, 4= Thursday, 5= Friday, 6= Saturday
 Global $iForceNotify = 0				;Force notify even Notify Scheduler is not active
-; IceCube (PushBullet Revamp v1.1)
+; IceCube (PushBullet Revamp v1.1)	
 ;---------------------------------------------------------------------------------------------------
 Global $BSpos[2] ; Inside Android window positions relative to the screen, [x,y]
 Global $BSrpos[2] ; Inside Android window positions relative to the window, [x,y]

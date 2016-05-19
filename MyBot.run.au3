@@ -186,7 +186,7 @@ Func runBot() ;Bot that runs everything in order
 		If checkSleep() And $ichkCloseNight = 1 Then
 			If $debugSetLog = 1 Then SetLog("Sleep Start: " & $nextSleepStart & " - Sleep End: " & $nextSleepEnd, $COLOR_MAROON)
 			SetLog("Time to log out for sleep period...", $COLOR_GREEN)
-			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd), True)
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd, True))
 			; Set Collector counter to 11 so it collects immediately after attacking
 			$iCollectCounter = 11
 			$RandomTimer = true
@@ -195,7 +195,7 @@ Func runBot() ;Bot that runs everything in order
 		ElseIf $ichkLimitAttacks = 1 And $dailyAttacks >= $dailyAttackLimit Then
 			If $debugSetLog = 1 Then SetLog("Attacks: " & $dailyAttacks & " - Limit: " & $dailyAttackLimit, $COLOR_MAROON)
 			SetLog("Already reached today's quota of attacks...", $COLOR_GREEN)
-			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd), True)
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd, True))
 			; Set Collector counter to 11 so it collects immediately after attacking
 			$iCollectCounter = 11
 			$RandomTimer = true
@@ -231,10 +231,10 @@ Func runBot() ;Bot that runs everything in order
 			;EndIf
 			If $ichkMultyFarming = 1 Then DetectAccount()
 			If $RequestScreenshot = 1 Then PushMsg("RequestScreenshot")
-			; IceCube (PushBullet Revamp v1.1)	
+			; IceCube (PushBullet Revamp v1.1)
 			If $RequestBuilderInfo = 1 Then PushMsg("BuilderInfo")
 			If $RequestShieldInfo = 1 Then PushMsg("ShieldInfo")
-			; IceCube (PushBullet Revamp v1.1)	
+			; IceCube (PushBullet Revamp v1.1)
 			If _Sleep($iDelayRunBot3) Then Return
 			VillageReport()
 			ProfileSwitch()
@@ -368,8 +368,8 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($iDelayRunBot5) Then Return
 			If $Restart = True Then ContinueLoop
 		EndIf
-			
-		; IceCube (Multy-Farming Revamp v1.6)	
+
+		; IceCube (Multy-Farming Revamp v1.6)
 		If $ichkMultyFarming = 1 Then
 			SetLog("Multy-Farming Mode Active...", $COLOR_RED)
 			SetLog("Please don't PAUSE/STOP BOT during profile change", $COLOR_RED)
@@ -382,55 +382,55 @@ Func runBot() ;Bot that runs everything in order
 			If $sCurrProfile = "[01] Main" Then
 				If IniRead($sProfilePath & "\[02] Second\config.ini", "MOD", "MultyFarming", "0") = "1" Then
 					SwitchAccount("Second")
-				ElseIf IniRead($sProfilePath & "\[03] Third\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+				ElseIf IniRead($sProfilePath & "\[03] Third\config.ini", "MOD", "MultyFarming", "0") = "1" Then
 					SwitchAccount("Third")
-				ElseIf IniRead($sProfilePath & "\[04] Fourth\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+				ElseIf IniRead($sProfilePath & "\[04] Fourth\config.ini", "MOD", "MultyFarming", "0") = "1" Then
 					SwitchAccount("Fourth")
 				Else
 					SetLog("You don't have other profiles configured for multy-farming. Swithing accounts canceled.", $COLOR_RED)
 				EndIF
-				
+
 			ElseIf $sCurrProfile = "[02] Second" Then
 				If $iAccount = "3" Or $iAccount = "4" Then
-					If IniRead($sProfilePath & "\[03] Third\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+					If IniRead($sProfilePath & "\[03] Third\config.ini", "MOD", "MultyFarming", "0") = "1" Then
 						SwitchAccount("Third")
-					ElseIf IniRead($sProfilePath & "\[04] Fourth\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+					ElseIf IniRead($sProfilePath & "\[04] Fourth\config.ini", "MOD", "MultyFarming", "0") = "1" Then
 						SwitchAccount("Fourth")
-					ElseIf IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
-						SwitchAccount("Main")							
+					ElseIf IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then
+						SwitchAccount("Main")
 					Else
 						SetLog("You don't have other profiles configured for multy-farming. Swithing accounts canceled.", $COLOR_RED)
 					EndIF
 				Else
-					If IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
-						SwitchAccount("Main")							
+					If IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then
+						SwitchAccount("Main")
 					EndIF
 				EndIf
-				
+
 			ElseIf $sCurrProfile = "[03] Third" Then
 				If $iAccount = "4" Then
-					If IniRead($sProfilePath & "\[04] Fourth\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+					If IniRead($sProfilePath & "\[04] Fourth\config.ini", "MOD", "MultyFarming", "0") = "1" Then
 						SwitchAccount("Fourth")
-					ElseIf IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
-						SwitchAccount("Main")		
-					ElseIf IniRead($sProfilePath & "\[02] Second\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+					ElseIf IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then
+						SwitchAccount("Main")
+					ElseIf IniRead($sProfilePath & "\[02] Second\config.ini", "MOD", "MultyFarming", "0") = "1" Then
 						SwitchAccount("Second")
 					Else
 						SetLog("You don't have other profiles configured for multy-farming. Swithing accounts canceled.", $COLOR_RED)
 					EndIf
 
 				ElseIf $iAccount = "3" Then
-					If IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
-						SwitchAccount("Main")							
+					If IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then
+						SwitchAccount("Main")
 					EndIF
 
 				EndIf
 			ElseIf $sCurrProfile = "[04] Fourth" Then
-				If IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
-					SwitchAccount("Main")		
-				ElseIf IniRead($sProfilePath & "\[02] Second\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+				If IniRead($sProfilePath & "\[01] Main\config.ini", "MOD", "MultyFarming", "0") = "1" Then
+					SwitchAccount("Main")
+				ElseIf IniRead($sProfilePath & "\[02] Second\config.ini", "MOD", "MultyFarming", "0") = "1" Then
 					SwitchAccount("Second")
-				ElseIf IniRead($sProfilePath & "\[03] Third\config.ini", "MOD", "MultyFarming", "0") = "1" Then	
+				ElseIf IniRead($sProfilePath & "\[03] Third\config.ini", "MOD", "MultyFarming", "0") = "1" Then
 					SwitchAccount("Third")
 				Else
 					SetLog("You don't have other profiles configured for multy-farming. Swithing accounts canceled.", $COLOR_RED)
@@ -450,7 +450,7 @@ Func Idle() ;Sequence that runs until Full Army
 		If checkSleep() And $ichkCloseNight = 1 Then
 			If $debugSetLog = 1 Then SetLog("Sleep Start: " & $nextSleepStart & " - Sleep End: " & $nextSleepEnd, $COLOR_MAROON)
 			SetLog("Time to log out for sleep period...", $COLOR_GREEN)
-			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd), True)
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd, True))
 			; Set Collector counter to 11 so it collects immediately after attacking
 			$iCollectCounter = 11
 			$RandomTimer = true
@@ -459,7 +459,7 @@ Func Idle() ;Sequence that runs until Full Army
 		ElseIf $ichkLimitAttacks = 1 And $dailyAttacks >= $dailyAttackLimit Then
 			If $debugSetLog = 1 Then SetLog("Attacks: " & $dailyAttacks & " - Limit: " & $dailyAttackLimit, $COLOR_MAROON)
 			SetLog("Already reached today's quota of attacks...", $COLOR_GREEN)
-			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd), True)
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd, True))
 			; Set Collector counter to 11 so it collects immediately after attacking
 			$iCollectCounter = 11
 			$RandomTimer = true
@@ -469,10 +469,10 @@ Func Idle() ;Sequence that runs until Full Army
 		checkAndroidTimeLag()
 
 		If $RequestScreenshot = 1 Then PushMsg("RequestScreenshot")
-		; IceCube (PushBullet Revamp v1.1)	
-		If $RequestBuilderInfo = 1 Then PushMsg("BuilderInfo")		
+		; IceCube (PushBullet Revamp v1.1)
+		If $RequestBuilderInfo = 1 Then PushMsg("BuilderInfo")
 		If $RequestShieldInfo = 1 Then PushMsg("ShieldInfo")
-		; IceCube (PushBullet Revamp v1.1)	
+		; IceCube (PushBullet Revamp v1.1)
 		If _Sleep($iDelayIdle1) Then Return
 		If $CommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLOR_GREEN)
 		Local $hTimer = TimerInit()
