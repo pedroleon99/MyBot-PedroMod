@@ -15,10 +15,12 @@
 
 #include <Date.au3>
 
-Func CloseCOCAndWait($timeRemaining)
+Func CloseCOCAndWait($timeRemaining, $forceClose = False)
+	; Randomly choose whether to actually exit COC or do nothing (time out)
+	If $forceClose Or Random(0, 1, 1) = 1 Then 
+		; Force close the bot
 	; Find and wait for the confirmation of exit "okay" button
 	Local $counter = 0
-
 	While 1
 		checkObstacles()
 		BS1BackButton()
@@ -35,18 +37,22 @@ Func CloseCOCAndWait($timeRemaining)
 			CloseCoC()
 			ExitLoop
 		EndIf
-
 		$counter += 1
 	WEnd
-
 	; Short wait for CoC to exit
 	If _Sleep(1500) Then Return
-
 	; Pushbullet Msg
 	PushMsg("TakeBreak")
-
 	; Log off CoC for set time
 	WaitnOpenCoC($timeRemaining * 1000, True)
+	Else
+		; Nothing is needed here for timeout, as WaitnOpenCoC will stop the bot from doing anything so it will timeout naturally
+		; Pushbullet Msg
+		PushMsg("TakeBreak")
+		; Just wait without close the CoC
+		WaitnOpenCoC($timeRemaining * 1000, True, False)
+	EndIf
+	
 EndFunc   ;==>CloseCOCAndWait
 
 Func calculateDailyAttackLimit()

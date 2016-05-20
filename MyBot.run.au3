@@ -50,7 +50,7 @@ $sBotTitle = "My Bot " & $sBotVersion & " MOD by Pedro " ;~ Don't use any non fi
 Global $sBotTitleDefault = $sBotTitle
 
 Opt("WinTitleMatchMode", 3) ; Window Title exact match mode
-#include "COCBot\functions\Main Screen\Android.au3"
+#include "COCBot\functions\Android\Android.au3"
 
 $hMutex_MyBot = _Singleton("MyBot.run", 1)
 $OnlyInstance = $hMutex_MyBot <> 0 ; And False
@@ -164,6 +164,9 @@ LoadAmountOfResourcesImages()
 
 CheckVersion() ; check latest version on mybot.run site
 
+; Deletes any ADB files for instances no longer running
+cleanUnusedADBFiles()
+
 ;AutoStart Bot if request
 AutoStart()
 
@@ -183,24 +186,25 @@ BotClose()
 Func runBot() ;Bot that runs everything in order
 	$TotalTrainedTroops = 0
 	While 1
-		If checkSleep() And $ichkCloseNight = 1 Then
+		If checkSleep() And $RunState And $ichkCloseNight = 1 Then
 			If $debugSetLog = 1 Then SetLog("Sleep Start: " & $nextSleepStart & " - Sleep End: " & $nextSleepEnd, $COLOR_MAROON)
 			SetLog("Time to log out for sleep period...", $COLOR_GREEN)
-			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd, True))
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd), True)
 			; Set Collector counter to 11 so it collects immediately after attacking
 			$iCollectCounter = 11
 			$RandomTimer = true
 			$FirstStart = true
 			RandomAttack()
-		ElseIf $ichkLimitAttacks = 1 And $dailyAttacks >= $dailyAttackLimit Then
+		ElseIf $RunState And $ichkLimitAttacks = 1 And $dailyAttacks >= $dailyAttackLimit Then
 			If $debugSetLog = 1 Then SetLog("Attacks: " & $dailyAttacks & " - Limit: " & $dailyAttackLimit, $COLOR_MAROON)
 			SetLog("Already reached today's quota of attacks...", $COLOR_GREEN)
-			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd, True))
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd), True)
 			; Set Collector counter to 11 so it collects immediately after attacking
 			$iCollectCounter = 11
 			$RandomTimer = true
 			$FirstStart = true
 			RandomAttack()
+		ElseIf $RunState Then
 		EndIf
 		;ModBoju
 		Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
@@ -447,24 +451,25 @@ Func Idle() ;Sequence that runs until Full Army
 
 	;If $debugsetlog = 1 Then SetLog("Func Idle ", $COLOR_PURPLE)
 	While $fullArmy = False Or $bFullArmyHero = False
-		If checkSleep() And $ichkCloseNight = 1 Then
+		If checkSleep() And $RunState And $ichkCloseNight = 1 Then
 			If $debugSetLog = 1 Then SetLog("Sleep Start: " & $nextSleepStart & " - Sleep End: " & $nextSleepEnd, $COLOR_MAROON)
 			SetLog("Time to log out for sleep period...", $COLOR_GREEN)
-			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd, True))
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd), True)
 			; Set Collector counter to 11 so it collects immediately after attacking
 			$iCollectCounter = 11
 			$RandomTimer = true
 			$FirstStart = true
 			RandomAttack()
-		ElseIf $ichkLimitAttacks = 1 And $dailyAttacks >= $dailyAttackLimit Then
+		ElseIf $RunState And $ichkLimitAttacks = 1 And $dailyAttacks >= $dailyAttackLimit Then
 			If $debugSetLog = 1 Then SetLog("Attacks: " & $dailyAttacks & " - Limit: " & $dailyAttackLimit, $COLOR_MAROON)
 			SetLog("Already reached today's quota of attacks...", $COLOR_GREEN)
-			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd, True))
+			CloseCOCAndWait(calculateTimeRemaining($nextSleepEnd), True)
 			; Set Collector counter to 11 so it collects immediately after attacking
 			$iCollectCounter = 11
 			$RandomTimer = true
 			$FirstStart = true
 			RandomAttack()
+		ElseIf $RunState Then
 		EndIf
 		checkAndroidTimeLag()
 
@@ -475,8 +480,10 @@ Func Idle() ;Sequence that runs until Full Army
 		; IceCube (PushBullet Revamp v1.1)
 		If _Sleep($iDelayIdle1) Then Return
 		If $CommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLOR_GREEN)
-		Local $hTimer = TimerInit()
-		Local $iReHere = 0
+
+			$hTimer = TimerInit()
+
+			$iReHere = 0
 		While $iReHere < 7
 			$iReHere += 1
 			DonateCC(True)

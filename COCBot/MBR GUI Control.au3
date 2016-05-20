@@ -198,6 +198,8 @@ Func BotClose()
    setupProfile()
    SaveConfig()
    AndroidAdbTerminateShellInstance()
+   ; Clean the ADB files from this instance
+   cleanUnusedADBFiles(True)
    ; Close Mutexes
    If $hMutex_BotTitle <> 0 Then _WinAPI_CloseHandle($hMutex_BotTitle)
    If $hMutex_Profile <> 0 Then _WinAPI_CloseHandle($hMutex_Profile)

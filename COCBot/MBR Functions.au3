@@ -96,6 +96,8 @@
 #include "functions\Attack\Troops\SelectDropTroop.au3"
 #include "functions\Attack\Troops\SetSleep.au3"
 
+#include "functions\BotInfo\runningBots.au3"
+
 #include "functions\CreateArmy\_TrainMoveBtn.au3"
 #include "functions\CreateArmy\BarracksStatus.au3"
 #include "functions\CreateArmy\CheckFullArmy.au3"
@@ -121,7 +123,7 @@
 #include "functions\Image Search\CheckTombs.au3"
 #include "functions\Image Search\THSearch.au3"
 
-#include "functions\Main Screen\BlueStacks1Shortcuts.au3"
+
 #include "functions\Main Screen\checkMainScreen.au3"
 #include "functions\Main Screen\checkObstacles.au3"
 #include "functions\Main Screen\GetDPI_Ratio.au3"
@@ -136,12 +138,14 @@
 
 ; Android support for BlueStacks, Droid4X, MEmu...
 #include "functions\Android\checkAndroidTimeLag.au3"
-#include "functions\Main Screen\OpenBlueStacks.au3"
-#include "functions\Main Screen\CloseBlueStacks.au3"
-#include "functions\Main Screen\OpenDroid4X.au3"
-#include "functions\Main Screen\CloseDroid4X.au3"
-#include "functions\Main Screen\AndroidMEmu.au3"
+#include "functions\Android\BlueStacks1Shortcuts.au3"
+#include "functions\Android\OpenBlueStacks.au3"
+#include "functions\Android\CloseBlueStacks.au3"
+#include "functions\Android\OpenDroid4X.au3"
+#include "functions\Android\CloseDroid4X.au3"
+#include "functions\Android\AndroidMEmu.au3"
 #include "functions\Android\AndroidNox.au3"
+#include "functions\Android\ADB.au3"
 
 #include "functions\Other\_NumberFormat.au3"
 #include "functions\Other\_PadStringCenter.au3"
@@ -180,13 +184,12 @@
 #include "functions\Other\CheckVersion.au3"
 #include "functions\Other\CloseRunningBot.au3"
 #include "functions\Other\RandomClick.au3"
-
 #include "functions\Other\ComError.au3"
 #include "functions\Other\IsPage.au3"
 #include "functions\Other\MoveMouseOutBS.au3"
 #include "functions\Other\KillProcess.au3"
 #include "functions\Other\LaunchConsole.au3"
-#include "functions\Other\ADB.au3"
+
 
 #include "functions\Pixels\_CaptureRegion.au3"
 #include "functions\Pixels\_ColorCheck.au3"
