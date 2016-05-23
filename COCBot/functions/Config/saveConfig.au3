@@ -1657,8 +1657,10 @@ EndIf
 
 	If GUICtrlRead($radClickSpeedFast) = $GUI_CHECKED Then
 		IniWrite($config, "attackCSV", "ClickSpeedFast", 1)
-	Else
+	ElseIf GUICtrlRead($radClickSpeedNormal) = $GUI_CHECKED Then
 		IniWrite($config, "attackCSV", "ClickSpeedFast", 0)
+	Else
+		IniWrite($config, "attackCSV", "ClickSpeedFast", 2)
 	EndIf
 
 	;MOD Settings--------------------------------------------------------------------------

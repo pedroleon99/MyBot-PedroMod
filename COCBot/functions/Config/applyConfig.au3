@@ -1792,9 +1792,15 @@ EndIf
 	If $iRadClickSpeedFast = 1 Then
 		GUICtrlSetState($radClickSpeedFast, $GUI_CHECKED)
 		GUICtrlSetState($radClickSpeedNormal, $GUI_UNCHECKED)
-	Else
+		GUICtrlSetState($radClickSpeedCSV, $GUI_UNCHECKED)
+	ElseIf $iRadClickSpeedFast = 0 Then
 		GUICtrlSetState($radClickSpeedFast, $GUI_UNCHECKED)
 		GUICtrlSetState($radClickSpeedNormal, $GUI_CHECKED)
+		GUICtrlSetState($radClickSpeedCSV, $GUI_UNCHECKED)
+	Else
+		GUICtrlSetState($radClickSpeedFast, $GUI_UNCHECKED)
+		GUICtrlSetState($radClickSpeedNormal, $GUI_UNCHECKED)
+		GUICtrlSetState($radClickSpeedCSV, $GUI_CHECKED)
 	EndIf
 
 	;Multi Farming Settings--------------------------------------------------------------------------

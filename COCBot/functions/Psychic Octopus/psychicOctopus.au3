@@ -21,6 +21,7 @@ Func CloseCOCAndWait($timeRemaining, $forceClose = False)
 		; Force close the bot
 	; Find and wait for the confirmation of exit "okay" button
 	Local $counter = 0
+
 	While 1
 		checkObstacles()
 		BS1BackButton()
@@ -37,12 +38,16 @@ Func CloseCOCAndWait($timeRemaining, $forceClose = False)
 			CloseCoC()
 			ExitLoop
 		EndIf
+
 		$counter += 1
 	WEnd
+
 	; Short wait for CoC to exit
 	If _Sleep(1500) Then Return
+
 	; Pushbullet Msg
 	PushMsg("TakeBreak")
+
 	; Log off CoC for set time
 	WaitnOpenCoC($timeRemaining * 1000, True)
 	Else
@@ -50,7 +55,7 @@ Func CloseCOCAndWait($timeRemaining, $forceClose = False)
 		; Pushbullet Msg
 		PushMsg("TakeBreak")
 		; Just wait without close the CoC
-		WaitnOpenCoC($timeRemaining * 1000, True, False)
+		WaitnOpenCoC($timeRemaining * 1000, True)
 	EndIf
 	
 EndFunc   ;==>CloseCOCAndWait

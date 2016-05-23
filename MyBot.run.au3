@@ -204,7 +204,7 @@ Func runBot() ;Bot that runs everything in order
 			$RandomTimer = true
 			$FirstStart = true
 			RandomAttack()
-		;ElseIf $RunState Then
+		ElseIf $RunState Then
 		EndIf
 		;ModBoju
 		Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
@@ -469,7 +469,7 @@ Func Idle() ;Sequence that runs until Full Army
 			$RandomTimer = true
 			$FirstStart = true
 			RandomAttack()
-		;ElseIf $RunState Then
+		ElseIf $RunState Then
 		EndIf
 		checkAndroidTimeLag()
 

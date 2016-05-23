@@ -320,7 +320,7 @@ Func UpdateStats()
 	; SmartZap DE Gain - Added by LunaEclipse
 	If $iOldSmartZapGain <> $smartZapGain Then
 		; IceCube (PushBullet Revamp v1.1)		
-		If $iOldSmartZapGain > 0 Then
+		If $iOldSmartZapGain > 0 AND $chkAlertTopGain  = 1 Then
 			_Push("New Top Smart Zap Gain: " & _NumberFormat($smartZapGain) & " on profile " & $sCurrProfile)
 		EndIf
 		; IceCube (PushBullet Revamp v1.1)
@@ -416,7 +416,7 @@ Func UpdateStats()
 
 	If Number($iGoldLast) > Number($topgoldloot) Then
 		; IceCube (PushBullet Revamp v1.1)		
-		If $topgoldloot > 0 Then
+		If $topgoldloot > 0  AND $chkAlertTopGain  = 1 Then
 			_Push("New Top Gold Gain: " & _NumberFormat($topgoldloot) & " on profile " & $sCurrProfile)
 		EndIf		
 		; IceCube (PushBullet Revamp v1.1)		
@@ -429,7 +429,7 @@ Func UpdateStats()
 
 	If Number($iElixirLast) > Number($topelixirloot) Then
 		; IceCube (PushBullet Revamp v1.1)		
-		If $topelixirloot > 0 Then
+		If $topelixirloot > 0  AND $chkAlertTopGain  = 1 Then
 			_Push("New Top Elixir Gain: " & _NumberFormat($topelixirloot) & " on profile " & $sCurrProfile)
 		EndIf			
 		; IceCube (PushBullet Revamp v1.1)
@@ -442,7 +442,7 @@ Func UpdateStats()
 
 	If Number($iDarkLast) > Number($topdarkloot) Then
 		; IceCube (PushBullet Revamp v1.1)		
-		If $topdarkloot > 0 Then
+		If $topdarkloot > 0  AND $chkAlertTopGain  = 1 Then
 			_Push("New Top Dark Elixir Gain: " & _NumberFormat($topdarkloot) & " on profile " & $sCurrProfile)
 		EndIf			
 		; IceCube (PushBullet Revamp v1.1)
@@ -455,7 +455,7 @@ Func UpdateStats()
 	
 	If Number($iTrophyLast) > Number($toptrophyloot) Then
 		; IceCube (PushBullet Revamp v1.1)		
-		If $toptrophyloot > 0 Then
+		If $toptrophyloot > 0  AND $chkAlertTopGain  = 1 Then
 			_Push("New Top Trophy Gain: " & _NumberFormat($toptrophyloot) & " on profile " & $sCurrProfile)
 		EndIf		
 		; IceCube (PushBullet Revamp v1.1)

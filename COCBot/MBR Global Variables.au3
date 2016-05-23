@@ -1204,7 +1204,7 @@ Global $iAccount, $OkLoc, $AccountLoc
 Global $iconfirm
 Global $bAccount[4] = ["Main", "Second", "Third", "Fourth"]
 
-Global $iRadClickSpeedFast, $radClickSpeedFast, $radClickSpeedNormal
+Global $iRadClickSpeedFast, $radClickSpeedFast, $radClickSpeedNormal, $radClickSpeedCSV
 Global $dbBase
 Global $TroopDropNumber = 0
 Global $remainingTroops[12][2]
