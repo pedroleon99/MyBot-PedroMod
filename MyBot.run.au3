@@ -588,6 +588,10 @@ Func AttackMain() ;Main control for attack functions
 				Setlog("Heroes not ready for dead base attack, return to wait!", $COLOR_BLUE)
 				Return
 			EndIf
+			If ($iWaitForSpells = 1 And $iTotalSpellSpace < $iTotalCountSpell) Then
+				Setlog("Spells not ready for attack, return to wait!", $COLOR_BLUE)
+				Return
+			 EndIf
 		Case 1  ; Live base
 			If (BitAND($iHeroAttack[$LB], $iHeroWait[$LB], $iHeroAvailable) <> $iHeroWait[$LB]) And _
 				($OptBullyMode = 0 Or ($OptBullyMode = 1 And (BitAND($iHeroAttack[$iTHBullyAttackMode], $iHeroWait[$iTHBullyAttackMode], $iHeroAvailable) <> $iHeroWait[$iTHBullyAttackMode]))) And _
@@ -595,6 +599,10 @@ Func AttackMain() ;Main control for attack functions
 				Setlog("Heroes not ready for live base attack, return to wait!", $COLOR_BLUE)
 				Return
 			EndIf
+			If ($iWaitForSpells = 1 And $iTotalSpellSpace < $iTotalCountSpell) Then
+				Setlog("Spells not ready for attack, return to wait!", $COLOR_BLUE)
+				Return
+			 EndIf
 		Case 2 ; Both Dead and Live bases
 			If (BitAND($iHeroAttack[$DB], $iHeroWait[$DB], $iHeroAvailable) <> $iHeroWait[$DB]) And _
 				(BitAND($iHeroAttack[$LB], $iHeroWait[$LB], $iHeroAvailable) <> $iHeroWait[$LB]) And _
@@ -603,6 +611,10 @@ Func AttackMain() ;Main control for attack functions
 				Setlog("Heroes not ready for attack, return to wait!", $COLOR_BLUE)
 				Return
 			EndIf
+			If ($iWaitForSpells = 1 And $iTotalSpellSpace < $iTotalCountSpell) Then
+				Setlog("Spells not ready for attack, return to wait!", $COLOR_BLUE)
+				Return
+			 EndIf
 	EndSwitch
 	PrepareSearch()
 		If $OutOfGold = 1 Then Return ; Check flag for enough gold to search

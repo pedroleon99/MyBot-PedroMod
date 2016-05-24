@@ -700,6 +700,9 @@ $itxtTreasuryGold = iniRead($config,"other","treasuryGold","0000")
 ;~ 		$MilkFarmAlgorithmTh = IniRead($config,"MilkingAttack","TownHallAlgorithm","Bam")
 ;~ 		$MilkFarmSnipeEvenIfNoExtractorsFound = IniRead($config,"MilkingAttack","TownHallHitAnyway","1")
 
+		;Wait For Spells
+		$iWaitForSpells = IniRead($config, "troop", "WaitForSpells", "0")
+	
 	;Profile Switch
 	$ichkGoldSwitchMax = IniRead($config, "profiles", "chkGoldSwitchMax", "0")
 	$icmbGoldMaxProfile = IniRead($config, "profiles", "cmbGoldMaxProfile", "0")

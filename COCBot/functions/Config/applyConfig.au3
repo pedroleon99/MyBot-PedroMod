@@ -1803,6 +1803,13 @@ EndIf
 		GUICtrlSetState($radClickSpeedCSV, $GUI_CHECKED)
 	EndIf
 
+	;Wait For Spells
+	If $iWaitForSpells = 1 Then
+		GUICtrlSetState($chkWaitForSpells, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkWaitForSpells, $GUI_UNCHECKED)
+	EndIf
+	
 	;Multi Farming Settings--------------------------------------------------------------------------
 	If $ichkSwitchDonate = 1 Then
 		GUICtrlSetState($chkSwitchDonate, $GUI_CHECKED)

@@ -40,6 +40,8 @@ Func getArmySpellCount($bOpenArmyWindow = False, $bCloseArmyWindow = False)
 		$CurHasteSpell = 0
 		$CurEarthSpell = 0
 
+		$iTotalSpellSpace = 0
+
 		For $i = 0 To 4 ; 5 visible slots in ArmyoverView window
 			If $debugSetlog = 1 Then Setlog(" Slot : " & $i + 1, $COLOR_PURPLE)
 			Local $FullTemp = getOcrSpellDetection(125 + (62 * $i), 450 + $midOffsetY)
@@ -50,41 +52,47 @@ Func getArmySpellCount($bOpenArmyWindow = False, $bCloseArmyWindow = False)
 			If $FullTemp = "Lightning" Then
 				$CurLightningSpell = $SpellQ
 				Setlog(" - No. of LightningSpell: " & $SpellQ)
+				$iTotalSpellSpace += (2 * $SpellQ)
 			EndIf
 			If $FullTemp = "Heal" Then
 				$CurHealSpell = $SpellQ
 				Setlog(" - No. of HealSpell: " & $SpellQ)
+				$iTotalSpellSpace += (2 * $SpellQ)
 			EndIf
 			If $FullTemp = "Rage" Then
 				$CurRageSpell = $SpellQ
 				Setlog(" - No. of RageSpell: " & $SpellQ)
+				$iTotalSpellSpace += (2 * $SpellQ)
 			EndIf
 			If $FullTemp = "Jump" Then
 				$CurJumpSpell = $SpellQ
 				Setlog(" - No. of JumpSpell: " & $SpellQ)
+				$iTotalSpellSpace += (2 * $SpellQ)
 			EndIf
 			If $FullTemp = "Freeze" Then
 				$CurFreezeSpell = $SpellQ
 				Setlog(" - No. of FreezeSpell: " & $SpellQ)
+				$iTotalSpellSpace += (2 * $SpellQ)
 			EndIf
 			If $FullTemp = "Poison" Then
 				$CurPoisonSpell = $SpellQ
 				Setlog(" - No. of PoisonSpell: " & $SpellQ)
+				$iTotalSpellSpace += $SpellQ
 			EndIf
 			If $FullTemp = "Haste" Then
 				$CurHasteSpell = $SpellQ
 				Setlog(" - No. of HasteSpell: " & $SpellQ)
+				$iTotalSpellSpace += $SpellQ
 			EndIf
 			If $FullTemp = "Earth" Then
 				$CurEarthSpell = $SpellQ
 				Setlog(" - No. of EarthquakeSpell: " & $SpellQ)
+				$iTotalSpellSpace += $SpellQ
 			EndIf
 			If $FullTemp = "" And $debugSetlog = 1 Then
 				Setlog(" - was not detected anything in slot: " & $i + 1, $COLOR_PURPLE)
-			ElseIf $FullTemp = "" Then
-				_ArrayAdd($TroopSpellStats, $FullTemp & "|" & $SpellQ)
-			EndIf
-		Next
+			 EndIf
+		 Next
 	EndIf
 
 	If $bCloseArmyWindow = True Then

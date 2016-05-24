@@ -1709,6 +1709,13 @@ EndIf
 ;~     IniWrite($config, "MilkingAttack", "TownHallAlgorithm", $MilkFarmAlgorithmTh)
 ;~     IniWrite($config, "MilkingAttack", "TownHallHitAnyway", $MilkFarmSnipeEvenIfNoExtractorsFound)
 
+	;Wait For Spells
+	If GUICtrlRead($chkWaitForSpells) = $GUI_CHECKED Then
+		IniWrite($config, "troop", "WaitForSpells", 1)
+	Else
+		IniWrite($config, "troop", "WaitForSpells", 0)
+	EndIf
+
 	;Profile Switch Settings
 	If GUICtrlRead($chkGoldSwitchMax) = $GUI_CHECKED Then
 		IniWrite($config, "profiles", "chkGoldSwitchMax", 1)

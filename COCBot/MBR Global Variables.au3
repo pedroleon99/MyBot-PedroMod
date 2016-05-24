@@ -1112,7 +1112,9 @@ Global $attackcsv_locate_gold_storage = 0
 Global $attackcsv_locate_elixir_storage = 0
 Global $attackcsv_locate_dark_storage = 0
 Global $attackcsv_locate_townhall = 0
+
 Global $attackcsv_use_red_line = 1
+Global $attackcsv_csv_speed = 1
 
 ;Milking Attack
 Global $debugresourcesoffset = 0 ;make images with offset to check correct adjust values
@@ -1166,6 +1168,9 @@ Global $hCollectorGUI = 0
 
 ;About GUI - AminTalkin
 Global $hAboutGUI = 0
+
+;Wait For Spell
+Global $iWaitForSpells, $chkWaitForSpells, $iTotalSpellSpace = 0
 
 Global $iDeadBase75percent = 1
 Global $iDeadBase75percentStartLevel = 4
