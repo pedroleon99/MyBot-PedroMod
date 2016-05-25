@@ -51,6 +51,10 @@ Func ParseAttackCSV_Read_SIDE_variables()
 				$value8 = StringStripWS(StringUpper($acommand[9]), 2)
 				$value9 = StringStripWS(StringUpper($acommand[10]), 2)
 
+				If $acommand[0] = 11 Then
+				  $value10 = StringStripWS(StringUpper($acommand[11]), 2)
+			   EndIf
+
 				If $command = "SIDE" Then
 					;forced side
 					If StringUpper($value8) = "TOP-LEFT" Or StringUpper($value8) = "TOP-RIGHT" Or StringUpper($value8) = "BOTTOM-LEFT" Or StringUpper($value8) = "BOTTOM-RIGHT" Then
