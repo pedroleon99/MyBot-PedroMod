@@ -1,8 +1,8 @@
 @ECHO OFF
 
 ::initialize
-SET version=v1.2
-SET versiondate=24-03-2016
+SET version=v1.3
+SET versiondate=25-05-2016
 TITLE MyBot Multiple Bot Runner %version%
 SET pro=1
 
@@ -11,7 +11,7 @@ SET pro=1
 cls
 ECHO MyBot Multiple Bot Runner %version%
 ECHO %versiondate%
-ECHO By AminTalkin
+ECHO By pedroleon99
 ECHO.
 ECHO   #############################################
 ECHO   #                                           #
@@ -67,7 +67,7 @@ IF "%errorlevel%" == "1" (
 cls
 ECHO MyBot Multiple Bot Runner %version%
 ECHO %versiondate%
-ECHO By AminTalkin
+ECHO By pedroleon99
 ECHO.
 ECHO   #############################################
 ECHO   #                                           #
@@ -174,7 +174,7 @@ IF "%errorlevel%" == "1" (
 cls
 ECHO MyBot Multiple Bot Runner %version%
 ECHO %versiondate%
-ECHO By AminTalkin
+ECHO By pedroleon99
 ECHO.
 ECHO   #############################################
 ECHO   #                                           #
@@ -206,7 +206,7 @@ IF "%memuname%" == "9" (
 cls
 ECHO MyBot Multiple Bot Runner %version%
 ECHO %versiondate%
-ECHO By AminTalkin
+ECHO By pedroleon99
 ECHO.
 ECHO   #############################################
 ECHO   #                                           #
@@ -313,7 +313,7 @@ IF "%errorlevel%" == "1" (
 cls
 ECHO MyBot Multiple Bot Runner %version%
 ECHO %versiondate%
-ECHO By AminTalkin
+ECHO By pedroleon99
 ECHO.
 ECHO   #############################################
 ECHO   #                                           #
@@ -345,7 +345,7 @@ IF "%noxname%" == "9" (
 cls
 ECHO MyBot Multiple Bot Runner %version%
 ECHO %versiondate%
-ECHO By AminTalkin
+ECHO By pedroleon99
 ECHO.
 ECHO   #############################################
 ECHO   #                                           #
@@ -452,7 +452,7 @@ IF "%errorlevel%" == "1" (
 cls
 ECHO MyBot Multiple Bot Runner %version%
 ECHO %versiondate%
-ECHO By AminTalkin
+ECHO By pedroleon99
 ECHO.
 ECHO   #############################################
 ECHO   #                                           #
