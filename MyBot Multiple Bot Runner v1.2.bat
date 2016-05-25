@@ -36,7 +36,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO input
 ) ELSE IF "%errorlevel%" == "2" (
@@ -45,17 +45,11 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO input
 ) ELSE IF "%errorlevel%" == "3" (
-	ECHO Starting MyBot With Droid4X
-	start mybot.run.exe %pro% Droid4X && (
-		echo Mybot Started Successfully
-		SET /A pro=%pro%+1
-	) || (
-		echo Srating Mybot Failed
-	)
+	GOTO droidoptions
 	GOTO input
 ) ELSE IF "%errorlevel%" == "4" (
 	GOTO memuoptions
@@ -100,7 +94,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO memuoptions
 ) ELSE IF "%errorlevel%" == "2" (
@@ -109,7 +103,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO memuoptions
 ) ELSE IF "%errorlevel%" == "3" (
@@ -118,7 +112,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO memuoptions
 ) ELSE IF "%errorlevel%" == "4" (
@@ -127,7 +121,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO memuoptions
 ) ELSE IF "%errorlevel%" == "5" (
@@ -136,7 +130,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO memuoptions
 ) ELSE IF "%errorlevel%" == "6" (
@@ -145,7 +139,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO memuoptions
 ) ELSE IF "%errorlevel%" == "7" (
@@ -154,7 +148,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO memuoptions
 ) ELSE IF "%errorlevel%" == "8" (
@@ -167,7 +161,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO memuoptions
 ) ELSE (
@@ -202,7 +196,7 @@ IF "%memuname%" == "9" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO memuoptions
 )
@@ -239,7 +233,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO noxoptions
 ) ELSE IF "%errorlevel%" == "2" (
@@ -248,7 +242,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO noxoptions
 ) ELSE IF "%errorlevel%" == "3" (
@@ -257,7 +251,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO noxoptions
 ) ELSE IF "%errorlevel%" == "4" (
@@ -266,7 +260,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO noxoptions
 ) ELSE IF "%errorlevel%" == "5" (
@@ -275,7 +269,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO noxoptions
 ) ELSE IF "%errorlevel%" == "6" (
@@ -284,7 +278,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO noxoptions
 ) ELSE IF "%errorlevel%" == "7" (
@@ -293,7 +287,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO noxoptions
 ) ELSE IF "%errorlevel%" == "8" (
@@ -306,7 +300,7 @@ IF "%errorlevel%" == "1" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO noxoptions
 ) ELSE (
@@ -341,7 +335,146 @@ IF "%noxname%" == "9" (
 		echo Mybot Started Successfully
 		SET /A pro=%pro%+1
 	) || (
-		echo Srating Mybot Failed
+		echo Starting Mybot Failed
 	)
 	GOTO noxoptions
+)
+
+:droidoptions
+
+cls
+ECHO MyBot Multiple Bot Runner %version%
+ECHO %versiondate%
+ECHO By AminTalkin
+ECHO.
+ECHO   #############################################
+ECHO   #                                           #
+ECHO   #  Select Droid4X Instance You Prefer          #
+ECHO   #  0 - Droid4X                                 #
+ECHO   #  1 - Droid4X_1                               #
+ECHO   #  2 - Droid4X_2                               #
+ECHO   #  3 - Droid4X_3                               #
+Echo   #  4 - Droid4X_4                               #
+Echo   #  5 - Droid4X_5                               #
+Echo   #  6 - Droid4X_6                               #
+Echo   #  7 - Droid4X_7                               #
+Echo   #  8 - Type Instance Name                   #
+Echo   #  9 - Back To Main Menu                    #
+ECHO   #                                           #
+ECHO   #############################################
+ECHO.
+
+choice /c 1234567890 /n
+
+IF "%errorlevel%" == "1" (
+	ECHO Starting MyBot With Droid4X_1
+	start mybot.run.exe %pro% Droid4X Droid4X_1 && (
+		echo Mybot Started Successfully
+		SET /A pro=%pro%+1
+	) || (
+		echo Starting Mybot Failed
+	)
+	GOTO droidoptions
+) ELSE IF "%errorlevel%" == "2" (
+	ECHO Starting MyBot With Droid4X_2
+	start mybot.run.exe %pro% Droid4X Droid4X_2 && (
+		echo Mybot Started Successfully
+		SET /A pro=%pro%+1
+	) || (
+		echo Starting Mybot Failed
+	)
+	GOTO droidoptions
+) ELSE IF "%errorlevel%" == "3" (
+	ECHO Starting MyBot With Droid4X_3
+	start mybot.run.exe %pro% Droid4X Droid4X_3 && (
+		echo Mybot Started Successfully
+		SET /A pro=%pro%+1
+	) || (
+		echo Starting Mybot Failed
+	)
+	GOTO droidoptions
+) ELSE IF "%errorlevel%" == "4" (
+	ECHO Starting MyBot With Droid4X_4
+	start mybot.run.exe %pro% Droid4X Droid4X_4 && (
+		echo Mybot Started Successfully
+		SET /A pro=%pro%+1
+	) || (
+		echo Starting Mybot Failed
+	)
+	GOTO droidoptions
+) ELSE IF "%errorlevel%" == "5" (
+	ECHO Starting MyBot With Droid4X_5
+	start mybot.run.exe %pro% Droid4X Droid4X_5 && (
+		echo Mybot Started Successfully
+		SET /A pro=%pro%+1
+	) || (
+		echo Starting Mybot Failed
+	)
+	GOTO droidoptions
+) ELSE IF "%errorlevel%" == "6" (
+	ECHO Starting MyBot With Droid4X_6
+	start mybot.run.exe %pro% Droid4X Droid4X_6 && (
+		echo Mybot Started Successfully
+		SET /A pro=%pro%+1
+	) || (
+		echo Starting Mybot Failed
+	)
+	GOTO droidoptions
+) ELSE IF "%errorlevel%" == "7" (
+	ECHO Starting MyBot With Droid4X_7
+	start mybot.run.exe %pro% Droid4X Droid4X_7 && (
+		echo Mybot Started Successfully
+		SET /A pro=%pro%+1
+	) || (
+		echo Starting Mybot Failed
+	)
+	GOTO droidoptions
+) ELSE IF "%errorlevel%" == "8" (
+	GOTO droidtype
+) ELSE IF "%errorlevel%" == "9" (
+	GOTO input
+) ELSE IF "%errorlevel%" == "10" (
+	ECHO Starting MyBot With Droid4X
+	start mybot.run.exe %pro% Droid4X && (
+		echo Mybot Started Successfully
+		SET /A pro=%pro%+1
+	) || (
+		echo Starting Mybot Failed
+	)
+	GOTO droidoptions
+) ELSE (
+	ECHO Wrong Input
+	GOTO droidoptions
+)
+
+:droidtype
+
+cls
+ECHO MyBot Multiple Bot Runner %version%
+ECHO %versiondate%
+ECHO By AminTalkin
+ECHO.
+ECHO   #############################################
+ECHO   #                                           #
+ECHO   #  Type Droid4X Instance Name And Press Enter  #
+ECHO   #  Type 9 And Press Enter To Go Back        #
+ECHO   #                                           #
+ECHO   #############################################
+ECHO.
+
+SET /P droidname="Type Droid4X Instance Name: "
+
+IF "%droidname%" == "9" (
+	GOTO droidoptions
+) ELSE IF "%droidname%" == "" (
+	GOTO droidtype
+) ELSE (
+	ECHO Starting MyBot With %droidname%
+	start mybot.run.exe %pro% Droid4X %droidname% && (
+		echo Mybot Started Successfully
+		SET /A pro=%pro%+1
+	) || (
+		echo Starting Mybot Failed
+	)
+	GOTO droidoptions
 )
