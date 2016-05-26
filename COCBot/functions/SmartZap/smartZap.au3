@@ -85,8 +85,13 @@ Func getSpellOffset()
 EndFunc   ;==>getSpellOffset
 
 Func zapDrill($x, $y, $xOffset, $yOffset)
-	dropSpell($x + $xOffset, $y + $yOffset, $eLSpell, 1)
+	Local $dropPoint = convertToPoint($x + $xOffset, $y + $yOffset)
+
+	dropSpell($dropPoint, $eLSpell, 1)
 EndFunc   ;==>zapDrill
+;Func zapDrill($x, $y, $xOffset, $yOffset)
+;	dropSpell($x + $xOffset, $y + $yOffset, $eLSpell, 1)
+;EndFunc   ;==>zapDrill
 
 Func smartZap($minDE = -1)
 	Local $searchDark, $oldSearchDark = 0, $numSpells, $skippedZap = True, $performedZap = False
@@ -109,7 +114,7 @@ Func smartZap($minDE = -1)
 	; Check to make sure the account is high enough level to store DE.
 	ElseIf $iTownHallLevel < 7 Then
 		SetLog("You do not have the ability to store Dark Elixir, time to go home!", $COLOR_FUCHSIA)
-		Return $performedZap		
+		Return $performedZap
 	; Check to ensure there is at least the minimum amount of DE available.
 	ElseIf ($searchDark < Number($minDE)) Then
 		SetLog("Dark Elixir is below minimum value, exiting now!", $COLOR_FUCHSIA)
@@ -131,7 +136,7 @@ Func smartZap($minDE = -1)
 		SetLog("Number of Lightning Spells: " & $numSpells, $COLOR_FUCHSIA)
 	EndIf
 
-	Local $aDrills	
+	Local $aDrills
 
 	; Get Drill locations and info
 	Local $listPixelByLevel = getDrillArray()
@@ -167,7 +172,7 @@ Func smartZap($minDE = -1)
 		CheckHeroesHealth()
 
 		; Store the DE value before any Zaps are done.
-		$oldSearchDark = $searchDark		
+		$oldSearchDark = $searchDark
 		; If you have max lightning spells, drop lightning on any level DE drill
 		If $numSpells > (4 - $spellAdjust) Then
 			SetLog("First condition: " & 4 - $spellAdjust & "+ Spells so attack any drill.", $COLOR_FUCHSIA)
@@ -177,7 +182,7 @@ Func smartZap($minDE = -1)
 			$numSpells -= 1
 			$performedZap = True
 			$skippedZap = False
-			
+
 			If _Sleep(3500) Then Return
 		; If you have one less then max, drop it on drills level (3 - drill offset)
 		ElseIf $numSpells > (3 - $spellAdjust) And $aDarkDrills[0][2] > (3 - $drillLvlOffset) Then
@@ -288,6 +293,6 @@ Func smartZap($minDE = -1)
 		; Create the log entry string for amount stealable
 		displayStealableLog($aDarkDrills)
 	WEnd
-	
+
 	Return $performedZap
 EndFunc   ;==>smartZap
