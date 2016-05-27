@@ -1239,6 +1239,10 @@ Global $sTimerRandomHalt
 ; Close while training variables
 Global $ichkCloseTraining = 1
 Global $minTrainAddition = 10, $maxTrainAddition = 20
+Global $LeaveCoCOpen = 0
+Global $CloseCoCGame = 1
+Global $RandomCoCOpen = 0
+Global $RandomCloseTraining = 0
 
 
 ; Sleep at night variables
