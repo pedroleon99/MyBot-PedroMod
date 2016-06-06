@@ -6,57 +6,16 @@
 ;                  $Remaining           - [optional] Flag for when checking remaining troops. Default is False.
 ; Return values .: None
 ; Author ........:
-; Modified ......: LunaEclipse(January, 2016)
+; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
-Func IsUnitAlreadyOnBar($aBarArray, $pTroopType, $index)
-	If Not IsArray($aBarArray) Then Return False ; Prevent errors
-
-	Local $return = False
-	Local $i = 0
-
-	; This loops through the bar array but allows us to exit as soon as we find our match.
-	For $i = 0 To $index - 1
-		; $aBarArray[$i][0] holds the unit ID for that position on the deployment bar.
-		If $aBarArray[$i][0] = $pTroopType Then
-			$return = True
-			ExitLoop
-		EndIf
-	Next
-
-	Return $return
-EndFunc   ;==>IsUnitAlreadyOnBar
-
-Func IsTroopToBeUsed($pMatchMode, $pTroopType)
-	If $pMatchMode = $DT Or $pMatchMode = $TB Or $pMatchMode = $TS Then Return True
-
-	Local $tempArr = $troopsToBeUsed[$iCmbSelectTroop[$pMatchMode]]
-
-	For $x = 0 To UBound($tempArr) - 1
-		If $tempArr[$x] = $pTroopType Then
-			Return True
-		EndIf
-	Next
-
-	Return False
-EndFunc   ;==>IsTroopToBeUsed
-
-Func PrepareAttack($pMatchMode, $Remaining = False) ; Assigns troops
-	Local $result, $troopData, $kind
-	Local $aTemp[12][3], $aTroopDataList
-	Local $barCounter = 0
-
-	If $debugSetlog = 1 Then SetLog("PrepareAttack", $COLOR_PURPLE)
-
-	; Clear the variables to make sure there is no old data in it
-	Dim $atkTroops[12][2]
-	$CCSpellType = -1
-
+Func PrepareAttack($pMatchMode, $Remaining = False) ;Assigns troops
+	Local $troopsnumber = 0
+	If $debugSetlog = 1 Then SetLog("PrepareAttack for " & $pMatchMode & " " & $sModeText[$pMatchMode], $COLOR_PURPLE)
 	If $Remaining Then
 		SetLog("Checking remaining unused troops for: " & $sModeText[$pMatchMode], $COLOR_BLUE)
 	Else
@@ -64,87 +23,232 @@ Func PrepareAttack($pMatchMode, $Remaining = False) ; Assigns troops
 	EndIf
 
 	_CaptureRegion2(0, 571 + $bottomOffsetY, 859, 671 + $bottomOffsetY)
-	If _SleepAttack($iDelayPrepareAttack1) Then Return
+	If _Sleep($iDelayPrepareAttack1) Then Return
 
-	; SuspendAndroid()
-	$result = DllCall($hFuncLib, "str", "searchIdentifyTroop", "ptr", $hHBitmap2)
-	If $debugSetlog = 1 Then SetLog("First Search of Troopsbar, getting units and spells", $COLOR_PURPLE)
+    ;SuspendAndroid()
+
+	Local $result = DllCall($hFuncLib, "str", "searchIdentifyTroop", "ptr", $hHBitmap2)
 	If $debugSetlog = 1 Then Setlog("DLL Troopsbar list: " & $result[0], $COLOR_PURPLE)
-
-	$aTroopDataList = StringSplit($result[0], "|", $STR_NOCOUNT)
-
+	Local $aTroopDataList = StringSplit($result[0], "|")
+	Local $aTemp[12][3]
 	If $result[0] <> "" Then
-		For $i = 0 To UBound($aTroopDataList) - 1
-			$troopData = StringSplit($aTroopDataList[$i], "#", $STR_NOCOUNT)
-
-			$aTemp[$troopData[1]][0] = $troopData[0]
-			$aTemp[$troopData[1]][1] = $troopData[2]
-
-			$barCounter = $troopData[1] + 1
+		For $i = 1 To $aTroopDataList[0]
+			Local $troopData = StringSplit($aTroopDataList[$i], "#", $STR_NOCOUNT)
+			$aTemp[Number($troopData[1])][0] = $troopData[0]
+			$aTemp[Number($troopData[1])][1] = Number($troopData[2])
 		Next
 	EndIf
-
-	; Check to see if a second copy of any of the dark elixir spells exists, as this will be a Clan Castle Spell
-	_CaptureRegion2(GetXPosofArmySlot($barCounter, 68), 571 + $bottomOffsetY, 859, 671 + $bottomOffsetY)
-	If _SleepAttack($iDelayPrepareAttack1) Then Return
-
-	$result = DllCall($hFuncLib, "str", "searchIdentifyTroop", "ptr", $hHBitmap2)
-	If $debugSetlog = 1 Then Setlog("Second Search of Troopsbar, checking for CC Spells", $COLOR_PURPLE)
-	If $debugSetlog = 1 Then Setlog("DLL Troopsbar list: " & $result[0], $COLOR_PURPLE)
-
-	$aTroopDataList = StringSplit($result[0], "|", $STR_NOCOUNT)
-
-	If $result[0] <> "" Then
-		For $i = 0 To UBound($aTroopDataList) - 1
-			$troopData = StringSplit($aTroopDataList[$i], "#", $STR_NOCOUNT)
-
-			If IsUnitAlreadyOnBar($aTemp, $troopData[0], $barCounter + $troopData[1]) Then
-				$aTemp[$barCounter + $troopData[1]][0] = $eCCSpell
-				$CCSpellType = $troopData[0]
-			Else
-				$aTemp[$barCounter + $troopData[1]][0] = $troopData[0]
-			EndIf
-			$aTemp[$barCounter + $troopData[1]][1] = $troopData[2]
-		Next
-	EndIf
-
 	For $i = 0 To UBound($aTemp) - 1
 		If $aTemp[$i][0] = "" And $aTemp[$i][1] = "" Then
 			$atkTroops[$i][0] = -1
 			$atkTroops[$i][1] = 0
 		Else
-			$kind = $aTemp[$i][0]
-			If $kind < $eKing And Not IsTroopToBeUsed($pMatchMode, $kind) Then
-				$atkTroops[$i][0] = -1
-				$kind = -1
-			Else
-				$atkTroops[$i][0] = $kind
+			$troopKind = $aTemp[$i][0]
+			;If $debugsetlog=1 Then Setlog("examine troop " &  NameOfTroop($TroopKind) ,$color_aqua)
+			If $troopKind <$eKing Then
+				;If $debugsetlog=1 Then Setlog("examine troop " &  NameOfTroop($TroopKind) & " -> normal troop",$color_aqua)
+				;normal troop
+				If Not IsTroopToBeUsed($pMatchMode, $troopKind) Then
+					If $debugSetlog = 1 Then Setlog("Discard use of troop " & $troopKind &  " " & NameOfTroop($troopKind), $COLOR_RED)
+					$atkTroops[$i][0] = -1
+					$troopKind = -1
+				Else
+					;use troop
+					;If $debugSetlog=1 Then Setlog("for matchmode = " & $pMatchMode & " and troop " & $TroopKind & " " & NameOfTroop($TroopKind) & " USE",$COLOR_aqua)
+					;Setlog ("troopsnumber = " & $troopsnumber & "+ " &  Number( $aTemp[$i][1]))
+					$atkTroops[$i][0] = $aTemp[$i][0]
+					$atkTroops[$i][1] = $aTemp[$i][1]
+					$troopKind = $aTemp[$i][1]
+					$troopsnumber +=  $aTemp[$i][1]
+				EndIf
+
+			Else ;king, queen, warden and spells
+				;If $debugsetlog=1 Then Setlog("examine troop " &  NameOfTroop($TroopKind) & " -> special troop",$color_aqua)
+				$atkTroops[$i][0] = $troopKind
+				If IsSpecialTroopToBeUsed($pMatchMode, $TroopKind) then
+					$troopsnumber += 1
+					;If $debugSetlog=1 Then Setlog("for matchmode = " & $pMatchMode & " and troop " & $TroopKind & " " & NameOfTroop($TroopKind) & " USE",$COLOR_aqua)
+					;Setlog ("troopsnumber = " & $troopsnumber & "+1")
+					$atkTroops[$i][0] = $aTemp[$i][0]
+					$troopKind = $aTemp[$i][1]
+					$troopsnumber +=  1
+				Else
+					;If $debugSetlog=1 Then Setlog("for matchmode = " & $pMatchMode & " and troop " & $TroopKind & " " & NameOfTroop($TroopKind) & " DISCARD",$COLOR_aqua)
+					If $debugSetlog = 1 Then Setlog("Discard use hero/poison " & $troopKind &  " " & NameOfTroop($troopKind), $COLOR_RED)
+					$troopKind = -1
+				EndIf
 			EndIf
 
-			Switch $kind
-				Case -1
-					$atkTroops[$i][1] = 0
-				Case $eKing, $eQueen, $eWarden, $eCastle
-					$atkTroops[$i][1] = ""
-				Case $eCCSpell
-					$atkTroops[$i][1] = 1
-				Case Else
-					$atkTroops[$i][1] = $aTemp[$i][1]
-			EndSwitch
+			If $troopKind <> -1 Then SetLog("-*-" & $atkTroops[$i][0] & " " & NameOfTroop($atkTroops[$i][0]) & " " & $atkTroops[$i][1], $COLOR_GREEN)
+		EndIf
+    Next
 
-			If $kind <> -1 Then
-				If $kind = $eCCSpell Then
-					SetLog("-*-" & "Clan Castle Spell: " & getTranslatedTroopName($CCSpellType), $COLOR_GREEN)
-				Else
-					If $atkTroops[$i][1] = "" Then
-						SetLog("-*-" & getTranslatedTroopName($kind), $COLOR_GREEN)
-					Else
-						SetLog("-*-" & getTranslatedTroopName($kind) & ": " & $atkTroops[$i][1], $COLOR_GREEN)
-					EndIf
-				EndIf
+    ;ResumeAndroid()
+
+	If $debugSetLog=1 Then Setlog("troopsnumber  = " & $troopsnumber)
+	Return $troopsnumber
+EndFunc   ;==>PrepareAttack
+
+Func IsTroopToBeUsed($pMatchMode, $pTroopType)
+	If $pMatchMode = $DT Or $pMatchMode = $TB  Then Return True
+	If $pMatchMode = $MA Then
+		Local $tempArr = $troopsToBeUsed[$iCmbSelectTroop[$DB]]
+	Else
+		Local $tempArr = $troopsToBeUsed[$iCmbSelectTroop[$pMatchMode]]
+	EndIf
+	For $x = 0 To UBound($tempArr) - 1
+		If $tempArr[$x] = $pTroopType Then
+			If $pMatchMode =$MA and $pTroopType = $eGobl Then ;exclude goblins in $MA
+				Return False
+			Else
+				Return True
 			EndIf
 		EndIf
 	Next
+	Return False
+EndFunc   ;==>IsTroopToBeUsed
 
-    ; ResumeAndroid()
-EndFunc   ;==>PrepareAttack
+Func IsSpecialTroopToBeUsed($pMatchMode, $pTroopType)
+	If $pmatchMode <> $DB and $pmatchMode <> $LB and $pmatchMode <> $TS and $pmatchMode <> $MA Then
+		Return True
+	Else
+		Switch $pTroopType
+			Case $eKing
+				Switch $pmatchMode
+					Case $DB
+						 If BitAND($iHeroAttack[$DB], $HERO_KING) = $HERO_KING Then Return True
+					Case $LB
+						 If BitAND($iHeroAttack[$LB], $HERO_KING) = $HERO_KING Then Return True
+					Case $TS
+						 If BitAND($iHeroAttack[$TS], $HERO_KING) = $HERO_KING Then Return True
+					Case $MA
+						 If BitAND($iHeroAttack[$DB], $HERO_KING) = $HERO_KING Then Return True
+				EndSwitch
+			Case $eQueen
+				Switch $pmatchMode
+					Case $DB
+						 If BitAND($iHeroAttack[$DB], $HERO_QUEEN) = $HERO_QUEEN Then Return True
+					Case $LB
+						 If BitAND($iHeroAttack[$LB], $HERO_QUEEN) = $HERO_QUEEN Then Return True
+					Case $TS
+						 If BitAND($iHeroAttack[$TS], $HERO_QUEEN) = $HERO_QUEEN Then Return True
+					Case $MA
+						 If BitAND($iHeroAttack[$DB], $HERO_QUEEN) = $HERO_QUEEN Then Return True
+				EndSwitch
+			case $eWarden
+				Switch $pmatchMode
+					Case $DB
+						 If BitAND($iHeroAttack[$DB], $HERO_WARDEN) = $HERO_WARDEN Then Return True
+					Case $LB
+						 If BitAND($iHeroAttack[$LB], $HERO_WARDEN) = $HERO_WARDEN Then Return True
+					Case $TS
+						 If BitAND($iHeroAttack[$TS], $HERO_WARDEN) = $HERO_WARDEN Then Return True
+					Case $MA
+						 If BitAND($iHeroAttack[$DB], $HERO_WARDEN) = $HERO_WARDEN Then Return True
+				EndSwitch
+			Case $eCastle
+				Switch $pmatchMode
+					Case $DB
+						 If $iDropCC[$DB] = 1 Then Return True
+					Case $LB
+						 If $iDropCC[$LB] = 1 Then Return True
+					Case $TS
+						 If $iDropCC[$TS] = 1 Then Return True
+					Case $MA
+						 If $iDropCC[$DB] = 1 Then Return True
+				EndSwitch
+			Case  $eLSpell
+				Switch $pmatchMode
+					Case $DB
+						 If $ichkLightSpell[$DB] = 1 Then Return True
+					Case $LB
+						 If $ichkLightSpell[$LB] = 1 Then Return True
+					Case $TS
+						 If $ichkLightSpell[$TS] = 1 Then Return True
+					Case $MA
+						 If $ichkLightSpell[$DB] = 1 Then Return True
+				EndSwitch
+			Case  $eHSpell
+				Switch $pmatchMode
+					Case $DB
+						 If $ichkHealSpell[$DB] = 1 Then Return True
+					Case $LB
+						 If $ichkHealSpell[$LB] = 1 Then Return True
+					Case $TS
+						 If $ichkHealSpell[$TS] = 1 Then Return True
+					Case $MA
+						 If $ichkHealSpell[$DB] = 1 Then Return True
+				EndSwitch
+			Case  $eRSpell
+				Switch $pmatchMode
+					Case $DB
+						 If $ichkRageSpell[$DB] = 1 Then Return True
+					Case $LB
+						 If $ichkRageSpell[$LB] = 1 Then Return True
+					Case $TS
+						 If $ichkRageSpell[$TS] = 1 Then Return True
+					Case $MA
+						 If $ichkRageSpell[$DB] = 1 Then Return True
+				EndSwitch
+			Case  $eJSpell
+				Switch $pmatchMode
+					Case $DB
+						 If $ichkJumpSpell[$DB] = 1 Then Return True
+					Case $LB
+						 If $ichkJumpSpell[$LB] = 1 Then Return True
+					Case $TS
+						 If $ichkJumpSpell[$TS] = 1 Then Return True
+					Case $MA
+						 If $ichkJumpSpell[$DB] = 1 Then Return True
+				EndSwitch
+			Case  $eFSpell
+				Switch $pmatchMode
+					Case $DB
+						 If $ichkFreezeSpell[$DB] = 1 Then Return True
+					Case $LB
+						 If $ichkFreezeSpell[$LB] = 1 Then Return True
+					Case $TS
+						 If $ichkFreezeSpell[$TS] = 1 Then Return True
+					Case $MA
+						 If $ichkFreezeSpell[$DB] = 1 Then Return True
+				EndSwitch
+			Case  $ePSpell
+				Switch $pmatchMode
+					Case $DB
+						 If $ichkPoisonSpell[$DB]  = 1 Then Return True
+					Case $LB
+						 If $ichkPoisonSpell[$LB] = 1 Then Return True
+					Case $TS
+						 If $ichkPoisonSpell[$TS] = 1 Then Return True
+					Case $MA
+						 If $ichkPoisonSpell[$DB] = 1 Then Return True
+				EndSwitch
+			Case  $eESpell
+				Switch $pmatchMode
+					Case $DB
+						 If $ichkEarthquakeSpell[$DB] = 1 Then Return True
+					Case $LB
+						 If $ichkEarthquakeSpell[$LB] = 1 Then Return True
+					Case $TS
+						 If $ichkEarthquakeSpell[$TS] = 1 Then Return True
+					Case $MA
+						 If $ichkEarthquakeSpell[$DB] = 1 Then Return True
+				EndSwitch
+			Case  $eHaSpell
+				Switch $pmatchMode
+					Case $DB
+						 If $ichkHasteSpell[$DB] = 1 Then Return True
+					Case $LB
+						 If $ichkHasteSpell[$LB] = 1 Then Return True
+					Case $TS
+						 If $ichkHasteSpell[$TS] = 1 Then Return True
+					Case $MA
+						 If $ichkHasteSpell[$DB] = 1 Then Return True
+				EndSwitch
+
+			Case Else
+				Return False
+		EndSwitch
+		Return False
+	EndIf
+EndFunc

@@ -1,199 +1,342 @@
-; #CLASS# ====================================================================================================================
-; Name ..........: algorithm_AllTroops
-; Description ...: This file contens all functions to manage attack profiles
-; Author ........: LunaEclipse(May, 2016)
-; Modified ......:
-; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015
+; #FUNCTION# ====================================================================================================================
+; Name ..........: algorith_AllTroops
+; Description ...: This file contens all functions to attack algorithm will all Troops , using Barbarians, Archers, Goblins, Giants and Wallbreakers as they are available
+; Syntax ........: algorithm_AllTroops()
+; Parameters ....: None
+; Return values .: None
+; Author ........:
+; Modified ......: Didipe (May-2015), ProMac(2016)
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
 ;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
 ; ===============================================================================================================================
 
-; Wrapper function to support CSV so no modifications needs to be made to CSV
-Func SetSlotSpecialTroops()
-	; Just call the new getHeroes() function
-	getHeroes()
-EndFunc   ;==>SetSlotSpecialTroops
+Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
+	If $debugSetlog = 1 Then Setlog("algorithm_AllTroops", $COLOR_PURPLE)
+	SetSlotSpecialTroops()
 
-; Function to close battle without checking normal end battle conditions
-Func CloseBattle($overrideStarCheck = False)
-	$skipReturnHome = True
-	
-	If Not $overrideStarCheck Then
-		For $i = 1 To 30
-			If _ColorCheck(_GetPixelColor($aWonOneStar[0], $aWonOneStar[1], True), Hex($aWonOneStar[2], 6), $aWonOneStar[3]) = True Then ExitLoop ; exit if not 'no star'
-			If _SleepAttack($iDelayalgorithm_AllTroops2) Then Return
-		Next
-	EndIf
-	
-	If IsAttackPage() Then ClickP($aSurrenderButton, 1, 0, "#0030") ; Click Surrender
-	If _SleepAttack($iDelayalgorithm_AllTroops3) Then Return
+	If _Sleep($iDelayalgorithm_AllTroops1) Then Return
 
-	If IsEndBattlePage() Then
-		ClickP($aConfirmSurrender, 1, 0, "#0031") ; Click Confirm
-		If _SleepAttack($iDelayalgorithm_AllTroops1) Then Return
-	EndIf
-EndFunc   ;==>CloseBattle
+	SmartAttackStrategy($iMatchMode) ; detect redarea first to drop any troops
 
-; Sets information about heroes into global variables
-Func getHeroes()
-	Local $aDeployButtonPositions = getUnitLocationArray()
-
-	$King = $aDeployButtonPositions[$eKing]
-	$Queen = $aDeployButtonPositions[$eQueen]
-	$Warden = $aDeployButtonPositions[$eWarden]
-	$CC = $aDeployButtonPositions[$eCastle]
-
-	If $debugSetlog = 1 Then
-		SetLog("Use king  SLOT n° " & $King, $COLOR_PURPLE)
-		SetLog("Use queen SLOT n° " & $Queen, $COLOR_PURPLE)
-		SetLog("Use Warden SLOT n° " & $Warden, $COLOR_PURPLE)
-		SetLog("Use CC SLOT n° " & $CC, $COLOR_PURPLE)
-	EndIf
-EndFunc   ;==>getHeroes
-
-; Function to actually use a heroes special ability, by clicking the appropriate troop bar button
-Func useHeroesAbility()
-	;Activate KQ's power
-	If ($checkKPower Or $checkQPower) And $iActivateKQCondition = "Manual" Then
-		SetLog("Waiting " & $delayActivateKQ / 1000 & " seconds before activating Hero abilities", $COLOR_BLUE)
-		If _SleepAttack($delayActivateKQ) Then Return
-
-		If $checkKPower Then
-			SetLog("Activating King's power", $COLOR_BLUE)
-			SelectDropTroop($King)
-			$checkKPower = False
-		EndIf
-
-		If $checkQPower Then
-			SetLog("Activating Queen's power", $COLOR_BLUE)
-			SelectDropTroop($Queen)
-			$checkQPower = False
-		EndIf
-	EndIf
-EndFunc   ;==>useHeroesAbility
-
-; Function to process town hall snipes, will exit battle after the snipe if it was a snipe only attack
-Func useTownHallSnipe()
-	SwitchAttackTHType()
-
-	; Check to see if the attack type was a townhall snipe only
-	If $iMatchMode = $TS Then
+	; If one of condtions passed then start TH snipe attack
+	; - detect matchmode TS
+	; - detect matchmode DB and enabled TH snipe before attack and th outside
+	; - detect matchmode LB and enabled TH snipe before attack and th outside
+	If $searchTH = "-"  and  ($iMatchMode = $DB and $THSnipeBeforeDBEnable = 1 ) or ($iMatchMode = $LB and $THSnipeBeforeDBEnable = 1 ) Then FindTownHall(True) ;If no previous detect townhall search th position
+	If $iMatchMode = $TS or  ( ( ($iMatchMode = $DB and $THSnipeBeforeDBEnable = 1 ) or ($iMatchMode = $LB and $THSnipeBeforeDBEnable = 1 ) )  and   SearchTownHallLoc()  ) Then
+		SwitchAttackTHType()
 		If $zoomedin = True Then
 			ZoomOut()
 			$zoomedin = False
 			$zCount = 0
 			$sCount = 0
 		EndIf
+	EndIf
 
-		If $THusedKing = 1 Or $THusedQueen = 1 Then
-			SetLog("King and/or Queen dropped, close attack")
+	If $iMatchMode = $TS Then; Return ;Exit attacking if trophy hunting and not bullymode
+		If ($THusedKing = 1 Or $THusedQueen = 1) And ($ichkSmartZapSaveHeroes = 1 Or $ichkSmartZap = 0) Then
+			Setlog("Wait few sec before close attack.")
+			If _Sleep(Random(0, 2, 1) * 1000) Then Return ;wait 0-2 second before exit if king and queen are not dropped
 		Else
+			SetLog("King and/or Queen dropped, close attack.")
+			If $ichkSmartZap = 1 Then SetLog("Skipping SmartZap to protect your royals!", $COLOR_FUCHSIA)
+		ElseIf IsAttackPage() And Not SmartZap() And $THusedKing = 0 And $THusedQueen = 0 Then
 			Setlog("Wait few sec before close attack")
-			If _SleepAttack(Random(2, 5, 1) * 1000) Then Return ; wait 2-5 second before exit if king and queen are not dropped
+			If _Sleep(Random(2, 5, 1) * 1000) Then Return ; wait 2-5 second before exit if king and queen are not dropped
 		EndIf
 
+		;close battle
 		CloseBattle()
+		Return
 	EndIf
-EndFunc   ;==>useTownHallSnipe
 
-; Function returns the number of sides to attack from, based on the attack type
-Func getNumberOfSides()
+
+
+	;############################################# LSpell Attack ############################################################
+	; DropLSpell()
+	;########################################################################################################################
 	Local $nbSides = 0
-
-	; Check the attack types common to both first, case else will deal with attack types specific to a particular type of base
 	Switch $iChkDeploySettings[$iMatchMode]
-		Case $eOneSide
-			SetLog("Attacking on a single side.", $COLOR_BLUE)
+		Case 0 ;Single sides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			SetLog("Attacking on a single side", $COLOR_BLUE)
 			$nbSides = 1
-		Case $eTwoSides
-			SetLog("Attacking on two sides.", $COLOR_BLUE)
+		Case 1 ;Two sides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			SetLog("Attacking on two sides", $COLOR_BLUE)
 			$nbSides = 2
-		Case $eThreeSides
-			SetLog("Attacking on three sides.", $COLOR_BLUE)
+		Case 2 ;Three sides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			SetLog("Attacking on three sides", $COLOR_BLUE)
 			$nbSides = 3
-		Case $eAllSides
-			SetLog("Attacking on all sides.", $COLOR_BLUE)
+		Case 3 ;All sides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			SetLog("Attacking on all sides", $COLOR_BLUE)
 			$nbSides = 4
-		Case Else
-			If $iMatchMode = $DB Then
-				Switch $iChkDeploySettings[$iMatchMode]
-					Case $eSmartSave
-						$nbSides = 4
-					Case Else
-						; Should never reach here unless there is a problem with the code
-				EndSwitch
-			ElseIf $iMatchMode = $LB Then
-				Switch $iChkDeploySettings[$iMatchMode]
-					Case $eCustomDeploy
-						$nbSides = 1
-					Case Else
-						; Should never reach here unless there is a problem with the code
-				EndSwitch
-			EndIf
+		Case 4 ;DE Side - Live Base only ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			SetLog("Attacking on Dark Elixir Side.", $COLOR_BLUE)
+			$nbSides = 1
+			If Not ($iChkRedArea[$iMatchMode]) Then GetBuildingEdge($eSideBuildingDES) ; Get DE Storage side when Redline is not used.
+		Case 5 ;TH Side - Live Base only ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			SetLog("Attacking on Town Hall Side.", $COLOR_BLUE)
+			$nbSides = 1
+			If Not ($iChkRedArea[$iMatchMode]) Then GetBuildingEdge($eSideBuildingTH) ; Get Townhall side when Redline is not used.
 	EndSwitch
+	If ($nbSides = 0) Then Return
+	If _Sleep($iDelayalgorithm_AllTroops2) Then Return
 
-	Return $nbSides
-EndFunc   ;==>getNumberOfSides
-
-; Function returns the deployment array for the attack, attack type can be overridden by using the parameter
-Func getDeploymentInfo($nbSides, $overrideMode = -1)
-	If ($iMatchMode = $LB And $iChkDeploySettings[$LB] = $eCustomDeploy And $overrideMode = -1) Or ($iMatchMode = $LB And $overrideMode = $eCustomDeploy) Then ; Customized side wave deployment for Custom Deploy
-        Local $listInfoDeploy = deployUISettingsToArray($nbSides)
-		If $debugSetlog = 1 Then SetLog("List Deploy for Customized Side attack", $COLOR_PURPLE)
-    ElseIf ($iMatchMode = $DB And $iChkDeploySettings[$DB] = $eSmartSave And $overrideMode = -1) Or ($iMatchMode = $DB And $overrideMode = $eSmartSave) Then ; Save Troops For Collectors Style
-	    Local $listInfoDeploy = deployArraySetSides($DEFAULT_SAVE_TROOPS_DEPLOY, $nbSides)
-        If $debugSetlog = 1 Then SetLog("List Deploy for Save Troops attacks", $COLOR_PURPLE)
+	; $ListInfoDeploy = [Troop, No. of Sides, $WaveNb, $MaxWaveNb, $slotsPerEdge]
+	If $iMatchMode = $LB And $iChkDeploySettings[$LB] = 4 Then ; Customise DE side wave deployment here
+		Switch $icmbStandardAlgorithm[$iMatchMode]
+			Case 0
+				Local $listInfoDeploy[18][5] = [[$eGole, $nbSides, 1, 1, 2] _
+						, [$eLava, $nbSides, 1, 1, 2] _
+						, [$eGiant, $nbSides, 1, 1, 2] _
+						, [$eDrag, $nbSides, 1, 1, 0] _
+						, [$eBall, $nbSides, 1, 1, 0] _
+						, [$eHogs, $nbSides, 1, 1, 1] _
+						, [$eValk, $nbSides, 1, 1, 0] _
+						, [$eBarb, $nbSides, 1, 1, 0] _
+						, [$eWall, $nbSides, 1, 1, 1] _
+						, [$eArch, $nbSides, 1, 1, 0] _
+						, [$eWiza, $nbSides, 1, 1, 0] _
+						, [$eMini, $nbSides, 1, 1, 0] _
+						, [$eWitc, $nbSides, 1, 1, 1] _
+						, [$eGobl, $nbSides, 1, 1, 0] _
+						, ["CC", 1, 1, 1, 1] _
+						, [$eHeal, $nbSides, 1, 1, 1] _
+						, [$ePekk, $nbSides, 1, 1, 1] _
+						, ["HEROES", 1, 2, 1, 1] _
+						]
+			Case 1
+				Local $listInfoDeploy[6][5] = [[$eBarb, $nbSides, 1, 1, 0] _
+						, [$eArch, $nbSides, 1, 1, 0] _
+						, [$eGobl, $nbSides, 1, 1, 0] _
+						, [$eMini, $nbSides, 1, 1, 0] _
+						, ["CC", 1, 1, 1, 1] _
+						, ["HEROES", 1, 2, 1, 1] _
+						]
+			Case 2
+				Local $listInfoDeploy[13][5] = [[$eGiant, $nbSides, 1, 1, 2] _
+						, [$eWall, $nbSides, 1, 1, 2] _
+						, [$eBarb, $nbSides, 1, 2, 2] _
+						, [$eArch, $nbSides, 1, 3, 3] _
+						, [$eBarb, $nbSides, 2, 2, 2] _
+						, [$eArch, $nbSides, 2, 3, 3] _
+						, ["CC", 1, 1, 1, 1] _
+						, ["HEROES", 1, 2, 1, 0] _
+						, [$eHogs, $nbSides, 1, 1, 1] _
+						, [$eWiza, $nbSides, 1, 1, 0] _
+						, [$eMini, $nbSides, 1, 1, 0] _
+						, [$eArch, $nbSides, 3, 3, 2] _
+						, [$eGobl, $nbSides, 1, 1, 1] _
+						]
+		EndSwitch
 	Else
-		Local $listInfoDeploy = deployArraySetSides($DEFAULT_ORIGINAL_DEPLOY, $nbSides)
-		If $debugSetlog = 1 Then SetLog("List Deploy for Standard attacks", $COLOR_PURPLE)
+		If $debugSetlog = 1 Then SetLog("listdeploy standard for attack", $COLOR_PURPLE)
+		Switch $icmbStandardAlgorithm[$iMatchMode]
+			Case 0
+				Local $listInfoDeploy[18][5] = [[$eGole, $nbSides, 1, 1, 2] _
+						, [$eLava, $nbSides, 1, 1, 2] _
+						, [$eGiant, $nbSides, 1, 1, 2] _
+						, [$eDrag, $nbSides, 1, 1, 0] _
+						, [$eBall, $nbSides, 1, 1, 0] _
+						, [$eHogs, $nbSides, 1, 1, 1] _
+						, [$eValk, $nbSides, 1, 1, 0] _
+						, [$eBarb, $nbSides, 1, 1, 0] _
+						, [$eWall, $nbSides, 1, 1, 1] _
+						, [$eArch, $nbSides, 1, 1, 0] _
+						, [$eWiza, $nbSides, 1, 1, 0] _
+						, [$eMini, $nbSides, 1, 1, 0] _
+						, [$eWitc, $nbSides, 1, 1, 1] _
+						, [$eGobl, $nbSides, 1, 1, 0] _
+						, ["CC", 1, 1, 1, 1] _
+						, [$eHeal, $nbSides, 1, 1, 1] _
+						, [$ePekk, $nbSides, 1, 1, 1] _
+						, ["HEROES", 1, 2, 1, 1] _
+						]
+			Case 1
+				Local $listInfoDeploy[6][5] = [[$eBarb, $nbSides, 1, 1, 0] _
+						, [$eArch, $nbSides, 1, 1, 0] _
+						, [$eGobl, $nbSides, 1, 1, 0] _
+						, [$eMini, $nbSides, 1, 1, 0] _
+						, ["CC", 1, 1, 1, 1] _
+						, ["HEROES", 1, 2, 1, 1] _
+						]
+			Case 2
+				Local $listInfoDeploy[13][5] = [[$eGiant, $nbSides, 1, 1, 2] _
+						, [$eBarb, $nbSides, 1, 2, 0] _
+						, [$eWall, $nbSides, 1, 1, 1] _
+						, [$eArch, $nbSides, 1, 2, 0] _
+						, [$eBarb, $nbSides, 2, 2, 0] _
+						, [$eGobl, $nbSides, 1, 2, 0] _
+						, ["CC", 1, 1, 1, 1] _
+						, [$eHogs, $nbSides, 1, 1, 1] _
+						, [$eWiza, $nbSides, 1, 1, 0] _
+						, [$eMini, $nbSides, 1, 1, 0] _
+						, [$eArch, $nbSides, 2, 2, 0] _
+						, [$eGobl, $nbSides, 2, 2, 0] _
+						, ["HEROES", 1, 2, 1, 1] _
+						]
+			Case Else
+				SetLog("Algorithm type unavailable, defaulting to regular", $COLOR_RED)
+				Local $listInfoDeploy[13][5] = [[$eGiant, $nbSides, 1, 1, 2] _
+						, [$eBarb, $nbSides, 1, 2, 0] _
+						, [$eWall, $nbSides, 1, 1, 1] _
+						, [$eArch, $nbSides, 1, 2, 0] _
+						, [$eBarb, $nbSides, 2, 2, 0] _
+						, [$eGobl, $nbSides, 1, 2, 0] _
+						, ["CC", 1, 1, 1, 1] _
+						, [$eHogs, $nbSides, 1, 1, 1] _
+						, [$eWiza, $nbSides, 1, 1, 0] _
+						, [$eMini, $nbSides, 1, 1, 0] _
+						, [$eArch, $nbSides, 2, 2, 0] _
+						, [$eGobl, $nbSides, 2, 2, 0] _
+						, ["HEROES", 1, 2, 1, 1] _
+						]
+		EndSwitch
 	EndIf
 
-	Return $listInfoDeploy
-EndFunc   ;==>getDeploymentInfo
+	$isCCDropped = False
+	$DeployCCPosition[0] = -1
+	$DeployCCPosition[1] = -1
+	$isHeroesDropped = False
+	$DeployHeroesPosition[0] = -1
+	$DeployHeroesPosition[1] = -1
 
-; This function calls the appropriate attack profile for the selected attack
-Func deployTroops($nbSides)
-	Local $listInfoDeploy = getDeploymentInfo($nbSides)
+	LaunchTroop2($listInfoDeploy, $CC, $King, $Queen, $Warden)
 
-	Switch $iMatchMode
-		Case $DB
-			Switch $iChkDeploySettings[$DB]
-				Case $eSmartSave
-					launchSaveTroopsForCollectors($listInfoDeploy, $CC, $King, $Queen, $Warden)
-				Case Else
-					launchStandard($listInfoDeploy, $CC, $King, $Queen, $Warden, $nbSides)
-			EndSwitch
-		Case $LB
-			Switch $iChkDeploySettings[$LB]
-				Case $eCustomDeploy
-					launchCustomDeploy($listInfoDeploy, $CC, $King, $Queen, $Warden)
-				Case Else
-					launchStandard($listInfoDeploy, $CC, $King, $Queen, $Warden, $nbSides)
-			EndSwitch
-	EndSwitch
-EndFunc   ;==>deployTroops
+	If _Sleep($iDelayalgorithm_AllTroops4) Then Return
+	SetLog("Dropping left over troops", $COLOR_BLUE)
+	For $x = 0 To 1
+		IF PrepareAttack($iMatchMode, True) = 0 Then
+			If $debugsetlog = 1 Then Setlog("No Wast time... exit, no troops usable left",$COLOR_PURPLE)
+			ExitLoop ;Check remaining quantities
+		EndIf
+		For $i = $eBarb To $eLava ; lauch all remaining troops
+			;If $i = $eBarb Or $i = $eArch Then
+			LauchTroop($i, $nbSides, 0, 1)
+			CheckHeroesHealth()
+			;Else
+			;	 LauchTroop($i, $nbSides, 0, 1, 2)
+			;EndIf
+			If _Sleep($iDelayalgorithm_AllTroops5) Then Return
+		Next
+	Next
 
-; Main function that handles all attack types to be sure the correct code runs
-Func algorithm_AllTroops()
-	If $debugSetlog = 1 Then Setlog("algorithm_AllTroops", $COLOR_PURPLE)
-
-	; Calculate Redline
-	calculateRedLine()
-
-	getHeroes()
-	If _SleepAttack($iDelayalgorithm_AllTroops1) Then Return
-
-    If $iMatchMode = $TS or ($chkATH = 1 And SearchTownHallLoc()) Then
-		useTownHallSnipe()
-
-		; Only quit if the attack was a town hall snipe
-		; This allows a standard attack to continue after destroying an outside town hall
-		If $iMatchMode = $TS Then Return
+	;Activate KQ's power
+	If ($checkKPower Or $checkQPower) And $iActivateKQCondition = "Manual" Then
+		SetLog("Waiting " & $delayActivateKQ / 1000 & " seconds before activating Hero abilities", $COLOR_BLUE)
+		If _Sleep($delayActivateKQ) Then Return
+		If $checkKPower Then
+			SetLog("Activating King's power", $COLOR_BLUE)
+			SelectDropTroop($King)
+			$checkKPower = False
+		EndIf
+		If $checkQPower Then
+			SetLog("Activating Queen's power", $COLOR_BLUE)
+			SelectDropTroop($Queen)
+			$checkQPower = False
+		EndIf
 	EndIf
 
-	Local $nbSides = getNumberOfSides()
-
-	If $nbSides = 0 Then Return ; No sides set, so lets just quit
-
-	If _SleepAttack($iDelayalgorithm_AllTroops2) Then Return
-	deployTroops($nbSides)
+	SetLog("Finished Attacking, waiting for the battle to end")
 EndFunc   ;==>algorithm_AllTroops
+
+Func SetSlotSpecialTroops()
+	$King = -1
+	$Queen = -1
+	$CC = -1
+	$Warden = -1
+	For $i = 0 To UBound($atkTroops) - 1
+		If $atkTroops[$i][0] = $eCastle Then
+			$CC = $i
+		ElseIf $atkTroops[$i][0] = $eKing Then
+			$King = $i
+		ElseIf $atkTroops[$i][0] = $eQueen Then
+			$Queen = $i
+		ElseIf $atkTroops[$i][0] = $eWarden Then
+			$Warden = $i
+		EndIf
+	Next
+	If $debugSetlog = 1 Then SetLog("Use king SLOT n° " & $King, $COLOR_PURPLE)
+	If $debugSetlog = 1 Then SetLog("Use queen SLOT n° " & $Queen, $COLOR_PURPLE)
+	If $debugSetlog = 1 Then SetLog("Use CC SLOT n° " & $CC, $COLOR_PURPLE)
+	If $debugSetlog = 1 Then SetLog("Use Warden SLOT n° " & $Warden, $COLOR_PURPLE)
+EndFunc   ;==>SetSlotSpecialTroops
+
+Func CloseBattle()
+	If IsAttackPage() Then
+		For $i = 1 To 30
+			;_CaptureRegion()
+			If _ColorCheck(_GetPixelColor($aWonOneStar[0], $aWonOneStar[1], True), Hex($aWonOneStar[2], 6), $aWonOneStar[3]) = True Then ExitLoop ;exit if not 'no star'
+			If _Sleep($iDelayalgorithm_AllTroops2) Then Return
+		Next
+	EndIf
+
+	If IsAttackPage() Then ClickP($aSurrenderButton, 1, 0, "#0030") ;Click Surrender
+	If _Sleep($iDelayalgorithm_AllTroops3) Then Return
+	If IsEndBattlePage() Then
+		ClickP($aConfirmSurrender, 1, 0, "#0031") ;Click Confirm
+		If _Sleep($iDelayalgorithm_AllTroops1) Then Return
+	EndIf
+
+EndFunc   ;==>CloseBattle
+
+
+Func SmartAttackStrategy($imode)
+	If $iMatchMode <> $MA then ; (milking attack use own strategy)
+
+		If ($iChkRedArea[$imode]) Then
+			SetLog("Calculating Smart Attack Strategy", $COLOR_BLUE)
+			Local $hTimer = TimerInit()
+			_CaptureRegion2()
+			_GetRedArea()
+
+			SetLog("Calculated  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds) :")
+			;SetLog("	[" & UBound($PixelTopLeft) & "] pixels TopLeft")
+			;SetLog("	[" & UBound($PixelTopRight) & "] pixels TopRight")
+			;SetLog("	[" & UBound($PixelBottomLeft) & "] pixels BottomLeft")
+			;SetLog("	[" & UBound($PixelBottomRight) & "] pixels BottomRight")
+
+			If ($iChkSmartAttack[$imode][0] = 1 Or $iChkSmartAttack[$imode][1] = 1 Or $iChkSmartAttack[$imode][2] = 1) Then
+				SetLog("Locating Mines, Collectors & Drills", $COLOR_BLUE)
+				$hTimer = TimerInit()
+				Global $PixelMine[0]
+				Global $PixelElixir[0]
+				Global $PixelDarkElixir[0]
+				Global $PixelNearCollector[0]
+				; If drop troop near gold mine
+				If ($iChkSmartAttack[$imode][0] = 1) Then
+					$PixelMine = GetLocationMine()
+					If (IsArray($PixelMine)) Then
+						_ArrayAdd($PixelNearCollector, $PixelMine)
+					EndIf
+				EndIf
+				; If drop troop near elixir collector
+				If ($iChkSmartAttack[$imode][1] = 1) Then
+					$PixelElixir = GetLocationElixir()
+					If (IsArray($PixelElixir)) Then
+						_ArrayAdd($PixelNearCollector, $PixelElixir)
+					EndIf
+				EndIf
+				; If drop troop near dark elixir drill
+				If ($iChkSmartAttack[$imode][2] = 1) Then
+					$PixelDarkElixir = GetLocationDarkElixir()
+					If (IsArray($PixelDarkElixir)) Then
+						_ArrayAdd($PixelNearCollector, $PixelDarkElixir)
+					EndIf
+				EndIf
+				SetLog("Located  (in " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds) :")
+				SetLog("[" & UBound($PixelMine) & "] Gold Mines")
+				SetLog("[" & UBound($PixelElixir) & "] Elixir Collectors")
+				SetLog("[" & UBound($PixelDarkElixir) & "] Dark Elixir Drill/s")
+				$iNbrOfDetectedMines[$imode] += UBound($PixelMine)
+				$iNbrOfDetectedCollectors[$imode] += UBound($PixelElixir)
+				$iNbrOfDetectedDrills[$imode] += UBound($PixelDarkElixir)
+				UpdateStats()
+			EndIf
+
+		EndIf
+	EndIf
+
+EndFunc

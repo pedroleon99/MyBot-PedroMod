@@ -5,7 +5,7 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: Sardo (2015-06) (2015-09)
-; Modified ......: LunaEclipse(February, 2016)
+; Modified ......:
 ;
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
 ;                  MyBot is distributed under the terms of the GNU GPL
@@ -32,9 +32,9 @@ Func WindowsArrange($position, $offsetX = 0, $offsetY = 0)
 		Local $BOTw = $BOTPos[2]
 		Local $BOTh = $BOTPos[3]
 		;Setlog($sBotTitle & " position found:" & $BOTx & "," & $BOTy & " w:" & $BOTw & " h:" & $BOTh)
-		;Setlog(Number($BSx) & " " & Number($BSy) )
+		;Setlog(Number( $BSx) & " " & Number($BSy ) )
 		;SetLog(@DesktopWidth)
-		If Number($BSx) > -30000 and Number($BSy) > -30000 Then
+		If Number( $BSx) > -30000 and Number($BSy ) > -30000 Then
 			Switch $position
 				Case "BS-BOT" ; position left bs, right adjacent BOT
 					$BSHandle = WinMove2($HWnD, "", 0 + Number($offsetX) , 0 + number($offsetY))
@@ -46,33 +46,23 @@ Func WindowsArrange($position, $offsetX = 0, $offsetY = 0)
 					If _Sleep($iDelayWindowsArrange1) Then Return
 					$BSHandle = WinMove2($HWnD, "", Number($BOTw) + Number($offsetX)*2, 0 + number($offsetY))
 					If _Sleep($iDelayWindowsArrange1) Then Return
-				Case "SNAP-BS-TR" ; position BOT top right of BS, do not move BS
-					If $BSx + $BSw + number($offsetX) < @DesktopWidth Then $BOTHandle = WinMove2($sBotTitle, "", $BSx + $BSw + Number($offsetX), $BSy)
+				Case "SNAP-TR" ; position BOT top right of BS, do not move BS
+					If $BSx + $BSw + number($offsetX) < @DesktopWidth Then $BOTHandle = WinMove2($sBotTitle, "", $BSx + $BSw + Number($offsetX), $BSy )
 					If _Sleep($iDelayWindowsArrange1) Then Return
-				Case "SNAP-BS-BR" ; position BOT botom right of BS, do not move BS
-					If $BSx + $BSw + number($offsetY) < @DesktopWidth Then $BOTHandle = WinMove2($sBotTitle, "", $BSx + $BSw + Number($offsetX), $BSy + ($BSh- $BOTh))
+				Case "SNAP-BR" ; position BOT botom right of BS, do not move BS
+					If $BSx + $BSw + number($offsetY) < @DesktopWidth Then $BOTHandle = WinMove2($sBotTitle, "", $BSx + $BSw + Number($offsetX), $BSy + ( $BSh- $BOTh )  )
 					If _Sleep(500) Then Return
-				Case "SNAP-BS-TL" ; position BOT top left of BS, do not move BS
-					If $BSx  >=100 Then $BOTHandle = WinMove2($sBotTitle, "", $BSx - $BOTw - Number($offsetX), $BSy)
+				Case "SNAP-TL" ; position BOT top left of BS, do not move BS
+					If $BSx  >=100 Then $BOTHandle = WinMove2($sBotTitle, "", $BSx - $BOTw - Number($offsetX), $BSy )
 					If _Sleep($iDelayWindowsArrange1) Then Return
-				Case "SNAP-BS-BL" ; position BOT bottom left of BS, do not move BS
-					If $BSx >= 100 Then $BOTHandle = WinMove2($sBotTitle, "", $BSx - $BOTw - Number($offsetX), $BSy + ($BSh - $BOTh))
-					If _Sleep($iDelayWindowsArrange1) Then Return
-				Case "SNAP-BOT-TR" ; position Android top right of BOT, do not move BOT
-					If $BOTx + $BOTw + number($offsetX) < @DesktopWidth Then $BSHandle = WinMove2($Title, "", $BOTx + $BOTw + Number($offsetX), $BOTy)
-					If _Sleep($iDelayWindowsArrange1) Then Return
-				Case "SNAP-BOT-BR" ; position Android botom right of BOT, do not move BOT
-					If $BOTx + $BOTw + number($offsetY) < @DesktopWidth Then $BSHandle = WinMove2($Title, "", $BOTx + $BOTw + Number($offsetX), $BOTy + ($BOTh - $BSh))
-					If _Sleep(500) Then Return
-				Case "SNAP-BOT-TL" ; position Android top left of BOT, do not move BOT
-					If $BOTx >= 100 Then $BSHandle = WinMove2($Title, "", $BOTx - $BSw - Number($offsetX), $BOTy)
-					If _Sleep($iDelayWindowsArrange1) Then Return
-				Case "SNAP-BOT-BL" ; position Android bottom left of BOT, do not move BOT
-					If $BOTx >= 100 Then $BSHandle = WinMove2($Title, "", $BOTx - $BSw - Number($offsetX), $BOTy + ($BOTh - $BSh))
+				Case "SNAP-BL" ; position BOT bottom left of BS, do not move BS
+					If $BSx >= 100 Then $BOTHandle = WinMove2($sBotTitle, "", $BSx - $BOTw - Number($offsetX), $BSy + ( $BSh- $BOTh ) )
 					If _Sleep($iDelayWindowsArrange1) Then Return
 			EndSwitch
 		EndIf
 	EndIf
+
+
 EndFunc   ;==>WindowsArrange
 
 Func DisposeWindows()
@@ -84,21 +74,13 @@ Func DisposeWindows()
 				Case 1
 					WindowsArrange("BOT-BS",  $iWAOffsetX, $iWAOffsetY)
 				Case 2
-					WindowsArrange("SNAP-BS-TR", $iWAOffsetX, $iWAOffsetY)
+					WindowsArrange("SNAP-TR", $iWAOffsetX, $iWAOffsetY)
 				Case 3
-					WindowsArrange("SNAP-BS-TL", $iWAOffsetX, $iWAOffsetY)
+					WindowsArrange("SNAP-TL", $iWAOffsetX, $iWAOffsetY)
 				Case 4
-					WindowsArrange("SNAP-BS-BR", $iWAOffsetX, $iWAOffsetY)
+					WindowsArrange("SNAP-BR", $iWAOffsetX, $iWAOffsetY)
 				Case 5
-					WindowsArrange("SNAP-BS-BL", $iWAOffsetX, $iWAOffsetY)
-				Case 6
-					WindowsArrange("SNAP-BOT-TR",  $iWAOffsetX, $iWAOffsetY)
-				Case 7
-					WindowsArrange("SNAP-BOT-TL",  $iWAOffsetX, $iWAOffsetY)
-				Case 8
-					WindowsArrange("SNAP-BOT-BR",  $iWAOffsetX, $iWAOffsetY)
-				Case 9
-					WindowsArrange("SNAP-BOT-BL",  $iWAOffsetX, $iWAOffsetY)					
+					WindowsArrange("SNAP-BL", $iWAOffsetX, $iWAOffsetY)
 			EndSwitch
 		Else
 			If $bMonitorHeight800orBelow Then

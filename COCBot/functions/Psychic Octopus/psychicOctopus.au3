@@ -16,41 +16,55 @@
 #include <Date.au3>
 
 Func CloseCOCAndWait($timeRemaining, $forceClose = False)
-	; Randomly choose whether to actually exit COC or do nothing (time out)
-	If $forceClose Or Random(0, 1, 1) = 1 Then
-		; Force close the bot
-	; Find and wait for the confirmation of exit "okay" button
-	Local $counter = 0
-	While 1
-		checkObstacles()
-		BS1BackButton()
 
-		; Wait for window to open
+	Local $tempCloseCoC = 0 
+	
+	; Random Stay connect on Game or Close the Game while Training
+	If ($ichkCloseTraining = 1 and $RandomCloseTraining = 1 and $RandomCloseTraining2 = 1) then Return  
+		
+	; Randomly choose whether to actually exit COC or do nothing (time out)
+	
+	; Random Close or Leave 
+	If $RandomCoCOpen = 1 then 
+		if $debugSetlog = 1 then  Setlog("Random Close or Leave ...", $COLOR_RED)
+		$tempCloseCoC = Random(0,1,1)
+		if $debugSetlog = 1 then  Setlog("$tempCloseCoC: " & $tempCloseCoC)
+	EndIf 
+	
+	If ($forceClose and $CloseCoCGame = 1) or ($forceClose and $RandomCoCOpen = 1 and $tempCloseCoC = 1 ) Then
+		; Force close the bot
+		; Find and wait for the confirmation of exit "okay" button
+		Local $counter = 0
+		While 1
+			checkObstacles()
+			BS1BackButton()
+
+			; Wait for window to open
 			If _Sleep($iDelayAttackDisable1000) Then Return
-		; Confirm okay to exit
+			; Confirm okay to exit
 			If ClickOkay("ExitCoCokay", True) = True Then ExitLoop
 
-		If $counter > 10 Then
-			If $debugImageSave = 1 Then DebugImageSave("CheckAttackDisableFailedButtonCheck_")
-			Setlog("Can not find Okay button to exit CoC, Forcefully Closing CoC", $COLOR_RED)
+			If $counter > 10 Then
+				If $debugImageSave = 1 Then DebugImageSave("CheckAttackDisableFailedButtonCheck_")
+				Setlog("Can not find Okay button to exit CoC, Forcefully Closing CoC", $COLOR_RED)
 
-			CloseCoC()
-			ExitLoop
-		EndIf
-		$counter += 1
-	WEnd
-	; Short wait for CoC to exit
-	If _Sleep(1500) Then Return
-	; Pushbullet Msg
-	PushMsg("TakeBreak")
-	; Log off CoC for set time
-	WaitnOpenCoC($timeRemaining * 1000, True)
+				CloseCoC()
+				ExitLoop
+			EndIf
+			$counter += 1
+		WEnd
+		; Short wait for CoC to exit
+		If _Sleep(1500) Then Return
+		; Pushbullet Msg
+		PushMsg("TakeBreak")
+		; Log off CoC for set time
+		WaitnOpenCoC($timeRemaining * 1000, True)
 	Else
 		; Nothing is needed here for timeout, as WaitnOpenCoC will stop the bot from doing anything so it will timeout naturally
 		; Pushbullet Msg
 		PushMsg("TakeBreak")
 		; Just wait without close the CoC
-		WaitnOpenCoC($timeRemaining * 1000, True)
+		WaitnOpenCoC($timeRemaining * 1000, True, False)
 	EndIf
 
 EndFunc   ;==>CloseCOCAndWait
@@ -134,7 +148,7 @@ Func checkRemainingTraining()
 	; Add random additional time from $minTrainAddition minute to $maxTrainAddition minutes
 	$iRemainingTimeTroops += Random($minTrainAddition, $maxTrainAddition, 1)
 	; Convert remaining time to seconds and close COC and wait for that length of time
-	CloseCOCAndWait($iRemainingTimeTroops * 60)
+	CloseCOCAndWait($iRemainingTimeTroops * 60, True)
 EndFunc   ;==>checkRemainingTraining
 
 Func checkSleep()

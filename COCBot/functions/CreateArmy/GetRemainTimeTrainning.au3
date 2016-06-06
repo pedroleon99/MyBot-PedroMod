@@ -61,11 +61,11 @@ Func getRemainingTraining($Troops = True, $Spells = True)
 			EndIf
 		EndIf
 
-		; Verify the higest value to return in minutes
+		; Verify the higest value to return in minutes and the % for fulll troops
 		If $aRemainTrainTroopTimer > $aRemainTrainSpellsTimer Then
-			Return $aRemainTrainTroopTimer
+			Return ($aRemainTrainTroopTimer * $fulltroop)/100
 		Else
-			Return $aRemainTrainSpellsTimer
+			Return ($aRemainTrainSpellsTimer * $fulltroop)/100
 		EndIf
 	Else
 		SetLog("Can not read the remaining Troops&Spells time!", $COLOR_RED)

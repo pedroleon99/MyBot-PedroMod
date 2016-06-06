@@ -5,7 +5,7 @@
 ; Parameters ....:
 ; Return values .: None
 ; Author ........: Sardo (2016)
-; Modified ......: AwesomeGamer (Feb. 11th 2016)
+; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2016
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -30,7 +30,7 @@ Func ParseAttackCSV_Read_SIDE_variables()
 	EndIf
 
 	Local $f, $line, $acommand, $command
-	Local $value1, $value2, $value3, $value4, $value5, $value6, $value7, $value8, $value9, $value10
+	Local $value1, $value2, $value3, $value4, $value5, $value6, $value7, $value8, $value9
 
 	If FileExists($dirAttacksCSV & "\" & $filename & ".csv") Then
 		$f = FileOpen($dirAttacksCSV & "\" & $filename & ".csv", 0)
@@ -51,70 +51,22 @@ Func ParseAttackCSV_Read_SIDE_variables()
 				$value8 = StringStripWS(StringUpper($acommand[9]), 2)
 				$value9 = StringStripWS(StringUpper($acommand[10]), 2)
 
-				If $acommand[0] = 11 Then
-				  $value10 = StringStripWS(StringUpper($acommand[11]), 2)
-			   EndIf
-
 				If $command = "SIDE" Then
 					;forced side
 					If StringUpper($value8) = "TOP-LEFT" Or StringUpper($value8) = "TOP-RIGHT" Or StringUpper($value8) = "BOTTOM-LEFT" Or StringUpper($value8) = "BOTTOM-RIGHT" Then
-						$attackcsv_locate_mine = 0
-						$attackcsv_locate_elixir = 0
-						$attackcsv_locate_drill = 0
-						$attackcsv_locate_gold_storage = 0
-						$attackcsv_locate_elixir_storage = 0
-						$attackcsv_locate_dark_storage = 0
-						$attackcsv_locate_townhall = 0
+						;keep original values
 					Else
-						If Int($value1) > 0 Then
-							$attackcsv_locate_mine = 1
-						Else
-							$attackcsv_locate_mine = 0
-						EndIf
-						If Int($value2) > 0 Then
-							$attackcsv_locate_elixir = 1
-						Else
-							$attackcsv_locate_elixir = 0
-						EndIf
-						If Int($value3) > 0 Then
-							$attackcsv_locate_drill = 1
-						Else
-							$attackcsv_locate_drill = 0
-						EndIf
-						If Int($value4) > 0 Then
-							$attackcsv_locate_gold_storage = 1
-						Else
-							$attackcsv_locate_gold_storage = 0
-						EndIf
-						If Int($value5) > 0 Then
-							$attackcsv_locate_elixir_storage = 1
-						Else
-							$attackcsv_locate_elixir_storage = 0
-						EndIf
-						If Int($value6) > 0 Then
-							$attackcsv_locate_dark_storage = 1
-						Else
-							$attackcsv_locate_dark_storage = 0
-						EndIf
-						If Int($value7) > 0 Then
-							$attackcsv_locate_townhall = 1
-						Else
-							$attackcsv_locate_townhall = 0
-						EndIf
-					EndIf
-					
-					If StringUpper($value9) = "NO" Then
-						$attackcsv_use_red_line = 0
-					Else
-						$attackcsv_use_red_line = 1
-					 EndIf
+						;if this line uses a building, then it must be detected
+						If Int($value1) > 0 Then $attackcsv_locate_mine = 1
+						If Int($value2) > 0 Then $attackcsv_locate_elixir = 1
+						If Int($value3) > 0 Then $attackcsv_locate_drill = 1
+						If Int($value4) > 0 Then $attackcsv_locate_gold_storage = 1
+						If Int($value5) > 0 Then $attackcsv_locate_elixir_storage = 1
+						If Int($value6) > 0 Then $attackcsv_locate_dark_storage = 1
+						If Int($value7) > 0 Then $attackcsv_locate_townhall = 1
 
-					 If StringUpper($value10) = "BOTSPEED" Then
-						$attackcsv_csv_speed = 0
-					 Else
-						$attackcsv_csv_speed = 1
-					 EndIf
-					ExitLoop
+					EndIf
+
 				EndIf
 			EndIf
 		WEnd

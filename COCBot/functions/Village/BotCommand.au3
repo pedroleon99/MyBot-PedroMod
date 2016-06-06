@@ -15,8 +15,8 @@
 ; ===============================================================================================================================
 Func BotCommand()
 	If $iChkBotStop = 1 Then
-		Local $RadonHaltAttack = false
-		$MeetCondStop = False  ; reset flags so bot can restart farming when conditions change.
+
+		$MeetCondStop = False ; reset flags so bot can restart farming when conditions change.
 		$bTrainEnabled = True
 		$bDonationEnabled = True
 
@@ -75,38 +75,18 @@ Func BotCommand()
 				$MeetCondStop = True
 				$bTrainEnabled = False
 				$bDonationEnabled = False
-			Case 19  ; Have shield - Online/Train/Collect/Donate
+			Case 19 ; Have shield - Online/Train/Collect/Donate
 				If $bWaitShield = True Then $MeetCondStop = True
-			Case 20  ; Have shield - Online/Collect/Donate
+			Case 20 ; Have shield - Online/Collect/Donate
 				If $bWaitShield = True Then
 					$MeetCondStop = True
 					$bTrainEnabled = False
 				EndIf
-			Case 21  ; Have shield - Online/Collect
+			Case 21 ; Have shield - Online/Collect
 				If $bWaitShield = True Then
 					$MeetCondStop = True
 					$bTrainEnabled = False
 					$bDonationEnabled = False
-				EndIf
-			Case 22
-				If RandomAttack() then
-					$MeetCondStop = True
-					$RadonHaltAttack = True
-				EndIf
-			Case 23
-				If	$myHourlyStatsGold <> "" And $myHourlyStatsGold < $itxtgainperhours	Then
-					$MeetCondStop = True
-					SetLog("gained Gold/H: "& _NumberFormat($myHourlyStatsGold) & " is less than " & _NumberFormat($itxtgainperhours)  , $COLOR_BLUE)
-				EndIf
-			Case 24
-				If	$myHourlyStatsElixir <> "" And $myHourlyStatsElixir < $itxtgainperhours	Then
-					$MeetCondStop = True
-					SetLog("gained Elixir/H: "& _NumberFormat($myHourlyStatsGold) & " is less than " & _NumberFormat($itxtgainperhours)  , $COLOR_BLUE)
-				EndIf
-			Case 25
-				If  $myHourlyStatsGold <> "" And $myHourlyStatsElixir <> "" And ($myHourlyStatsGold + $myHourlyStatsElixir) < $itxtgainperhours   Then
-					$MeetCondStop = True
-					SetLog("gained Gold and Elixir/H: "& _NumberFormat($myHourlyStatsGold + $myHourlyStatsElixir) & " is less than " & _NumberFormat($itxtgainperhours)  , $COLOR_BLUE)
 				EndIf
 		EndSwitch
 
@@ -117,7 +97,6 @@ Func BotCommand()
 			EndIf
 			Switch $icmbBotCommand
 				Case 0
-					ChatbotMessage()  ; <<<<<<<<<<<<<
 					If $bDonationEnabled = False Then
 						SetLog("Halt Attack, Stay Online/Collect...", $COLOR_BLUE)
 					ElseIf $bTrainEnabled = False Then
@@ -135,30 +114,28 @@ Func BotCommand()
 					SetLog("MyBot.run Close Bot as requested!!", $COLOR_BLUE)
 					If _Sleep($iDelayBotCommand1) Then Return
 					BotClose()
-					Return True  ; HaHa - No Return possible!
+					Return True ; HaHa - No Return possible!
 				Case 3
 					SetLog("Close Android and Bot as requested!!", $COLOR_BLUE)
 					If _Sleep($iDelayBotCommand1) Then Return
 					CloseAndroid()
 					BotClose()
-					Return True  ; HaHa - No Return possible!
+					Return True ; HaHa - No Return possible!
 				Case 4
 					SetLog("Force Shutdown of PC...", $COLOR_BLUE)
 					If _Sleep($iDelayBotCommand1) Then Return
 					Shutdown(BitOR($SD_SHUTDOWN, $SD_FORCE)) ; Force Shutdown
-					Return True  ; HaHa - No Return possible!
+					Return True ; HaHa - No Return possible!
 				Case 5
 					SetLog("PC Sleep Mode Start now ...", $COLOR_BLUE)
 					If _Sleep($iDelayBotCommand1) Then Return
 					Shutdown($SD_STANDBY) ; Sleep / Stand by
-					Return True  ; HaHa - No Return possible!
+					Return True ; HaHa - No Return possible!
 				Case 6
 					SetLog("Rebooting PC...", $COLOR_BLUE)
 					If _Sleep($iDelayBotCommand1) Then Return
-					Shutdown(BitOR($SD_REBOOT, $SD_FORCE) ) ; Reboot
-					Return True  ; HaHa - No Return possible!
-				Case 7
-					If $RadonHaltAttack = true then RandomAttaclCloseCoC()
+					Shutdown(BitOR($SD_REBOOT, $SD_FORCE)) ; Reboot
+					Return True ; HaHa - No Return possible!
 			EndSwitch
 		EndIf
 	EndIf

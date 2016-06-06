@@ -26,7 +26,8 @@ Func OpenBlueStacks($bRestart = False)
 
     If Not InitAndroid() Then Return
 
-	$PID = ShellExecute($__BlueStacks_Path & "HD-RunApp.exe", "-p com.supercell.clashofclans -a com.supercell.clashofclans.GameApp")  ;Start BS and CoC with command line
+	;$PID = ShellExecute($__BlueStacks_Path & "HD-RunApp.exe", "-p " & $AndroidGamePackage & " -a " & $AndroidGamePackage & $AndroidGameClass)  ;Start BS and CoC with command line
+	$PID = ShellExecute($__BlueStacks_Path & "HD-Frontend.exe", "Android")  ;Start BS and CoC with command line
 	If _Sleep(1000) Then Return
 	$ErrorResult = ControlGetHandle("BlueStacks Error", "", "") ; Check for BS error window handle if it opens
 	If $debugsetlog = 1 Then Setlog("$PID= "&$PID & ", $ErrorResult = " &$ErrorResult, $COLOR_PURPLE)
@@ -38,14 +39,13 @@ Func OpenBlueStacks($bRestart = False)
 		Return
 	EndIf
 
-	$hTimer = TimerInit()  ; start a timer for tracking BS start up time
-	SetLog("Please wait while BS/CoC start....", $COLOR_GREEN)
+	SetLog("Please wait while " & $Android & "/CoC start....", $COLOR_GREEN)
 	WinGetAndroidHandle()
+	$hTimer = TimerInit()  ; start a timer for tracking BS start up time
 	While IsArray(ControlGetPos($Title, $AppPaneName, $AppClassInstance)) = False
-		If _Sleep(1000) Then ExitLoop
-		$iCount += 1
-		_StatusUpdateTime($hTimer, "BS/CoC Start")
-		If $iCount > 240 Then ; if no BS position returned in 4 minutes, BS/PC has major issue so exit
+		If _Sleep(3000) Then ExitLoop
+		_StatusUpdateTime($hTimer, $Android & "/CoC Start")
+		If TimerDiff($hTimer) > $AndroidLaunchWaitSec * 1000 Then ; if no BS position returned in 4 minutes, BS/PC has major issue so exit
 			SetLog("Serious error has occurred, please restart PC and try again", $COLOR_RED)
 			SetLog("BlueStacks refuses to load, waited " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_RED)
 			DebugSaveDesktopImage("BSOpenError_") ; Save copy of user desktop for analysis
@@ -58,32 +58,10 @@ Func OpenBlueStacks($bRestart = False)
 	WEnd
 
 	If IsArray(ControlGetPos($Title, $AppPaneName, $AppClassInstance)) Then
-	    $connected_to = ConnectAndroidAdb(False, 60 * 1000)
+	    $connected_to = ConnectAndroidAdb(False, 3000) ; small time-out as ADB connection must be available now
 
 		SetLog("BlueStacks Loaded, took " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds to begin.", $COLOR_GREEN)
-		AndroidAdbLaunchShellInstance()
 
-	    ; Check Android screen size, position windows
-		If InitiateLayout() Then Return; can also call this recursively again when screen size is adjusted
-		DisableBS($HWnD, $SC_MINIMIZE)
-		;DisableBS($HWnD, $SC_CLOSE) ; don't tamper with close button
-		If $bRestart = False Then  ; Then 1st time BS is open
-			waitMainScreenMini()
-			If Not $RunState Then Return
-			Zoomout()
-			If Not $RunState Then Return
-			Initiate()
-		Else
-			WaitMainScreenMini()
-			If Not $RunState Then Return
-			If @error = 1 Then  ; if error waiting for main screen, set restart flag, clear OOS flag, and hope the rest of code fixes it
-				$Restart = True
-				$Is_ClientSyncError = False
-				SetError(0,0,0)
-				Return
-			EndIf
-			Zoomout()
-		EndIf
 	EndIf
 
 EndFunc   ;==>OpenBlueStacks
@@ -104,12 +82,12 @@ Func OpenBlueStacks2($bRestart = False)
    While IsArray(ControlGetPos($Title, $AppPaneName, $AppClassInstance)) = False
 	  If Not $RunState Then Return
 	  ; check that HD-Frontend.exe process is really there
-	  Local $pid = ProcessExists("HD-Frontend.exe")
+	  Local $pid = ProcessExists2($AndroidProgramPath)
 	  If $pid <= 0 Then
-		 $pid = ShellExecute($__BlueStacks_Path & "HD-Frontend.exe", GetBlueStacks2ProgramParameter())
+		 $pid = ShellExecute($AndroidProgramPath, GetBlueStacks2ProgramParameter())
 		 If _Sleep(1000) Then Return
 	  EndIf
-	  If $pid > 0 Then $pid = ProcessExists("HD-Frontend.exe")
+	  If $pid > 0 Then $pid = ProcessExists2($AndroidProgramPath)
 	  If $pid <= 0 Then
 		 CloseAndroid()
 		 If _Sleep(1000) Then Return
@@ -118,11 +96,12 @@ Func OpenBlueStacks2($bRestart = False)
 	 _StatusUpdateTime($hTimer)
 	 If TimerDiff($hTimer) > $AndroidLaunchWaitSec * 1000 Then ; if no BS position returned in 4 minutes, BS/PC has major issue so exit
 		 SetLog("Serious error has occurred, please restart PC and try again", $COLOR_RED)
-		 SetLog("BlueStacks refuses to load, waited " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_RED)
+		 SetLog($Android & " refuses to load, waited " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds", $COLOR_RED)
 		 SetError(1, @extended, False)
 		 Return
 	 EndIf
-	 If _Sleep(500) Then Return
+	 If _Sleep(3000) Then Return
+     _StatusUpdateTime($hTimer, $Android & "/CoC Start")
      WinGetAndroidHandle()
    WEnd
 
@@ -134,56 +113,31 @@ Func OpenBlueStacks2($bRestart = False)
    _WinAPI_SetWindowLong($HWnd, $GWL_STYLE, $lCurStyle)
    ;_WinAPI_SetWindowPos($HWnd, 0, 0, 0, 0, 0, BitOr($SWP_NOMOVE, $SWP_NOSIZE, $SWP_FRAMECHANGED)) ; redraw
 
-   $connected_to = ConnectAndroidAdb(False, 60 * 1000)
-
-   ;If WaitForDeviceBlueStacks2($AndroidLaunchWaitSec - TimerDiff($hTimer) / 1000, $hTimer) Then Return
-   If WaitForAndroidBootCompleted($AndroidLaunchWaitSec - TimerDiff($hTimer) / 1000, $hTimer) Then Return
-   If Not $RunState Then Return
-
    If IsArray(ControlGetPos($Title, $AppPaneName, $AppClassInstance)) Then
+     $connected_to = ConnectAndroidAdb(False, 3000) ; small time-out as ADB connection must be available now
+
+     ;If WaitForDeviceBlueStacks2($AndroidLaunchWaitSec - TimerDiff($hTimer) / 1000, $hTimer) Then Return
+     If WaitForAndroidBootCompleted($AndroidLaunchWaitSec - TimerDiff($hTimer) / 1000, $hTimer) Then Return
+	 If Not $RunState Then Return
+
 	 SetLog($Android & " Loaded, took " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds to begin.", $COLOR_GREEN)
      AndroidAdbLaunchShellInstance()
 
+	 If Not $RunState Then Return
      ConfigeBlueStacks2WindowManager()
-	 If Not $RunState Then Return
 
-     ; Check Android screen size, position windows
-     if InitiateLayout() Then Return; can also call OpenDroid4X again when screen size is adjusted
-
-     If Not $RunState Then Return
-     ; Launch CcC
-	 SetLog("Launch Clash of Clans now...", $COLOR_GREEN)
-	 ;$cmdOutput = LaunchConsole($AndroidAdbPath, "-s " & $AndroidAdbDevice & " shell am start -W -S -n com.supercell.clashofclans/.GameApp", $process_killed)
-
-	 RestartAndroidCoC()
-	 If Not $RunState Then Return
-
-     $HWnD = WinGetHandle($Title) ; get BS window Handle
-
-     DisableBS($HWnD, $SC_MINIMIZE)
-	 ;DisableBS($HWnD, $SC_CLOSE) ; don't tamper with close button
-	 If $bRestart = False Then
-		 waitMainScreenMini()
-		 If Not $RunState Then Return
-		 Zoomout()
-		 If Not $RunState Then Return
-		 Initiate()
-	 Else
-		 WaitMainScreenMini()
-		 If Not $RunState Then Return
-		 If @error = 1 Then
-			 $Restart = True
-			 $Is_ClientSyncError = False
-			 Return
-		 EndIf
-		 Zoomout()
-	 EndIf
    EndIf
 
 EndFunc   ;==>OpenBlueStacks
 
 Func InitBlueStacksX($bCheckOnly = False, $bAdjustResolution = False)
-    Local $i, $aFiles[3] = ["HD-Frontend.exe", "HD-Adb.exe", "HD-Quit.exe"]
+
+	; more recent BlueStacks 2 version install VirtualBox based "plus" mode by default
+	Local $plusMode = RegRead($HKLM & "\SOFTWARE\BlueStacks\", "Engine") = "plus"
+	Local $frontend_exe = "HD-Frontend.exe"
+	If $plusMode = True Then $frontend_exe = "HD-Plus-Frontend.exe"
+
+    Local $i, $aFiles[3] = [$frontend_exe, "HD-Adb.exe", "HD-Quit.exe"]
     Local $Values[4][3] = [ _
 	  ["Screen Width", $AndroidClientWidth  , $AndroidClientWidth], _
 	  ["Screen Height", $AndroidClientHeight, $AndroidClientHeight], _
@@ -224,7 +178,7 @@ Func InitBlueStacksX($bCheckOnly = False, $bAdjustResolution = False)
 	  EndIf
 
 	  ; update global variables
-	  $AndroidProgramPath = $__BlueStacks_Path & "HD-Frontend.exe"
+	  $AndroidProgramPath = $__BlueStacks_Path & $frontend_exe
 	  $AndroidAdbPath = FindPreferredAdbPath()
 	  If $AndroidAdbPath = "" Then $AndroidAdbPath = $__BlueStacks_Path & "HD-Adb.exe"
 	  $AndroidVersion = $__BlueStacks_Version
@@ -236,6 +190,7 @@ Func InitBlueStacksX($bCheckOnly = False, $bAdjustResolution = False)
 		 EndIf
 	  Next
 
+	  SetDebugLog($Android & " Engine 'Plus'-Mode: " & $plusMode)
 	  SetDebugLog($Android & " OEM Features: " & $OEMFeatures)
 	  SetDebugLog($Android & " System Bar is " & ($AndroidHasSystemBar ? "" : "not ") & "available")
 	  #cs as of 2016-01-26 CoC release, system bar is transparent and should be closed when bot is running
@@ -345,7 +300,7 @@ Func RestartBlueStacksXCoC()
    If @error <> 0 Then Return False
    ;WinActivate($HWnD)  	; ensure bot has window focus
    ;WaitForDeviceBlueStacks2(30)
-   $cmdOutput = LaunchConsole($AndroidAdbPath, "-s " & $AndroidAdbDevice & " shell am start -W -S -n com.supercell.clashofclans/.GameApp", $process_killed)
+   $cmdOutput = LaunchConsole($AndroidAdbPath, "-s " & $AndroidAdbDevice & " shell am start -W -S -n " & $AndroidGamePackage & "/" & $AndroidGameClass, $process_killed)
    SetLog("Please wait for CoC restart......", $COLOR_BLUE)   ; Let user know we need time...
    Return True
 EndFunc
@@ -494,21 +449,38 @@ Func GetBlueStacks2ProgramParameter($bAlternative = False)
 EndFunc
 
 Func BlueStacksBotStartEvent()
+   SetDebugLog("Disable " & $Android & " minimize/maximize Window Buttons")
+   DisableBS($HWnD, $SC_MINIMIZE)
+   DisableBS($HWnD, $SC_MAXIMIZE)
    Return AndroidCloseSystemBar()
 EndFunc
 
 Func BlueStacksBotStopEvent()
+   SetDebugLog("Enable " & $Android & " minimize/maximize Window Buttons")
+   EnableBS($HWnD, $SC_MINIMIZE)
+   EnableBS($HWnD, $SC_MAXIMIZE)
    Return AndroidOpenSystemBar()
 EndFunc
 
 Func BlueStacks2BotStartEvent()
+   SetDebugLog("Disable " & $Android & " minimize/maximize Window Buttons")
+   DisableBS($HWnD, $SC_MINIMIZE)
+   DisableBS($HWnD, $SC_MAXIMIZE)
    If $AndroidHasSystemBar Then Return AndroidCloseSystemBar()
    Return False
 EndFunc
 
 Func BlueStacks2BotStopEvent()
+   SetDebugLog("Enable " & $Android & " minimize/maximize Window Buttons")
+   EnableBS($HWnD, $SC_MINIMIZE)
+   EnableBS($HWnD, $SC_MAXIMIZE)
    If $AndroidHasSystemBar Then Return AndroidOpenSystemBar()
    Return False
+EndFunc
+
+Func BlueStacksAdjustClickCoordinates(ByRef $x, ByRef $y)
+   $x = Round(32767.0 / $AndroidClientWidth * $x)
+   $y = Round(32767.0 / $AndroidClientHeight * $y)
 EndFunc
 
 Func BlueStacks2AdjustClickCoordinates(ByRef $x, ByRef $y)
@@ -518,6 +490,18 @@ Func BlueStacks2AdjustClickCoordinates(ByRef $x, ByRef $y)
    ;$x = Int(($Num * $x) / $AndroidClientWidth)
    ;$y = Int(($Num * $y) / $AndroidClientHeight)
 EndFunc
+
+Func DisableBS($HWnD, $iButton)
+	$hSysMenu = _GUICtrlMenu_GetSystemMenu($HWnD, 0)
+	_GUICtrlMenu_RemoveMenu($hSysMenu, $iButton, False)
+	_GUICtrlMenu_DrawMenuBar($HWnD)
+EndFunc   ;==>DisableBS
+
+Func EnableBS($HWnD, $iButton)
+	$hSysMenu = _GUICtrlMenu_GetSystemMenu($HWnD, 1)
+	_GUICtrlMenu_RemoveMenu($hSysMenu, $iButton, False)
+	_GUICtrlMenu_DrawMenuBar($HWnD)
+EndFunc   ;==>EnableBS
 
 #comments-start
 $connect = _GetNetworkConnect()

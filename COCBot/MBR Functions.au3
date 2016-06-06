@@ -13,11 +13,15 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+#include "functions\GUI\GUI_State.au3"
+#include "functions\Other\UpdateStatsWall.au3"
 #include "functions\Config\profileFunctions.au3"
+#include "functions\Other\JSON.au3"
+
 #include "functions\Config\applyConfig.au3"
+#include "functions\Config\strategies.au3"
 #include "functions\Config\readConfig.au3"
 #include "functions\Config\saveConfig.au3"
-#include "functions\Config\ScreenCoordinates.au3"
 #include "functions\Config\DelayTimes.au3"
 
 #include "functions\Attack\AttackReport.au3"
@@ -28,13 +32,11 @@
 #include "functions\Attack\ReturnHome.au3"
 #include "functions\Attack\SnipeWhileTrain.au3"
 #include "functions\Attack\Unbreakable.au3"
-#include "functions\Attack\RandomAttack.au3"
 
 #include "functions\Attack\Attack Algorithms\algorithm_AllTroops.au3"
 #include "functions\Attack\Attack Algorithms\algorithm_Barch.au3"
 #include "functions\Attack\Attack Algorithms\algorithmTH.au3"
 #include "functions\Attack\Attack Algorithms\THAttackTypes.au3"
-#include "functions\Attack\Attack Algorithms\AttackTHCustomized.au3"
 #include "functions\Attack\Attack Algorithms\AttackFromCSV.au3"
 
 #include "functions\Attack\AttackCSV\AttackCSVDebugImage.au3"
@@ -65,6 +67,9 @@
 #include "functions\Attack\MilkingAttack\MilkingDetectMineExtractors.au3"
 #include "functions\Attack\MilkingAttack\MilkingDetectDarkExtractors.au3"
 #include "functions\Attack\MilkingAttack\MilkingDetectRedArea.au3"
+#include "functions\Attack\MilkingAttack\MilkingDebug.au3"
+#include "functions\Attack\MilkingAttack\MilkingRedAreaPointsNearStructure.au3"
+#include "functions\Attack\MilkingAttack\MilkingCheckMilkingBase.au3"
 
 #include "functions\Attack\RedArea\_FindPixelCloser.au3"
 #include "functions\Attack\RedArea\_GetOffsetTroopFurther.au3"
@@ -88,7 +93,6 @@
 #include "functions\Attack\Troops\DropOnEdges.au3"
 #include "functions\Attack\Troops\GetXPosOfArmySlot.au3"
 #include "functions\Attack\Troops\GetSlotIndexFromXPos.au3"
-#include "functions\Attack\Troops\IdentifyTroopKind.au3"
 #include "functions\Attack\Troops\LauchTroop.au3"
 #include "functions\Attack\Troops\NameOfTroop.au3"
 #include "functions\Attack\Troops\OldDropTroop.au3"
@@ -113,16 +117,15 @@
 #include "functions\CreateArmy\TrainClick.au3"
 #include "functions\CreateArmy\Train.au3"
 #include "functions\CreateArmy\TrainIt.au3"
+
 #include "functions\CreateArmy\GetRemainTimeTrainning.au3"
 
 #include "functions\Image Search\ImageSearch.au3"
 #include "functions\Image Search\checkDeadBase.au3"
 #include "functions\Image Search\checkTownhall.au3"
 #include "functions\Image Search\checkWall.au3"
-;#include "functions\Image Search\checkDElixS.au3"
 #include "functions\Image Search\CheckTombs.au3"
 #include "functions\Image Search\THSearch.au3"
-
 
 #include "functions\Main Screen\checkMainScreen.au3"
 #include "functions\Main Screen\checkObstacles.au3"
@@ -131,21 +134,22 @@
 #include "functions\Main Screen\isNoUpgradeLoot.au3"
 #include "functions\Main Screen\isProblemAffect.au3"
 #include "functions\Main Screen\checkAttackDisable.au3"
-#include "functions\Main Screen\Close_OpenCoC.au3"
 #include "functions\Main Screen\RemoveGhostTrayIcons.au3"
 #include "functions\Main Screen\waitMainScreen.au3"
-#include "functions\Main Screen\ZoomOut.au3"
 
-; Android support for BlueStacks, Droid4X, MEmu...
-#include "functions\Android\checkAndroidTimeLag.au3"
+; Android support for MEmu, Droid4X, Nox, BlueStacks...
+#include "functions\Android\AndroidMenuShortcuts.au3"
+#include "functions\Android\Close_OpenCoC.au3"
+#include "functions\Android\ZoomOut.au3"
 #include "functions\Android\BlueStacks1Shortcuts.au3"
+#include "functions\Android\checkAndroidTimeLag.au3"
 #include "functions\Android\OpenBlueStacks.au3"
 #include "functions\Android\CloseBlueStacks.au3"
 #include "functions\Android\OpenDroid4X.au3"
 #include "functions\Android\CloseDroid4X.au3"
 #include "functions\Android\AndroidMEmu.au3"
 #include "functions\Android\AndroidNox.au3"
-#include "functions\Android\ADB.au3"
+#include "functions\Android\getBSPos.au3"
 
 #include "functions\Other\_NumberFormat.au3"
 #include "functions\Other\_PadStringCenter.au3"
@@ -163,10 +167,8 @@
 #include "functions\Other\DebugSaveDesktopImage.au3"
 #include "functions\Other\ExtendedErrorInfo.au3"
 #include "functions\Other\FindPos.au3"
-#include "functions\Other\getBSPos.au3"
 #include "functions\Other\ExtMsgBox.au3"
 #include "functions\Other\StringSize.au3"
-;#include "functions\Other\GUICtrlGetBkColor.au3" ; included in MBR GUI Control
 #include "functions\Other\SetLog.au3"
 #include "functions\Other\Tab.au3"
 #include "functions\Other\Time.au3"
@@ -183,13 +185,13 @@
 #include "functions\Other\UpdateStats.au3"
 #include "functions\Other\CheckVersion.au3"
 #include "functions\Other\CloseRunningBot.au3"
-#include "functions\Other\RandomClick.au3"
+
 #include "functions\Other\ComError.au3"
 #include "functions\Other\IsPage.au3"
 #include "functions\Other\MoveMouseOutBS.au3"
 #include "functions\Other\KillProcess.au3"
 #include "functions\Other\LaunchConsole.au3"
-
+#include "functions\Other\ADB.au3"
 
 #include "functions\Pixels\_CaptureRegion.au3"
 #include "functions\Pixels\_ColorCheck.au3"
@@ -205,31 +207,21 @@
 
 #include "functions\Read Text\BuildingInfo.au3"
 #include "functions\Read Text\getOcr.au3"
-;#include "functions\Read Text\getPBTInfo.au3"
 #include "functions\Read Text\getPBTime.au3"
 #include "functions\Read Text\getShieldInfo.au3"
-;#include "functions\Read Text\Obsolete\getChar.au3"
-;#include "functions\Read Text\Obsolete\getDarkElixir.au3"
-;#include "functions\Read Text\Obsolete\getDigit.au3"
-;#include "functions\Read Text\Obsolete\getDigitLarge.au3"
-;#include "functions\Read Text\Obsolete\getDigitSmall.au3"
-;#include "functions\Read Text\Obsolete\getDigitProfile.au3"
-;#include "functions\Read Text\Obsolete\getElixir.au3"
-;#include "functions\Read Text\Obsolete\getGold.au3"
-;#include "functions\Read Text\Obsolete\getNormal.au3"
-;#include "functions\Read Text\Obsolete\getOther.au3"
-;#include "functions\Read Text\Obsolete\getReturnHome.au3"
-;#include "functions\Read Text\Obsolete\getTrophy.au3"
-;#include "functions\Read Text\Obsolete\getString.au3"
 
+#include "functions\Search\multiSearch.au3"
+#include "functions\Search\WeakBase.au3"
 #include "functions\Search\CompareResources.au3"
 #include "functions\Search\GetResources.au3"
 #include "functions\Search\PrepareSearch.au3"
 #include "functions\Search\VillageSearch.au3"
 #include "functions\Search\CheckZoomOut.au3"
 #include "functions\Search\SearchTownHallloc.au3"
+#include "functions\Search\FindTownHall.au3"
+#include "functions\Search\IsSearchModeActive.au3"
 
-#include "functions\Village\actionQueue.au3"
+
 #include "functions\Village\BoostBarracks.au3"
 #include "functions\Village\BotDetectFirstTime.au3"
 #include "functions\Village\BotCommand.au3"
@@ -257,6 +249,7 @@
 #include "functions\Village\VillageReport.au3"
 #include "functions\Village\UpgradeBuilding.au3"
 #include "functions\Village\UpgradeWall.au3"
+#include "functions\Village\Notify.au3"
 #include "functions\Village\PushBullet.au3"
 #include "functions\Village\Laboratory.au3"
 #include "functions\Village\ReplayShare.au3"
@@ -264,41 +257,14 @@
 #include "functions\Village\UpgradeHeroes.au3"
 #include "functions\Village\ClanLevel.au3"
 #include "functions\Village\StarBonus.au3"
-#include "functions\Other\JSON.au3"
 
-;DonateStats - by Cutidudz
-#include "functions\DonateStats\DonateStats.au3"
-
-;Clan Hop - Added by AminTalkin
 #include "functions\Village\ProfileSwitch.au3"
-
-;COCStats - Added by AminTalkin
-#include "functions\Other\CoCStats.com.au3"
-
-;Multi Farming - Added by LakeReng
-#include "functions\Mod\SwitchDonate.au3"
-#include "functions\Mod\SwitchAccount.au3"
-#include "functions\Mod\DetectAccount.au3"
-
-; Clan Hop - Added by Rhino
 #include "functions\Village\ClanHop.au3"
+
 
 ; Attack files - Added by LunaEclipse
 #include "functions\Attack\attackFunctions.au3"
 #include "functions\Attack\unitInfo.au3"
-
-; Deployment files - Added by LunaEclipse
-#include "functions\Attack\Deployment\troopDeployment.au3"
-#include "functions\Attack\Deployment\deployArray.au3"
-
-; Attack Profile Vectors files - Added by LunaEclipse
-#include "functions\Attack\Attack Profiles\Vectors\standardAttack.au3"
-#include "functions\Attack\Attack Profiles\Vectors\customDeploy.au3"
-
-; Attack Profile files - Added by LunaEclipse
-#include "functions\Attack\Attack Profiles\standardAttack.au3"
-#include "functions\Attack\Attack Profiles\saveTroopsForCollectors.au3"
-#include "functions\Attack\Attack Profiles\customDeploy.au3"
 
 ; SmartZap files - Added by LunaEclipse
 #include "functions\SmartZap\drillSearch.au3"

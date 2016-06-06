@@ -12,12 +12,22 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-$tabProfiles = GUICtrlCreateTabItem(GetTranslated(19,33,"Switch Profiles"))
+Global $txtPresetSaveFilename, $txtSavePresetMessage, $lblLoadPresetMessage,$btnGUIPresetDeleteConf, $chkCheckDeleteConf
+Global $cmbPresetList, $txtPresetMessage,$btnGUIPresetLoadConf,  $lblLoadPresetMessage,$btnGUIPresetDeleteConf, $chkCheckDeleteConf
 
-Local $x = 30, $y = 150
-	$grpProfiles = GUICtrlCreateGroup(GetTranslated(7,26, "Switch Profiles"), $x - 20, $y - 20, 450, 45)
+$hGUI_Profiles = GUICreate("", $_GUI_MAIN_WIDTH - 28, $_GUI_MAIN_HEIGHT - 255 - 28, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $hGUI_MOD)
+GUISetBkColor($COLOR_WHITE, $hGUI_Profiles)
+
+GUISwitch($hGUI_Profiles)
+
+
+
+;$tabProfiles = GUICtrlCreateTabItem(GetTranslated(19,33,"Switch Profiles"))
+
+Local $x = 20, $y = 25
+	$grpProfiles = GUICtrlCreateGroup(GetTranslated(7,26, "Switch Profiles"), $x - 20, $y - 20, 438, 45)
 		$y -= 0
-		$lblProfile = GUICtrlCreateLabel(GetTranslated(19,2,"Current Profile:"), $x, $y, -1, -1)
+		$lblProfile = GUICtrlCreateLabel(GetTranslated(19,2,"Current Profile:"), $x - 10, $y, -1, -1)
 		$cmbProfile = GUICtrlCreateCombo("", $x + 75, $y - 5, 220, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			$txtTip =GetTranslated(19,3, "Use this to switch to a different profile") & @CRLF & GetTranslated(19,4,"Your profiles can be found in") & ": " & @CRLF &  $sProfilePath
 			GUICtrlSetTip(-1, $txtTip)
@@ -66,26 +76,26 @@ Local $x = 30, $y = 150
 			_GUIImageList_AddBitmap($bIconRecycle, @ScriptDir & "\images\Button\iconRecycle.bmp")
 			_GUIImageList_AddBitmap($bIconRecycle, @ScriptDir & "\images\Button\iconRecycle_2.bmp")
 			_GUIImageList_AddBitmap($bIconRecycle, @ScriptDir & "\images\Button\iconRecycle_2.bmp")
-			_GUIImageList_AddBitmap($bIconRecycle, @ScriptDir & "\images\Button\iconRecycle.bmp")
+			_GUIImageList_AddBitmap($bIconRecycle, @ScriptDir & "\images\Button\iconRecycle_4.bmp")
 			_GUIImageList_AddBitmap($bIconRecycle, @ScriptDir & "\images\Button\iconRecycle.bmp")
 		; IceCube (Misc v1.0)
 			
-		$btnAdd = GUICtrlCreateButton("", $x + 310, $y - 5, 22, 22)
+		$btnAdd = GUICtrlCreateButton("", $x + 300, $y - 5, 22, 22)
 			_GUICtrlButton_SetImageList($btnAdd, $bIconAdd, 4)
 			GUICtrlSetOnEvent(-1, "btnAddConfirm")
 			GUICtrlSetState(-1, $GUI_SHOW)
 			GUICtrlSetTip(-1, GetTranslated(7,103, "Add New Profile"))
-		$btnConfirmAdd = GUICtrlCreateButton("", $x + 310, $y - 5, 22, 22)
+		$btnConfirmAdd = GUICtrlCreateButton("", $x + 300, $y - 5, 22, 22)
 			_GUICtrlButton_SetImageList($btnConfirmAdd, $bIconConfirm, 4)
 			GUICtrlSetOnEvent(-1, "btnAddConfirm")
 			GUICtrlSetState(-1, $GUI_HIDE)
 			GUICtrlSetTip(-1, GetTranslated(7,104, "Confirm"))
-		$btnConfirmRename = GUICtrlCreateButton("", $x + 310, $y - 5, 22, 22)
+		$btnConfirmRename = GUICtrlCreateButton("", $x + 300, $y - 5, 22, 22)
 			_GUICtrlButton_SetImageList($btnConfirmRename, $bIconConfirm, 4)
 			GUICtrlSetOnEvent(-1, "btnRenameConfirm")
 			GUICtrlSetState(-1, $GUI_HIDE)
 			GUICtrlSetTip(-1, GetTranslated(7,104, "Confirm"))
-		$btnDelete = GUICtrlCreateButton("", $x + 337, $y - 5, 22, 22)
+		$btnDelete = GUICtrlCreateButton("", $x + 327, $y - 5, 22, 22)
 			_GUICtrlButton_SetImageList($btnDelete, $bIconDelete, 4)
 			GUICtrlSetOnEvent(-1, "btnDeleteCancel")
 			GUICtrlSetState(-1, $GUI_SHOW)
@@ -96,12 +106,12 @@ Local $x = 30, $y = 150
 				GUICtrlSetState(-1, $GUI_ENABLE)
 			EndIf
 
-		$btnCancel = GUICtrlCreateButton("", $x + 337, $y - 5, 22, 22)
+		$btnCancel = GUICtrlCreateButton("", $x + 327, $y - 5, 22, 22)
 			_GUICtrlButton_SetImageList($btnCancel, $bIconCancel, 4)
 			GUICtrlSetOnEvent(-1, "btnDeleteCancel")
 			GUICtrlSetState(-1, $GUI_HIDE)
 			GUICtrlSetTip(-1, GetTranslated(7,106, "Cancel"))
-		$btnRename = GUICtrlCreateButton("", $x + 365, $y - 5, 22, 22)
+		$btnRename = GUICtrlCreateButton("", $x + 355, $y - 5, 22, 22)
 			_GUICtrlButton_SetImageList($btnRename, $bIconEdit, 4)
 			GUICtrlSetOnEvent(-1, "btnRenameConfirm")
 			GUICtrlSetTip(-1, GetTranslated(7,107, "Rename Profile"))
@@ -111,7 +121,7 @@ Local $x = 30, $y = 150
 				GUICtrlSetState(-1, $GUI_ENABLE)
 			EndIf
 		; IceCube (Misc v1.0)
-		$btnRecycle = GUICtrlCreateButton("", $x + 393, $y - 5, 22, 22)
+		$btnRecycle = GUICtrlCreateButton("", $x + 383, $y - 5, 22, 22)
 			_GUICtrlButton_SetImageList($btnRecycle, $bIconRecycle, 4)
 			GUICtrlSetOnEvent(-1, "btnRecycle")
 			GUICtrlSetState(-1, $GUI_SHOW)
@@ -126,8 +136,8 @@ Local $x = 30, $y = 150
 
 		$y -= 5
 
-Local $x = 30, $y = 200
-	$grpGoldSwitch = GUICtrlCreateGroup(GetTranslated(19,7,"Gold Switch Profile Conditions"), $x - 20, $y - 20, 450, 75) ;Gold Switch
+Local $x = 20, $y = 75
+	$grpGoldSwitch = GUICtrlCreateGroup(GetTranslated(19,7,"Gold Switch Profile Conditions"), $x - 20, $y - 20, 438, 75) ;Gold Switch
 		$chkGoldSwitchMax = GUICtrlCreateCheckbox(GetTranslated(19,8,"Switch To"), $x-10, $y - 5, -1, -1)
 			$txtTip = GetTranslated(19,9,"Enable this to switch profiles when gold is above amount.")
 			GUICtrlSetTip(-1, $txtTip)
@@ -156,8 +166,8 @@ $y += 30
 		;$picProfileGold = GUICtrlCreateIcon($pIconLib, $eIcnGold, $x + 330, $y - 15, 32, 32)
 		$picProfileGold = GUICtrlCreatePic(@ScriptDir & "\Images\GoldStorage.jpg", $x + 350, $y - 40, 60, 60)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-$y += 50
-	$grpElixirSwitch = GUICtrlCreateGroup(GetTranslated(19,15,"Elixir Switch Profile Conditions"), $x - 20, $y - 20, 450, 75) ; Elixir Switch
+$y += 48
+	$grpElixirSwitch = GUICtrlCreateGroup(GetTranslated(19,15,"Elixir Switch Profile Conditions"), $x - 20, $y - 20, 438, 75) ; Elixir Switch
 		$chkElixirSwitchMax = GUICtrlCreateCheckbox(GetTranslated(19,8,"Switch To"), $x-10, $y - 5, -1, -1)
 			$txtTip = GetTranslated(19,16,"Enable this to switch profiles when Elixir is above amount.")
 			GUICtrlSetTip(-1, $txtTip)
@@ -187,8 +197,8 @@ $y += 30
 		;$picProfileElixir = GUICtrlCreateIcon($pIconLib, $eIcnElixir, $x + 330, $y - 15, 32, 32)
 		$picProfileElixir = GUICtrlCreatePic(@ScriptDir & "\Images\ElixirStorage.jpg", $x + 350, $y - 40, 60, 60)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-$y += 50
-	$grpDESwitch = GUICtrlCreateGroup(GetTranslated(19,21,"Dark Elixir Switch Profile Conditions"), $x - 20, $y - 20, 450, 75) ;DE Switch
+$y += 48
+	$grpDESwitch = GUICtrlCreateGroup(GetTranslated(19,21,"Dark Elixir Switch Profile Conditions"), $x - 20, $y - 20, 438, 75) ;DE Switch
 		$chkDESwitchMax = GUICtrlCreateCheckbox(GetTranslated(19,8,"Switch To"), $x-10, $y - 5, -1, -1)
 			$txtTip = GetTranslated(19,22,"Enable this to switch profiles when Dark Elixir is above amount.")
 			GUICtrlSetTip(-1, $txtTip)
@@ -217,8 +227,8 @@ $y += 30
 		;$picProfileDE = GUICtrlCreateIcon($pIconLib, $eIcnDark, $x + 330, $y - 15, 32, 32)
 		$picProfileDE = GUICtrlCreatePic(@ScriptDir & "\Images\DEStorage.jpg", $x + 350, $y - 40, 60, 60)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-$y += 50
-	$grpTrophySwitch = GUICtrlCreateGroup(GetTranslated(19,27,"Trophy Switch Profile Conditions"), $x - 20, $y - 20, 450, 85) ; Trophy Switch
+$y += 48
+	$grpTrophySwitch = GUICtrlCreateGroup(GetTranslated(19,27,"Trophy Switch Profile Conditions"), $x - 20, $y - 20, 438, 75) ; Trophy Switch
 		$chkTrophySwitchMax = GUICtrlCreateCheckbox(GetTranslated(19,8,"Switch To"), $x-10, $y - 5, -1, -1)
 			$txtTip = GetTranslated(19,28,"Enable this to switch profiles when Trophies are above amount.")
 			GUICtrlSetTip(-1, $txtTip)

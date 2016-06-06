@@ -12,39 +12,27 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
 Func SetSleep($type)
 	If IsKeepClicksActive() = True Then Return 0 ; fast bulk deploy
-
+	Local $factor0 = 10
+	Local $factor1 = 100
 	If $AndroidAdbClick = True Then
-		; adjust for slow ADB clicks the delay factor
-		Local $factor0 = 10
-		Local $factor1 = 100
-	Else
-		Local $factor0 = 10
-		Local $factor1 = 100
-	EndIf
-	
-	If $iMatchMode = $DB And $iChkDeploySettings[$DB] = $eSmartSave And Not $usingAllSides Then
-		Local $aUnitDelay[8] = [1, 2, 3, 4, 5, 6, 7, 8]
-		Local $aWaveDelay[4] = [2, 4, 6, 8]
-	Else
-		Local $aUnitDelay[8] = [1, 5, 10, 11, 12, 13, 14, 15]
-		Local $aWaveDelay[4] = [5, 10 , 20 , 25]
-	EndIf
-	
+	   ; adjust for slow ADB clicks the delay factor
+	   $factor0 = 10
+	   $factor1 = 100
+    EndIf
 	Switch $type
 		Case 0
 			If $iChkRandomspeedatk[$iMatchMode] = 1 Then
-				Return Number($aUnitDelay[Random(0, UBound($aUnitDelay) - 1, 1)]) * $factor0 ; random deploying click [10ms to 150ms]
+				Return Round(Random(1, 10)) * $factor0
 			Else
-				Return Number($aUnitDelay[$iCmbUnitDelay[$iMatchMode]]) * $factor0
+				Return ($iCmbUnitDelay[$iMatchMode] + 1) * $factor0
 			EndIf
 		Case 1
 			If $iChkRandomspeedatk[$iMatchMode] = 1 Then
-				Return Number($aWaveDelay[Random(0, UBound($aWaveDelay) - 1, 1)]) * $factor1 ; random delay between waves [500ms to 2500ms]
+				Return Round(Random(1, 10)) * $factor1
 			Else
-				Return Number($aWaveDelay[$iCmbWaveDelay[$iMatchMode]]) * $factor1
+				Return ($iCmbWaveDelay[$iMatchMode] + 1) * $factor1
 			EndIf
 	EndSwitch
 EndFunc   ;==>SetSleep

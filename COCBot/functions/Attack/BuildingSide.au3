@@ -7,7 +7,7 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: Knowskones (2015)
-; Modified ......: Hervidero (2015), LunaEclipse(March, 2016)
+; Modified ......: Hervidero (2015)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -78,7 +78,7 @@ Func BuildingXY($TypeBuilding = $eSideBuildingDES)
 		$pixel[0] += 230 ; compensate CaptureRegion reduction
 		$pixel[1] += 170 ; compensate CaptureRegion reduction
 		SetLog("== " & $TypeBuildingName & " : [" & $pixel[0] & "," & $pixel[1] & "] ==", $COLOR_BLUE)
-		If _SleepAttack(1000) Then Return False
+		If _Sleep(1000) Then Return False
 		$BuildingLocx = $pixel[0] ; compensation for $x center
 		$BuildingLocy = $pixel[1] ; compensation for $y center
 		$BuildingLoc = 1
@@ -91,16 +91,16 @@ Func DELow()
 	While $DarkE = "" ;~~~~~~~~Loop 10x or until Dark Elixer is Readable.
 		$DarkE = getDarkElixirVillageSearch(48, 125)
 		$Dchk += 1
-		If _SleepAttack(50) Then Return
+		If _Sleep(50) Then Return
 		If $Dchk >= 10 Then
 			SetLog("Can't find De", $COLOR_RED)
 			Return False
 		EndIf
 	WEnd
 	If Number($DarkE) < (Number($searchDark) * (Number($DELowEndMin) / 100)) Then ; First check if Dark Elixer is below set minimum
-		If _SleepAttack(50) Then Return
+		If _Sleep(50) Then Return
 		$DarkE = getDarkElixirVillageSearch(48, 125)
-		If _SleepAttack(50) Then Return
+		If _Sleep(50) Then Return
 		If Number($DarkE) < (Number($searchDark) * (Number($DELowEndMin) / 100)) Then ; Second check if Dark Elixer is below set minimum
 			If $DEEndAq And $dropQueen And $checkQPower = False Then
 				If $iActivateKQCondition = "Auto" Then
@@ -146,19 +146,20 @@ Func DELow()
 EndFunc   ;==>DELow
 
 Func SaveandDisableEBO()
-	$saveichkEndOneStar = $ichkEndOneStar
-	$saveichkEndTwoStars = $ichkEndTwoStars
-	$saveichkTimeStopAtk = $ichkTimeStopAtk
-	$saveiChkTimeStopAtk2 = $iChkTimeStopAtk2
-	$ichkEndOneStar = 0
-	$ichkEndTwoStars = 0
-	$ichkTimeStopAtk = 0
-	$iChkTimeStopAtk2 = 0
+	$saveichkEndOneStar[$iMatchMode] = $ichkEndOneStar[$iMatchMode]
+	$saveichkEndTwoStars[$iMatchMode] = $ichkEndTwoStars[$iMatchMode]
+	$saveichkTimeStopAtk[$iMatchMode] = $ichkTimeStopAtk[$iMatchMode]
+	$saveiChkTimeStopAtk2[$iMatchMode] = $iChkTimeStopAtk2[$iMatchMode]
+	$ichkEndOneStar[$iMatchMode] = 0
+	$ichkEndTwoStars[$iMatchMode] = 0
+	$ichkTimeStopAtk[$iMatchMode] = 0
+	$iChkTimeStopAtk2[$iMatchMode] = 0
 EndFunc   ;==>SaveandDisableEBO
 
 Func RevertEBO()
-	$ichkEndOneStar = $saveichkEndOneStar
-	$ichkEndTwoStars = $saveichkEndTwoStars
-	$ichkTimeStopAtk = $saveichkTimeStopAtk
-	$iChkTimeStopAtk2 = $saveiChkTimeStopAtk2
+	$ichkEndOneStar[$iMatchMode] = $saveichkEndOneStar
+	$ichkEndTwoStars[$iMatchMode] = $saveichkEndTwoStars
+	$ichkTimeStopAtk[$iMatchMode] = $saveichkTimeStopAtk
+	$iChkTimeStopAtk2[$iMatchMode] = $saveiChkTimeStopAtk2
 EndFunc   ;==>RevertEBO
+

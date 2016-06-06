@@ -12,11 +12,15 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+$hGUI_ModDocOc = GUICreate("", $_GUI_MAIN_WIDTH - 28, $_GUI_MAIN_HEIGHT - 255 - 28, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $hGUI_MOD)
+GUISetBkColor($COLOR_WHITE, $hGUI_ModDocOc)
 
-$tabDocOc = GUICtrlCreateTabItem("Doc Oc")
+GUISwitch($hGUI_ModDocOc)
+;$tabDocOc = GUICtrlCreateTabItem("Doc Oc")
 	; Simulate Sleep Settings
-	Local $x = 35, $y = 150
-	$grpSleep = GUICtrlCreateGroup("Simulate Sleep", $x - 20, $y - 20, 440, 100)
+	;Local $x = 35, $y = 150
+	Local $x = 20, $y = 25
+	$grpSleep = GUICtrlCreateGroup("Simulate Sleep", $x - 20, $y - 20, 438, 90)
 		$chkUseSleep = GUICtrlCreateCheckbox("Enable Sleep Mode", $x + 50, $y - 5, -1, -1)
 			$txtTip = "Enable this option to cause the bot to log out for an extended period to simulate sleeping." & @CRLF & @CRLF & _
 				      "     Doctor's Recommendation: Use this setting, with at least 8 hours sleep."
@@ -38,14 +42,14 @@ $tabDocOc = GUICtrlCreateTabItem("Doc Oc")
 			GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetData(-1, "12 AM|  1 AM|  2 AM|  3 AM|  4 AM|  5 AM|  6 AM|  7 AM|  8 AM|  9 AM|10 AM|11 AM|12 PM|  1 PM|  2 PM|  3 PM|  4 PM|  5 PM|  6 PM|  7 PM|  8 PM|  9 PM|10 PM|11 PM", "  8 AM")
 			GUICtrlSetOnEvent(-1, "cmbEndSleep")
-		$lblTotalSleep = GUICtrlCreateLabel("Estimated Sleep Time: 7 - 9 Hours", $x + 50, $y + 50, 420, -1, $SS_CENTER)
-		GUICtrlCreateIcon ($pIconLib, $eIcnSleep, $x - 10, $y + 10, 48, 48)
+		$lblTotalSleep = GUICtrlCreateLabel("Estimated Sleep Time: 7 - 9 Hours", $x + 50, $y + 50, 360, 15, $SS_CENTER)
+		GUICtrlCreateIcon ($pIconLib, $eIcnSleepMode, $x - 10, $y + 10, 48, 48)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	; Close When Training Settings
-	Local $x = 35, $y = 250
-	$grpTrainingClose = GUICtrlCreateGroup("Training Settings", $x - 20, $y - 20, 440, 170)
-		GUICtrlCreateIcon ($pIconLib, $eIcnTraining, $x - 10, $y + 10, 48, 48)
+	Local $x = 20, $y = 115
+	$grpTrainingClose = GUICtrlCreateGroup("Training Settings", $x - 20, $y - 20, 438, 170)
+		GUICtrlCreateIcon ($pIconLib, $eIcnTrainMode, $x - 10, $y + 10, 48, 48)
 		$chkUseTrainingClose = GUICtrlCreateCheckbox("Enable Close While Training", $x + 50, $y - 5, -1, -1)
 			$txtTip = "Enable this option to cause the bot to close when there is more than 2 mins remaining on training times." & @CRLF & @CRLF & _
 				      "     Doctor's Recommendation: Use this setting to reduce overall time spent online."
@@ -80,26 +84,26 @@ $tabDocOc = GUICtrlCreateTabItem("Doc Oc")
 		$radLeaveCoCOpen = GUICtrlCreateRadio("Leave CoC open and disconnect by inactivity", $x + 81, $y + 70, -1, -1)
 			GUICtrlSetTip(-1, "While training the bot will leave CoC open and disconnect by inactivity.")
 			;GUICtrlSetOnEvent(-1, "chkLeaveOpenOrClose")
-			GUICtrlSetState(-1, $GUI_DISABLE)
+			;GUICtrlSetState(-1, $GUI_DISABLE)
 		$radCloseCoCGame = GUICtrlCreateRadio("Close CoC game and stay on home screen", $x + 81, $y + 90, -1, -1)
+		GUICtrlSetState(-1, $GUI_CHECKED)
 			GUICtrlSetTip(-1, "While training the bot will close CoC game and stay on android home screen.")
 			;GUICtrlSetOnEvent(-1, "chkLeaveOpenOrClose")
-			GUICtrlSetState(-1, $GUI_DISABLE)
+			;GUICtrlSetState(-1, $GUI_DISABLE)
 		$radRandomCoCOpen = GUICtrlCreateRadio("Random Close or Leave! ", $x + 81, $y + 110, -1, -1)
-			GUICtrlSetState(-1, $GUI_CHECKED)
 			GUICtrlSetTip(-1, "Random between leave coc open or Close the game.")
 			;GUICtrlSetOnEvent(-1, "chkLeaveOpenOrClose")
-			GUICtrlSetState(-1, $GUI_DISABLE)
+			;GUICtrlSetState(-1, $GUI_DISABLE)
 		$chkRandomStayORClose = GUICtrlCreateCheckbox("Random Stay or Close the Game while Training", $x + 50, $y + 127, -1, -1)
 			GUICtrlSetTip(-1, "Random Stay in the Game and Close the Game with your previous settings!")
-			GUICtrlSetState(-1, $GUI_DISABLE)
+			;GUICtrlSetState(-1, $GUI_DISABLE)
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 	; Daily Settings
-	Local $x = 35, $y = 420
-	$grpTrainingClose = GUICtrlCreateGroup("Daily Settings", $x - 20, $y - 20, 440, 100)
-	GUICtrlCreateIcon ($pIconLib, $eIcnDaily, $x - 10, $y + 10, 48, 48)
+	Local $x = 20, $y = 285
+	$grpTrainingClose = GUICtrlCreateGroup("Daily Settings", $x - 20, $y - 20, 438, 100)
+	GUICtrlCreateIcon ($pIconLib, $eIcnDailyProgram, $x - 10, $y + 10, 48, 48)
 		$chkUseAttackLimit = GUICtrlCreateCheckbox("Enable Daily Attack Limit", $x + 50, $y - 5, -1, -1)
 			$txtTip = "Enable this option to limit the maximum amount of attacks the bot can perform per day." & @CRLF & @CRLF & _
 				      "     Doctor's Recommendation: Use this setting to stop excessive attacks."
@@ -132,4 +136,6 @@ $tabDocOc = GUICtrlCreateTabItem("Doc Oc")
 			GUICtrlSetData(-1, 25)
 			GUICtrlSetOnEvent(-1, "sldAttacksMax")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-GUICtrlCreateTabItem("")
+;GUICtrlCreateTabItem("")
+Global $LastControlToHideModAIO = GUICtrlCreateDummy()
+Global $iPrevState[$LastControlToHideModAIO + 1]

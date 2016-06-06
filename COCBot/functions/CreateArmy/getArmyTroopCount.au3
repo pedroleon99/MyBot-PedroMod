@@ -19,19 +19,23 @@
 Global $SlotInArmyBarb = -1, $SlotInArmyArch = -1, $SlotInArmyGiant = -1, $SlotInArmyGobl = -1, $SlotInArmyWall = -1, $SlotInArmyBall = -1, $SlotInArmyWiza = -1, $SlotInArmyHeal = -1
 Global $SlotInArmyMini = -1, $SlotInArmyHogs = -1, $SlotInArmyValk = -1, $SlotInArmyGole = -1, $SlotInArmyWitc = -1, $SlotInArmyLava = -1, $SlotInArmyDrag = -1, $SlotInArmyPekk = -1
 
-Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False)
+Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $test = false)
 
-	If $debugSetlog = 1 Then SETLOG("Begin getArmyTroopCount:", $COLOR_PURPLE)
+	If $debugsetlogTrain = 1 Then SETLOG("Begin getArmyTroopCount:", $COLOR_PURPLE)
 
-	If $bOpenArmyWindow = False And IsTrainPage() = False Then ; check for train page
-		SetError(1)
-		Return ; not open, not requested to be open - error.
-	ElseIf $bOpenArmyWindow = True Then
-		If openArmyOverview() = False Then
-			SetError(2)
-			Return ; not open, requested to be open - error.
+	If $test = false  Then
+		If $bOpenArmyWindow = False And IsTrainPage() = False Then ; check for train page
+			SetError(1)
+			Return ; not open, not requested to be open - error.
+		ElseIf $bOpenArmyWindow = True Then
+			If openArmyOverview() = False Then
+				SetError(2)
+				Return ; not open, requested to be open - error.
+			EndIf
+			If _Sleep($iDelaycheckArmyCamp5) Then Return
 		EndIf
-		If _Sleep($iDelaycheckArmyCamp5) Then Return
+	Else
+		Setlog("test")
 	EndIf
 
 
@@ -39,16 +43,15 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False)
 	Local $TroopName = 0
 	Local $TroopQ = 0
 	Local $TroopTypeT = ""
-	ReDim $TroopSpellStats[0][2]
 
 	_CaptureRegion2(120, 165 + $midOffsetY, 740, 220 + $midOffsetY)
 	If $debugSetlog = 1 Then SetLog("$hHBitmap2 made", $COLOR_PURPLE)
 	If _Sleep($iDelaycheckArmyCamp5) Then Return
-	If $debugSetlog = 1 Then SetLog("Calling MBRfunctions.dll/searchIdentifyTroopTrained ", $COLOR_PURPLE)
+	If $debugsetlogTrain = 1 Then SetLog("Calling MBRfunctions.dll/searchIdentifyTroopTrained ", $COLOR_PURPLE)
 
 	$FullTemp = DllCall($hFuncLib, "str", "searchIdentifyTroopTrained", "ptr", $hHBitmap2)
 	If _Sleep($iDelaycheckArmyCamp6) Then Return ; 10ms improve pause button response
-	If $debugSetlog = 1 Then
+	If $debugsetlogTrain = 1 Then
 		If IsArray($FullTemp) Then
 			SetLog("Dll return $FullTemp :" & $FullTemp[0], $COLOR_PURPLE)
 		Else
@@ -60,14 +63,14 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False)
 		$TroopTypeT = StringSplit($FullTemp[0], "|")
 	EndIf
 
-	If $debugSetlog = 1 Then
+	If $debugsetlogTrain = 1 Then
 		If IsArray($TroopTypeT) Then
 			SetLog("$Trooptype split # : " & $TroopTypeT[0], $COLOR_PURPLE)
 		Else
 			SetLog("$Trooptype split # : ERROR " & $TroopTypeT, $COLOR_PURPLE)
 		EndIf
 	EndIf
-	If $debugSetlog = 1 Then SetLog("Start the Loop", $COLOR_PURPLE)
+	If $debugsetlogTrain = 1 Then SetLog("Start the Loop", $COLOR_PURPLE)
 
 	For $i = 0 To UBound($TroopName) - 1 ; Reset the variables
 		Assign(("SlotInArmy" & $TroopName[$i]), -1)
@@ -89,7 +92,7 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False)
 			$TroopQ = "0"
 			If _sleep($iDelaycheckArmyCamp1) Then Return
 			Local $Troops = StringSplit($TroopTypeT[$i], "#", $STR_NOCOUNT)
-			If $debugSetlog = 1 Then SetLog("$TroopTypeT[$i] split : " & $i, $COLOR_PURPLE)
+			If $debugsetlogTrain = 1 Then SetLog("$TroopTypeT[$i] split : " & $i, $COLOR_PURPLE)
 
 			If IsArray($Troops) And $Troops[0] <> "" Then
 
@@ -227,11 +230,16 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False)
 						$SlotInArmyLava = $i - 1
 					EndIf
 
+				ElseIf $Troops[0] = $eBowl Then
+					$TroopQ = $Troops[2]
+					$TroopName = "Bowlers"
+					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eBowl) Then
+						$CurBowl = -($TroopQ)
+						$SlotInArmyBowl = $i - 1
+					EndIf
+
 				EndIf
-				If $TroopQ <> 0 Then 
-					SetLog(" - No. of " & $TroopName & ": " & $TroopQ)
-					_ArrayAdd($TroopSpellStats, $TroopName & "|" & $TroopQ)
-				EndIf
+				If $TroopQ <> 0 Then SetLog(" - No. of " & $TroopName & ": " & $TroopQ)
 
 			EndIf
 

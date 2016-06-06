@@ -5,7 +5,7 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: kaganus (2015-jun-20)
-; Modified ......: LunaEclipse(January, 2016)
+; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -26,16 +26,16 @@ Global $iOldSearchCost, $iOldTrainCostElixir, $iOldTrainCostDElixir ; search and
 Global $iOldNbrOfOoS ; number of Out of Sync occurred
 Global $iOldNbrOfTHSnipeFails, $iOldNbrOfTHSnipeSuccess ; number of fails and success while TH Sniping
 Global $iOldGoldFromMines, $iOldElixirFromCollectors, $iOldDElixirFromDrills ; number of resources gain by collecting mines, collectors, drills
-Global $iOldAttackedCount, $iOldAttackedVillageCount[$iModeCount+1] ; number of attack villages for DB, LB, TB, TS
-Global $iOldTotalGoldGain[$iModeCount+1], $iOldTotalElixirGain[$iModeCount+1], $iOldTotalDarkGain[$iModeCount+1], $iOldTotalTrophyGain[$iModeCount+1] ; total resource gains for DB, LB, TB, TS
-Global $iOldNbrOfDetectedMines[$iModeCount+1], $iOldNbrOfDetectedCollectors[$iModeCount+1], $iOldNbrOfDetectedDrills[$iModeCount+1] ; number of mines, collectors, drills detected for DB, LB, TB
-Global $iOldsmartZapGain = 0, $iOldNumLTSpellsUsed = 0 ; Used to Update Smart Zap Totals
+Global $iOldAttackedCount, $iOldAttackedVillageCount[$iModeCount + 1] ; number of attack villages for DB, LB, TB, TS
+Global $iOldTotalGoldGain[$iModeCount + 1], $iOldTotalElixirGain[$iModeCount + 1], $iOldTotalDarkGain[$iModeCount + 1], $iOldTotalTrophyGain[$iModeCount + 1] ; total resource gains for DB, LB, TB, TS
+Global $iOldNbrOfDetectedMines[$iModeCount + 1], $iOldNbrOfDetectedCollectors[$iModeCount + 1], $iOldNbrOfDetectedDrills[$iModeCount + 1] ; number of mines, collectors, drills detected for DB, LB, TB
+
+; Smart Zap Totals - Added by LunaEclipse
+Global $iOldsmartZapGain = 0, $iOldNumLTSpellsUsed = 0
+
 
 Func UpdateStats()
 	If $FirstRun = 1 Then
-		; IceCube (Misc v1.0)
-		GUICtrlSetState($btnQuickStats, $GUI_SHOW)	
-		; IceCube (Misc v1.0)	
 		GUICtrlSetState($lblResultStatsTemp, $GUI_HIDE)
 		GUICtrlSetState($lblVillageReportTemp, $GUI_HIDE)
 		GUICtrlSetState($picResultGoldTemp, $GUI_HIDE)
@@ -46,7 +46,6 @@ Func UpdateStats()
 		GUICtrlSetState($picResultGoldNow, $GUI_SHOW)
 		GUICtrlSetState($lblResultElixirNow, $GUI_SHOW)
 		GUICtrlSetState($picResultElixirNow, $GUI_SHOW)
-
 		If $iDarkCurrent <> "" Then
 			GUICtrlSetState($lblResultDeNow, $GUI_SHOW)
 			GUICtrlSetState($picResultDeNow, $GUI_SHOW)
@@ -56,44 +55,34 @@ Func UpdateStats()
 			GUICtrlSetState($picDarkLastAttack, $GUI_HIDE)
 			GUICtrlSetState($picHourlyStatsDark, $GUI_HIDE)
 		EndIf
-
 		GUICtrlSetState($lblResultTrophyNow, $GUI_SHOW)
 		GUICtrlSetState($lblResultBuilderNow, $GUI_SHOW)
 		GUICtrlSetState($lblResultGemNow, $GUI_SHOW)
-
 		$iGoldStart = $iGoldCurrent
 		$iElixirStart = $iElixirCurrent
 		$iDarkStart = $iDarkCurrent
 		$iTrophyStart = $iTrophyCurrent
-
 		GUICtrlSetData($lblResultGoldStart, _NumberFormat($iGoldCurrent, True))
 		GUICtrlSetData($lblResultGoldNow, _NumberFormat($iGoldCurrent, True))
 		$iOldGoldCurrent = $iGoldCurrent
-
 		GUICtrlSetData($lblResultElixirStart, _NumberFormat($iElixirCurrent, True))
 		GUICtrlSetData($lblResultElixirNow, _NumberFormat($iElixirCurrent, True))
 		$iOldElixirCurrent = $iElixirCurrent
-
 		If $iDarkStart <> "" Then
 			GUICtrlSetData($lblResultDEStart, _NumberFormat($iDarkCurrent, True))
 			GUICtrlSetData($lblResultDeNow, _NumberFormat($iDarkCurrent, True))
 			$iOldDarkCurrent = $iDarkCurrent
 		EndIf
-
 		GUICtrlSetData($lblResultTrophyStart, _NumberFormat($iTrophyCurrent, True))
 		GUICtrlSetData($lblResultTrophyNow, _NumberFormat($iTrophyCurrent, True))
 		$iOldTrophyCurrent = $iTrophyCurrent
-
 		GUICtrlSetData($lblResultGemNow, _NumberFormat($iGemAmount, True))
 		$iOldGemAmount = $iGemAmount
-
 		GUICtrlSetData($lblResultBuilderNow, $iFreeBuilderCount & "/" & $iTotalBuilderCount)
 		$iOldFreeBuilderCount = $iFreeBuilderCount
 		$iOldTotalBuilderCount = $iTotalBuilderCount
-		
 		$FirstRun = 0
 		GUICtrlSetState($btnResetStats, $GUI_ENABLE)
-
 		Return
 	EndIf
 
@@ -102,26 +91,23 @@ Func UpdateStats()
 		GUICtrlSetState($lblLastAttackBonusTemp, $GUI_HIDE)
 		GUICtrlSetState($lblTotalLootTemp, $GUI_HIDE)
 		GUICtrlSetState($lblHourlyStatsTemp, $GUI_HIDE)
-
 		$FirstAttack = 2
 	EndIf
 
 	If $ResetStats = 1 Then
 		GUICtrlSetData($lblResultGoldStart, _NumberFormat($iGoldCurrent, True))
 		GUICtrlSetData($lblResultElixirStart, _NumberFormat($iElixirCurrent, True))
-
 		If $iDarkStart <> "" Then
 			GUICtrlSetData($lblResultDEStart, _NumberFormat($iDarkCurrent, True))
 		EndIf
-
 		GUICtrlSetData($lblResultTrophyStart, _NumberFormat($iTrophyCurrent, True))
 		GUICtrlSetData($lblHourlyStatsGold, "")
 		GUICtrlSetData($lblHourlyStatsElixir, "")
 		GUICtrlSetData($lblHourlyStatsDark, "")
 		GUICtrlSetData($lblHourlyStatsTrophy, "")
-		GUICtrlSetData($lblResultGoldHourNow, "")  ;GUI BOTTOM
+		GUICtrlSetData($lblResultGoldHourNow, "") ;GUI BOTTOM
 		GUICtrlSetData($lblResultElixirHourNow, "");GUI BOTTOM
-		GUICtrlSetData($lblResultDEHourNow, "")    ;GUI BOTTOM
+		GUICtrlSetData($lblResultDEHourNow, "") ;GUI BOTTOM
 
 	EndIf
 
@@ -250,11 +236,13 @@ Func UpdateStats()
 	If $iOldNbrOfWallsUppedGold <> $iNbrOfWallsUppedGold Then
 		GUICtrlSetData($lblWallgoldmake, $iNbrOfWallsUppedGold)
 		$iOldNbrOfWallsUppedGold = $iNbrOfWallsUppedGold
+		WallsStatsMAJ()
 	EndIf
 
 	If $iOldNbrOfWallsUppedElixir <> $iNbrOfWallsUppedElixir Then
 		GUICtrlSetData($lblWallelixirmake, $iNbrOfWallsUppedElixir)
 		$iOldNbrOfWallsUppedElixir = $iNbrOfWallsUppedElixir
+		WallsStatsMAJ()
 	EndIf
 
 	If $iOldNbrOfBuildingsUppedGold <> $iNbrOfBuildingsUppedGold Then
@@ -319,32 +307,20 @@ Func UpdateStats()
 
 	; SmartZap DE Gain - Added by LunaEclipse
 	If $iOldSmartZapGain <> $smartZapGain Then
-		; IceCube (PushBullet Revamp v1.1)		
-		If $iOldSmartZapGain > 0 AND $chkAlertTopGain  = 1 Then
-			_Push("New Top Smart Zap Gain: " & _NumberFormat($smartZapGain) & " on profile " & $sCurrProfile)
-		EndIf
-		; IceCube (PushBullet Revamp v1.1)
 		GUICtrlSetData($lblSmartZap, _NumberFormat($smartZapGain, True))
-		GUICtrlSetData($lblSmartZapStat, _NumberFormat($smartZapGain, True))
-		; IceCube (Misc v1.0)
-		GUICtrlSetData($lblResultDEDrillZapTop, _NumberFormat($smartZapGain, True))
-		; IceCube (Misc v1.0)
 		$iOldSmartZapGain = $smartZapGain
 	EndIf
 
 	; SmartZap Spells Used - Added by LunaEclipse
 	If $iOldNumLTSpellsUsed <> $numLSpellsUsed Then
 		GUICtrlSetData($lblLightningUsed, _NumberFormat($numLSpellsUsed, True))
-		GUICtrlSetData($lblLightningUsedStat, _NumberFormat($numLSpellsUsed, True))
-		; IceCube (Misc v1.0)
-		GUICtrlSetData($lblResultLSpellTop, _NumberFormat($numLSpellsUsed, True))
-		; IceCube (Misc v1.0)		
 		$iOldNumLTSpellsUsed = $numLSpellsUsed
  	EndIf
 
 	Local $iAttackedCount = 0
 
 	For $i = 0 To $iModeCount
+
 		If $iOldAttackedVillageCount[$i] <> $iAttackedVillageCount[$i] Then
 			GUICtrlSetData($lblAttacked[$i], _NumberFormat($iAttackedVillageCount[$i], True))
 			$iOldAttackedVillageCount[$i] = $iAttackedVillageCount[$i]
@@ -370,6 +346,7 @@ Func UpdateStats()
 			GUICtrlSetData($lblTotalTrophyGain[$i], _NumberFormat($iTotalTrophyGain[$i], True))
 			$iOldTotalTrophyGain[$i] = $iTotalTrophyGain[$i]
 		EndIf
+
 	Next
 
 	If $iOldAttackedCount <> $iAttackedCount Then
@@ -379,6 +356,7 @@ Func UpdateStats()
 	EndIf
 
 	For $i = 0 To $iModeCount
+
 		If $i = $TS Then ContinueLoop
 
 		If $iOldNbrOfDetectedMines[$i] <> $iNbrOfDetectedMines[$i] Then
@@ -395,81 +373,30 @@ Func UpdateStats()
 			GUICtrlSetData($lblNbrOfDetectedDrills[$i], $iNbrOfDetectedDrills[$i])
 			$iOldNbrOfDetectedDrills[$i] = $iNbrOfDetectedDrills[$i]
 		EndIf
+
 	Next
 
 	If $FirstAttack = 2 Then
 		GUICtrlSetData($lblHourlyStatsGold, _NumberFormat(Round($iGoldTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600)) & "K / h")
 		GUICtrlSetData($lblHourlyStatsElixir, _NumberFormat(Round($iElixirTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600)) & "K / h")
-		$myHourlyStatsGold = Round($iGoldTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600 * 1000)
-		$myHourlyStatsElixir = Round($iElixirTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600 * 1000)
 		If $iDarkStart <> "" Then
 			GUICtrlSetData($lblHourlyStatsDark, _NumberFormat(Round($iDarkTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600 * 1000)) & " / h")
 		EndIf
 		GUICtrlSetData($lblHourlyStatsTrophy, _NumberFormat(Round($iTrophyTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600 * 1000)) & " / h")
 
-		GUICtrlSetData($lblResultGoldHourNow, _NumberFormat(Round($iGoldTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600)) & "K / h")              ;GUI BOTTOM
-		GUICtrlSetData($lblResultElixirHourNow, _NumberFormat(Round($iElixirTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600)) & "K / h")           ;GUI BOTTOM
+		GUICtrlSetData($lblResultGoldHourNow, _NumberFormat(Round($iGoldTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600)) & "K / h") ;GUI BOTTOM
+		GUICtrlSetData($lblResultElixirHourNow, _NumberFormat(Round($iElixirTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600)) & "K / h") ;GUI BOTTOM
 		If $iDarkStart <> "" Then
-			GUICtrlSetData($lblResultDEHourNow, _NumberFormat(Round($iDarkTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600 * 1000)) & " / h")      ;GUI BOTTOM
+			GUICtrlSetData($lblResultDEHourNow, _NumberFormat(Round($iDarkTotal / (Int(TimerDiff($sTimer) + $iTimePassed)) * 3600 * 1000)) & " / h") ;GUI BOTTOM
 		EndIf
-	EndIf
 
-	If Number($iGoldLast) > Number($topgoldloot) Then
-		; IceCube (PushBullet Revamp v1.1)		
-		If $topgoldloot > 0  AND $chkAlertTopGain  = 1 Then
-			_Push("New Top Gold Gain: " & _NumberFormat($topgoldloot) & " on profile " & $sCurrProfile)
-		EndIf		
-		; IceCube (PushBullet Revamp v1.1)		
-		$topgoldloot = $iGoldLast
-		GUICtrlSetData($lbltopgoldloot,_NumberFormat($topgoldloot))
-		; IceCube (Misc v1.0)
-		GUICtrlSetData($lblResultGoldTop, _NumberFormat($topgoldloot, True))
-		; IceCube (Misc v1.0)	
-	EndIf
-
-	If Number($iElixirLast) > Number($topelixirloot) Then
-		; IceCube (PushBullet Revamp v1.1)		
-		If $topelixirloot > 0  AND $chkAlertTopGain  = 1 Then
-			_Push("New Top Elixir Gain: " & _NumberFormat($topelixirloot) & " on profile " & $sCurrProfile)
-		EndIf			
-		; IceCube (PushBullet Revamp v1.1)
-		$topelixirloot = $iElixirLast
-		GUICtrlSetData($lbltopelixirloot,_NumberFormat($topelixirloot))
-		; IceCube (Misc v1.0)
-		GUICtrlSetData($lblResultElixirTop, _NumberFormat($topelixirloot, True))
-		; IceCube (Misc v1.0)				
-	EndIf
-
-	If Number($iDarkLast) > Number($topdarkloot) Then
-		; IceCube (PushBullet Revamp v1.1)		
-		If $topdarkloot > 0  AND $chkAlertTopGain  = 1 Then
-			_Push("New Top Dark Elixir Gain: " & _NumberFormat($topdarkloot) & " on profile " & $sCurrProfile)
-		EndIf			
-		; IceCube (PushBullet Revamp v1.1)
-		$topdarkloot = $iDarkLast
-		GUICtrlSetData($lbltopdarkloot,_NumberFormat($topdarkloot))
-		; IceCube (Misc v1.0)
-		GUICtrlSetData($lblResultDETop, _NumberFormat($topdarkloot, True))
-		; IceCube (Misc v1.0)				
-	EndIf
-	
-	If Number($iTrophyLast) > Number($toptrophyloot) Then
-		; IceCube (PushBullet Revamp v1.1)		
-		If $toptrophyloot > 0  AND $chkAlertTopGain  = 1 Then
-			_Push("New Top Trophy Gain: " & _NumberFormat($toptrophyloot) & " on profile " & $sCurrProfile)
-		EndIf		
-		; IceCube (PushBullet Revamp v1.1)
-		$toptrophyloot = $iTrophyLast
-		GUICtrlSetData($lbltoptrophyloot,_NumberFormat($toptrophyloot))
-		; IceCube (Misc v1.0)
-		GUICtrlSetData($lblResultTrophyTop, _NumberFormat($toptrophyloot, True))
-		; IceCube (Misc v1.0)			
 	EndIf
 
 	If $ResetStats = 1 Then
 		$ResetStats = 0
 	EndIf
-EndFunc
+
+EndFunc   ;==>UpdateStats
 
 Func ResetStats()
 	$ResetStats = 1
@@ -482,18 +409,10 @@ Func ResetStats()
 	GUICtrlSetState($lblLastAttackBonusTemp, $GUI_SHOW)
 	GUICtrlSetState($lblTotalLootTemp, $GUI_SHOW)
 	GUICtrlSetState($lblHourlyStatsTemp, $GUI_SHOW)
-	GUICtrlSetData($lbltopgoldloot,"")
-	GUICtrlSetData($lbltopelixirloot,"")
-	GUICtrlSetData($lbltopdarkloot,"")
-	GUICtrlSetData($lbltoptrophyloot,"")
 	$iGoldStart = $iGoldCurrent
 	$iElixirStart = $iElixirCurrent
 	$iDarkStart = $iDarkCurrent
 	$iTrophyStart = $iTrophyCurrent
-	$topgoldloot = 0
-	$topelixirloot = 0
-	$topdarkloot = 0
-	$toptrophyloot = 0
 	$iGoldTotal = 0
 	$iElixirTotal = 0
 	$iDarkTotal = 0
@@ -540,4 +459,4 @@ Func ResetStats()
 		$iNbrOfDetectedDrills[$i] = 0
 	Next
 	UpdateStats()
-EndFunc
+EndFunc   ;==>ResetStats

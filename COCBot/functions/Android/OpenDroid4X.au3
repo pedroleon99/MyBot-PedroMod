@@ -68,40 +68,6 @@ Func OpenDroid4X($bRestart = False)
 
     SetLog($Android & " Loaded, took " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds to begin.", $COLOR_GREEN)
 
-    ; Check Android screen size, position windows
-    if InitiateLayout() Then Return; can also call OpenDroid4X again when screen size is adjusted
-
-	; Launch CcC
-	SetLog("Launch Clash of Clans now...", $COLOR_GREEN)
-    $cmdOutput = LaunchConsole($AndroidAdbPath, "-s " & $AndroidAdbDevice & " shell am start -S -n com.supercell.clashofclans/.GameApp", $process_killed, 30 * 1000) ; removed "-W" option and added timeout (didn't exit sometimes)
-	If StringInStr($cmdOutput, "Error:") > 0 Then
-		SetLog("Unable to load Clash of Clans, install/reinstall the game.", $COLOR_RED)
-		SetLog("Unable to continue........", $COLOR_MAROON)
-		btnStop()
-		SetError(1, 1, -1)
-		Return
-	EndIf
-
-   WinGetAndroidHandle()
-   ;DisableBS($HWnD, $SC_MINIMIZE)
-   ;DisableBS($HWnD, $SC_CLOSE)
-   If $bRestart = False Then
-	  waitMainScreenMini()
-	  If Not $RunState Then Return
-	  Zoomout()
-	  If Not $RunState Then Return
-	  Initiate()
-   Else
-	  WaitMainScreenMini()
-	  If Not $RunState Then Return
-	  If @error = 1 Then
-		  $Restart = True
-		  $Is_ClientSyncError = False
-		  Return
-	  EndIf
-	  Zoomout()
-   EndIf
-
 EndFunc   ;==>OpenDroid4X
 
 Func GetDroid4XProgramParameter($bAlternative = False)
@@ -233,34 +199,13 @@ Func InitDroid4X($bCheckOnly = False)
 	  $__VBoxGuestProperties = LaunchConsole($__VBoxManage_Path, "guestproperty enumerate " & $AndroidInstance, $process_killed)
 
 	  WinGetAndroidHandle()
+
+	  ; Update Android Screen and Window
+	  UpdateDroid4XConfig()
    EndIf
 
    Return True
 
-EndFunc
-
-Func RestartDroid4XCoC()
-   If Not $RunState Then Return False
-   If Not InitAndroid() Then Return False
-
-   Local $cmdOutput, $process_killed, $connected_to
-   ;WinActivate($HWnD)  	; ensure bot has window focus
-
-   ; Test ADB is connected
-   ;$cmdOutput = LaunchConsole($AndroidAdbPath, "connect " & $AndroidAdbDevice, $process_killed)
-   ;$connected_to = StringInStr($cmdOutput, "connected to")
-
-   SetLog("Please wait for CoC restart......", $COLOR_BLUE)   ; Let user know we need time...
-   $cmdOutput = LaunchConsole($AndroidAdbPath, "-s " & $AndroidAdbDevice & " shell am start -S -n com.supercell.clashofclans/.GameApp", $process_killed, 30 * 1000) ; removed "-W" option and added timeout (didn't exit sometimes)
-   If StringInStr($cmdOutput, "Error:") > 0 Then
-	  SetLog("Unable to load Clash of Clans, install/reinstall the game.", $COLOR_RED)
-	  SetLog("Unable to continue........", $COLOR_MAROON)
-	  btnStop()
-	  SetError(1, 1, -1)
-	  Return False
-   EndIf
-
-   Return True
 EndFunc
 
 Func SetScreenDroid4X()
@@ -344,4 +289,61 @@ Func CheckScreenDroid4X($bSetLog = True)
 
    Return True
 
+EndFunc
+
+Func UpdateDroid4XConfig()
+   Return UpdateDroid4XWindowState()
+EndFunc
+
+Func UpdateDroid4XWindowState()
+   WinGetAndroidHandle()
+   ControlGetPos($hWnD, $AppPaneName, $AppClassInstance)
+   If @error = 1 Then
+	  ; Window not found, nothing to do
+	  SetError(0, 0, 0)
+	  Return False
+   EndIf
+
+   Local $acw = $AndroidAppConfig[$AndroidConfig][5]
+   Local $ach = $AndroidAppConfig[$AndroidConfig][6]
+   Local $aww = $AndroidAppConfig[$AndroidConfig][7]
+   Local $awh = $AndroidAppConfig[$AndroidConfig][8]
+
+   Local $v = GetVersionNormalized($AndroidVersion)
+   For $i = 0 To UBound($__Droid4X_Window) - 1
+	  Local $v2 = GetVersionNormalized($__Droid4X_Window[$i][0])
+	  If $v >= $v2 Then
+		 SetDebugLog("Using Window sizes of " & $Android & " " & $__Droid4X_Window[$i][0])
+		 $aww = $__Droid4X_Window[$i][1]
+		 $awh = $__Droid4X_Window[$i][2]
+		 ExitLoop
+	  EndIf
+   Next
+
+   Local $i
+   Local $Values[4][3] = [ _
+	  ["Screen Width", $AndroidClientWidth  , $AndroidClientWidth], _
+	  ["Screen Height", $AndroidClientHeight, $AndroidClientHeight], _
+	  ["Window Width", $AndroidWindowWidth  , $AndroidWindowWidth], _
+	  ["Window Height", $AndroidWindowHeight , $AndroidWindowHeight] _
+   ]
+   Local $bChanged = False, $ok = False
+   $Values[0][2] = $acw
+   $Values[1][2] = $ach
+   $Values[2][2] = $aww
+   $Values[3][2] = $awh
+
+   $AndroidClientWidth = $Values[0][2]
+   $AndroidClientHeight = $Values[1][2]
+   $AndroidWindowWidth =  $Values[2][2]
+   $AndroidWindowHeight = $Values[3][2]
+
+   For $i = 0 To UBound($Values) -1
+	  If $Values[$i][1] <> $Values[$i][2] Then
+		 $bChanged = True
+		 SetDebugLog($Android & " " & $Values[$i][0] & " updated from " & $Values[$i][1] & " to " & $Values[$i][2])
+	  EndIf
+   Next
+
+   Return $bChanged
 EndFunc

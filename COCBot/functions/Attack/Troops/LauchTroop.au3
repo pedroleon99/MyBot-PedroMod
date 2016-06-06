@@ -42,8 +42,8 @@ Func LauchTroop($troopKind, $nbSides, $waveNb, $maxWaveNb, $slotsPerEdge = 0)
 	If $maxWaveNb = 1 Then $waveName = "only"
 	If $waveNb = 0 Then $waveName = "last"
 	SetLog("Dropping " & $waveName & " wave of " & $troopNb & " " & $name, $COLOR_GREEN)
-
 	DropTroop($troop, $nbSides, $troopNb, $slotsPerEdge)
+
 	Return True
 EndFunc   ;==>LauchTroop
 
@@ -133,23 +133,21 @@ Func LaunchTroop2($listInfoDeploy, $CC, $King, $Queen, $Warden)
 							$isHeroesDropped = True
 						EndIf
 					Else
-						If _SleepAttack($iDelayLaunchTroop21) Then Return
+						If _Sleep($iDelayLaunchTroop21) Then Return
 						SelectDropTroop($infoPixelDropTroop[0]) ;Select Troop
-						If _SleepAttack($iDelayLaunchTroop21) Then Return
+						If _Sleep($iDelayLaunchTroop21) Then Return
 						Local $waveName = "first"
 						If $numWave + 1 = 2 Then $waveName = "second"
 						If $numWave + 1 = 3 Then $waveName = "third"
 						If $numWave + 1 = 0 Then $waveName = "last"
 						SetLog("Dropping " & $waveName & " wave of " & $infoPixelDropTroop[5] & " " & $infoPixelDropTroop[4], $COLOR_GREEN)
-
-
 						DropOnPixel($infoPixelDropTroop[0], $infoPixelDropTroop[1], $infoPixelDropTroop[2], $infoPixelDropTroop[3])
 					EndIf
 					If ($isHeroesDropped) Then
-						If _SleepAttack($iDelayLaunchTroop22) Then Return ; delay Queen Image  has to be at maximum size : CheckHeroesHealth checks the y = 573
+						If _Sleep($iDelayLaunchTroop22) Then Return ; delay Queen Image  has to be at maximum size : CheckHeroesHealth checks the y = 573
 						CheckHeroesHealth()
 					EndIf
-					If _SleepAttack(SetSleep(1)) Then Return
+					If _Sleep(SetSleep(1)) Then Return
 				Next
 			Next
 		Else
@@ -204,22 +202,22 @@ Func LaunchTroop2($listInfoDeploy, $CC, $King, $Queen, $Warden)
 									$infoListArrPixel = $infoTroopListArrPixel[1]
 									$listPixel = $infoListArrPixel[$i]
 									;infoPixelDropTroop : First element in array contains troop and list of array to drop troop
-									If _SleepAttack($iDelayLaunchTroop21) Then Return
+									If _Sleep($iDelayLaunchTroop21) Then Return
 									SelectDropTroop($infoTroopListArrPixel[0]) ;Select Troop
-									If _SleepAttack($iDelayLaunchTroop23) Then Return
+									If _Sleep($iDelayLaunchTroop23) Then Return
 									SetLog("Dropping " & $infoTroopListArrPixel[2] & "  of " & $infoTroopListArrPixel[5] & " => on each side (side : " & $i + 1 & ")", $COLOR_GREEN)
 									Local $pixelDropTroop[1] = [$listPixel]
 									DropOnPixel($infoTroopListArrPixel[0], $pixelDropTroop, $infoTroopListArrPixel[2], $infoTroopListArrPixel[3])
 								EndIf
 								If ($isHeroesDropped) Then
-									If _SleepAttack(1000) Then Return ; delay Queen Image  has to be at maximum size : CheckHeroesHealth checks the y = 573
+									If _sleep(1000) Then Return ; delay Queen Image  has to be at maximum size : CheckHeroesHealth checks the y = 573
 									CheckHeroesHealth()
 								EndIf
 							Next
 						Next
 					EndIf
 				EndIf
-				If _SleepAttack(SetSleep(1)) Then Return
+				If _Sleep(SetSleep(1)) Then Return
 			Next
 		EndIf
 		For $numWave = 0 To UBound($listListInfoDeployTroopPixel) - 1
@@ -230,11 +228,10 @@ Func LaunchTroop2($listInfoDeploy, $CC, $King, $Queen, $Warden)
 					Local $numberLeft = ReadTroopQuantity($infoPixelDropTroop[0])
 					;SetLog("NumberLeft : " & $numberLeft)
 					If ($numberLeft > 0) Then
-						If _SleepAttack($iDelayLaunchTroop21) Then Return
+						If _Sleep($iDelayLaunchTroop21) Then Return
 						SelectDropTroop($infoPixelDropTroop[0]) ;Select Troop
-						If _SleepAttack($iDelayLaunchTroop23) Then Return
+						If _Sleep($iDelayLaunchTroop23) Then Return
 						SetLog("Dropping last " & $numberLeft & "  of " & $infoPixelDropTroop[5], $COLOR_GREEN)
-
 						DropOnPixel($infoPixelDropTroop[0], $infoPixelDropTroop[1], Ceiling($numberLeft / UBound($infoPixelDropTroop[1])), $infoPixelDropTroop[3])
 					EndIf
 				EndIf
@@ -243,8 +240,7 @@ Func LaunchTroop2($listInfoDeploy, $CC, $King, $Queen, $Warden)
 	Else
 		For $i = 0 To UBound($listInfoDeploy) - 1
 			If (IsString($listInfoDeploy[$i][0]) And ($listInfoDeploy[$i][0] = "CC" Or $listInfoDeploy[$i][0] = "HEROES")) Then
-				; Modified by LunaEclipse
-				If $iMatchMode = $LB And $iChkDeploySettings[$LB] = $eCustomDeploy Then ; Used for DE or TH side attack
+				If $iMatchMode = $LB And $iChkDeploySettings[$LB] >= 4 Then ; Used for DE or TH side attack
 					Local $RandomEdge = $Edges[$BuildingEdge]
 					Local $RandomXY = 2
 				Else
@@ -257,10 +253,20 @@ Func LaunchTroop2($listInfoDeploy, $CC, $King, $Queen, $Warden)
 					dropHeroes($RandomEdge[$RandomXY][0], $RandomEdge[$RandomXY][1], $King, $Queen, $Warden)
 				EndIf
 			Else
-				If LauchTroop($listInfoDeploy[$i][0], $listInfoDeploy[$i][1], $listInfoDeploy[$i][2], $listInfoDeploy[$i][3], $listInfoDeploy[$i][4]) Then
-					If _SleepAttack(SetSleep(1)) Then Return
+				;no drop goblins in standard attack after milking attack
+				If $duringMilkingAttack = 0 Then
+					If LauchTroop($listInfoDeploy[$i][0], $listInfoDeploy[$i][1], $listInfoDeploy[$i][2], $listInfoDeploy[$i][3], $listInfoDeploy[$i][4]) Then
+						If _Sleep(SetSleep(1)) Then Return
+					EndIf
+				Else
+					If $listInfoDeploy[$i][0] <> $eGobl Then
+						If LauchTroop($listInfoDeploy[$i][0], $listInfoDeploy[$i][1], $listInfoDeploy[$i][2], $listInfoDeploy[$i][3], $listInfoDeploy[$i][4]) Then
+							If _Sleep(SetSleep(1)) Then Return
+						EndIf
+					EndIf
 				EndIf
 			EndIf
+
 		Next
 
 	EndIf

@@ -25,16 +25,8 @@ Func cmbProfile()
 	readConfig()
 	applyConfig()
 	saveConfig()
-	
-	;DonateStats
-	InitDonateStats()
 
 	SetLog(_PadStringCenter("Profile " & $sCurrProfile & " loaded from " & $config, 50, "="), $COLOR_GREEN)
-	; IceCube (PushBullet Revamp v1.1)
-	If $RunState AND $pAlertMFSwitch = 1 Then
-		_Push("Multy-Farming account switched to " & $sCurrProfile)
-	EndIf
-	; IceCube (PushBullet Revamp v1.1)
 EndFunc   ;==>cmbProfile
 
 Func btnAddConfirm()
@@ -82,7 +74,7 @@ Func btnAddConfirm()
 			If GUICtrlGetState($btnRecycle) <> $GUI_ENABLE Then GUICtrlSetState($btnRecycle, $GUI_ENABLE)
 			; IceCube (Misc v1.0)
 			;DonateStats
-			InitDonateStats()
+			;InitDonateStats()
 		Case Else
 			SetLog("If you are seeing this log message there is something wrong.", $COLOR_RED)
 	EndSwitch

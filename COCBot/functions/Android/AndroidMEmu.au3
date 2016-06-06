@@ -68,33 +68,6 @@ Func OpenMEmu($bRestart = False)
 
     SetLog($Android & " Loaded, took " & Round(TimerDiff($hTimer) / 1000, 2) & " seconds to begin.", $COLOR_GREEN)
 
-    ; Check Android screen size, position windows
-    If InitiateLayout() Then Return; can also call OpenMEmu again when screen size is adjusted
-
-	; Launch CcC
-	SetLog("Launch Clash of Clans now...", $COLOR_GREEN)
-    LaunchConsole($AndroidAdbPath, "-s " & $AndroidAdbDevice & " shell am start -S -n com.supercell.clashofclans/.GameApp", $process_killed, 30 * 1000) ; removed "-W" option and added timeout (didn't exit sometimes)
-
-   WinGetAndroidHandle() ; get window Handle
-   ;DisableBS($HWnD, $SC_MINIMIZE)
-   ;DisableBS($HWnD, $SC_CLOSE)
-   If $bRestart = False Then
-	  waitMainScreenMini()
-	  If Not $RunState Then Return
-	  Zoomout()
-	  If Not $RunState Then Return
-	  Initiate()
-   Else
-	  WaitMainScreenMini()
-	  If Not $RunState Then Return
-	  If @error = 1 Then
-		  $Restart = True
-		  $Is_ClientSyncError = False
-		  Return
-	  EndIf
-	  Zoomout()
-   EndIf
-
 EndFunc   ;==>OpenMEmu
 
 Func GetMEmuProgramParameter($bAlternative = False)
@@ -108,15 +81,20 @@ EndFunc
 
 Func GetMEmuPath()
    Local $MEmu_Path = EnvGet("MEmu_Path") & "\MEmu\" ;RegRead($HKLM & "\SOFTWARE\MEmu\", "InstallDir") ; Doesn't exist (yet)
-   If $MEmu_Path = "\MEmu\" Then ; work-a-round
-	  Local $DisplayIcon = RegRead($HKLM & "\SOFTWARE" & $Wow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\MEmu\", "DisplayIcon")
-	  If @error = 0 Then
-		 Local $iLastBS = StringInStr($DisplayIcon, "\", 0, -1)
-		 $MEmu_Path = StringLeft($DisplayIcon, $iLastBS)
-		 If StringLeft($MEmu_Path, 1) = """" Then $MEmu_Path = StringMid($MEmu_Path, 2)
+   If FileExists($MEmu_Path & "MEmu.exe") = 0 Then ; work-a-round
+	  Local $InstallLocation = RegRead($HKLM & "\SOFTWARE" & $Wow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\MEmu\", "InstallLocation")
+	  If @error = 0 And FileExists($InstallLocation & "\MEmu\MEmu.exe") = 1 Then
+		 $MEmu_Path = $InstallLocation & "\MEmu\"
 	  Else
-		 $MEmu_Path = @ProgramFilesDir & "\Microvirt\MEmu\"
-		 SetError(0, 0, 0)
+		 Local $DisplayIcon = RegRead($HKLM & "\SOFTWARE" & $Wow6432Node & "\Microsoft\Windows\CurrentVersion\Uninstall\MEmu\", "DisplayIcon")
+		 If @error = 0 Then
+			Local $iLastBS = StringInStr($DisplayIcon, "\", 0, -1)
+			$MEmu_Path = StringLeft($DisplayIcon, $iLastBS)
+			If StringLeft($MEmu_Path, 1) = """" Then $MEmu_Path = StringMid($MEmu_Path, 2)
+		 Else
+			$MEmu_Path = @ProgramFilesDir & "\Microvirt\MEmu\"
+			SetError(0, 0, 0)
+		 EndIf
 	  EndIf
    EndIf
    Return $MEmu_Path
@@ -135,11 +113,11 @@ Func InitMEmu($bCheckOnly = False)
    ; Could also read MEmu paths from environment variables MEmu_Path and MEmuHyperv_Path
    Local $MEmu_Path = GetMEmuPath()
    Local $MEmu_Manage_Path = EnvGet("MEmuHyperv_Path") & "\MEmuManage.exe"
-   If $MEmu_Manage_Path = "\MEmuManage.exe" Then
-	  $MEmu_Manage_Path = $MEmu_Path & "..\MEmuHyperv" & $MEmu_Manage_Path
+   If FileExists($MEmu_Manage_Path) = 0 Then
+	  $MEmu_Manage_Path = $MEmu_Path & "..\MEmuHyperv\MEmuManage.exe"
    EndIf
 
-   If FileExists($MEmu_Path & "MEmu.exe") = False Then
+   If FileExists($MEmu_Path & "MEmu.exe") = 0 Then
 	  If Not $bCheckOnly Then
 		 SetLog("Serious error has occurred: Cannot find " & $Android & ":", $COLOR_RED)
 		 SetLog($MEmu_Path & "MEmu.exe", $COLOR_RED)
@@ -148,7 +126,7 @@ Func InitMEmu($bCheckOnly = False)
 	  Return False
    EndIf
 
-   If FileExists($MEmu_Path & "adb.exe") = False Then
+   If FileExists($MEmu_Path & "adb.exe") = 0 Then
 	  If Not $bCheckOnly Then
 		 SetLog("Serious error has occurred: Cannot find " & $Android & ":", $COLOR_RED)
 		 SetLog($MEmu_Path & "adb.exe", $COLOR_RED)
@@ -157,7 +135,7 @@ Func InitMEmu($bCheckOnly = False)
 	  Return False
    EndIf
 
-   If FileExists($MEmu_Manage_Path) = False Then
+   If FileExists($MEmu_Manage_Path) = 0 Then
 	  If Not $bCheckOnly Then
 		 SetLog("Serious error has occurred: Cannot find MEmu-Hyperv:", $COLOR_RED)
 		 SetLog($MEmu_Manage_Path, $COLOR_RED)
@@ -213,6 +191,7 @@ Func InitMEmu($bCheckOnly = False)
 	  If Not @error Then
 		 $AndroidPicturesHostPath = $aRegExResult[0] & "\"
 	  Else
+		 $oops = 1
 		 $AndroidAdbScreencap = False
 		 $AndroidPicturesHostPath = ""
 		 SetLog($Android & " Background Mode is not available", $COLOR_RED)
@@ -222,9 +201,10 @@ Func InitMEmu($bCheckOnly = False)
 
 	  ; Update Android Screen and Window
 	  UpdateMEmuConfig()
+
    EndIf
 
-   Return True
+   Return SetError($oops, 0, True)
 
 EndFunc
 
@@ -250,28 +230,6 @@ Func WaitForAmMEmu($WaitInSec, $hTimer = 0) ; doesn't work yet!!!
 	  If _Sleep(1000) Then Return True
     WEnd
 	Return False
-EndFunc
-
-Func RestartMEmuCoC()
-
-   If Not InitAndroid() Then Return False
-
-   Local $cmdOutput, $process_killed, $connected_to
-   ;WinActivate($HWnD)  	; ensure bot has window focus
-
-   ; Test ADB is connected
-   $cmdOutput = LaunchConsole($AndroidAdbPath, "connect " & $AndroidAdbDevice, $process_killed)
-   $connected_to = StringInStr($cmdOutput, "connected to")
-
-   If Not $connected_to Then
-	  SetDebugLog("ADB not connected, restart " & $Android)
-	  RebootAndroid()
-	  Return False
-   EndIf
-   SetLog("Please wait for CoC restart......", $COLOR_BLUE)   ; Let user know we need time...
-   $cmdOutput = LaunchConsole($AndroidAdbPath, "-s " & $AndroidAdbDevice & " shell am start -S -n com.supercell.clashofclans/.GameApp", $process_killed, 30 * 1000) ; removed "-W" option and added timeout (didn't exit sometimes)
-
-   Return True
 EndFunc
 
 Func SetScreenMEmu()
@@ -457,6 +415,24 @@ Func UpdateMEmuWindowState()
 	  Return False
    EndIf
 
+   Local $acw = $AndroidAppConfig[$AndroidConfig][5]
+   Local $ach = $AndroidAppConfig[$AndroidConfig][6]
+   Local $aww = $AndroidAppConfig[$AndroidConfig][7]
+   Local $awh = $AndroidAppConfig[$AndroidConfig][8]
+   Local $tbw = $__MEmu_ToolBar_Width
+
+   Local $v = GetVersionNormalized($AndroidVersion)
+   For $i = 0 To UBound($__MEmu_Window) - 1
+	  Local $v2 = GetVersionNormalized($__MEmu_Window[$i][0])
+	  If $v >= $v2 Then
+		 SetDebugLog("Using Window sizes of " & $Android & " " & $__MEmu_Window[$i][0])
+		 $aww = $__MEmu_Window[$i][1]
+		 $awh = $__MEmu_Window[$i][2]
+		 $tbw = $__MEmu_Window[$i][3]
+		 ExitLoop
+	  EndIf
+   Next
+
    Local $bToolBarVisible = True
    Local $i
    Local $Values[4][3] = [ _
@@ -469,34 +445,34 @@ Func UpdateMEmuWindowState()
    Local $toolBarPos = ControlGetPos($Title, "", "Qt5QWindowIcon3")
    If UBound($toolBarPos) = 4 Then
 	  ;ConsoleWrite("Qt5QWindowIcon3=" & $toolBarPos[0] & "," & $toolBarPos[1] & "," & $toolBarPos[2] & "," & $toolBarPos[3] & ($isVisible = 1 ? " visible" : " hidden")) ; 863,33,45,732
-	  If $toolBarPos[2] = $__MEmu_ToolBar_Width Then
+	  If $toolBarPos[2] = $tbw Then
 		 $bToolBarVisible = ControlCommand($Title, "", "Qt5QWindowIcon3", "IsVisible", "") = 1
 		 SetDebugLog($Android & " Tool Bar is " & ($bToolBarVisible ? "visible" : "hidden"))
 		 $ok = True
 	  EndIf
    EndIf
    If Not $ok Then
-	  SetDebugLog($Android & " Tool Bar state is undetermined as treated as " & ($bToolBarVisible ? "visible" : "hidden"))
+	  SetDebugLog($Android & " Tool Bar state is undetermined as treated as " & ($bToolBarVisible ? "visible" : "hidden"), $COLOR_RED)
    EndIF
 
-   Local $w = ($bToolBarVisible ? 0 : $__MEmu_ToolBar_Width)
+   Local $w = ($bToolBarVisible ? 0 : $tbw)
 
    Switch $__MEmu_PhoneLayout
 	  Case "0" ; Bottom position (default)
-		 $Values[0][2] = $AndroidAppConfig[$AndroidConfig][5]
-		 $Values[1][2] = $AndroidAppConfig[$AndroidConfig][6]
-		 $Values[2][2] = $AndroidAppConfig[$AndroidConfig][7] - $w
-		 $Values[3][2] = $AndroidAppConfig[$AndroidConfig][8]
+		 $Values[0][2] = $acw
+		 $Values[1][2] = $ach
+		 $Values[2][2] = $aww - $w
+		 $Values[3][2] = $awh
 	  Case "1" ; Right position
-		 $Values[0][2] = $AndroidAppConfig[$AndroidConfig][5] + $__MEmu_SystemBar
-		 $Values[1][2] = $AndroidAppConfig[$AndroidConfig][6] - $__MEmu_SystemBar
-		 $Values[2][2] = $AndroidAppConfig[$AndroidConfig][7] + $__MEmu_SystemBar - $w
-		 $Values[3][2] = $AndroidAppConfig[$AndroidConfig][8] - $__MEmu_SystemBar
+		 $Values[0][2] = $acw + $__MEmu_SystemBar
+		 $Values[1][2] = $ach - $__MEmu_SystemBar
+		 $Values[2][2] = $aww + $__MEmu_SystemBar - $w
+		 $Values[3][2] = $awh - $__MEmu_SystemBar
 	  Case "2" ; Hidden
-		 $Values[0][2] = $AndroidAppConfig[$AndroidConfig][5]
-		 $Values[1][2] = $AndroidAppConfig[$AndroidConfig][6] - $__MEmu_SystemBar
-		 $Values[2][2] = $AndroidAppConfig[$AndroidConfig][7] - $w
-		 $Values[3][2] = $AndroidAppConfig[$AndroidConfig][8] - $__MEmu_SystemBar
+		 $Values[0][2] = $acw
+		 $Values[1][2] = $ach - $__MEmu_SystemBar
+		 $Values[2][2] = $aww - $w
+		 $Values[3][2] = $awh - $__MEmu_SystemBar
 	  Case Else ; Unexpected Value
 		 SetDebugLog("Unsupported " & $Android & " guestproperty phone_layout = " & $__MEmu_PhoneLayout, $COLOR_RED)
    EndSwitch
