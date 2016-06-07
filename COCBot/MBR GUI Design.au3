@@ -43,10 +43,9 @@ $hToolTip = _GUIToolTip_Create($frmBot) ; tool tips for URL links etc
 
 $idMENU_DONATE = GUICtrlCreateMenu("&" & GetTranslated(601,18,"Paypal Donate?"))
 $idMENU_DONATE_SUPPORT = GUICtrlCreateMenuItem(GetTranslated(601,19,"Support the development"), $idMENU_DONATE)
-GUICtrlSetOnEvent(-1, "")
-$idMENU_HELP = GUICtrlCreateMenu("&Help")
-$idMENU_HELP_CHECK = GUICtrlCreateMenuItem("Check MOD Version", $idMENU_HELP)
-$idMENU_HELP_DOWNLOAD = GUICtrlCreateMenuItem("Download latest MOD", $idMENU_HELP)
+$AboutMenu = GUICtrlCreateMenu("MOD support")
+$CheckVersionConfig = GUICtrlCreateMenuItem("Check MOD Version", $AboutMenu)
+$DownloadLatestConfig = GUICtrlCreateMenuItem("Download Latest MOD", $AboutMenu)
 GUICtrlSetOnEvent(-1, "")
 ;$idMENU_OPTIONS = GUICtrlCreateMenu("&Options")
 ;GUICtrlSetOnEvent(-1, "")

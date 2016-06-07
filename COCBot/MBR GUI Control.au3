@@ -195,10 +195,10 @@ Func GUIControl($hWind, $iMsg, $wParam, $lParam)
 					btnAttackNowTS()
 				Case $idMENU_DONATE_SUPPORT
 					ShellExecute("https://mybot.run/forums/index.php?/donate/make-donation/")
-				Case $idMENU_HELP_CHECK
-					If CheckMODVersion() Then MsgBox(0, "", "Your "& $LatestVersion &" is updated to latest")
-			    Case $idMENU_HELP_DOWNLOAD
-				    ShellExecute("https://github.com/pedroleon99/MyBot-PedroMod/archive/master.zip")
+				Case $CheckVersionConfig
+					If CheckMODVersion() Then MsgBox(0, "", "Your "& $ModVersion &" is updated to latest version")
+				Case $DownloadLatestConfig
+					ShellExecute("https://github.com/" & $ModOwner & "/" & $ModRepo & "/archive/master.zip")
 				Case $btnDeletePBMessages
 					If $RunState Then
 						btnDeletePBMessages() ; call with flag when bot is running to execute on _sleep() idle
