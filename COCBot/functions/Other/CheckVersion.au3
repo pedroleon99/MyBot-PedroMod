@@ -130,7 +130,7 @@ Func CheckMODVersion()
 
 	If $lastModified And $lastPushed Then
 		If Number($lastModified) < Number($lastPushed) Then ; check if last modified timestamp of local bot is within 5 mins of latest upload timestamp
-			MsgBox(0, "", "A new version of " & $LatestVersion & " has been uploaded(" & _Date_Time_SystemTimeToDateTimeStr($localPushedTime, 1) & ") , your version might be outdated." & @CRLF & _
+			MsgBox(0, "", "A new version of " & $ModVersion & " has been uploaded(" & _Date_Time_SystemTimeToDateTimeStr($localPushedTime, 1) & ") , your version might be outdated." & @CRLF & _
 			"Check and download latest version from Help Menu")
 			Return False
 		EndIf
