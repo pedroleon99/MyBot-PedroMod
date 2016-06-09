@@ -216,19 +216,19 @@ EndIf
 		$Restart = False
 		$fullArmy = False
 		$CommandStop = -1
-
-			; each loop ( after each attack ) will determinate if close while train or not
-			If $RandomCloseTraining = 1 then
+			
+			; each loop ( after each attack ) will determinate if close while train or not 
+			If $RandomCloseTraining = 1 then 
 				if $debugSetlog = 1 then Setlog("You chose the Random Close Or Leave train...", $COLOR_RED)
 				$RandomCloseTraining2 = Random(0,1,1)
-				If $RandomCloseTraining2 = 1 then $LeaveOrClose +=1
-				If $LeaveOrClose = 3 then
+				If $RandomCloseTraining2 = 1 then $LeaveOrClose +=1 
+				If $LeaveOrClose = 3 then 
 					$RandomCloseTraining2 = 0
-					$LeaveOrClose = 0
-				EndIf
+					$LeaveOrClose = 0 
+				EndIf 
 				if $debugSetlog = 1 then Setlog("$RandomCloseTraining2: " & $RandomCloseTraining2)
 			EndIf
-
+			
 		If _Sleep($iDelayRunBot1) Then Return
 		checkMainScreen()
 		If $Restart = True Then ContinueLoop
