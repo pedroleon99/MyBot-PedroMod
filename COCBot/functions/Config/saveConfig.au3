@@ -1725,6 +1725,13 @@ Func saveConfig() ;Saves the controls settings to the config
 	;atk their king
 	;attk their queen
 
+	; Donate Stats ==========================================================================
+	If GUICtrlRead($chkDStats) = $GUI_CHECKED Then
+		IniWrite($config, "donate", "chkDStats", 1)
+	Else
+		IniWrite($config, "donate", "chkDStats", 0)
+	EndIf
+	
 	;Donate Settings-------------------------------------------------------------------------
 
 ;~ 	IniWriteS($config, "donate", "chkRequest", $iChkRequest)
@@ -2120,7 +2127,7 @@ Func saveConfig() ;Saves the controls settings to the config
 	IniWriteS($config, "planned", "attackHours", $string)
 
 	Local $string = ""
-	For $i = 0 To 7
+	For $i = 0 To 6
 		If GUICtrlRead(Eval("chkAttackWeekdays" & $i)) = $GUI_CHECKED Then
 			$string &= "1|"
 		Else
@@ -2307,6 +2314,20 @@ Func saveConfig() ;Saves the controls settings to the config
     EndIf
 	IniWrite($config, "SmartZap", "MinDE", GUICtrlRead($txtMinDark))
 
+	;Multy Farming Setting --------------------------------------------------------------------------
+	If GUICtrlRead($chkSwitchDonate) = $GUI_CHECKED Then
+		IniWrite($config, "Multy", "SwitchDonate", 1)
+	Else
+		IniWrite($config, "Multy", "SwitchDonate", 0)
+	EndIf
+
+	If GUICtrlRead($chkMultyFarming) = $GUI_CHECKED Then
+		IniWrite($config, "Multy", "MultyFarming", 1)
+	Else
+		IniWrite($config, "Multy", "MultyFarming", 0)
+	EndIf
+	IniWrite($config, "Multy", "Account", GUICtrlRead($Account))
+	
 	; Android Settings - Added by LunaEclipse
 	IniWrite($config, "Android", "Emulator", GUICtrlRead($cmbAndroid))
 	IniWrite($config, "Android", "Instance", GUICtrlRead($txtAndroidInstance))

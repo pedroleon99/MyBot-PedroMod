@@ -1091,8 +1091,8 @@ Global $iPlannedattackHours[24]
 For $i = 0 To 23
 	$iPlannedattackHours[$i] = 1
 Next
-Global $iPlannedAttackWeekDays[8]
-For $i = 0 To 7
+Global $iPlannedAttackWeekDays[7]
+For $i = 0 To 6
 	$iPlannedAttackWeekDays[$i] = 1
 Next
 Global $hourLoot
@@ -1472,6 +1472,13 @@ Global $ichkElixirSwitchMax, $itxtMaxElixirAmount, $icmbElixirMaxProfile, $ichkE
 Global $ichkDESwitchMax, $itxtMaxDEAmount, $icmbDEMaxProfile, $ichkDESwitchMin, $itxtMinDEAmount, $icmbDEMinProfile
 Global $ichkTrophySwitchMax, $itxtMaxTrophyAmount, $icmbTrophyMaxProfile, $ichkTrophySwitchMin, $itxtMinTrophyAmount, $icmbTrophyMinProfile
 
+; Multy-Farming
+Global $iSwCount
+Global $ichkSwitchDonate
+Global $ichkMultyFarming
+Global $iAccount, $OkLoc, $AccountLoc
+Global $iconfirm
+Global $bAccount[6] = ["Main", "Second", "Third", "Fourth", "Fifth", "Sixth"]
 
 ; SmartZap GUI variables - Added by LunaEclipse
 Global $ichkSmartZap = 1
