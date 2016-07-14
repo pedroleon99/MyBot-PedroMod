@@ -151,6 +151,14 @@ AdlibRegister("PushBulletRemoteControl", $PBRemoteControlInterval)
 AdlibRegister("PushBulletDeleteOldPushes", $PBDeleteOldPushesInterval)
 
 
+; Add Telegram extension by CDudz
+$lastmessage = GetLastMsg()
+If $FirstRun = 1 Then
+	$lastremote = $lastuid
+	Getchatid(GetTranslated(620, 92, "select your remote")) ; receive Telegram chat id and send keyboard
+EndIf
+
+
 CheckDisplay() ; verify display size and DPI (Dots Per Inch) setting
 
 
@@ -218,19 +226,19 @@ EndIf
 		$Restart = False
 		$fullArmy = False
 		$CommandStop = -1
-
-			; each loop ( after each attack ) will determinate if close while train or not
-			If $RandomCloseTraining = 1 then
+			
+			; each loop ( after each attack ) will determinate if close while train or not 
+			If $RandomCloseTraining = 1 then 
 				if $debugSetlog = 1 then Setlog("You chose the Random Close Or Leave train...", $COLOR_RED)
 				$RandomCloseTraining2 = Random(0,1,1)
-				If $RandomCloseTraining2 = 1 then $LeaveOrClose +=1
-				If $LeaveOrClose = 3 then
+				If $RandomCloseTraining2 = 1 then $LeaveOrClose +=1 
+				If $LeaveOrClose = 3 then 
 					$RandomCloseTraining2 = 0
-					$LeaveOrClose = 0
-				EndIf
+					$LeaveOrClose = 0 
+				EndIf 
 				if $debugSetlog = 1 then Setlog("$RandomCloseTraining2: " & $RandomCloseTraining2)
 			EndIf
-
+			
 		If _Sleep($iDelayRunBot1) Then Return
 		checkMainScreen()
 		If $Restart = True Then ContinueLoop
@@ -339,6 +347,7 @@ EndIf
 			   UpgradeWall()
 			   If _Sleep($iDelayRunBot3) Then Return
 			   If $Restart = True Then ContinueLoop
+			   PushMsgToPushBullet("CheckBuilderIdle")
 			   Idle()
 			   ;$fullArmy1 = $fullArmy
 			   If _Sleep($iDelayRunBot3) Then Return
@@ -488,7 +497,7 @@ EndIf
 					ElseIf IniRead($sProfilePath & "\[04] Fourth\config.ini", "Multy", "MultyFarming", "0") = "1" Then
 						SwitchAccount("Fourth")
 					Else
-
+					
 						SetLog("You don't have other profiles configured for multy-farming. Swithing accounts canceled.", $COLOR_RED)
 					EndIf
 
