@@ -46,6 +46,7 @@ EndIf
 ;~ ProcessSetPriority(@AutoItPID, $PROCESS_ABOVENORMAL)
 #include "COCBot\MBR Global Variables.au3"
 #include "COCBot\functions\Config\ScreenCoordinates.au3"
+#include "COCBot\functions\Chatbot\Chatbot.au3"
 
 $sBotVersion = "v6.1.4" ;~ Don't add more here, but below. Version can't be longer than vX.y.z because it it also use on Checkversion()
 $sBotTitle = "My Bot " & $sBotVersion & " " & $ModVersion & " " ;~ Don't use any non file name supported characters like \ / : * ? " < > |
@@ -563,6 +564,11 @@ Func Idle() ;Sequence that runs until Full Army
 		While $iReHere < 7
 			$iReHere += 1
 			DonateCC(True)
+			;modification Chat by rulesss
+			If $iReHere = 6 Then 
+			   ChatbotMessage()  
+			EndIf
+            ;End Chat
 			If _Sleep($iDelayIdle2) Then ExitLoop
 			If $Restart = True Then ExitLoop
 		WEnd
