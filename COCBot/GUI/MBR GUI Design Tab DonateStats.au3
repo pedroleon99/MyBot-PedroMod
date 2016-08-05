@@ -32,19 +32,19 @@ _GUICtrlListView_SetColumnWidth($lvDonatedTroops, 0, 139)
 
 GUICtrlCreateLabel("Current Donations:", $x - 18, $y - 20, 90, 20)
 $txtTip = "Current Donations of All Troops"
-	GUICtrlSetTip(-1, $txtTip)
+	_GUICtrlSetTip(-1, $txtTip)
 $lblCurDonate = GUICtrlCreateLabel("0", $x + 73, $y - 20, 40, 20, $SS_LEFT)
-GUICtrlSetColor(-1, 0x7C00CE)
+GUICtrlSetColor(-1, 0x0404B4)
 $txtTip = "Number of Total Donations of All Troops"
-	GUICtrlSetTip(-1, $txtTip)
+	_GUICtrlSetTip(-1, $txtTip)
 $chkLimitDStats = GUICtrlCreateCheckbox("Stop Donation After:", $x + 130, $y - 22, 111, 20)
 $txtTip = "Check This to Automatically STOP Donations as You Want"
-	GUICtrlSetTip(-1, $txtTip)
+	_GUICtrlSetTip(-1, $txtTip)
 $iLimitDStats = GUICtrlCreateInput("5000", $x + 248, $y - 22, 37, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 	GUICtrlSetLimit(-1, 4)
-	GUICtrlSetColor(-1, 0xFF05BD)
+	GUICtrlSetColor(-1, 0xB40404)
 	$txtTip = "Number of Max Limit Donations, If it reaches the max donations, Then the bot will STOP donations"
-	GUICtrlSetTip(-1, $txtTip)
+	_GUICtrlSetTip(-1, $txtTip)
 
 Local $chkDStats = GUICtrlCreateCheckbox("Enable", $x + 300, $y - 22, 50, 20)
 $DonateStatsReset = GUICtrlCreateButton("ResetDStats", $x + 355, $y - 22, 65, 20)

@@ -25,11 +25,11 @@ Func cmbProfile()
 	readConfig()
 	applyConfig()
 	saveConfig()
-
+	
 	;DonateStats ============================
 	InitDonateStats()
-	
-	SetLog(_PadStringCenter("Profile " & $sCurrProfile & " loaded from " & $config, 50, "="), $COLOR_GREEN)
+
+	SetLog("Profile " & $sCurrProfile & " loaded from " & $config, $COLOR_GREEN)
 EndFunc   ;==>cmbProfile
 
 Func btnAddConfirm()
@@ -49,7 +49,7 @@ Func btnAddConfirm()
 		Case $btnConfirmAdd
 			Local $newProfileName = StringRegExpReplace(GUICtrlRead($txtVillageName), '[/:*?"<>|]', '_')
 			If FileExists($sProfilePath & "\" & $newProfileName) Then
-				MsgBox($MB_ICONWARNING, GetTranslated(7,108, "Profile Already Exists"), $newProfileName & " " & GetTranslated(7,109, "already exists.") & @CRLF & GetTranslated(7,110, "Please choose another name for your profile"))
+				MsgBox($MB_ICONWARNING, GetTranslated(637, 11, "Profile Already Exists"), GetTranslated(637, 12, "%s already exists.\r\nPlease choose another name for your profile.", $newProfileName))
 				Return
 			EndIf
 
@@ -76,7 +76,7 @@ Func btnAddConfirm()
 			; IceCube (Misc v1.0)
 			If GUICtrlGetState($btnRecycle) <> $GUI_ENABLE Then GUICtrlSetState($btnRecycle, $GUI_ENABLE)
 			; IceCube (Misc v1.0)
-			;DonateStats ============================
+			;DonateStats =============================
 			InitDonateStats()
 		Case Else
 			SetLog("If you are seeing this log message there is something wrong.", $COLOR_RED)
@@ -86,13 +86,20 @@ EndFunc   ;==>btnAddConfirm
 Func btnDeleteCancel()
 	Switch @GUI_CtrlId
 		Case $btnDelete
-			Local $msgboxAnswer = MsgBox($MB_ICONWARNING + $MB_OKCANCEL, GetTranslated(7,111, "Delete Profile"), GetTranslated(7,112, "Are you sure you really want to delete the profile?") & @CRLF & GetTranslated(7,113, "This action can not be undone."))
+			Local $msgboxAnswer = MsgBox($MB_ICONWARNING + $MB_OKCANCEL, GetTranslated(637, 8, "Delete Profile"), GetTranslated(637, 14, "Are you sure you really want to delete the profile?\r\nThis action can not be undone."))
 			If $msgboxAnswer = $IDOK Then
 				; Confirmed profile deletion so delete it.
 				deleteProfile()
-				setupProfileComboBox()
-				setupProfileComboBoxswitch()
-				selectProfile()
+				; reset inputtext
+				GUICtrlSetData($txtVillageName, GetTranslated(637,4, "MyVillage"))
+				If _GUICtrlComboBox_GetCount($cmbProfile) > 1 Then
+					; select existing profile
+					setupProfileComboBox()
+					selectProfile()
+				Else
+					; create new default profile
+					createProfile(True)
+				EndIf
 			EndIf
 		Case $btnCancel
 			GUICtrlSetState($txtVillageName, $GUI_HIDE)
@@ -146,7 +153,7 @@ Func btnRenameConfirm()
 		Case $btnConfirmRename
 			Local $newProfileName = StringRegExpReplace(GUICtrlRead($txtVillageName), '[/:*?"<>|]', '_')
 			If FileExists($sProfilePath & "\" & $newProfileName) Then
-				MsgBox($MB_ICONWARNING, GetTranslated(7,108, "Profile Already Exists"), $newProfileName & " " & GetTranslated(7,109, "already exists.") & @CRLF & GetTranslated(7,110, "Please choose another name for your profile"))
+				MsgBox($MB_ICONWARNING, GetTranslated(7, 108, "Profile Already Exists"), $newProfileName & " " & GetTranslated(7, 109, "already exists.") & @CRLF & GetTranslated(7, 110, "Please choose another name for your profile"))
 				Return
 			EndIf
 

@@ -57,6 +57,23 @@ Func cmbLanguage()
 	MsgBox("", "", GetTranslated(636, 71, "Restart Bot to load program with new language:") & " " & $aLanguageFile[$sLanguageIndex][1] & " (" & $sLanguage & ")")
 EndFunc   ;==>cmbLanguage
 
+Func chkUseRandomClick()
+	If GUICtrlRead($chkUseRandomClick) = $GUI_CHECKED Then
+		$iUseRandomClick = 1
+	Else
+		$iUseRandomClick = 0
+	EndIf
+EndFunc   ;==>chkUseRandomClick
+
+Func chkUpdatingWhenMinimized()
+	$iUpdatingWhenMinimized = (GUICtrlRead($chkUpdatingWhenMinimized) = $GUI_CHECKED ? 1 : 0)
+EndFunc   ;==>chkUpdatingWhenMinimized
+
+Func chkHideWhenMinimized()
+	$iHideWhenMinimized = (GUICtrlRead($chkHideWhenMinimized) = $GUI_CHECKED ? 1 : 0)
+	TrayItemSetState($tiHide, ($iHideWhenMinimized = 1 ? $TRAY_CHECKED : $TRAY_UNCHECKED))
+EndFunc   ;==>chkHideWhenMinimized
+
 Func chkScreenshotType()
 	If GUICtrlRead($chkScreenshotType) = $GUI_CHECKED Then
 		$iScreenshotType = 1
@@ -130,9 +147,12 @@ Func chkSinglePBTForced()
 	If GUICtrlRead($chkSinglePBTForced) = $GUI_CHECKED Then
 		GUICtrlSetState($txtSinglePBTimeForced, $GUI_ENABLE)
 		GUICtrlSetState($txtPBTimeForcedExit, $GUI_ENABLE)
+		GUICtrlSetState($chkCloseTakeBreak, $GUI_ENABLE)
+		GUICtrlSetState($chkCloseTakeBreak, $GUI_CHECKED)
 	Else
 		GUICtrlSetState($txtSinglePBTimeForced, $GUI_DISABLE)
 		GUICtrlSetState($txtPBTimeForcedExit, $GUI_DISABLE)
+		GUICtrlSetState($chkCloseTakeBreak, $GUI_DISABLE)
 	EndIf
 	txtSinglePBTimeForced()
 EndFunc   ;==>chkSinglePBTForced
@@ -155,6 +175,14 @@ Func txtSinglePBTimeForced()
 			GUICtrlSetBkColor($txtPBTimeForcedExit, $COLOR_MONEYGREEN)
 	EndSwitch
 EndFunc   ;==>txtSinglePBTimeForced
+
+Func chkClosePBEmu()
+If GUICtrlRead($chkCloseTakeBreak) = $GUI_CHECKED Then
+		$ichkCloseTakeBreak = 1
+	Else
+		$ichkCloseTakeBreak = 0
+	EndIf
+EndFunc  ;==>chkClosePBEmu
 
 Func chkDebugClick()
 	If GUICtrlRead($chkDebugClick) = $GUI_CHECKED Then
@@ -219,65 +247,12 @@ Func chkdebugOCRDonate()
 	SetDebugLog("chkdebugOCRDonate " & ($debugOCRdonate = 1 ? "enabled" : "disabled"))
 EndFunc   ;==>chkdebugOCRDonate
 
-Func sldMaxVSDelay()
-	$iMaxVSDelay = GUICtrlRead($sldMaxVSDelay)
-	GUICtrlSetData($lblMaxVSDelay, $iMaxVSDelay)
-	If $iMaxVSDelay < $iVSDelay Then
-		GUICtrlSetData($lblVSDelay, $iMaxVSDelay)
-		GUICtrlSetData($sldVSDelay, $iMaxVSDelay)
-		$iVSDelay = $iMaxVSDelay
-	EndIf
-	If $iVSDelay = 1 Then
-		GUICtrlSetData($lbltxtVSDelay, GetTranslated(603,7, "second"))
-	Else
-		GUICtrlSetData($lbltxtVSDelay, GetTranslated(603,8, "seconds"))
-	EndIf
-	If $iMaxVSDelay = 1 Then
-		GUICtrlSetData($lbltxtMaxVSDelay, GetTranslated(603,7, "second"))
-	Else
-		GUICtrlSetData($lbltxtMaxVSDelay, GetTranslated(603,8, "seconds"))
-	EndIf
-EndFunc   ;==>sldMaxVSDelay
-
-Func sldVSDelay()
-	$iVSDelay = GUICtrlRead($sldVSDelay)
-	GUICtrlSetData($lblVSDelay, $iVSDelay)
-	If $iVSDelay > $iMaxVSDelay Then
-		GUICtrlSetData($lblMaxVSDelay, $iVSDelay)
-		GUICtrlSetData($sldMaxVSDelay, $iVSDelay)
-		$iMaxVSDelay = $iVSDelay
-	EndIf
-	If $iVSDelay = 1 Then
-		GUICtrlSetData($lbltxtVSDelay, GetTranslated(603,7, "second"))
-	Else
-		GUICtrlSetData($lbltxtVSDelay, GetTranslated(603,8, "seconds"))
-	EndIf
-	If $iMaxVSDelay = 1 Then
-		GUICtrlSetData($lbltxtMaxVSDelay, GetTranslated(603,7, "second"))
-	Else
-		GUICtrlSetData($lbltxtMaxVSDelay, GetTranslated(603,8, "seconds"))
-	EndIf
-EndFunc   ;==>sldVSDelay
-
-
-Func sldTrainITDelay()
-	$isldTrainITDelay = GUICtrlRead($sldTrainITDelay)
-	GUICtrlSetData($lbltxtTrainITDelay, GetTranslated(636, 32, "delay") & " " & $isldTrainITDelay & " ms.")
-EndFunc   ;==>sldTrainITDelay
-
-#cs
-	Func cmbGUIstyle()
-	MsgBox("", "", GetTranslated(636, 71, "Restart Bot to load new GUI style"))
-	EndFunc   ;==>cmbGUIstyle
-#ce
-
-
 Func btnTestTrain()
 		Local $currentOCR = $debugOcr
 		Local $currentRunState = $RunState
 		_GUICtrlTab_ClickTab($tabMain, 0)
 		$debugOcr = 1
-		$RunState = 1
+		$RunState = True
  		ForceCaptureRegion()
 		DebugImageSave("train_")
 		SetLog(_PadStringCenter(" Test Train begin (" & $sBotVersion &  ")", 54, "="), $COLOR_BLUE)
@@ -293,15 +268,13 @@ Func btnTestTrain()
 		$RunState = $currentRunState
 EndFunc
 
-
-
 Func btnTestDonateCC()
 		Local $currentOCR = $debugOcr
 		Local $currentRunState = $RunState
 		Local $currentSetlog = $debugsetlog
 		_GUICtrlTab_ClickTab($tabMain, 0)
 		$debugOcr = 1
-		$RunState = 1
+		$RunState = True
 		$debugsetlog = 1
  		ForceCaptureRegion()
 		;DebugImageSave("donateCC_")
@@ -320,9 +293,9 @@ Func btnTestDonateCC()
 			Return False
 		EndIf
 		Setlog("Detecting Troops...")
-		DetectSlotTroop($eLava)
+		DetectSlotTroop($eBowl)
 		Setlog("Detecting Spells...")
-		DetectSlotTroop($eHaSpell)
+		DetectSlotTroop($eSkSpell)
 		SetLog(_PadStringCenter(" Test DonateCC end ", 54, "="), $COLOR_BLUE)
 		Run("Explorer.exe " & $LibDir & "\debug\ocr\" )
 
@@ -338,7 +311,7 @@ Func btnTestAttackBar()
 		_GUICtrlTab_ClickTab($tabMain, 0)
 
 		$debugOcr = 1
-		$RunState = 1
+		$RunState = True
  		ForceCaptureRegion()
 		SetLog(_PadStringCenter(" Test Attack Bar begin (" & $sBotVersion &  ")", 54, "="), $COLOR_BLUE)
 

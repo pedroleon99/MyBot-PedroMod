@@ -17,6 +17,12 @@
 Func checkObstacles() ;Checks if something is in the way for mainscreen
 	Local $x, $y, $result
 	$MinorObstacle = False
+
+	If WinGetAndroidHandle() = 0 Then
+		; Android not available
+		Return True
+	EndIf
+
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	; Detect All Reload Button errors => 1- Another device, 2- Take a break, 3- Connection lost or error, 4- Out of sync, 5- Inactive, 6- Maintenance
 	$Message = _PixelSearch($aIsReloadError[0], $aIsReloadError[1], $aIsReloadError[0] + 3, $aIsReloadError[1] + 11, Hex($aIsReloadError[2], 6), $aIsReloadError[3])
@@ -61,6 +67,7 @@ Func checkObstacles() ;Checks if something is in the way for mainscreen
 				If $ichkSinglePBTForced = 1 Then $bGForcePBTUpdate = True
 			Case _CheckPixel($aIsConnectLost, $bNoCapturePixel) ; Connection Lost
 				SetLog("Connection lost, Reloading CoC...", $COLOR_RED)
+				ChckInetCon()
 			Case _CheckPixel($aIsCheckOOS, $bNoCapturePixel) ; Check OoS
 				SetLog("Out of Sync Error, Reloading CoC...", $COLOR_RED)
 			Case _CheckPixel($aIsMaintenance, $bNoCapturePixel) ; Check Maintenance
@@ -80,7 +87,9 @@ Func checkObstacles() ;Checks if something is in the way for mainscreen
 					Case StringInStr($result, "30", $STR_NOCASESENSEBASIC)
 						$iMaintenanceWaitTime = $iDelaycheckObstacles8 ; Wait 15 min
 					Case StringInStr($result, "45", $STR_NOCASESENSEBASIC)
-						$iMaintenanceWaitTime = $iDelaycheckObstacles8 ; Wait 15 min
+						$iMaintenanceWaitTime = $iDelaycheckObstacles9 ; Wait 20 min
+					Case StringInStr($result, "hour", $STR_NOCASESENSEBASIC)
+						$iMaintenanceWaitTime = $iDelaycheckObstacles10 ; Wait 30 min
 					Case Else
 						$iMaintenanceWaitTime = $iDelaycheckObstacles4 ; Wait 2 min
 						SetLog("Error reading Maintenance Break time?", $COLOR_RED)
@@ -116,6 +125,7 @@ Func checkObstacles() ;Checks if something is in the way for mainscreen
 	_CaptureRegion() ; Bot restart is not required for These cases just close window then WaitMainScreen then continue
 	If _ColorCheck(_GetPixelColor(235, 209 + $midOffsetY), Hex(0x9E3826, 6), 20) Then
 		PureClick(429, 493 + $midOffsetY, 1, 0, "#0132") ;See if village was attacked, clicks Okay
+		$iShouldRearm = True
 		$MinorObstacle = True
 		If _Sleep($iDelaycheckObstacles1) Then Return
 		Return False
@@ -123,7 +133,7 @@ Func checkObstacles() ;Checks if something is in the way for mainscreen
 	If _CheckPixel($aIsMainGrayed, $bNoCapturePixel) Then
 		PureClickP($aAway, 1, 0, "#0133") ;Click away If things are open
 		If _Sleep(1000) Then Return
-		PureClick(354, 435) ;Click Cancel If Window Msg Load Account
+		PureClick(354, 435, 1, 0, "Click Cancel") ;Click Cancel Button
 		$MinorObstacle = True
 		If _Sleep($iDelaycheckObstacles1) Then Return
 		Return False

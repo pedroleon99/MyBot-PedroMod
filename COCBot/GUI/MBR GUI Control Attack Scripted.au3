@@ -294,14 +294,34 @@ Func sldSelectedSpeedAB()
 	Local $speedText = $iCSVSpeeds[$isldSelectedCSVSpeed[$LB]] & "x";
 	IF $isldSelectedCSVSpeed[$LB] = 4 Then $speedText = "Normal"
 	GUICtrlSetData($lbltxtSelectedSpeedAB, $speedText & " speed")
+
 EndFunc   ;==>sldSelectedSpeedAB
 
-Func AttackNow()
-$iMatchMode = $LB			; Select Live Base As Attack Type
-$iAtkAlgorithm[$LB] = 1			; Select Scripted Attack
-$scmbABScriptName = GuiCtrlRead($cmbScriptNameAB)		; Select Scripted Attack File From The Combo Box, Cos it wasn't refreshing until pressing Start button
-$iMatchMode = 1			; Select Live Base As Attack Type
-$RunState = True
-PrepareAttack($iMatchMode)			; lol I think it's not needed for Scripted attack, But i just Used this to be sure of my code
-	Attack()			; Fire xD
-EndFunc   ;==>AttackNow
+		;;;; Attack Now Button (Useful for CSV Testing) By MR.ViPeR ;;;;
+Func AttackNowDB()
+	If $RunState Then Return
+	LockGUI()
+	$iMatchMode = $DB			; Select Dead Base As Attack Type
+	$iAtkAlgorithm[$DB] = 1		; Select Scripted Attack
+	$scmbDBScriptName = GuiCtrlRead($cmbScriptNameDB)		; Select Scripted Attack File From The Combo Box, Cos it wasn't refreshing until pressing Start button
+	$iMatchMode = $DB			; Select Dead Base As Attack Type
+	$RunState = True
+	PrepareAttack($iMatchMode)	; lol I think it's not needed for Scripted attack, But i just Used this to be sure of my code
+	Attack()					; Fire xD
+	$RunState = False
+	UnLockGUI()
+EndFunc   ;==>AttackNow Dead Base
+
+Func AttackNowAB()
+	If $RunState Then Return
+	LockGUI()
+	$iMatchMode = $LB			; Select Live Base As Attack Type
+	$iAtkAlgorithm[$LB] = 1		; Select Scripted Attack
+	$scmbABScriptName = GuiCtrlRead($cmbScriptNameAB)		; Select Scripted Attack File From The Combo Box, Cos it wasn't refreshing until pressing Start button
+	$iMatchMode = $LB			; Select Live Base As Attack Type
+	$RunState = True
+	PrepareAttack($iMatchMode)	; lol I think it's not needed for Scripted attack, But i just Used this to be sure of my code
+	Attack()					; Fire xD
+	$RunState = False
+	UnLockGUI()
+EndFunc   ;==>AttackNow Live Base

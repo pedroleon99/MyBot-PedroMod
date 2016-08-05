@@ -82,12 +82,12 @@ Func PrepareAttack($pMatchMode, $Remaining = False) ;Assigns troops
 			If $troopKind <> -1 Then SetLog("-*-" & $atkTroops[$i][0] & " " & NameOfTroop($atkTroops[$i][0]) & " " & $atkTroops[$i][1], $COLOR_GREEN)
 		EndIf
     Next
-	
-	;AwesomeGamer CSV mod
+
+    ;AwesomeGamer CSV mod
 	$remainingTroops = $atkTroops
 	$TroopDropNumber = 0
-
-    ;ResumeAndroid()
+	
+	;ResumeAndroid()
 
 	If $debugSetLog=1 Then Setlog("troopsnumber  = " & $troopsnumber)
 	Return $troopsnumber
@@ -249,6 +249,30 @@ Func IsSpecialTroopToBeUsed($pMatchMode, $pTroopType)
 					Case $MA
 						 If $ichkHasteSpell[$DB] = 1 Then Return True
 				EndSwitch
+#comments-start	; add new spells when ready
+				Case $eCSpell
+				Switch $pmatchMode
+					Case $DB
+						 If $ichkCloneSpell[$DB] = 1 Then Return True
+					Case $LB
+						 If $ichkCloneSpell[$LB] = 1 Then Return True
+					Case $TS
+						 If $ichkCloneSpell[$TS] = 1 Then Return True
+					Case $MA
+						 If $ichkCloneSpell[$DB] = 1 Then Return True
+				EndSwitch
+				Case  $eSkSpell
+				Switch $pmatchMode
+					Case $DB
+						 If $ichkSkeletonSpell[$DB] = 1 Then Return True
+					Case $LB
+						 If $ichkSkeletonSpell[$LB] = 1 Then Return True
+					Case $TS
+						 If $ichkSkeletonSpell[$TS] = 1 Then Return True
+					Case $MA
+						 If $ichkSkeletonSpell[$DB] = 1 Then Return True
+				EndSwitch
+#comments-end
 
 			Case Else
 				Return False

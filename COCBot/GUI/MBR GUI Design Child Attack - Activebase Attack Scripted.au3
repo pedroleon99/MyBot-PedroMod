@@ -25,48 +25,49 @@ Local $x = 25, $y = 20
 			$txtTip = GetTranslated(607,3, -1)
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetState(-1, $GUI_HIDE)
-			GUICtrlSetTip(-1, $txtTip)
+			_GUICtrlSetTip(-1, $txtTip)
 		$y +=15
 		$cmbScriptNameAB=GUICtrlCreateCombo("", $x , $y, 185, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 			$txtTip = GetTranslated(607,4, -1)
-			GUICtrlSetTip(-1, $txtTip)
+			_GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetOnEvent(-1, "cmbScriptNameAB")
 		$picreloadScriptsAB = GUICtrlCreateIcon($pIconLib, $eIcnReload, $x + 192, $y + 2, 16, 16)
 			$txtTip =  GetTranslated(607,5, -1)
-			GUICtrlSetTip(-1, $txtTip)
+			_GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetOnEvent(-1, 'UpdateComboScriptNameAB') ; Run this function when the secondary GUI [X] is clicked
 		$y +=25
 			$lblNotesScriptAB =  GUICtrlCreateLabel("", $x, $y + 5, 180, 118)
 			PopulateComboScriptsFilesAB() ; populate
 			$picreloadScriptsAB = GUICtrlCreateIcon($pIconLib, $eIcnEdit, $x + 192, $y + 2, 16, 16)
 			$txtTip =  GetTranslated(607,6, -1)
-			GUICtrlSetTip(-1, $txtTip)
+			_GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetOnEvent(-1, "EditScriptAB")
 		$y +=25
 			$picnewScriptsAB = GUICtrlCreateIcon($pIconLib, $eIcnAddcvs, $x + 192, $y + 2, 16, 16)
 			$txtTip =  GetTranslated(607,7, -1)
-			GUICtrlSetTip(-1, $txtTip)
+			_GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetOnEvent(-1, "NewScriptAB")
 		$y +=25
 			$picduplicateScriptsAB = GUICtrlCreateIcon($pIconLib, $eIcnCopy, $x + 192, $y + 2, 16, 16)
 			$txtTip =  GetTranslated(607,8, -1)
-			GUICtrlSetTip(-1, $txtTip)
+			_GUICtrlSetTip(-1, $txtTip)
 			GUICtrlSetOnEvent(-1, "DuplicateScriptAB")
 
 		; CSV Deployment Speed Mod
 		$y += 134
-		
+		;;;; Attack Now (CSV) By MR.ViPeR ;;;;
 		$btnAttNow = GUICtrlCreateButton("Attack Now", $x, $y-30, 91, 25)
+				_GUICtrlSetTip(-1, "Attack Now Button (Useful for CSV Testing)")
 				GUISetState(@SW_SHOW)
-				GUICtrlSetOnEvent(-1, "AttackNow")
-GUICtrlCreateGroup("", -99, -99, 1, 1)
-		
-		$grpScriptSpeedAB = GUICtrlCreateGroup("CSV Deployment  Speed", $x, $y, 230, 50)
+				GUICtrlSetOnEvent(-1, "AttackNowAB")
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+	
+		$grpScriptSpeedAB = GUICtrlCreateGroup("CSV Deployment Speed", $x, $y, 230, 50)
 			$lbltxtSelectedSpeedAB = GUICtrlCreateLabel("Normal speed", $x + 15, $y + 20, 75, 25)
-				GUICtrlSetTip(-1, "Increase or decrease the speed at which the CSV attack script deploys troops and waves.")
+				_GUICtrlSetTip(-1, "Increase or decrease the speed at which the CSV attack script deploys troops and waves.")
 			$sldSelectedSpeedAB = GUICtrlCreateSlider($x + 98, $y + 20, 125, 25, BitOR($TBS_TOOLTIPS, $TBS_AUTOTICKS))
-				GUICtrlSetTip(-1, "Increase or decrease the speed at which the CSV attack script deploys troops and waves.")
+				_GUICtrlSetTip(-1, "Increase or decrease the speed at which the CSV attack script deploys troops and waves.")
 				_GUICtrlSlider_SetTipSide(-1, $TBTS_BOTTOM)
 				_GUICtrlSlider_SetTicFreq(-1, 1)
 				GUICtrlSetLimit(-1, 12, 0) ; change max/min value
@@ -80,6 +81,6 @@ GUICtrlCreateGroup("", -99, -99, 1, 1)
 ;----- populate list of script and assign the default value if no exist profile -----------
 UpdateComboScriptNameAB()
 Local $tempindex = _GUICtrlComboBox_FindStringExact($cmbScriptNameAB, $scmbABScriptName)
-If $tempindex = -1 Then 	$tempindex = 0
+If $tempindex = -1 Then $tempindex = 0
 _GUICtrlComboBox_SetCurSel($cmbScriptNameAB, $tempindex)
 ;------------------------------------------------------------------------------------------

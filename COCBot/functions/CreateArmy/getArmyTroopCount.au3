@@ -17,7 +17,8 @@
 ;
 
 Global $SlotInArmyBarb = -1, $SlotInArmyArch = -1, $SlotInArmyGiant = -1, $SlotInArmyGobl = -1, $SlotInArmyWall = -1, $SlotInArmyBall = -1, $SlotInArmyWiza = -1, $SlotInArmyHeal = -1
-Global $SlotInArmyMini = -1, $SlotInArmyHogs = -1, $SlotInArmyValk = -1, $SlotInArmyGole = -1, $SlotInArmyWitc = -1, $SlotInArmyLava = -1, $SlotInArmyDrag = -1, $SlotInArmyPekk = -1
+Global $SlotInArmyMini = -1, $SlotInArmyHogs = -1, $SlotInArmyValk = -1, $SlotInArmyGole = -1, $SlotInArmyWitc = -1, $SlotInArmyLava = -1, $SlotInArmyBowl = -1, $SlotInArmyDrag = -1
+Global $SlotInArmyPekk = -1, $SlotInArmyBabyD = -1, $SlotInArmyMine = -1
 
 Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $test = false)
 
@@ -40,7 +41,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 
 	Local $FullTemp = ""
-	Local $TroopName = 0
 	Local $TroopQ = 0
 	Local $TroopTypeT = ""
 	ReDim $TroopSpellStats[0][2]
@@ -89,7 +89,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 		For $i = 1 To $TroopTypeT[0]
 
-			$TroopName = "Unknown"
 			$TroopQ = "0"
 			If _sleep($iDelaycheckArmyCamp1) Then Return
 			Local $Troops = StringSplit($TroopTypeT[$i], "#", $STR_NOCOUNT)
@@ -99,7 +98,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				If $Troops[0] = $eBarb Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Barbarians"
 					$aDTtroopsToBeUsed[0][1] = $Troops[2]
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eBarb) Then
 						$CurBarb = -($TroopQ)
@@ -108,7 +106,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				ElseIf $Troops[0] = $eArch Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Archers"
 					$aDTtroopsToBeUsed[1][1] = $Troops[2]
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eArch) Then
 						$CurArch = -($TroopQ)
@@ -117,7 +114,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				ElseIf $Troops[0] = $eGiant Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Giants"
 					$aDTtroopsToBeUsed[2][1] = $Troops[2]
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eGiant) Then
 						$CurGiant = -($TroopQ)
@@ -126,7 +122,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				ElseIf $Troops[0] = $eGobl Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Goblins"
 					$aDTtroopsToBeUsed[4][1] = $Troops[2]
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eGobl) Then
 						$CurGobl = -($TroopQ)
@@ -135,7 +130,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				ElseIf $Troops[0] = $eWall Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Wallbreakers"
 					$aDTtroopsToBeUsed[3][1] = $Troops[2]
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eWall) Then
 						$CurWall = -($TroopQ)
@@ -144,7 +138,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				ElseIf $Troops[0] = $eBall Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Balloons"
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eBall) Then
 						$CurBall = -($TroopQ)
 						$SlotInArmyBall = $i - 1
@@ -152,7 +145,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				ElseIf $Troops[0] = $eHeal Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Healers"
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eHeal) Then
 						$CurHeal = -($TroopQ)
 						$SlotInArmyHeal = $i - 1
@@ -160,7 +152,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				ElseIf $Troops[0] = $eWiza Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Wizards"
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eWiza) Then
 						$CurWiza = -($TroopQ)
 						$SlotInArmyWiza = $i - 1
@@ -168,7 +159,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				ElseIf $Troops[0] = $eDrag Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Dragons"
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eDrag) Then
 						$CurDrag = -($TroopQ)
 						$SlotInArmyDrag = $i - 1
@@ -176,15 +166,27 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				ElseIf $Troops[0] = $ePekk Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Pekkas"
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($ePekk) Then
 						$CurPekk = -($TroopQ)
 						$SlotInArmyPekk = $i - 1
 					EndIf
 
+				ElseIf $Troops[0] = $eBabyD Then
+					$TroopQ = $Troops[2]
+					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eBabyD) Then
+						$CurPekk = -($TroopQ)
+						$SlotInArmyBabyD = $i - 1
+					EndIf
+
+				ElseIf $Troops[0] = $eMine Then
+					$TroopQ = $Troops[2]
+					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eMine) Then
+						$CurPekk = -($TroopQ)
+						$SlotInArmyMine = $i - 1
+					EndIf
+
 				ElseIf $Troops[0] = $eMini Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Minions"
 					$aDTtroopsToBeUsed[5][1] = $Troops[2]
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eMini) Then
 						$CurMini = -($TroopQ)
@@ -193,7 +195,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				ElseIf $Troops[0] = $eHogs Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Hog Riders"
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eHogs) Then
 						$CurHogs = -($TroopQ)
 						$SlotInArmyHogs = $i - 1
@@ -201,7 +202,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				ElseIf $Troops[0] = $eValk Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Valkyries"
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eValk) Then
 						$CurValk = -($TroopQ)
 						$SlotInArmyValk = $i - 1
@@ -209,7 +209,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				ElseIf $Troops[0] = $eGole Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Golems"
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eGole) Then
 						$CurGole = -($TroopQ)
 						$SlotInArmyGole = $i - 1
@@ -217,7 +216,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				ElseIf $Troops[0] = $eWitc Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Witches"
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eWitc) Then
 						$CurWitc = -($TroopQ)
 						$SlotInArmyWitc = $i - 1
@@ -225,7 +223,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				ElseIf $Troops[0] = $eLava Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Lava Hounds"
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eLava) Then
 						$CurLava = -($TroopQ)
 						$SlotInArmyLava = $i - 1
@@ -233,7 +230,6 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				ElseIf $Troops[0] = $eBowl Then
 					$TroopQ = $Troops[2]
-					$TroopName = "Bowlers"
 					If $FirstStart Or $fullArmy Or IsTroopToDonateOnly($eBowl) Then
 						$CurBowl = -($TroopQ)
 						$SlotInArmyBowl = $i - 1
@@ -241,12 +237,10 @@ Func getArmyTroopCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 
 				EndIf
 				If $TroopQ <> 0 Then 
-					SetLog(" - No. of " & $TroopName & ": " & $TroopQ)
+					SetLog(" - No. of " & NameOfTroop($Troops[0]) & ": " & $TroopQ)
 					_ArrayAdd($TroopSpellStats, $TroopName & "|" & $TroopQ)
 				EndIf
-
 			EndIf
-
 		Next
 
 	EndIf

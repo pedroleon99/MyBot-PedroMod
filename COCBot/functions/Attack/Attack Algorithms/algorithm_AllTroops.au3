@@ -19,7 +19,9 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 
 	If _Sleep($iDelayalgorithm_AllTroops1) Then Return
 
-	SmartAttackStrategy($iMatchMode) ; detect redarea first to drop any troops
+	If $iChkDeploySettings[$iMatchMode] <> 4 Then
+		SmartAttackStrategy($iMatchMode) ; detect redarea first to drop any troops
+	EndIf
 
 	; If one of condtions passed then start TH snipe attack
 	; - detect matchmode TS
@@ -37,20 +39,18 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	EndIf
 
 	If $iMatchMode = $TS Then; Return ;Exit attacking if trophy hunting and not bullymode
-		If ($THusedKing = 1 Or $THusedQueen = 1) And ($ichkSmartZapSaveHeroes = 1 Or $ichkSmartZap = 0) Then
+		If ($THusedKing = 1 Or $THusedQueen = 1) And ($ichkSmartZapSaveHeroes = 1 Or $ichkSmartZap = 0 Or $ichkExtLightSpell = 0) Then
 			Setlog("Wait few sec before close attack.")
 			If _Sleep(Random(0, 2, 1) * 1000) Then Return ;wait 0-2 second before exit if king and queen are not dropped
-		ElseIf IsAttackPage() And Not SmartZap() And $THusedKing = 0 And $THusedQueen = 0 Then
+		ElseIf IsAttackPage() And Not (SmartZap() Or ExtremeZap()) And $THusedKing = 0 And $THusedQueen = 0 Then
 			Setlog("Wait few sec before close attack")
-			If _Sleep(Random(2, 5, 1) * 1000) Then Return ; wait 2-5 second before exit if king and queen are not dropped		
+			If _Sleep(Random(2, 5, 1) * 1000) Then Return ; wait 2-5 second before exit if king and queen are not dropped
 		Else
 			SetLog("King and/or Queen dropped, close attack.")
-			If $ichkSmartZap = 1 Then SetLog("Skipping SmartZap to protect your royals!", $COLOR_FUCHSIA)
+			If ($ichkSmartZap = 1 Or $ichkExtLightSpell = 1) Then SetLog("Skipping SmartZap Or ExtremeZap to protect your royals!", $COLOR_FUCHSIA)
+			CloseBattle()
+			Return
 		EndIf
-
-		;close battle
-		CloseBattle()
-		Return
 	EndIf
 
 
@@ -60,23 +60,26 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	;########################################################################################################################
 	Local $nbSides = 0
 	Switch $iChkDeploySettings[$iMatchMode]
-		Case 0 ;Single sides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Case 0 ;Single sides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			SetLog("Attacking on a single side", $COLOR_BLUE)
 			$nbSides = 1
 		Case 1 ;Two sides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			SetLog("Attacking on two sides", $COLOR_BLUE)
 			$nbSides = 2
-		Case 2 ;Three sides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Case 2 ;Three sides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			SetLog("Attacking on three sides", $COLOR_BLUE)
 			$nbSides = 3
 		Case 3 ;All sides ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			SetLog("Attacking on all sides", $COLOR_BLUE)
 			$nbSides = 4
-		Case 4 ;DE Side - Live Base only ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Case 4 ;Classic Four Finger ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			SetLog("Attacking Classic Four Finger Fight Style", $COLOR_BLUE)
+			$nbSides = 5
+		Case 5 ;DE Side - Live Base only ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			SetLog("Attacking on Dark Elixir Side.", $COLOR_BLUE)
 			$nbSides = 1
 			If Not ($iChkRedArea[$iMatchMode]) Then GetBuildingEdge($eSideBuildingDES) ; Get DE Storage side when Redline is not used.
-		Case 5 ;TH Side - Live Base only ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Case 6 ;TH Side - Live Base only ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			SetLog("Attacking on Town Hall Side.", $COLOR_BLUE)
 			$nbSides = 1
 			If Not ($iChkRedArea[$iMatchMode]) Then GetBuildingEdge($eSideBuildingTH) ; Get Townhall side when Redline is not used.
@@ -85,16 +88,19 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 	If _Sleep($iDelayalgorithm_AllTroops2) Then Return
 
 	; $ListInfoDeploy = [Troop, No. of Sides, $WaveNb, $MaxWaveNb, $slotsPerEdge]
-	If $iMatchMode = $LB And $iChkDeploySettings[$LB] = 4 Then ; Customise DE side wave deployment here
+	If $iMatchMode = $LB And $iChkDeploySettings[$LB] = 5 Then ; Customise DE side wave deployment here
 		Switch $icmbStandardAlgorithm[$iMatchMode]
 			Case 0
-				Local $listInfoDeploy[18][5] = [[$eGole, $nbSides, 1, 1, 2] _
+				Local $listInfoDeploy[21][5] = [[$eGole, $nbSides, 1, 1, 2] _
 						, [$eLava, $nbSides, 1, 1, 2] _
 						, [$eGiant, $nbSides, 1, 1, 2] _
 						, [$eDrag, $nbSides, 1, 1, 0] _
 						, [$eBall, $nbSides, 1, 1, 0] _
+						, [$eBabyD, $nbSides, 1, 1, 1] _
 						, [$eHogs, $nbSides, 1, 1, 1] _
 						, [$eValk, $nbSides, 1, 1, 0] _
+						, [$eBowl, $nbSides, 1, 1, 0] _
+						, [$eMine, $nbSides, 1, 1, 0] _
 						, [$eBarb, $nbSides, 1, 1, 0] _
 						, [$eWall, $nbSides, 1, 1, 1] _
 						, [$eArch, $nbSides, 1, 1, 0] _
@@ -131,17 +137,43 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 						, [$eGobl, $nbSides, 1, 1, 1] _
 						]
 		EndSwitch
+; Classic Four Finger
+	ElseIf $nbSides = 5 Then
+		Local $listInfoDeploy[21][5] = [[$eGiant, $nbSides, 1, 1, 2], _
+						[$eGole,  $nbSides, 1, 1, 2], _
+						[$eLava,  $nbSides, 1, 1, 2], _
+						[$eBarb,  $nbSides, 1, 1, 0], _
+						[$eWall,  $nbSides, 1, 1, 2], _
+						[$eArch,  $nbSides, 1, 1, 0], _
+						[$eHogs,  $nbSides, 1, 1, 2], _
+						[$eGobl,  $nbSides, 1, 1, 0], _
+						[$eValk,  $nbSides, 1, 1, 2], _
+						[$eBowl,  $nbSides, 1, 1, 0], _
+						[$eMine,  $nbSides, 1, 1, 0], _
+						[$ePekk,  $nbSides, 1, 1, 2], _
+						[$eDrag,  $nbSides, 1, 1, 2], _
+						[$eBall,  $nbSides, 1, 1, 2], _
+						[$eBabyD, $nbSides, 1, 1, 1], _
+						[$eWiza,  $nbSides, 1, 1, 2], _
+						[$eWitc,  $nbSides, 1, 1, 2], _
+						[$eMini,  $nbSides, 1, 1, 0], _
+						["CC",           1, 1, 1, 1], _
+						["HEROES",       1, 2, 1, 1]]
+
 	Else
 		If $debugSetlog = 1 Then SetLog("listdeploy standard for attack", $COLOR_PURPLE)
 		Switch $icmbStandardAlgorithm[$iMatchMode]
 			Case 0
-				Local $listInfoDeploy[18][5] = [[$eGole, $nbSides, 1, 1, 2] _
+				Local $listInfoDeploy[21][5] = [[$eGole, $nbSides, 1, 1, 2] _
 						, [$eLava, $nbSides, 1, 1, 2] _
 						, [$eGiant, $nbSides, 1, 1, 2] _
 						, [$eDrag, $nbSides, 1, 1, 0] _
 						, [$eBall, $nbSides, 1, 1, 0] _
+						, [$eBabyD, $nbSides, 1, 1, 0] _
 						, [$eHogs, $nbSides, 1, 1, 1] _
 						, [$eValk, $nbSides, 1, 1, 0] _
+						, [$eBowl, $nbSides, 1, 1, 0] _
+						, [$eMine, $nbSides, 1, 1, 0] _
 						, [$eBarb, $nbSides, 1, 1, 0] _
 						, [$eWall, $nbSides, 1, 1, 1] _
 						, [$eArch, $nbSides, 1, 1, 0] _
@@ -212,7 +244,7 @@ Func algorithm_AllTroops() ;Attack Algorithm for all existing troops
 			If $debugsetlog = 1 Then Setlog("No Wast time... exit, no troops usable left",$COLOR_PURPLE)
 			ExitLoop ;Check remaining quantities
 		EndIf
-		For $i = $eBarb To $eLava ; lauch all remaining troops
+		For $i = $eBarb To $eBowl ; lauch all remaining troops
 			;If $i = $eBarb Or $i = $eArch Then
 			LauchTroop($i, $nbSides, 0, 1)
 			CheckHeroesHealth()

@@ -25,7 +25,7 @@ Func GetResources($bLog = True, $pMatchMode = -1) ;Reads resources
 	While _CheckPixel($aNoCloudsAttack, $bCapturePixel) = False ; wait for clouds to be gone
 		If _Sleep($iDelayGetResources1) Then Return
 		$i += 1
-		If $i >= 180 Or isProblemAffect(True) Then ; Wait 45 sec max then restart bot and CoC
+		If $i >= 720 Or isProblemAffect(True) Then ; Wait 3 min then restart bot and CoC
 			$Is_ClientSyncError = True
 			checkMainScreen()
 			If $Restart Then
@@ -90,6 +90,20 @@ Func GetResources($bLog = True, $pMatchMode = -1) ;Reads resources
 	EndIf
 
 	$SearchCount += 1 ; Counter for number of searches
+	
+	;pushbullet searchcount notification every xxx searches so you know bot is still running
+    If $searchcount>0 AND $SearchNotifyCount = 1 AND mod($searchcount,$SearchNotifyCountTXT) = 0 Then
+        PushMsgToPushBullet ("CurrentSearchCount")
+    ElseIF $searchcount=1 AND $SearchNotifyCount = 1 Then
+        PushMsgToPushBullet ("CurrentSearchCount")
+    EndIf
+
+	;send village stats every xxx attacks
+	If $Villagestatincrement=1 AND mod($Attackcount,$VillageStatIncrementTXT) = 0 AND $AttackCount <>0 Then
+		PushMsgToPushBullet ("AttackCountStats")
+		$attackcount =0
+	EndIf
+	If $PersonalBreakNotified = True THEN $PersonalBreakNotified = False
 
 	ResumeAndroid()
 

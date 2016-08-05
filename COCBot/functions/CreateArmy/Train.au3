@@ -5,7 +5,7 @@
 ; Parameters ....:
 ; Return values .: None
 ; Author ........: Hungle
-; Modified ......: ProMac(2015), Sardo(2015), KnowJack(Jul/Aug 2105), barracoda (July/Aug 2015), Sardo(2015-08, kaganus(Aug 2015) ,TheMaster 2015-10
+; Modified ......: ProMac(08-2016), Sardo(2015), KnowJack(Jul/Aug 2105), barracoda (July/Aug 2015), Sardo(2015-08, kaganus(Aug 2015) ,TheMaster 2015-10, Boju 2016-06
 ; Remarks .......:
 ; Related .......:
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
@@ -19,7 +19,7 @@ Global $LastDarkBarrackTrainDonatedTroop = 1
 Func Train()
 
 	If $iAtkAlgorithm[$LB] = 2 Then
-		Local $TempTroopGroup[10][3] = [["Gobl", 3, 1], ["Arch", 1, 1], ["Giant", 2, 5], ["Wall", 4, 2], ["Barb", 0, 1], ["Heal", 7, 14], ["Pekk", 9, 25], ["Ball", 5, 5], ["Wiza", 6, 4], ["Drag", 8, 20]]
+		Local $TempTroopGroup[12][3] = [["Gobl", 3, 1], ["Arch", 1, 1], ["Giant", 2, 5], ["Wall", 4, 2], ["Barb", 0, 1], ["Heal", 7, 14], ["Pekk", 9, 25], ["Ball", 5, 5], ["Wiza", 6, 4], ["Drag", 8, 20], ["BabyD", 10, 10], ["Mine", 11, 5]]
 		$TroopGroup = $TempTroopGroup
 		Local $tempTroopName[UBound($TroopGroup, 1)]
 		$TroopName = $tempTroopName
@@ -28,7 +28,7 @@ Func Train()
 		$TroopNamePosition = $TempTroopNamePosition
 		Local $TempTroopHeight[UBound($TroopGroup, 1)]
 		$TroopHeight = $TempTroopHeight
-		Local $TempTroopGroupDark[6][3] = [["Mini", 0, 2], ["Hogs", 1, 5], ["Valk", 2, 8], ["Gole", 3, 30], ["Witc", 4, 12], ["Lava", 5, 30]]
+		Local $TempTroopGroupDark[7][3] = [["Mini", 0, 2], ["Hogs", 1, 5], ["Valk", 2, 8], ["Gole", 3, 30], ["Witc", 4, 12], ["Lava", 5, 30], ["Bowl", 6, 6]]
 		$TroopGroupDark = $TempTroopGroupDark
 		Local $TempTroopDarkName[UBound($TroopGroupDark, 1)]
 		$TroopDarkName = $TempTroopDarkName
@@ -68,6 +68,7 @@ Func Train()
 	Local $tempDElixir = ""
 	Local $tempElixirSpent = 0
 	Local $tempDElixirSpent = 0
+	Local $tmpNumber
 
 	If $debugsetlogTrain = 1 Then SetLog("Func Train ", $COLOR_PURPLE)
 	If $bTrainEnabled = False Then Return
@@ -146,7 +147,11 @@ Func Train()
 	If WaitforPixel(28, 505 + $bottomOffsetY, 30, 507 + $bottomOffsetY, Hex(0xE4A438, 6), 5, 10) Then
 		If $debugsetlogTrain = 1 Then SetLog("Click $aArmyTrainButton", $COLOR_GREEN)
 		If IsMainPage() Then
-			Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#0293") ; Button Army Overview
+			If $iUseRandomClick = 0 Then
+				Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#0293") ; Button Army Overview
+			Else
+				ClickR($aArmyTrainButtonRND, $aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0)
+			EndIf
 		EndIf
 	EndIf
 
@@ -243,7 +248,7 @@ Func Train()
 		$BarrackDarkStatus[0] = False
 		$BarrackDarkStatus[1] = False
 		SetLog("Your Army Camps are now Full", $COLOR_RED)
-		If ($PushBulletEnabled = 1 And $ichkAlertPBCampFull = 1) Then PushMsg("CampFull")
+		If ($PushBulletEnabled = 1 Or $TelegramEnabled = 1) And $ichkAlertPBCampFull = 1 Then PushMsgToPushBullet("CampFull")
 	EndIf
 
 	;If is fullArmy or FirstStart or we are using the Barracks modes is not necessary count the donations , the $Cur will add the correct troops to make
@@ -267,6 +272,8 @@ Func Train()
 
 	If $debugsetlogTrain = 1 Then SetLog("Total ArmyCamp :" & $TotalCamp, $COLOR_PURPLE)
 
+If $IsWaitingForHeroesSpells = 0 Then
+
 	If $fullarmy = True Then
 		SetLog("Calculating Troops before Training new Army.", $COLOR_BLUE)
 		$anotherTroops = 0
@@ -280,18 +287,18 @@ Func Train()
 				If $icmbTroopComp <> 8 And Eval("Cur" & $TroopName[$i]) * -1 >= Eval($TroopName[$i] & "Comp") * 2.0 Then ; 200% way too many
 					SetLog("Way Too many " & $TroopName[$i] & ", Dont Train.")
 					Assign(("Cur" & $TroopName[$i]), 0)
-					$anotherTroops += Eval($TroopName[$i] & "Comp") * $TroopHeight[$i]  ; When army full, add WayTooMany to $anotherTroops to prevent Arch/Barb/Gobl filling
+					$anotherTroops += Eval($TroopName[$i] & "Comp") * $TroopHeight[$i] ; When army full, add WayTooMany to $anotherTroops to prevent Arch/Barb/Gobl filling
 				Else
 					If $icmbTroopComp <> 8 And Eval("Cur" & $TroopName[$i]) * -1 > Eval($TroopName[$i] & "Comp") * 1.10 Then ; 110% too many
 						SetLog("Too many " & $TroopName[$i] & ", train last.")
 						Assign(("Cur" & $TroopName[$i]), 0)
 						Assign(("tooMany" & $TroopName[$i]), 1)
-						$anotherTroops += Eval($TroopName[$i] & "Comp") * $TroopHeight[$i]  ; When army full, add Too Many to $anotherTroops to prevent Arch/Barb/Gobl filling
+						$anotherTroops += Eval($TroopName[$i] & "Comp") * $TroopHeight[$i] ; When army full, add Too Many to $anotherTroops to prevent Arch/Barb/Gobl filling
 					ElseIf $icmbTroopComp <> 8 And (Eval("Cur" & $TroopName[$i]) * -1 < Eval($TroopName[$i] & "Comp") * .90) Then ; 90% too few
 						SetLog("Too few " & $TroopName[$i] & ", train first.")
 						Assign(("Cur" & $TroopName[$i]), 0)
 						Assign(("tooFew" & $TroopName[$i]), 1)
-						$anotherTroops += Eval($TroopName[$i] & "Comp") * $TroopHeight[$i]  ; When army full, add WayTooMany to $anotherTroops to prevent Arch/Barb/Gobl filling
+						$anotherTroops += Eval($TroopName[$i] & "Comp") * $TroopHeight[$i] ; When army full, add WayTooMany to $anotherTroops to prevent Arch/Barb/Gobl filling
 					Else
 						;##########################################################
 						If IsTroopToDonateOnly(Eval("e" & $TroopName[$i])) Then
@@ -324,18 +331,18 @@ Func Train()
 				If $icmbTroopComp <> 8 And Eval("Cur" & $TroopDarkName[$i]) * -1 >= Eval($TroopDarkName[$i] & "Comp") * 2.0 Then ; 200% way too many
 					SetLog("Way Too many " & $TroopDarkName[$i] & ", Dont Train.")
 					Assign(("Cur" & $TroopDarkName[$i]), 0)
-					$anotherTroops += Eval($TroopDarkName[$i] & "Comp") * $TroopDarkHeight[$i]  ; When army full, add WayTooMany to $anotherTroops to prevent Arch/Barb/Gobl/Minion filling
+					$anotherTroops += Eval($TroopDarkName[$i] & "Comp") * $TroopDarkHeight[$i] ; When army full, add WayTooMany to $anotherTroops to prevent Arch/Barb/Gobl/Minion filling
 				Else
 					If $icmbTroopComp <> 8 And Eval("Cur" & $TroopDarkName[$i]) * -1 > Eval($TroopDarkName[$i] & "Comp") * 1.10 Then ; 110% too many
 						SetLog("Too many " & $TroopDarkName[$i] & ", train last.")
 						Assign(("Cur" & $TroopDarkName[$i]), 0)
 						Assign(("tooMany" & $TroopDarkName[$i]), 1)
-						$anotherTroops += Eval($TroopDarkName[$i] & "Comp") * $TroopDarkHeight[$i]  ; When army full, add TooMany to $anotherTroops to prevent Arch/Barb/Gobl/Minion filling
+						$anotherTroops += Eval($TroopDarkName[$i] & "Comp") * $TroopDarkHeight[$i] ; When army full, add TooMany to $anotherTroops to prevent Arch/Barb/Gobl/Minion filling
 					ElseIf $icmbTroopComp <> 8 And (Eval("Cur" & $TroopDarkName[$i]) * -1 < Eval($TroopDarkName[$i] & "Comp") * .90) Then ; 90% too few
 						SetLog("Too few " & $TroopDarkName[$i] & ", train first.")
 						Assign(("Cur" & $TroopDarkName[$i]), 0)
 						Assign(("tooFew" & $TroopDarkName[$i]), 1)
-						$anotherTroops += Eval($TroopDarkName[$i] & "Comp") * $TroopDarkHeight[$i]  ; When army full, add Too few to $anotherTroops to prevent Arch/Barb/Gobl/Minion filling
+						$anotherTroops += Eval($TroopDarkName[$i] & "Comp") * $TroopDarkHeight[$i] ; When army full, add Too few to $anotherTroops to prevent Arch/Barb/Gobl/Minion filling
 					Else
 						;###############################################################
 						If IsTroopToDonateOnly(Eval("e" & $TroopDarkName[$i])) Then
@@ -511,42 +518,44 @@ Func Train()
 						If $icount = 7 Then ExitLoop
 					WEnd
 				EndIf
-
 				If $iChkDontRemove = 0 Then
-
-				$icount = 0
-				While Not _ColorCheck(_GetPixelColor(599, 202 + $midOffsetY, True), Hex(0xD0D0C0, 6), 20) ; while not disappears  green arrow
-					If Not (IsTrainPage()) Then Return
-					Click(568, 177 + $midOffsetY, 10, 0, "#0273") ; Remove Troops in training
-					$icount += 1
-					If $icount = 100 Then ExitLoop
-				WEnd
+					$icount = 0
+					While Not _ColorCheck(_GetPixelColor(599, 202 + $midOffsetY, True), Hex(0xD0D0C0, 6), 20) ; while not disappears  green arrow
+						If Not (IsTrainPage()) Then Return
+						Click(568, 177 + $midOffsetY, 10, $isldTrainITDelay, "#0273") ; Remove Troops in training
+						$icount += 1
+						If $icount = 100 Then ExitLoop
+					WEnd
+					If $debugsetlogTrain = 1 And $icount = 100 Then SetLog("Train warning 6", $COLOR_PURPLE)
 				EndIf
-				If $debugsetlogTrain = 1 And $icount = 100 Then SetLog("Train warning 6", $COLOR_PURPLE)
 			EndIf
 			If _Sleep($iDelayTrain2) Then Return
 			If Not (IsTrainPage()) Then Return ; exit from train if no train page
 			Switch $barrackTroop[$brrNum - 1]
 				Case 0
-					TrainClick(166, 320 + $midOffsetY, 85, 10, $FullBarb, $GemBarb, "#0274") ; Barbarian
+					TrainClick(166, 320 + $midOffsetY, 85, $isldTrainITDelay, $FullBarb, $GemBarb, "#0274", $TrainBarbRND) ; Barbarian
 				Case 1
-					TrainClick(245, 320 + $midOffsetY, 85, 10, $FullArch, $GemArch, "#0275") ; Archer
+					TrainClick(245, 320 + $midOffsetY, 85, $isldTrainITDelay, $FullArch, $GemArch, "#0275", $TrainArchRND) ; Archer
 				Case 2
-					TrainClick(370, 320 + $midOffsetY, 17, 10, $FullGiant, $GemGiant, "#0276") ; Giant
+					TrainClick(370, 320 + $midOffsetY, 17, $isldTrainITDelay, $FullGiant, $GemGiant, "#0276", $TrainGiantRND) ; Giant
 				Case 3
-					TrainClick(482, 320 + $midOffsetY, 85, 10, $FullGobl, $GemGobl, "#0277") ; Goblin
+					TrainClick(482, 320 + $midOffsetY, 85, $isldTrainITDelay, $FullGobl, $GemGobl, "#0277", $TrainGoblRND) ; Goblin
 				Case 4
-					TrainClick(557, 320 + $midOffsetY, 42, 10, $FullWall, $GemWall, "#0278") ; Wall Breaker
+					TrainClick(557, 320 + $midOffsetY, 42, $isldTrainITDelay, $FullWall, $GemWall, "#0278", $TrainWallRND) ; Wall Breaker
 				Case 5
-					TrainClick(682, 320 + $midOffsetY, 17, 10, $FullBall, $GemBall, "#0279") ; Balloon
+					TrainClick(682, 320 + $midOffsetY, 17, $isldTrainITDelay, $FullBall, $GemBall, "#0279", $TrainBallRND) ; Balloon
 				Case 6
-					TrainClick(173, 425 + $midOffsetY, 21, 10, $FullWiza, $GemWiza, "#0280") ; Wizard
+					TrainClick(173, 425 + $midOffsetY, 21, $isldTrainITDelay, $FullWiza, $GemWiza, "#0280", $TrainWizaRND) ; Wizard
 				Case 7
-					TrainClick(263, 425 + $midOffsetY, 6, 10, $FullHeal, $GemHeal, "#0281") ; Healer
+					TrainClick(263, 425 + $midOffsetY, 6, $isldTrainITDelay, $FullHeal, $GemHeal, "#0281", $TrainHealRND) ; Healer
 				Case 8
-					TrainClick(383, 425 + $midOffsetY, 4, 10, $FullDrag, $GemDrag, "#0282") ; Dragon
+					TrainClick(383, 425 + $midOffsetY, 4, $isldTrainITDelay, $FullDrag, $GemDrag, "#0282", $TrainDragRND) ; Dragon
 				Case 9
-					TrainClick(474, 425 + $midOffsetY, 3, 10, $FullPekk, $GemPekk, "#0283") ; Pekka
+					TrainClick(474, 425 + $midOffsetY, 3, $isldTrainITDelay, $FullPekk, $GemPekk, "#0283", $TrainPekkRND) ; Pekka
+				Case 10
+					TrainClick(572, 425 + $midOffsetY, 8, $isldTrainITDelay, $FullBabyD, $GemBabyD, "#0342", $TrainBabyDRND) ; Baby Dragon
+				Case 11
+					TrainClick(675, 425 + $midOffsetY, 17, $isldTrainITDelay, $FullMine, $GemMine, "#0343", $TrainMineRND) ; Miner
 			EndSwitch
 			If $OutOfElixir = 1 Then
 				Setlog("Not enough Elixir to train troops!", $COLOR_RED)
@@ -590,15 +599,17 @@ Func Train()
 						If $icount = 7 Then ExitLoop
 					WEnd
 				EndIf
-				$icount = 0
-				While Not _ColorCheck(_GetPixelColor(593, 200 + $midOffsetY, True), Hex(0xD0D0C0, 6), 20) ; while not disappears  green arrow
-					If Not (IsTrainPage()) Then Return ;exit if no train page
-					Click(568, 177 + $midOffsetY, 10, 0, "#0284") ; Remove Troops in training
-					$icount += 1
-					If $RunState = False Then Return
-					If $icount = 100 Then ExitLoop
-				WEnd
-				If $debugsetlogTrain = 1 And $icount = 100 Then SetLog("Train warning 7", $COLOR_PURPLE)
+				If $iChkDontRemove = 0 Then
+					$icount = 0
+					While Not _ColorCheck(_GetPixelColor(593, 200 + $midOffsetY, True), Hex(0xD0D0C0, 6), 20) ; while not disappears  green arrow
+						If Not (IsTrainPage()) Then Return ;exit if no train page
+						Click(568, 177 + $midOffsetY, 10, $isldTrainITDelay, "#0284") ; Remove Troops in training
+						$icount += 1
+						If $RunState = False Then Return
+						If $icount = 100 Then ExitLoop
+					WEnd
+					If $debugsetlogTrain = 1 And $icount = 100 Then SetLog("Train warning 7", $COLOR_PURPLE)
+				EndIf
 			EndIf
 
 			If _Sleep($iDelayTrain1) Then Return
@@ -610,12 +621,13 @@ Func Train()
 						$heightTroop = 396 + $midOffsetY
 						$positionTroop = $TroopNamePosition[$i] - 6
 					EndIf
-					If $debugsetlogTrain = 1 And Number(getBarracksTroopQuantity(126 + 102 * $positionTroop, $heightTroop)) <> 0 Then SetLog("ASSIGN TroopFirst." & $TroopName[$i] & ": " & Number(getBarracksTroopQuantity(126 + 102 * $positionTroop, $heightTroop)), $COLOR_PURPLE)
-					Assign(("troopFirst" & $TroopName[$i]), Number(getBarracksTroopQuantity(126 + 102 * $positionTroop, $heightTroop)))
+					$tmpNumber = Number(getBarracksTroopQuantity(126 + 102 * $positionTroop, $heightTroop))
+					If $debugsetlogTrain = 1 And $tmpNumber <> 0 Then SetLog("ASSIGN TroopFirst." & $TroopName[$i] & ": " & $tmpNumber, $COLOR_PURPLE)
+					Assign(("troopFirst" & $TroopName[$i]), $tmpNumber)
 					If Eval("troopFirst" & $TroopName[$i]) = 0 Then
 						If _Sleep($iDelayTrain1) Then Return
-						If $debugsetlogTrain = 1 And Number(getBarracksTroopQuantity(126 + 102 * $positionTroop, $heightTroop)) <> 0 Then SetLog("ASSIGN TroopFirst." & $TroopName[$i] & ": " & Number(getBarracksTroopQuantity(126 + 102 * $positionTroop, $heightTroop)), $COLOR_PURPLE)
-						Assign(("troopFirst" & $TroopName[$i]), Number(getBarracksTroopQuantity(126 + 102 * $positionTroop, $heightTroop)))
+						If $debugsetlogTrain = 1 And $tmpNumber <> 0 Then SetLog("ASSIGN TroopFirst." & $TroopName[$i] & ": " & $tmpNumber, $COLOR_PURPLE)
+						Assign(("troopFirst" & $TroopName[$i]), $tmpNumber)
 					EndIf
 				EndIf
 				If $RunState = False Then Return
@@ -692,12 +704,13 @@ Func Train()
 						$heightTroop = 396 + $midOffsetY
 						$positionTroop = $TroopNamePosition[$i] - 6
 					EndIf
-					If $debugsetlogTrain = 1 And Number(getBarracksTroopQuantity(126 + 102 * $positionTroop, $heightTroop)) <> 0 Then SetLog(("troopSecond" & $TroopName[$i] & ": " & Number(getBarracksTroopQuantity(126 + 102 * $positionTroop, $heightTroop))), $COLOR_PURPLE)
-					Assign(("troopSecond" & $TroopName[$i]), Number(getBarracksTroopQuantity(126 + 102 * $positionTroop, $heightTroop)))
+					$tmpNumber = Number(getBarracksTroopQuantity(126 + 102 * $positionTroop, $heightTroop))
+					If $debugsetlogTrain = 1 And $tmpNumber <> 0 Then SetLog(("troopSecond" & $TroopName[$i] & ": " & $tmpNumber), $COLOR_PURPLE)
+					Assign(("troopSecond" & $TroopName[$i]), $tmpNumber)
 					If Eval("troopSecond" & $TroopName[$i]) = 0 Then
 						If _Sleep($iDelayTrain1) Then Return
-						If $debugsetlogTrain = 1 And Number(getBarracksTroopQuantity(126 + 102 * $positionTroop, $heightTroop)) <> 0 Then SetLog("ASSIGN troopSecond" & $TroopName[$i] & ": " & Number(getBarracksTroopQuantity(126 + 102 * $positionTroop, $heightTroop)), $COLOR_PURPLE)
-						Assign(("troopSecond" & $TroopName[$i]), Number(getBarracksTroopQuantity(126 + 102 * $positionTroop, $heightTroop)))
+						If $debugsetlogTrain = 1 And $tmpNumber <> 0 Then SetLog("ASSIGN troopSecond" & $TroopName[$i] & ": " & $tmpNumber, $COLOR_PURPLE)
+						Assign(("troopSecond" & $TroopName[$i]), $tmpNumber)
 					EndIf
 				EndIf
 				If $RunState = False Then Return
@@ -721,24 +734,6 @@ Func Train()
 			;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 			If $icmbTroopComp <> 8 And $fullarmy = False And $FirstStart = False Then
 
-				; Checks if there is Troops being trained in this barrack
-				If _ColorCheck(_GetPixelColor(599, 202 + $midOffsetY, True), Hex(0xa8d070, 6), 20) = False Then ;if no green arrow
-					$BarrackStatus[$brrNum - 1] = False ; No troop is being trained in this barrack
-				Else
-					$BarrackStatus[$brrNum - 1] = True ; Troops are being trained in this barrack
-				EndIf
-				If $debugsetlogTrain = 1 Then SetLog("Available BARRACK " & $brrNum & " STATUS: " & $BarrackStatus[$brrNum - 1], $COLOR_PURPLE)
-
-				;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-				; Checks if the barrack is full ( stopped )
-				If CheckFullBarrack() Then
-					$BarrackFull[$brrNum - 1] = True ; Barrack is full
-				Else
-					$BarrackFull[$brrNum - 1] = False ; Barrack isn't full
-				EndIf
-				If $debugsetlogTrain = 1 Then SetLog("Available BARRACK " & $brrNum & " Full: " & $BarrackFull[$brrNum - 1], $COLOR_PURPLE)
-
 				;####################### Train the Donated Troops #########################
 				If $LastBarrackTrainDonatedTroop = $brrNum Then
 					For $i = 0 To UBound($TroopName) - 1
@@ -759,6 +754,22 @@ Func Train()
 				EndIf
 				;###########################################################################
 
+				; Checks if there is Troops being trained in this barrack
+				If _ColorCheck(_GetPixelColor(599, 202 + $midOffsetY, True), Hex(0xa8d070, 6), 20) = False Then ;if no green arrow
+					$BarrackStatus[$brrNum - 1] = False ; No troop is being trained in this barrack
+				Else
+					$BarrackStatus[$brrNum - 1] = True ; Troops are being trained in this barrack
+				EndIf
+				If $debugsetlogTrain = 1 Then SetLog("Available BARRACK " & $brrNum & " STATUS: " & $BarrackStatus[$brrNum - 1], $COLOR_PURPLE)
+
+				; Checks if the barrack is full ( stopped )
+				If CheckFullBarrack() Then
+					$BarrackFull[$brrNum - 1] = True ; Barrack is full
+				Else
+					$BarrackFull[$brrNum - 1] = False ; Barrack isn't full
+				EndIf
+				If $debugsetlogTrain = 1 Then SetLog("Available BARRACK " & $brrNum & " Full: " & $BarrackFull[$brrNum - 1], $COLOR_PURPLE)
+
 				;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 				; If The remaining capacity is lower than the Housing Space of training troop and its not full army or first start then delete the training troop and train 20 archer
@@ -769,7 +780,11 @@ Func Train()
 						ClickP($aAway, 2, $iDelayTrain5, "#0501"); Click away twice with 250ms delay
 						If WaitforPixel(28, 505 + $bottomOffsetY, 30, 507 + $bottomOffsetY, Hex(0xE4A438, 6), 5, 10) Then
 							If $debugsetlogTrain = 1 Then SetLog("Click $aArmyTrainButton", $COLOR_GREEN)
-							Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#9998") ; Button Army Overview
+							If $iUseRandomClick = 0 Then
+								Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#9998") ; Button Army Overview
+							Else
+								ClickR($aArmyTrainButtonRND, $aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0)
+							EndIf
 						EndIf
 
 						$icount = 0
@@ -870,37 +885,35 @@ Func Train()
 							If $icount = 7 Then ExitLoop
 						WEnd
 					EndIf
-
-						If $iChkDontRemove = 0 Then
-
-					$icount = 0
-					While Not _ColorCheck(_GetPixelColor(599, 202 + $midOffsetY, True), Hex(0xD0D0C0, 6), 20) ; while not disappears  green arrow
-						If Not (IsTrainPage()) Then Return
-						Click(568, 177 + $midOffsetY, 10, 0, "#0273") ; Remove Troops in training
-						$icount += 1
-						If $icount = 100 Then ExitLoop
-						If $RunState = False Then Return
-					WEnd
-					If $debugsetlogTrain = 1 And $icount = 100 Then SetLog("Train warning 6", $COLOR_PURPLE)
-				EndIf
+					If $iChkDontRemove = 0 Then
+						$icount = 0
+						While Not _ColorCheck(_GetPixelColor(599, 202 + $midOffsetY, True), Hex(0xD0D0C0, 6), 20) ; while not disappears  green arrow
+							If Not (IsTrainPage()) Then Return
+							Click(568, 177 + $midOffsetY, 10, 0, "#0273") ; Remove Troops in training
+							$icount += 1
+							If $icount = 100 Then ExitLoop
+							If $RunState = False Then Return
+						WEnd
+						If $debugsetlogTrain = 1 And $icount = 100 Then SetLog("Train warning 6", $COLOR_PURPLE)
+					EndIf
 				EndIf
 				If _Sleep($iDelayTrain2) Then ExitLoop
 				If Not (IsTrainPage()) Then Return ; exit from train if no train page
 				Switch $darkbarrackTroop[$brrDarkNum - 1]
 					Case 0
-						TrainClick(220, 320 + $midOffsetY, 50, 10, $FullMini, $GemMini, "#0274") ; Minion
+						TrainClick(220, 320 + $midOffsetY, 50, 10, $FullMini, $GemMini, "#0274", $TrainMiniRND) ; Minion
 					Case 1
-						TrainClick(331, 320 + $midOffsetY, 20, 10, $FullHogs, $GemHogs, "#0275") ; Hog Rider
+						TrainClick(331, 320 + $midOffsetY, 20, 10, $FullHogs, $GemHogs, "#0275", $TrainHogsRND) ; Hog Rider
 					Case 2
-						TrainClick(432, 320 + $midOffsetY, 12, 10, $FullValk, $GemValk, "#0276") ; Valkyrie
+						TrainClick(432, 320 + $midOffsetY, 12, 10, $FullValk, $GemValk, "#0276", $TrainValkRND) ; Valkyrie
 					Case 3
-						TrainClick(546, 320 + $midOffsetY, 3, 10, $FullGole, $GemGole, "#0277") ; Golem
+						TrainClick(546, 320 + $midOffsetY, 3, 10, $FullGole, $GemGole, "#0277", $TrainGoleRND) ; Golem
 					Case 4
-						TrainClick(647, 320 + $midOffsetY, 8, 10, $FullWitc, $GemWitc, "#0278") ; Witch
+						TrainClick(647, 320 + $midOffsetY, 8, 10, $FullWitc, $GemWitc, "#0278", $TrainWitcRND) ; Witch
 					Case 5
-						TrainClick(220, 425 + $midOffsetY, 3, 10, $FullBall, $GemBall, "#0279") ; Lava Hound
-					; Case 6
-						; TrainClick(331, 425 + $midOffsetY, 3, 10, $FullBowl, $GemBowl, "#0279") ; Bowler
+						TrainClick(220, 425 + $midOffsetY, 3, 10, $FullBall, $GemBall, "#0279", $TrainLavaRND) ; Lava Hound
+					Case 6
+						TrainClick(331, 425 + $midOffsetY, 16, 10, $FullBowl, $GemBowl, "#0341", $TrainBowlRND) ; Bowler
 				EndSwitch
 				If $OutOfElixir = 1 Then
 					Setlog("Not enough Dark Elixir to train troops!", $COLOR_RED)
@@ -939,15 +952,17 @@ Func Train()
 							If $icount = 7 Then ExitLoop
 						WEnd
 					EndIf
-					$icount = 0
-					While Not _ColorCheck(_GetPixelColor(599, 202 + $midOffsetY, True), Hex(0xD0D0C0, 6), 20) ; while not disappears  green arrow
-						If Not (IsTrainPage()) Then Return ;exit if no train page
-						Click(568, 177 + $midOffsetY, 10, 0, "#0287") ; Remove Troops in training
-						$icount += 1
-						If $icount = 100 Then ExitLoop
-						If $RunState = False Then Return
-					WEnd
-					If $debugsetlogTrain = 1 And $icount = 100 Then SetLog("Train warning 9", $COLOR_PURPLE)
+					If $iChkDontRemove = 0 Then
+						$icount = 0
+						While Not _ColorCheck(_GetPixelColor(599, 202 + $midOffsetY, True), Hex(0xD0D0C0, 6), 20) ; while not disappears  green arrow
+							If Not (IsTrainPage()) Then Return ;exit if no train page
+							Click(568, 177 + $midOffsetY, 10, 0, "#0287") ; Remove Troops in training
+							$icount += 1
+							If $icount = 100 Then ExitLoop
+							If $RunState = False Then Return
+						WEnd
+						If $debugsetlogTrain = 1 And $icount = 100 Then SetLog("Train warning 9", $COLOR_PURPLE)
+					EndIf
 				EndIf
 				If _Sleep($iDelayTrain1) Then Return
 				For $i = 0 To UBound($TroopDarkName) - 1
@@ -955,17 +970,19 @@ Func Train()
 						$heightTroop = 294 + $midOffsetY
 						$positionTroop = $TroopDarkNamePosition[$i]
 						If $TroopDarkNamePosition[$i] > 4 Then
-							$heightTroop = 396 + $midOffsetY
+							$heightTroop = 402 + $midOffsetY
 							$positionTroop = $TroopDarkNamePosition[$i] - 5
 						EndIf
 
 						;read troops in windows troopsfirst
-						If $debugsetlogTrain = 1 And Number(getBarracksTroopQuantity(175 + 107 * $positionTroop, $heightTroop)) <> 0 Then SetLog("ASSIGN TroopFirst.." & $TroopDarkName[$i] & ": " & Number(getBarracksTroopQuantity(175 + 107 * $positionTroop, $heightTroop)), $COLOR_PURPLE)
-						Assign(("troopFirst" & $TroopDarkName[$i]), Number(getBarracksTroopQuantity(175 + 107 * $positionTroop, $heightTroop)))
+						$tmpNumber = Number(getBarracksTroopQuantity(174 + 107 * $positionTroop, $heightTroop)) ; read troop quantity
+						If _Sleep($iDelayTrain1) Then Return
+						If $debugsetlogTrain = 1 And $tmpNumber <> 0 Then SetLog("ASSIGN TroopFirst.." & $TroopDarkName[$i] & ": " & $tmpNumber, $COLOR_PURPLE)
+						Assign(("troopFirst" & $TroopDarkName[$i]), $tmpNumber)
 						If Eval("troopFirst" & $TroopDarkName[$i]) = 0 Then
 							If _Sleep($iDelayTrain1) Then Return
-							If $debugsetlogTrain = 1 And Number(getBarracksTroopQuantity(175 + 107 * $positionTroop, $heightTroop)) <> 0 Then SetLog("ASSIGN TroopFirst..." & $TroopDarkName[$i] & ": " & Number(getBarracksTroopQuantity(175 + 107 * $positionTroop, $heightTroop)), $COLOR_PURPLE)
-							Assign(("troopFirst" & $TroopDarkName[$i]), Number(getBarracksTroopQuantity(175 + 107 * $positionTroop, $heightTroop)))
+							If $debugsetlogTrain = 1 And $tmpNumber <> 0 Then SetLog("ASSIGN TroopFirst..." & $TroopDarkName[$i] & ": " & $tmpNumber, $COLOR_PURPLE)
+							Assign(("troopFirst" & $TroopDarkName[$i]), $tmpNumber)
 						EndIf
 					EndIf
 					If $RunState = False Then Return
@@ -985,28 +1002,26 @@ Func Train()
 				Next
 				;Balanced troops, train in normal order
 				For $i = 0 To UBound($TroopDarkName) - 1
-					If $debugsetlogTrain = 1 Then SetLog("** " & $TroopDarkName[$i] & " : " & "txtNum" & $TroopDarkName[$i] & " = " & Eval($TroopDarkName[$i] & "Comp") & "  Cur" & $TroopDarkName[$i] & " = " & Eval("Cur" & $TroopDarkName[$i]), $COLOR_PURPLE)
-					If $debugsetlogTrain = 1 Then SetLog("*** " & "txtNum" & $TroopDarkName[$i] & "=" & Eval($TroopDarkName[$i] & "Comp"), $COLOR_PURPLE)
-					If $debugsetlogTrain = 1 Then SetLog("*** " & "Cur" & $TroopDarkName[$i] & "=" & Eval("Cur" & $TroopDarkName[$i]), $COLOR_PURPLE)
-					If $debugsetlogTrain = 1 Then SetLog("*** " & $TroopDarkName[$i] & "EBarrack" & "=" & Eval("Cur" & $TroopDarkName[$i]), $COLOR_PURPLE)
+					If $debugsetlogTrain = 1 Then
+						SetLog("** " & $TroopDarkName[$i] & " : " & "txtNum" & $TroopDarkName[$i] & " = " & Eval($TroopDarkName[$i] & "Comp") & "  Cur" & $TroopDarkName[$i] & " = " & Eval("Cur" & $TroopDarkName[$i]), $COLOR_PURPLE)
+						SetLog("*** " & "txtNum" & $TroopDarkName[$i] & "=" & Eval($TroopDarkName[$i] & "Comp"), $COLOR_PURPLE)
+						SetLog("*** " & "Cur" & $TroopDarkName[$i] & "=" & Eval("Cur" & $TroopDarkName[$i]), $COLOR_PURPLE)
+						SetLog("*** " & $TroopDarkName[$i] & "EBarrack" & "=" & Eval("Cur" & $TroopDarkName[$i]), $COLOR_PURPLE)
+					EndIf
 					If Eval($TroopDarkName[$i] & "Comp") <> "0" And Eval("Cur" & $TroopDarkName[$i]) > 0 Then
-
-						;If _ColorCheck(_GetPixelColor(261, 366), Hex(0x39D8E0, 6), 20) And $CurArch > 0 Then
-						If Eval("Cur" & $TroopDarkName[$i]) > 0 Then
-							If Not (IsTrainPage()) Then Return ;exit from train
-							If Eval($TroopDarkName[$i] & "EBarrack") = 0 Then
-								If $debugsetlogTrain = 1 Then SetLog("Call Func TrainIt for " & $TroopDarkName[$i], $COLOR_PURPLE)
-								TrainIt(Eval("e" & $TroopDarkName[$i]), 1)
-								$BarrackDarkStatus[$brrDarkNum - 1] = True ; Troops are being trained in this Dark barrack
-							ElseIf Eval($TroopDarkName[$i] & "EBarrack") >= Eval("Cur" & $TroopDarkName[$i]) Then
-								If $debugsetlogTrain = 1 Then SetLog("Call Func TrainIt for " & $TroopDarkName[$i], $COLOR_PURPLE)
-								TrainIt(Eval("e" & $TroopDarkName[$i]), Eval("Cur" & $TroopDarkName[$i]))
-								$BarrackDarkStatus[$brrDarkNum - 1] = True ; Troops are being trained in this Dark barrack
-							Else
-								If $debugsetlogTrain = 1 Then SetLog("Call Func TrainIt for " & $TroopDarkName[$i], $COLOR_PURPLE)
-								TrainIt(Eval("e" & $TroopDarkName[$i]), Eval($TroopDarkName[$i] & "EBarrack"))
-								$BarrackDarkStatus[$brrDarkNum - 1] = True ; Troops are being trained in this Dark barrack
-							EndIf
+						If Not (IsTrainPage()) Then Return ;exit from train
+						If Eval($TroopDarkName[$i] & "EBarrack") = 0 Then
+							If $debugsetlogTrain = 1 Then SetLog("Call Func TrainIt for " & $TroopDarkName[$i], $COLOR_PURPLE)
+							TrainIt(Eval("e" & $TroopDarkName[$i]), 1)
+							$BarrackDarkStatus[$brrDarkNum - 1] = True ; Troops are being trained in this Dark barrack
+						ElseIf Eval($TroopDarkName[$i] & "EBarrack") >= Eval("Cur" & $TroopDarkName[$i]) Then
+							If $debugsetlogTrain = 1 Then SetLog("Call Func TrainIt for " & $TroopDarkName[$i], $COLOR_PURPLE)
+							TrainIt(Eval("e" & $TroopDarkName[$i]), Eval("Cur" & $TroopDarkName[$i]))
+							$BarrackDarkStatus[$brrDarkNum - 1] = True ; Troops are being trained in this Dark barrack
+						Else
+							If $debugsetlogTrain = 1 Then SetLog("Call Func TrainIt for " & $TroopDarkName[$i], $COLOR_PURPLE)
+							TrainIt(Eval("e" & $TroopDarkName[$i]), Eval($TroopDarkName[$i] & "EBarrack"))
+							$BarrackDarkStatus[$brrDarkNum - 1] = True ; Troops are being trained in this Dark barrack
 						EndIf
 					EndIf
 					If $RunState = False Then Return
@@ -1030,15 +1045,17 @@ Func Train()
 						$heightTroop = 294 + $midOffsetY
 						$positionTroop = $TroopDarkNamePosition[$i]
 						If $TroopDarkNamePosition[$i] > 4 Then
-							$heightTroop = 396 + $midOffsetY
+							$heightTroop = 402 + $midOffsetY
 							$positionTroop = $TroopDarkNamePosition[$i] - 5
 						EndIf
-						If $debugsetlogTrain = 1 Then SetLog(">>>troopSecond" & $TroopDarkName[$i] & " = " & Number(getBarracksTroopQuantity(175 + 107 * $positionTroop, $heightTroop)), $COLOR_PURPLE)
-						Assign(("troopSecond" & $TroopDarkName[$i]), Number(getBarracksTroopQuantity(175 + 107 * $positionTroop, $heightTroop)))
+						$tmpNumber = Number(getBarracksTroopQuantity(174 + 107 * $positionTroop, $heightTroop))
+						If _Sleep($iDelayTrain1) Then Return
+						If $debugsetlogTrain = 1 Then SetLog(">>>troopSecond" & $TroopDarkName[$i] & " = " & $tmpNumber, $COLOR_PURPLE)
+						Assign(("troopSecond" & $TroopDarkName[$i]), $tmpNumber)
 						If Eval("troopSecond" & $TroopDarkName[$i]) = 0 Then
 							If _Sleep($iDelayTrain1) Then Return
-							If $debugsetlogTrain = 1 Then SetLog(">>>troopSecond" & $TroopDarkName[$i] & " = " & Number(getBarracksTroopQuantity(175 + 107 * $positionTroop, $heightTroop)), $COLOR_PURPLE)
-							Assign(("troopSecond" & $TroopDarkName[$i]), Number(getBarracksTroopQuantity(175 + 107 * $positionTroop, $heightTroop)))
+							If $debugsetlogTrain = 1 Then SetLog(">>>troopSecond" & $TroopDarkName[$i] & " = " & $tmpNumber, $COLOR_PURPLE)
+							Assign(("troopSecond" & $TroopDarkName[$i]), $tmpNumber)
 						EndIf
 					EndIf
 					If $RunState = False Then Return
@@ -1048,33 +1065,17 @@ Func Train()
 						$ArmyComp += (Eval("troopSecond" & $TroopDarkName[$i]) - Eval("troopFirst" & $TroopDarkName[$i])) * $TroopDarkHeight[$i]
 						If $debugsetlogTrain = 1 Then SetLog("#Cur" & $TroopDarkName[$i] & " = " & Eval("Cur" & $TroopDarkName[$i]) & " - (" & Eval("troopSecond" & $TroopDarkName[$i]) & " - " & Eval("troopFirst" & $TroopDarkName[$i]) & ")", $COLOR_PURPLE)
 						Assign(("Cur" & $TroopDarkName[$i]), Eval("Cur" & $TroopDarkName[$i]) - (Eval("troopSecond" & $TroopDarkName[$i]) - Eval("troopFirst" & $TroopDarkName[$i])))
-						If $debugsetlogTrain = 1 Then SetLog("**** " & "txtNum" & $TroopDarkName[$i] & "=" & Eval($TroopDarkName[$i] & "Comp"), $COLOR_PURPLE)
-						If $debugsetlogTrain = 1 Then SetLog("**** " & "Cur" & $TroopDarkName[$i] & "=" & Eval("Cur" & $TroopDarkName[$i]), $COLOR_PURPLE)
-						If $debugsetlogTrain = 1 Then SetLog("**** " & $TroopDarkName[$i] & "EBarrack" & "=" & Eval("Cur" & $TroopDarkName[$i]), $COLOR_PURPLE)
+						If $debugsetlogTrain = 1 Then
+							SetLog("**** " & "txtNum" & $TroopDarkName[$i] & "=" & Eval($TroopDarkName[$i] & "Comp"), $COLOR_PURPLE)
+							SetLog("**** " & "Cur" & $TroopDarkName[$i] & "=" & Eval("Cur" & $TroopDarkName[$i]), $COLOR_PURPLE)
+							SetLog("**** " & $TroopDarkName[$i] & "EBarrack" & "=" & Eval("Cur" & $TroopDarkName[$i]), $COLOR_PURPLE)
+						EndIf
 					EndIf
 				Next
 
 				;;;;;;; Train Minions to reach full army if trained troops not enough to reach full army or remaining capacity is lower than housing space of trained troop ;;;;;;;
 				;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 				If $icmbTroopComp <> 8 And $fullarmy = False And $FirstStart = False Then
-
-					; Checks if there is Troops being trained in this Dark barrack
-					If _ColorCheck(_GetPixelColor(599, 202 + $midOffsetY, True), Hex(0xa8d070, 6), 20) = False Then ;if no green arrow
-						$BarrackDarkStatus[$brrDarkNum - 1] = False ; No troop is being trained in this Dark barrack
-					Else
-						$BarrackDarkStatus[$brrDarkNum - 1] = True ; Troops are being trained in this Dark barrack
-					EndIf
-					If $debugsetlogTrain = 1 Then SetLog("Available Dark BARRACK " & $brrDarkNum & " STATUS: " & $BarrackDarkStatus[$brrDarkNum - 1], $COLOR_PURPLE)
-
-					;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-					; Checks if the Dark barrack is full (stopped)
-					If CheckFullBarrack() Then
-						$BarrackDarkFull[$brrDarkNum - 1] = True ; Dark barrack is full
-					Else
-						$BarrackDarkFull[$brrDarkNum - 1] = False ; Dark barrack isn't full
-					EndIf
-					If $debugsetlogTrain = 1 Then SetLog("Available Dark BARRACK " & $brrDarkNum & " Full: " & $BarrackDarkFull[$brrDarkNum - 1], $COLOR_PURPLE)
 
 					;####################### Train the Donated Troops #########################
 					If $LastDarkBarrackTrainDonatedTroop = $brrDarkNum Then
@@ -1096,6 +1097,22 @@ Func Train()
 					EndIf
 					;#########################################################################
 
+					; Checks if there is Troops being trained in this Dark barrack
+					If _ColorCheck(_GetPixelColor(599, 202 + $midOffsetY, True), Hex(0xa8d070, 6), 20) = False Then ;if no green arrow
+						$BarrackDarkStatus[$brrDarkNum - 1] = False ; No troop is being trained in this Dark barrack
+					Else
+						$BarrackDarkStatus[$brrDarkNum - 1] = True ; Troops are being trained in this Dark barrack
+					EndIf
+					If $debugsetlogTrain = 1 Then SetLog("Available Dark BARRACK " & $brrDarkNum & " STATUS: " & $BarrackDarkStatus[$brrDarkNum - 1], $COLOR_PURPLE)
+
+					; Checks if the Dark barrack is full (stopped)
+					If CheckFullBarrack() Then
+						$BarrackDarkFull[$brrDarkNum - 1] = True ; Dark barrack is full
+					Else
+						$BarrackDarkFull[$brrDarkNum - 1] = False ; Dark barrack isn't full
+					EndIf
+					If $debugsetlogTrain = 1 Then SetLog("Available Dark BARRACK " & $brrDarkNum & " Full: " & $BarrackDarkFull[$brrDarkNum - 1], $COLOR_PURPLE)
+					
 					;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 					;;;;;;;;;;;;; If The remaining capacity is lower then the Housing Space of training troop , delete the remaining training troop and train 10 Minions;;;;;;;;;;;
@@ -1155,7 +1172,7 @@ Func Train()
 	EndIf
 	;;;;;;;;;;;; End Training Dark Troops ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	If $debugsetlogTrain = 1 Then SetLog("---=====================END TRAIN =======================================---", $COLOR_PURPLE)
-
+EndIf
 
 	If _Sleep($iDelayTrain4) Then Return
 	BrewSpells() ; Create Spells

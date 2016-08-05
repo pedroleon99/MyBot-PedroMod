@@ -121,29 +121,24 @@ Func checkAttackDisable($iSource, $Result = "")
 
 	Setlog("Time for break, exit now..", $COLOR_BLUE)
 
-	; Find and wait for the confirmation of exit "okay" button
-	Local $i = 0 ; Reset Loop counter
-	While 1
-		checkObstacles()
-		AndroidBackButton()
-		If _Sleep($iDelayAttackDisable1000) Then Return ; wait for window to open
-		If ClickOkay("ExitCoCokay", True) = True Then ExitLoop ; Confirm okay to exit
-		If $i > 10 Then
-			Setlog("Can not find Okay button to exit CoC, Forcefully Closing CoC", $COLOR_RED)
-			If $debugImageSave = 1 Then DebugImageSave("CheckAttackDisableFailedButtonCheck_")
-			CloseCoC()
-			ExitLoop
-		EndIf
-		$i += 1
-	WEnd
+	PoliteCloseCoC("AttackDisable_")
 
 	If _Sleep(1000) Then Return ; short wait for CoC to exit
-	PushMsg("TakeBreak")
+	PushMsgToPushBullet("TakeBreak")
 
 	; CoC is closed >>
 	If $iModSource = $iTaBChkTime And $aShieldStatus[0] <> "guard" Then
 		Setlog("Personal Break Reset log off: " & $iValueSinglePBTimeForced & " Minutes", $COLOR_BLUE)
-		WaitnOpenCoC($iValueSinglePBTimeForced * 60 * 1000, True) ; Log off CoC for user set time in expert tab
+		If $chkCloseTakeBreak = 0 Then
+			WaitnOpenCoC($iValueSinglePBTimeForced * 60 * 1000, True) ; Log off CoC for user set time in expert tab
+		Else
+			CloseAndroid()
+			; Pushbullet Msg/Telegram
+			_PushToPushBullet($iOrigPushBullet & " | Time To PersonalBreak - Close Emulator - Waiting " & $iValueSinglePBTimeForced & " Minutes")
+			StartEmulatorCoC($iValueSinglePBTimeForced * 60 * 1000, True)
+			Setlog("Personal Break Finish..", $COLOR_BLUE)
+			_PushToPushBullet($iOrigPushBullet & " | Finish PersonalBreak - Start Emulator And CoC")
+		EndIf
 	Else
 		WaitnOpenCoC(20000, True) ; close CoC for 20 seconds to ensure server logoff, True=call checkmainscreen to clean up if needed
 	EndIf

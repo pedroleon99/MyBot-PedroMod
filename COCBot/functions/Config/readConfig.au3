@@ -19,7 +19,7 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 	; Read the stats files into arrays, will create the files if necessary
 	$aWeakBaseStats = readWeakBaseStats()
 
-    $configLoaded=True
+	$configLoaded = True
 	If FileExists($building) Then
 		SetDebugLog("Read Building Config " & $building)
 
@@ -63,25 +63,25 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 
 		IniReadS($listResourceLocation, $building, "other", "listResource", "")
 
-		For $iz = 0 to UBound($aUpgrades, 1) - 1 ; Reads Upgrade building data
-			$aUpgrades[$iz][0] = IniRead($building, "upgrade", "xupgrade"&$iz, "-1")
-			$aUpgrades[$iz][1] = IniRead($building, "upgrade", "yupgrade"&$iz, "-1")
-			$aUpgrades[$iz][2] = IniRead($building, "upgrade", "upgradevalue"&$iz, "-1")
-			$aUpgrades[$iz][3] = IniRead($building, "upgrade", "upgradetype"&$iz, "")
-			$aUpgrades[$iz][4] = IniRead($building, "upgrade", "upgradename"&$iz, "")
-			$aUpgrades[$iz][5] = IniRead($building, "upgrade", "upgradelevel"&$iz, "")
-			$aUpgrades[$iz][6] = IniRead($building, "upgrade", "upgradetime"&$iz, "")
-			$aUpgrades[$iz][7] = IniRead($building, "upgrade", "upgradeend"&$iz, "-1")
-			$ichkbxUpgrade[$iz] = IniRead($building, "upgrade", "upgradechk"&$iz, "0")
-			$ichkUpgrdeRepeat[$iz] = IniRead($building, "upgrade", "upgraderepeat"&$iz, "0")
-			$ipicUpgradeStatus[$iz] = IniRead($building, "upgrade", "upgradestatusicon"&$iz, $eIcnTroops)
+		For $iz = 0 To UBound($aUpgrades, 1) - 1 ; Reads Upgrade building data
+			$aUpgrades[$iz][0] = IniRead($building, "upgrade", "xupgrade" & $iz, "-1")
+			$aUpgrades[$iz][1] = IniRead($building, "upgrade", "yupgrade" & $iz, "-1")
+			$aUpgrades[$iz][2] = IniRead($building, "upgrade", "upgradevalue" & $iz, "-1")
+			$aUpgrades[$iz][3] = IniRead($building, "upgrade", "upgradetype" & $iz, "")
+			$aUpgrades[$iz][4] = IniRead($building, "upgrade", "upgradename" & $iz, "")
+			$aUpgrades[$iz][5] = IniRead($building, "upgrade", "upgradelevel" & $iz, "")
+			$aUpgrades[$iz][6] = IniRead($building, "upgrade", "upgradetime" & $iz, "")
+			$aUpgrades[$iz][7] = IniRead($building, "upgrade", "upgradeend" & $iz, "-1")
+			$ichkbxUpgrade[$iz] = IniRead($building, "upgrade", "upgradechk" & $iz, "0")
+			$ichkUpgrdeRepeat[$iz] = IniRead($building, "upgrade", "upgraderepeat" & $iz, "0")
+			$ipicUpgradeStatus[$iz] = IniRead($building, "upgrade", "upgradestatusicon" & $iz, $eIcnTroops)
 		Next
 
-		InireadS($ichkLab,$building, "upgrade", "upgradetroops", "0")
-		InireadS($icmbLaboratory,$building, "upgrade", "upgradetroopname", "0")
+		InireadS($ichkLab, $building, "upgrade", "upgradetroops", "0")
+		InireadS($icmbLaboratory, $building, "upgrade", "upgradetroopname", "0")
 		$sLabUpgradeTime = IniRead($building, "upgrade", "upgradelabtime", "")
-		InireadS($aLabPos[0],$building, "upgrade", "LabPosX", "0")
-		InireadS($aLabPos[1],$building, "upgrade", "LabPosY", "0")
+		InireadS($aLabPos[0], $building, "upgrade", "LabPosX", "0")
+		InireadS($aLabPos[1], $building, "upgrade", "LabPosY", "0")
 
 	EndIf
 
@@ -91,9 +91,29 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 
 		;General Settings--------------------------------------------------------------------------
 		;InireadS($icmbProfile,$config, "general", "cmbProfile", "01")?
-		IniReadS($frmBotPosX, $config, "general", "frmBotPosX", "900")
-		IniReadS($frmBotPosY, $config, "general", "frmBotPosY", "20")
-
+		IniReadS($frmBotPosX, $config, "general", "frmBotPosX", "-1")
+		IniReadS($frmBotPosY, $config, "general", "frmBotPosY", "-1")
+		If $frmBotPosX < -30000 Or $frmBotPosY < -30000 Then
+			; bot window was minimized, restore default position
+			$frmBotPosX = -1
+			$frmBotPosY = -1
+		EndIf
+		IniReadS($AndroidPosX, $config, "general", "AndroidPosX", "-1")
+		IniReadS($AndroidPosY, $config, "general", "AndroidPosY", "-1")
+		If $AndroidPosX < -30000 Or $AndroidPosY < -30000 Then
+			; bot window was minimized, restore default position
+			$AndroidPosX = -1
+			$AndroidPosY = -1
+		EndIf
+		IniReadS($frmBotDockedPosX, $config, "general", "frmBotDockedPosX", "-1")
+		IniReadS($frmBotDockedPosY, $config, "general", "frmBotDockedPosY", "-1")
+		If $frmBotDockedPosX < -30000 Or $frmBotDockedPosY < -30000 Then
+			; bot window was minimized, restore default position
+			$frmBotDockedPosX = -1
+			$frmBotDockedPosY = -1
+		EndIf
+		IniReadS($iUpdatingWhenMinimized, $config, "general", "UpdatingWhenMinimized", $iUpdatingWhenMinimized)
+		IniReadS($iHideWhenMinimized, $config, "general", "HideWhenMinimized", $iHideWhenMinimized)
 
 		IniReadS($iVillageName, $config, "general", "villageName", "")
 
@@ -120,6 +140,8 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 
 		IniReadS($ichkbtnScheduler, $config, "general", "BtnScheduler", "0")
 
+		; 0 = disabled, 1 = Redraw always entire bot window, 2 = Redraw only required bot window area (or entire bot if control not specified)
+		IniReadS($RedrawBotWindowMode, $config, "general", "RedrawBotWindowMode", "2", "Int")
 
 		;Upgrades
 		IniReadS($ichkUpgradeKing, $config, "upgrade", "UpgradeKing", "0")
@@ -179,8 +201,24 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 
 		IniReadS($isldTrainITDelay, $config, "other", "TrainITDelay", "40")
 
-		$ichkCloseTraining = IniRead($config, "troop", "CloseWhenTraining", "1")
-		$ichkCloseNight = IniRead($config, "troop", "CloseAtNight", "1")
+		IniReadS($ichkCloseWaitEnable, $config, "other", "chkCloseWaitEnable", "1")
+		IniReadS($ichkCloseWaitTrain, $config, "other", "chkCloseWaitTrain", "0")
+		IniReadS($ibtnCloseWaitStop, $config, "other", "btnCloseWaitStop", "0")
+		IniReadS($ibtnCloseWaitStopRandom, $config, "other", "btnCloseWaitStopRandom", "0")
+		IniReadS($ibtnCloseWaitExact, $config, "other", "btnCloseWaitExact", "0")
+		IniReadS($ibtnCloseWaitRandom, $config, "other", "btnCloseWaitRandom", "1")
+		IniReadS($icmbCloseWaitRdmPercent, $config, "other", "CloseWaitRdmPercent", "10")
+
+		IniReadS($ichkTroopOrder, $config, "troop", "chkTroopOrder", "0")
+		For $z = 0 To UBound($DefaultTroopGroup) -1
+			IniReadS($icmbTroopOrder[$z], $config, "troop", "cmbTroopOrder" & $z, "-1")
+		Next
+
+		IniReadS($ichkDarkTroopOrder, $config, "troop", "chkDarkTroopOrder", "0")
+		For $z = 0 To UBound($DefaultTroopGroupDark) -1
+			IniReadS($icmbDarkTroopOrder[$z], $config, "troop", "cmbDarkTroopOrder" & $z, "-1")
+		Next
+
 
 		;Army training - Spells Creation  -----------------------------------------------------
 		Local $tempQtaSpell
@@ -189,9 +227,11 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		IniReadS($iHealSpellComp, $config, "Spells", "HealSpell", "0")
 		IniReadS($iJumpSpellComp, $config, "Spells", "JumpSpell", "0")
 		IniReadS($iFreezeSpellComp, $config, "Spells", "FreezeSpell", "0")
+		IniReadS($iCloneSpellComp, $config, "Spells", "CloneSpell", "0", "Int")
 		IniReadS($iPoisonSpellComp, $config, "Spells", "PoisonSpell", "0")
 		IniReadS($iHasteSpellComp, $config, "Spells", "HasteSpell", "0")
 		IniReadS($iEarthSpellComp, $config, "Spells", "EarthSpell", "0")
+		IniReadS($iSkeletonSpellComp, $config, "Spells", "SkeletonSpell", "0", "Int")
 		IniReadS($iTotalCountSpell, $config, "Spells", "SpellFactory", "0")
 		$iLightningSpellComp = Int($iLightningSpellComp)
 		$iRageSpellComp = Int($iRageSpellComp)
@@ -212,8 +252,6 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		IniReadS($iChkMeetTrophy[$DB], $config, "search", "DBMeetTrophy", "0")
 		IniReadS($iChkMeetTH[$DB], $config, "search", "DBMeetTH", "0")
 		IniReadS($iChkMeetTHO[$DB], $config, "search", "DBMeetTHO", "0")
-		IniReadS($iChkWeakBase[$DB], $config, "search", "DBWeakBase", "0")
-		$iChkNoLeague[$DB] = IniRead($config, "search", "DBNoLeague", "0")
 		IniReadS($iChkMeetOne[$DB], $config, "search", "DBMeetOne", "0")
 
 		IniReadS($iEnableAfterCount[$DB], $config, "search", "DBEnableAfterCount", "1")
@@ -233,11 +271,11 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		IniReadS($iCmbWeakXBow[$DB], $config, "search", "DBWeakXBow", "4")
 		IniReadS($iCmbWeakInferno[$DB], $config, "search", "DBWeakInferno", "1")
 		IniReadS($iCmbWeakEagle[$DB], $config, "search", "DBWeakEagle", "2")
-		IniReadS($iChkChkMortar[$DB], $config, "search", "DBCheckMortar", "0")
-		IniReadS($iChkChkWizTower[$DB], $config, "search", "DBCheckWizTower", "0")
-		IniReadS($iChkChkXBow[$DB], $config, "search", "DBCheckXBow", "0")
-		IniReadS($iChkChkInferno[$DB], $config, "search", "DBCheckInferno", "0")
-		IniReadS($iChkChkEagle[$DB], $config, "search", "DBCheckEagle", "0")
+		IniReadS($iChkMaxMortar[$DB], $config, "search", "DBCheckMortar", "0")
+		IniReadS($iChkMaxWizTower[$DB], $config, "search", "DBCheckWizTower", "0")
+		IniReadS($iChkMaxXBow[$DB], $config, "search", "DBCheckXBow", "0")
+		IniReadS($iChkMaxInferno[$DB], $config, "search", "DBCheckInferno", "0")
+		IniReadS($iChkMaxEagle[$DB], $config, "search", "DBCheckEagle", "0")
 
 		IniReadS($iChkEnableAfter[$LB], $config, "search", "ABEnableAfter", "0")
 		IniReadS($iCmbMeetGE[$LB], $config, "search", "ABMeetGE", "2")
@@ -245,8 +283,6 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		IniReadS($iChkMeetTrophy[$LB], $config, "search", "ABMeetTrophy", "0")
 		IniReadS($iChkMeetTH[$LB], $config, "search", "ABMeetTH", "0")
 		IniReadS($iChkMeetTHO[$LB], $config, "search", "ABMeetTHO", "0")
-		IniReadS($iChkWeakBase[$LB], $config, "search", "ABWeakBase", "0")
-		$iChkNoLeague[$LB] = IniRead($config, "search", "ABNoLeague", "0")
 		IniReadS($iChkMeetOne[$LB], $config, "search", "ABMeetOne", "0")
 
 		IniReadS($iEnableAfterCount[$LB], $config, "search", "ABEnableAfterCount", "1")
@@ -267,11 +303,11 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		IniReadS($iCmbWeakXBow[$LB], $config, "search", "ABWeakXBow", "4")
 		IniReadS($iCmbWeakInferno[$LB], $config, "search", "ABWeakInferno", "1")
 		IniReadS($iCmbWeakEagle[$LB], $config, "search", "ABWeakEagle", "2")
-		IniReadS($iChkChkMortar[$LB], $config, "search", "ABCheckMortar", "0")
-		IniReadS($iChkChkWizTower[$LB], $config, "search", "ABCheckWizTower", "0")
-		IniReadS($iChkChkXBow[$LB], $config, "search", "ABCheckXBow", "0")
-		IniReadS($iChkChkInferno[$LB], $config, "search", "ABCheckInferno", "0")
-		IniReadS($iChkChkEagle[$LB], $config, "search", "ABCheckEagle", "0")
+		IniReadS($iChkMaxMortar[$LB], $config, "search", "ABCheckMortar", "0")
+		IniReadS($iChkMaxWizTower[$LB], $config, "search", "ABCheckWizTower", "0")
+		IniReadS($iChkMaxXBow[$LB], $config, "search", "ABCheckXBow", "0")
+		IniReadS($iChkMaxInferno[$LB], $config, "search", "ABCheckInferno", "0")
+		IniReadS($iChkMaxEagle[$LB], $config, "search", "ABCheckEagle", "0")
 
 		IniReadS($iChkSearchReduction, $config, "search", "reduction", "0")
 		IniReadS($ReduceCount, $config, "search", "reduceCount", "20")
@@ -330,12 +366,12 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		IniReadS($iAtkAlgorithm[$DB], $config, "attack", "DBAtkAlgorithm", "0")
 		IniReadS($iAtkAlgorithm[$LB], $config, "attack", "ABAtkAlgorithm", "0")
 		IniReadS($iChkDeploySettings[$DB], $config, "attack", "DBDeploy", "3")
-		IniReadS($iCmbUnitDelay[$DB], $config, "attack", "DBUnitD", "6")
+		IniReadS($iCmbUnitDelay[$DB], $config, "attack", "DBUnitD", "4")
 		IniReadS($iCmbWaveDelay[$DB], $config, "attack", "DBWaveD", "4")
 		IniReadS($iChkRandomspeedatk[$DB], $config, "attack", "DBRandomSpeedAtk", "1")
 
 		IniReadS($iChkDeploySettings[$LB], $config, "attack", "ABDeploy", "0")
-		IniReadS($iCmbUnitDelay[$LB], $config, "attack", "ABUnitD", "6")
+		IniReadS($iCmbUnitDelay[$LB], $config, "attack", "ABUnitD", "4")
 		IniReadS($iCmbWaveDelay[$LB], $config, "attack", "ABWaveD", "4")
 		IniReadS($iChkRandomspeedatk[$LB], $config, "attack", "ABRandomSpeedAtk", "1")
 
@@ -433,10 +469,6 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 
 		IniReadS($scmbDBScriptName, $config, "attack", "ScriptDB", "Barch four fingers")
 		IniReadS($scmbABScriptName, $config, "attack", "ScriptAB", "Barch four fingers")
-		
-		; CSV Deployment Speed Mod
-		IniReadS($isldSelectedCSVSpeed[$DB], $config, "attack", "CSVSpeedDB", 3)
-		IniReadS($isldSelectedCSVSpeed[$LB], $config, "attack", "CSVSpeedAB", 3)
 
 		IniReadS($iActivateKQCondition, $config, "attack", "ActivateKQ", "Auto")
 		IniReadS($delayActivateKQ, $config, "attack", "delayActivateKQ", "9")
@@ -546,6 +578,7 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		IniReadS($ichkEndTwoStars[$LB], $config, "endbattle", "chkABEndTwoStars", "0")
 		IniReadS($ichkEndNoResources[$LB], $config, "endbattle", "chkABEndNoResources", "0")
 
+#CS
 		IniReadS($sTimeStopAtk[$TS], $config, "endbattle", "txtTSTimeStopAtk", "20")
 		IniReadS($iChkTimeStopAtk[$TS], $config, "endbattle", "chkTSTimeStopAtk", "1")
 		IniReadS($sTimeStopAtk2[$TS], $config, "endbattle", "txtTSTimeStopAtk2", "7")
@@ -556,7 +589,7 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		IniReadS($ichkEndOneStar[$TS], $config, "endbattle", "chkTSEndOneStar", "0")
 		IniReadS($ichkEndTwoStars[$TS], $config, "endbattle", "chkTSEndTwoStars", "0")
 		IniReadS($ichkEndNoResources[$TS], $config, "endbattle", "chkTSEndNoResources", "0")
-
+#CE
 		;end battle de side
 		IniReadS($DESideEB, $config, "endbattle", "chkDESideEB", "0")
 		IniReadS($DELowEndMin, $config, "endbattle", "txtDELowEndMin", "25")
@@ -592,12 +625,6 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 
 		IniReadS($ichkTrap, $config, "other", "chkTrap", "1")
 		IniReadS($iChkCollect, $config, "other", "chkCollect", "1")
-
-		IniReadS($itxtTRGold,$config,"other","treasuryGold","0000")
-		IniReadS($itxtTRElixir,$config,"other","treasuryElixir","0000")
-		IniReadS($itxtTRDElixir,$config,"other","treasuryDark","0000")
-		IniReadS($ichkTRFull, $config, "other", "chkTRFull", "0")
-
 		IniReadS($ichkTombstones, $config, "other", "chkTombstones", "1")
 		IniReadS($ichkCleanYard, $config, "other", "chkCleanYard", "0")
 		;Boju Only clear GemBox
@@ -610,10 +637,13 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		IniReadS($iWAOffsetX, $config, "other", "WAOffsetX", "0")
 		IniReadS($iWAOffsetY, $config, "other", "WAOffsetY", "0")
 
+		; Telegram Notify - Added by CDudz
+		IniReadS($TelegramEnabled, $config, "pushbullet", "PBEnabled2", "0")
+		IniReadS($TelegramToken, $config, "pushbullet", "AccountToken2", "")
+		IniReadS($ichkAlertBuilderIdle, $config, "pushbullet", "AlertBuilderIdle", "0")
+		
 		;PushBullet Settings ---------------------------------------------
 		IniReadS($PushBulletToken, $config, "pushbullet", "AccountToken", "")
-		;Added by CDudz
-		IniReadS($TelegramToken, $config, "pushbullet", "AccountToken2", "")
 		IniReadS($iOrigPushBullet, $config, "pushbullet", "OrigPushBullet", $sCurrProfile)
 
 		IniReadS($iAlertPBVillage, $config, "pushbullet", "AlertPBVillage", "0")
@@ -621,8 +651,6 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		IniReadS($iAlertPBLastRaidTxt, $config, "pushbullet", "AlertPBLastRaidTxt", "0")
 
 		IniReadS($PushBulletEnabled, $config, "pushbullet", "PBEnabled", "0")
-		;Added by CDudz
-		IniReadS($TelegramEnabled, $config, "pushbullet", "PBEnabled2", "0")	
 		IniReadS($pRemote, $config, "pushbullet", "PBRemote", "0")
 		IniReadS($iDeleteAllPBPushes, $config, "pushbullet", "DeleteAllPBPushes", "0")
 		IniReadS($pMatchFound, $config, "pushbullet", "AlertPBVMFound", "0")
@@ -634,8 +662,6 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		IniReadS($icmbHoursPushBullet, $config, "pushbullet", "HoursPushBullet", "4")
 		IniReadS($ichkDeleteOldPBPushes, $config, "pushbullet", "DeleteOldPBPushes", "0")
 		IniReadS($ichkAlertPBCampFull, $config, "pushbullet", "AlertPBCampFull", "0")
-		$ichkAlertBuilderIdle = IniRead($config, "pushbullet", "AlertBuilderIdle", "0")
-		
 		IniReadS($iAlertPBVillage, $config, "pushbullet", "AlertPBVillage", "0")
 		IniReadS($iLastAttackPB, $config, "pushbullet", "AlertPBLastAttack", "0")
 
@@ -646,7 +672,17 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		IniReadS($ichkDeleteLoots, $config, "deletefiles", "DeleteLoots", "1")
 		IniReadS($iDeleteLootsDays, $config, "deletefiles", "DeleteLootsDays", "2")
 
-	    $DebugClick = BitOR($DebugClick, IniRead($config, "debug", "debugsetclick", "0"))
+		; Pushbullet Stuff
+		$VillageStatIncrement = IniRead($config, "pushbullet", "VillageStatIncrement", "0")
+		$VillageStatIncrementTXT = IniRead($config, "pushbullet", "VillageStatIncrementTXT", "5")
+		$SearchNotifyCount = IniRead($config, "pushbullet", "SearchNotifyCount", "0")
+		$SearchNotifyCountTXT = IniRead($config, "pushbullet", "SearchNotifyCountTXT", "25")
+		
+		; psychic octopus max logout time
+		$TrainLogoutMaxTime = IniRead($config, "TrainLogout", "TrainLogoutMaxTime", "0")
+		$TrainLogoutMaxTimeTXT = IniRead($config, "TrainLogout", "TrainLogoutMaxTimeTXT", "20")
+		
+		$DebugClick = BitOR($DebugClick, IniRead($config, "debug", "debugsetclick", "0"))
 		If $DevMode = 1 Then
 			$DebugSetlog = BitOR($DebugSetlog, IniRead($config, "debug", "debugsetlog", "0"))
 			$DebugOcr = BitOR($DebugOcr, IniRead($config, "debug", "debugocr", "0"))
@@ -656,8 +692,8 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 			$makeIMGCSV = BitOR($debugBuildingPos, IniRead($config, "debug", "debugmakeimgcsv", "0"))
 			$debugresourcesoffset = BitOR($debugresourcesoffset, IniRead($config, "debug", "debugresourcesoffset", "0"))
 			$continuesearchelixirdebug = BitOR($continuesearchelixirdebug, IniRead($config, "debug", "continuesearchelixirdebug", "0"))
-			$debugMilkingIMGmake =  BitOR($debugMilkingIMGmake, IniRead($config, "debug", "debugMilkingIMGmake", "0"))
-			$debugOCRdonate = BitOr ($debugOCRdonate,  IniRead($config, "debug", "debugOCRDonate", "0"))
+			$debugMilkingIMGmake = BitOR($debugMilkingIMGmake, IniRead($config, "debug", "debugMilkingIMGmake", "0"))
+			$debugOCRdonate = BitOR($debugOCRdonate, IniRead($config, "debug", "debugOCRDonate", "0"))
 			;InireadS(xxxx,$config, "attack", "xxxx", "0")
 			;InireadS(xxxx,$config, "attack", "xxxx", "0")
 			;InireadS(xxxx,$config, "attack", "xxxx", "0")
@@ -682,14 +718,16 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		$iPlannedBoostBarracksHours = StringSplit(IniRead($config, "planned", "BoostBarracksHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
 		$iPlannedattackHours = StringSplit(IniRead($config, "planned", "attackHours", "1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
 		$iPlannedAttackWeekDays = StringSplit(IniRead($config, "planned", "attackDays", "1|1|1|1|1|1|1"), "|", $STR_NOCOUNT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
+
+		$ichkAttackPlannerEnable = IniRead($config, "planned", "chkAttackPlannerEnable", "0")
+		$ichkAttackPlannerCloseCoC = IniRead($config, "planned", "chkAttackPlannerCloseCoC", "0")
+		$ichkAttackPlannerCloseAll = IniRead($config, "planned", "chkAttackPlannerCloseAll", "0")
+		$ichkAttackPlannerRandom = IniRead($config, "planned", "chkAttackPlannerRandom", "0")
+		$icmbAttackPlannerRandom = IniRead($config, "planned", "cmbAttackPlannerRandom", "4")
+		$ichkAttackPlannerDayLimit = IniRead($config, "planned", "chkAttackPlannerDayLimit", "0")
+		$icmbAttackPlannerDayMin = IniRead($config, "planned", "cmbAttackPlannerDayMin", "12")
+		$icmbAttackPlannerDayMax = IniRead($config, "planned", "cmbAttackPlannerDayMax", "15")
+
 
 		;Share Attack Settings----------------------------------------
 		$iShareminGold = IniRead($config, "shareattack", "minGold", "200000")
@@ -703,6 +741,8 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
+		;Use random click
+		$iUseRandomClick = IniRead($config, "other", "UseRandomClick", "0")
 		;screenshot type: 0 JPG   1 PNG
 		$iScreenshotType = IniRead($config, "other", "ScreenshotType", "0")
 		;InireadS(xxxx,$config, "attack", "xxxx", "0")
@@ -721,43 +761,29 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		$iValuePBTimeForcedExit = IniRead($config, "other", "ValuePBTimeForcedExit", "15")
 
 		$ichkLanguage = IniRead($config, "General", "ChkLanguage", "1")
-		$ichkDisableSplash = IniRead($config, "General", "ChkDisableSplash", "1")
+		$ichkDisableSplash = IniRead($config, "General", "ChkDisableSplash", $ichkDisableSplash)
 		$ichkVersion = IniRead($config, "General", "ChkVersion", "1")
 		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
-		; Donate Stats ==========================================================================
-		$ichkDStats = IniRead($config, "donate", "chkDStats", "1")
-		
+
 		;Donate Settings-------------------------------------------------------------------------
 		$sTxtRequest = IniRead($config, "donate", "txtRequest", "")
 		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateBarbarians = IniRead($config, "donate", "chkDonateBarbarians", "0")
 		$ichkDonateAllBarbarians = IniRead($config, "donate", "chkDonateAllBarbarians", "0")
-		$sTxtDonateBarbarians = StringReplace(IniRead($config, "donate", "txtDonateBarbarians", "barbarians|barb|any"), "|", @CRLF)
-		$sTxtBlacklistBarbarians = StringReplace(IniRead($config, "donate", "txtBlacklistBarbarians", "no barbarians|no barb|barbarians no|barb no"), "|", @CRLF)
+		$sTxtDonateBarbarians = StringReplace(IniRead($config, "donate", "txtDonateBarbarians", "barbarians|barbarian|barb"), "|", @CRLF)
+		$sTxtBlacklistBarbarians = StringReplace(IniRead($config, "donate", "txtBlacklistBarbarians", "no barbarians|no barb|barbarian no|barb no"), "|", @CRLF)
 		$aDonBarbarians = StringSplit($sTxtDonateBarbarians, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkBarbarians = StringSplit($sTxtBlacklistBarbarians, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateArchers = IniRead($config, "donate", "chkDonateArchers", "0")
 		$ichkDonateAllArchers = IniRead($config, "donate", "chkDonateAllArchers", "0")
-		$sTxtDonateArchers = StringReplace(IniRead($config, "donate", "txtDonateArchers", "archers|arch|any"), "|", @CRLF)
-		$sTxtBlacklistArchers = StringReplace(IniRead($config, "donate", "txtBlacklistArchers", "no archers|no arch|archers no|arch no"), "|", @CRLF)
+		$sTxtDonateArchers = StringReplace(IniRead($config, "donate", "txtDonateArchers", "archers|archer|arch"), "|", @CRLF)
+		$sTxtBlacklistArchers = StringReplace(IniRead($config, "donate", "txtBlacklistArchers", "no archers|no arch|archer no|arch no"), "|", @CRLF)
 		$aDonArchers = StringSplit($sTxtDonateArchers, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkArchers = StringSplit($sTxtBlacklistArchers, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateGiants = IniRead($config, "donate", "chkDonateGiants", "0")
 		$ichkDonateAllGiants = IniRead($config, "donate", "chkDonateAllGiants", "0")
@@ -765,12 +791,6 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		$sTxtBlacklistGiants = StringReplace(IniRead($config, "donate", "txtBlacklistGiants", "no giants|giants no"), "|", @CRLF)
 		$aDonGiants = StringSplit($sTxtDonateGiants, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkGiants = StringSplit($sTxtBlacklistGiants, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateGoblins = IniRead($config, "donate", "chkDonateGoblins", "0")
 		$ichkDonateAllGoblins = IniRead($config, "donate", "chkDonateAllGoblins", "0")
@@ -778,12 +798,6 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		$sTxtBlacklistGoblins = StringReplace(IniRead($config, "donate", "txtBlacklistGoblins", "no goblins|goblins no"), "|", @CRLF)
 		$aDonGoblins = StringSplit($sTxtDonateGoblins, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkGoblins = StringSplit($sTxtBlacklistGoblins, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateWallBreakers = IniRead($config, "donate", "chkDonateWallBreakers", "0")
 		$ichkDonateAllWallBreakers = IniRead($config, "donate", "chkDonateAllWallBreakers", "0")
@@ -791,38 +805,20 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		$sTxtBlacklistWallBreakers = StringReplace(IniRead($config, "donate", "txtBlacklistWallBreakers", "no wallbreakers|wb no"), "|", @CRLF)
 		$aDonWallBreakers = StringSplit($sTxtDonateWallBreakers, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkWallBreakers = StringSplit($sTxtBlacklistWallBreakers, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateBalloons = IniRead($config, "donate", "chkDonateBalloons", "0")
 		$ichkDonateAllBalloons = IniRead($config, "donate", "chkDonateAllBalloons", "0")
 		$sTxtDonateBalloons = StringReplace(IniRead($config, "donate", "txtDonateBalloons", "balloons|balloon"), "|", @CRLF)
-		$sTxtBlacklistBalloons = StringReplace(IniRead($config, "donate", "txtBlacklistBalloons", "no balloons|balloons no"), "|", @CRLF)
+		$sTxtBlacklistBalloons = StringReplace(IniRead($config, "donate", "txtBlacklistBalloons", "no balloon|balloons no"), "|", @CRLF)
 		$aDonBalloons = StringSplit($sTxtDonateBalloons, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkBalloons = StringSplit($sTxtBlacklistBalloons, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateWizards = IniRead($config, "donate", "chkDonateWizards", "0")
 		$ichkDonateAllWizards = IniRead($config, "donate", "chkDonateAllWizards", "0")
-		$sTxtDonateWizards = StringReplace(IniRead($config, "donate", "txtDonateWizards", "wizards|wizard"), "|", @CRLF)
-		$sTxtBlacklistWizards = StringReplace(IniRead($config, "donate", "txtBlacklistWizards", "no wizards|wizards no"), "|", @CRLF)
+		$sTxtDonateWizards = StringReplace(IniRead($config, "donate", "txtDonateWizards", "wizards|wizard|wiz"), "|", @CRLF)
+		$sTxtBlacklistWizards = StringReplace(IniRead($config, "donate", "txtBlacklistWizards", "no wizards|wizards no|no wizard|wizard no"), "|", @CRLF)
 		$aDonWizards = StringSplit($sTxtDonateWizards, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkWizards = StringSplit($sTxtBlacklistWizards, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateHealers = IniRead($config, "donate", "chkDonateHealers", "0")
 		$ichkDonateAllHealers = IniRead($config, "donate", "chkDonateAllHealers", "0")
@@ -830,12 +826,6 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		$sTxtBlacklistHealers = StringReplace(IniRead($config, "donate", "txtBlacklistHealers", "no healer|healer no"), "|", @CRLF)
 		$aDonHealers = StringSplit($sTxtDonateHealers, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkHealers = StringSplit($sTxtBlacklistHealers, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateDragons = IniRead($config, "donate", "chkDonateDragons", "0")
 		$ichkDonateAllDragons = IniRead($config, "donate", "chkDonateAllDragons", "0")
@@ -843,64 +833,48 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		$sTxtBlacklistDragons = StringReplace(IniRead($config, "donate", "txtBlacklistDragons", "no dragon|dragon no"), "|", @CRLF)
 		$aDonDragons = StringSplit($sTxtDonateDragons, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkDragons = StringSplit($sTxtBlacklistDragons, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonatePekkas = IniRead($config, "donate", "chkDonatePekkas", "0")
 		$ichkDonateAllPekkas = IniRead($config, "donate", "chkDonateAllPekkas", "0")
-		$sTxtDonatePekkas = StringReplace(IniRead($config, "donate", "txtDonatePekkas", "pekka"), "|", @CRLF)
-		$sTxtBlacklistPekkas = StringReplace(IniRead($config, "donate", "txtBlacklistPekkas", "no pekka|pekka no"), "|", @CRLF)
+		$sTxtDonatePekkas = StringReplace(IniRead($config, "donate", "txtDonatePekkas", "PEKKA|pekka"), "|", @CRLF)
+		$sTxtBlacklistPekkas = StringReplace(IniRead($config, "donate", "txtBlacklistPekkas", "no PEKKA|pekka no"), "|", @CRLF)
 		$aDonPekkas = StringSplit($sTxtDonatePekkas, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkPekkas = StringSplit($sTxtBlacklistPekkas, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
+
+		$ichkDonateBabyDragons = IniRead($config, "donate", "chkDonateBabyDragons", "0")
+		$ichkDonateAllBabyDragons = IniRead($config, "donate", "chkDonateAllBabyDragons", "0")
+		$sTxtDonateBabyDragons = StringReplace(IniRead($config, "donate", "txtDonateBabyDragons", "baby dragon|baby"), "|", @CRLF)
+		$sTxtBlacklistBabyDragons = StringReplace(IniRead($config, "donate", "txtBlacklistBabyDragons", "no baby dragon|baby dragon no|no baby|baby no"), "|", @CRLF)
+		$aDonBabyDragons = StringSplit($sTxtDonateBabyDragons, @CRLF, $STR_ENTIRESPLIT)
+		$aBlkBabyDragons = StringSplit($sTxtBlacklistBabyDragons, @CRLF, $STR_ENTIRESPLIT)
+
+		$ichkDonateMiners = IniRead($config, "donate", "chkDonateMiners", "0")
+		$ichkDonateAllMiners = IniRead($config, "donate", "chkDonateAllMiners", "0")
+		$sTxtDonateMiners = StringReplace(IniRead($config, "donate", "txtDonateMiners", "miner|mine"), "|", @CRLF)
+		$sTxtBlacklistMiners = StringReplace(IniRead($config, "donate", "txtBlacklistMiners", "no miner|miner no|no mine|mine no"), "|", @CRLF)
+		$aDonMiners = StringSplit($sTxtDonateMiners, @CRLF, $STR_ENTIRESPLIT)
+		$aBlkMiners = StringSplit($sTxtBlacklistMiners, @CRLF, $STR_ENTIRESPLIT)
 
 		$ichkDonateMinions = IniRead($config, "donate", "chkDonateMinions", "0")
 		$ichkDonateAllMinions = IniRead($config, "donate", "chkDonateAllMinions", "0")
 		$sTxtDonateMinions = StringReplace(IniRead($config, "donate", "txtDonateMinions", "minions|minion"), "|", @CRLF)
-		$sTxtBlacklistMinions = StringReplace(IniRead($config, "donate", "txtBlacklistMinions", "no minions|minions no"), "|", @CRLF)
+		$sTxtBlacklistMinions = StringReplace(IniRead($config, "donate", "txtBlacklistMinions", "no minion|minions no"), "|", @CRLF)
 		$aDonMinions = StringSplit($sTxtDonateMinions, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkMinions = StringSplit($sTxtBlacklistMinions, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateHogRiders = IniRead($config, "donate", "chkDonateHogRiders", "0")
 		$ichkDonateAllHogRiders = IniRead($config, "donate", "chkDonateAllHogRiders", "0")
 		$sTxtDonateHogRiders = StringReplace(IniRead($config, "donate", "txtDonateHogRiders", "hogriders|hogs|hog"), "|", @CRLF)
-		$sTxtBlacklistHogRiders = StringReplace(IniRead($config, "donate", "txtBlacklistHogRiders", "no hogriders|hogriders no|no hogs|hogs no"), "|", @CRLF)
+		$sTxtBlacklistHogRiders = StringReplace(IniRead($config, "donate", "txtBlacklistHogRiders", "no hogriders|hogriders no|no hog|hogs no"), "|", @CRLF)
 		$aDonHogRiders = StringSplit($sTxtDonateHogRiders, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkHogRiders = StringSplit($sTxtBlacklistHogRiders, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateValkyries = IniRead($config, "donate", "chkDonateValkyries", "0")
 		$ichkDonateAllValkyries = IniRead($config, "donate", "chkDonateAllValkyries", "0")
-		$sTxtDonateValkyries = StringReplace(IniRead($config, "donate", "txtDonateValkyries", "valkyries|valkyrie"), "|", @CRLF)
-		$sTxtBlacklistValkyries = StringReplace(IniRead($config, "donate", "txtBlacklistValkyries", "no valkyries|valkyries no"), "|", @CRLF)
+		$sTxtDonateValkyries = StringReplace(IniRead($config, "donate", "txtDonateValkyries", "valkyries|valkyrie|valk"), "|", @CRLF)
+		$sTxtBlacklistValkyries = StringReplace(IniRead($config, "donate", "txtBlacklistValkyries", "no valkyrie|valkyries no|no valk|valk no"), "|", @CRLF)
 		$aDonValkyries = StringSplit($sTxtDonateValkyries, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkValkyries = StringSplit($sTxtBlacklistValkyries, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateGolems = IniRead($config, "donate", "chkDonateGolems", "0")
 		$ichkDonateAllGolems = IniRead($config, "donate", "chkDonateAllGolems", "0")
@@ -908,38 +882,27 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		$sTxtBlacklistGolems = StringReplace(IniRead($config, "donate", "txtBlacklistGolems", "no golem|golem no"), "|", @CRLF)
 		$aDonGolems = StringSplit($sTxtDonateGolems, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkGolems = StringSplit($sTxtBlacklistGolems, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateWitches = IniRead($config, "donate", "chkDonateWitches", "0")
 		$ichkDonateAllWitches = IniRead($config, "donate", "chkDonateAllWitches", "0")
 		$sTxtDonateWitches = StringReplace(IniRead($config, "donate", "txtDonateWitches", "witches|witch"), "|", @CRLF)
-		$sTxtBlacklistWitches = StringReplace(IniRead($config, "donate", "txtBlacklistWitches", "no witches|witches no"), "|", @CRLF)
+		$sTxtBlacklistWitches = StringReplace(IniRead($config, "donate", "txtBlacklistWitches", "no witches|witches no|no witch|witch no"), "|", @CRLF)
 		$aDonWitches = StringSplit($sTxtDonateWitches, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkWitches = StringSplit($sTxtBlacklistWitches, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateLavaHounds = IniRead($config, "donate", "chkDonateLavaHounds", "0")
 		$ichkDonateAllLavaHounds = IniRead($config, "donate", "chkDonateAllLavaHounds", "0")
-		$sTxtDonateLavaHounds = StringReplace(IniRead($config, "donate", "txtDonateLavaHounds", "lavahounds|hound|lava"), "|", @CRLF)
-		$sTxtBlacklistLavaHounds = StringReplace(IniRead($config, "donate", "txtBlacklistLavaHounds", "no lavahound|hound no"), "|", @CRLF)
+		$sTxtDonateLavaHounds = StringReplace(IniRead($config, "donate", "txtDonateLavaHounds", "lavahounds|lava|hound"), "|", @CRLF)
+		$sTxtBlacklistLavaHounds = StringReplace(IniRead($config, "donate", "txtBlacklistLavaHounds", "no lavahound|lavahound no|no lava|lava no|nohound|hound no"), "|", @CRLF)
 		$aDonLavaHounds = StringSplit($sTxtDonateLavaHounds, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkLavaHounds = StringSplit($sTxtBlacklistLavaHounds, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
+
+		$ichkDonateBowlers = IniRead($config, "donate", "chkDonateBowlers", "0")
+		$ichkDonateAllBowlers = IniRead($config, "donate", "chkDonateAllBowlers", "0")
+		$sTxtDonateBowlers = StringReplace(IniRead($config, "donate", "txtDonateBowlers", "bowler|bowl"), "|", @CRLF)
+		$sTxtBlacklistBowlers = StringReplace(IniRead($config, "donate", "txtBlacklistBowlers", "no bowler|bowl no"), "|", @CRLF)
+		$aDonBowlers = StringSplit($sTxtDonateBowlers, @CRLF, $STR_ENTIRESPLIT)
+		$aBlkBowlers = StringSplit($sTxtBlacklistBowlers, @CRLF, $STR_ENTIRESPLIT)
 
 		$ichkDonatePoisonSpells = IniRead($config, "donate", "chkDonatePoisonSpells", "0")
 		$ichkDonateAllPoisonSpells = IniRead($config, "donate", "chkDonateAllPoisonSpells", "0")
@@ -947,12 +910,6 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		$sTxtBlacklistPoisonSpells = StringReplace(IniRead($config, "donate", "txtBlacklistPoisonSpells", "no poison|poison no"), "|", @CRLF)
 		$aDonPoisonSpells = StringSplit($sTxtDonatePoisonSpells, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkPoisonSpells = StringSplit($sTxtBlacklistPoisonSpells, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateEarthQuakeSpells = IniRead($config, "donate", "chkDonateEarthQuakeSpells", "0")
 		$ichkDonateAllEarthQuakeSpells = IniRead($config, "donate", "chkDonateAllEarthQuakeSpells", "0")
@@ -960,12 +917,6 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		$sTxtBlacklistEarthQuakeSpells = StringReplace(IniRead($config, "donate", "txtBlacklistEarthQuakeSpells", "no earthquake|quake no"), "|", @CRLF)
 		$aDonEarthQuakeSpells = StringSplit($sTxtDonateEarthQuakeSpells, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkEarthQuakeSpells = StringSplit($sTxtBlacklistEarthQuakeSpells, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		$ichkDonateHasteSpells = IniRead($config, "donate", "chkDonateHasteSpells", "0")
 		$ichkDonateAllHasteSpells = IniRead($config, "donate", "chkDonateAllHasteSpells", "0")
@@ -973,64 +924,64 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		$sTxtBlacklistHasteSpells = StringReplace(IniRead($config, "donate", "txtBlacklistHasteSpells", "no haste|haste no"), "|", @CRLF)
 		$aDonHasteSpells = StringSplit($sTxtDonateHasteSpells, @CRLF, $STR_ENTIRESPLIT)
 		$aBlkHasteSpells = StringSplit($sTxtBlacklistHasteSpells, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
-		;;; Custom Combination Donate by ChiefM3, edit by Hervidero
-		$ichkDonateCustom = IniRead($config, "donate", "chkDonateCustom", "0")
-		$ichkDonateAllCustom = IniRead($config, "donate", "chkDonateAllCustom", "0")
-		$sTxtDonateCustom = StringReplace(IniRead($config, "donate", "txtDonateCustom", "any|need"), "|", @CRLF)
-		$sTxtBlacklistCustom = StringReplace(IniRead($config, "donate", "txtBlacklistCustom", "only|just"), "|", @CRLF)
-		$aDonCustom = StringSplit($sTxtDonateCustom, @CRLF, $STR_ENTIRESPLIT)
-		$aBlkCustom = StringSplit($sTxtBlacklistCustom, @CRLF, $STR_ENTIRESPLIT)
-		$varDonateCustom[0][0] = IniRead($config, "donate", "cmbDonateCustom1", "6")
-		$varDonateCustom[1][0] = IniRead($config, "donate", "cmbDonateCustom2", "1")
-		$varDonateCustom[2][0] = IniRead($config, "donate", "cmbDonateCustom3", "0")
-		$varDonateCustom[0][1] = IniRead($config, "donate", "txtDonateCustom1", "2")
-		$varDonateCustom[1][1] = IniRead($config, "donate", "txtDonateCustom2", "3")
-		$varDonateCustom[2][1] = IniRead($config, "donate", "txtDonateCustom3", "1")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
+		$ichkDonateSkeletonSpells = IniRead($config, "donate", "chkDonateSkeletonSpells", "0")
+		$ichkDonateAllSkeletonSpells = IniRead($config, "donate", "chkDonateAllSkeletonSpells", "0")
+		$sTxtDonateSkeletonSpells = StringReplace(IniRead($config, "donate", "txtDonateSkeletonSpells", "skeleton"), "|", @CRLF)
+		$sTxtBlacklistSkeletonSpells = StringReplace(IniRead($config, "donate", "txtBlacklistSkeletonSpells", "no skeleton|skeleton no"), "|", @CRLF)
+		$aDonSkeletonSpells = StringSplit($sTxtDonateSkeletonSpells, @CRLF, $STR_ENTIRESPLIT)
+		$aBlkSkeletonSpells = StringSplit($sTxtBlacklistSkeletonSpells, @CRLF, $STR_ENTIRESPLIT)
+
+		;;; Custom Combination Donate by ChiefM3, edit by Hervidero & MonkeyHunter
+		$ichkDonateCustomA = IniRead($config, "donate", "chkDonateCustomA", "0")
+		$ichkDonateAllCustomA = IniRead($config, "donate", "chkDonateAllCustomA", "0")
+		$sTxtDonateCustomA = StringReplace(IniRead($config, "donate", "txtDonateCustomA", "ground support|ground"), "|", @CRLF)
+		$sTxtBlacklistCustomA = StringReplace(IniRead($config, "donate", "txtBlacklistCustomA", "no ground|ground no|nonly"), "|", @CRLF)
+		$aDonCustomA = StringSplit($sTxtDonateCustomA, @CRLF, $STR_ENTIRESPLIT)
+		$aBlkCustomA = StringSplit($sTxtBlacklistCustomA, @CRLF, $STR_ENTIRESPLIT)
+		$varDonateCustomA[0][0] = IniRead($config, "donate", "cmbDonateCustomA1", "6")
+		$varDonateCustomA[1][0] = IniRead($config, "donate", "cmbDonateCustomA2", "1")
+		$varDonateCustomA[2][0] = IniRead($config, "donate", "cmbDonateCustomA3", "0")
+		$varDonateCustomA[0][1] = IniRead($config, "donate", "txtDonateCustomA1", "2")
+		$varDonateCustomA[1][1] = IniRead($config, "donate", "txtDonateCustomA2", "3")
+		$varDonateCustomA[2][1] = IniRead($config, "donate", "txtDonateCustomA3", "1")
+
+		$ichkDonateCustomB = IniRead($config, "donate", "chkDonateCustomB", "0")
+		$ichkDonateAllCustomB = IniRead($config, "donate", "chkDonateAllCustomB", "0")
+		$sTxtDonateCustomB = StringReplace(IniRead($config, "donate", "txtDonateCustomB", "air support|any air"), "|", @CRLF)
+		$sTxtBlacklistCustomB = StringReplace(IniRead($config, "donate", "txtBlacklistCustomB", "no air|air no|only|just"), "|", @CRLF)
+		$aDonCustomB = StringSplit($sTxtDonateCustomB, @CRLF, $STR_ENTIRESPLIT)
+		$aBlkCustomB = StringSplit($sTxtBlacklistCustomB, @CRLF, $STR_ENTIRESPLIT)
+		$varDonateCustomB[0][0] = IniRead($config, "donate", "cmbDonateCustomB1", "11")
+		$varDonateCustomB[1][0] = IniRead($config, "donate", "cmbDonateCustomB2", "1")
+		$varDonateCustomB[2][0] = IniRead($config, "donate", "cmbDonateCustomB3", "6")
+		$varDonateCustomB[0][1] = IniRead($config, "donate", "txtDonateCustomB1", "3")
+		$varDonateCustomB[1][1] = IniRead($config, "donate", "txtDonateCustomB2", "13")
+		$varDonateCustomB[2][1] = IniRead($config, "donate", "txtDonateCustomB3", "5")
 
 		$sTxtBlacklist = StringReplace(IniRead($config, "donate", "txtBlacklist", "clan war|war|cw"), "|", @CRLF)
 		$aBlackList = StringSplit($sTxtBlacklist, @CRLF, $STR_ENTIRESPLIT)
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
-		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
 		; Extra Alphabets , Cyrillic.
 		$ichkExtraAlphabets = IniRead($config, "donate", "chkExtraAlphabets", "0")
 
 		;InireadS(xxxx,$config, "attack", "xxxx", "0")
 
-		InireadS($chkLvl6Enabled,$config, "collectors", "lvl6Enabled", "1")
-		InireadS($chkLvl7Enabled,$config, "collectors", "lvl7Enabled", "1")
-		InireadS($chkLvl8Enabled,$config, "collectors", "lvl8Enabled", "1")
-		InireadS($chkLvl9Enabled,$config, "collectors", "lvl9Enabled", "1")
-		InireadS($chkLvl10Enabled,$config, "collectors", "lvl10Enabled", "1")
-		InireadS($chkLvl11Enabled,$config, "collectors", "lvl11Enabled", "1")
-		InireadS($chkLvl12Enabled,$config, "collectors", "lvl12Enabled", "1")
-		InireadS($cmbLvl6Fill,$config, "collectors", "lvl6fill", "2")
-		InireadS($cmbLvl7Fill,$config, "collectors", "lvl7fill", "2")
-		InireadS($cmbLvl8Fill,$config, "collectors", "lvl8fill", "2")
-		InireadS($cmbLvl9Fill,$config, "collectors", "lvl9fill", "1")
-		InireadS($cmbLvl10Fill,$config, "collectors", "lvl10fill", "0")
-		InireadS($cmbLvl11Fill,$config, "collectors", "lvl11fill", "0")
-		InireadS($cmbLvl12Fill,$config, "collectors", "lvl12fill", "0")
-		InireadS($toleranceOffset,$config, "collectors", "tolerance", "0")
+		InireadS($chkLvl6Enabled, $config, "collectors", "lvl6Enabled", "1", "Int")
+		InireadS($chkLvl7Enabled, $config, "collectors", "lvl7Enabled", "1", "Int")
+		InireadS($chkLvl8Enabled, $config, "collectors", "lvl8Enabled", "1", "Int")
+		InireadS($chkLvl9Enabled, $config, "collectors", "lvl9Enabled", "1", "Int")
+		InireadS($chkLvl10Enabled, $config, "collectors", "lvl10Enabled", "1", "Int")
+		InireadS($chkLvl11Enabled, $config, "collectors", "lvl11Enabled", "1", "Int")
+		InireadS($chkLvl12Enabled, $config, "collectors", "lvl12Enabled", "1", "Int")
+		InireadS($cmbLvl6Fill, $config, "collectors", "lvl6fill", "2")
+		InireadS($cmbLvl7Fill, $config, "collectors", "lvl7fill", "2")
+		InireadS($cmbLvl8Fill, $config, "collectors", "lvl8fill", "2")
+		InireadS($cmbLvl9Fill, $config, "collectors", "lvl9fill", "1")
+		InireadS($cmbLvl10Fill, $config, "collectors", "lvl10fill", "0")
+		InireadS($cmbLvl11Fill, $config, "collectors", "lvl11fill", "0")
+		InireadS($cmbLvl12Fill, $config, "collectors", "lvl12fill", "0")
+		InireadS($toleranceOffset, $config, "collectors", "tolerance", "0")
 
 		; Android Configuration
 		$AndroidGamePackage = IniRead($config, "android", "game.package", $AndroidGamePackage)
@@ -1045,73 +996,76 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		$AndroidAdbClicksEnabled = IniRead($config, "android", "adb.clicks.enabled", ($AndroidAdbClicksEnabled ? "1" : "0")) = "1"
 		$AndroidAdbClicksTroopDeploySize = Int(IniRead($config, "android", "adb.clicks.troop.deploy.size", $AndroidAdbClicksTroopDeploySize))
 		$NoFocusTampering = IniRead($config, "android", "no.focus.tampering", ($NoFocusTampering ? "1" : "0")) = "1"
-		
-; Mod AIO
-		
-		$iChkDontRemove = IniRead($config, "troop", "DontRemove", "0")
-		$iChkBarrackSpell = IniRead($config, "Spells", "BarrackSpell", "0")
+		$AndroidShieldColor = Dec(IniRead($config, "android", "shield.color", Hex($AndroidShieldColor, 6)))
+		$AndroidShieldTransparency = Int(IniRead($config, "android", "shield.transparency", $AndroidShieldTransparency))
+		$AndroidActiveColor = Dec(IniRead($config, "android", "active.color", Hex($AndroidActiveColor, 6)))
+		$AndroidActiveTransparency = Int(IniRead($config, "android", "active.transparency", $AndroidActiveTransparency))
+		$AndroidInactiveColor = Dec(IniRead($config, "android", "inactive.color", Hex($AndroidInactiveColor, 6)))
+		$AndroidInactiveTransparency = Int(IniRead($config, "android", "inactive.transparency", $AndroidInactiveTransparency))
 
+		;Apply to switch Attack Standard after THSnipe End ==>
+		IniReadS($ichkTSActivateCamps2, $config, "search", "ChkTSSearchCamps2", "0")
+		IniReadS($iEnableAfterArmyCamps2, $config, "search", "TSEnableAfterArmyCamps2", "100")
+		;==>Apply to switch Attack Standard after THSnipe End
+
+		; CSV Deployment Speed Mod
+		IniReadS($isldSelectedCSVSpeed[$DB], $config, "attack", "CSVSpeedDB", 3)
+		IniReadS($isldSelectedCSVSpeed[$LB], $config, "attack", "CSVSpeedAB", 3)
 		
-		;mikemikemikecoc - Wait For Spells
+		;Wait For Spells
 		IniReadS($iEnableSpellsWait[$DB], $config, "search", "ChkDBSpellsWait", "0")
 		IniReadS($iEnableSpellsWait[$LB], $config, "search", "ChkABSpellsWait", "0")
-
-		; Close When Training Settings
-		$ichkCloseTraining = Number(IniRead($config, "Close When Training", "Enabled", "1"))
-		$minTrainAddition = Number(IniRead($config, "Close When Training", "AdditionMin", "10"))
-		$maxTrainAddition = Number(IniRead($config, "Close When Training", "AdditionMax", "20"))
-		$LeaveCoCOpen = IniRead($config, "Leave CoC Open", "Enabled", "0")
-		$CloseCoCGame = IniRead($config, "Close CoC Game", "Enabled", "1")
-		$RandomCoCOpen = IniRead($config, "Random Leave-Close", "Enabled", "0")
-		$RandomCloseTraining = IniRead($config, "Random Stay-Close Game", "Enabled", "0")
-
-
-		; Daily Attack Settings
-		$ichkLimitAttacks = Number(IniRead($config, "Daily Attacks", "Enabled", "1"))
-		$rangeAttacksStart = Number(IniRead($config, "Daily Attacks", "RangeStart", "20"))
-		$rangeAttacksEnd = Number(IniRead($config, "Daily Attacks", "RangeEnd", "25"))
-		$dailyAttackLimit = Number(IniRead($config, "Daily Attacks", "AttackLimit", "0"))
-		$dailyAttacks = Number(IniRead($config, "Daily Attacks", "Attacks", "0"))
-
-		; Simulate Sleep Settings
-		$ichkCloseNight = Number(IniRead($config, "Simulate Sleep", "Enabled", "1"))
-		$sleepStart = Number(IniRead($config, "Simulate Sleep", "StartHour", "0"))
-		$sleepEnd = Number(IniRead($config, "Simulate Sleep", "EndHour", "8"))
-		$nextSleepStart = IniRead($config, "Simulate Sleep", "SleepStart", "-999")
-		$nextSleepEnd = IniRead($config, "Simulate Sleep", "SleepEnd", "-999")
-		checkSleep()
-
+		IniReadS($iTotalTrainSpaceSpell, $config, "search", "TotalTrainSpaceSpell", "0")
 
 		; SmartZap Settings - Added by LunaEclipse
 		$ichkSmartZap = IniRead($config, "SmartZap", "UseSmartZap", "1")
 		$ichkSmartZapDB = IniRead($config, "SmartZap", "ZapDBOnly", "1")
         $ichkSmartZapSaveHeroes = IniRead($config, "SmartZap", "THSnipeSaveHeroes", "1")
 		$itxtMinDE = IniRead($config, "SmartZap", "MinDE", "250")
-
-		;Multy Farming Settings ------------------------------------------------------------------
-		$ichkSwitchDonate = IniRead($config, "Multy", "SwitchDonate", "0")
-		$ichkMultyFarming = IniRead($config, "Multy", "MultyFarming", "0")
-		$iAccount = IniRead($config, "Multy", "Account", "2")
+		
+		; ExtremeZap - Added by TheRevenor
+		$ichkExtLightSpell = IniRead($config, "MOD", "ExtLightSpell", "0")
+		$itxtMinDE = IniRead($config, "MOD", "MinDE", "250")
 		
 		; Android Settings - Added by LunaEclipse
 		$sAndroid = IniRead($config, "Android", "Emulator", "<No Emulators>")
 		$sAndroidInstance = IniRead($config, "Android", "Instance", "")
-		$ichkHideTaskBar = IniRead($config, "Android", "HideTaskBarIcon", "0")
+		;$ichkHideTaskBar = IniRead($config, "Android", "HideTaskBarIcon", "0")
 
 		; Misc Battle Settings - Added by LunaEclipse
 		$AndroidAdbClicksEnabled = IniRead($config, "Fast Clicks", "UseADBFastClicks", "0")
-
-		;modification Chat by rulesss
+		
+		; Check Collectors Outside - Added by TheRevenor
+		$ichkDBMeetCollOutside = IniRead($config, "search", "DBMeetCollOutside", "0")
+		$iDBMinCollOutsidePercent = IniRead($config, "search", "DBMinCollOutsidePercent", "50")
+		
+		; Check Connections - Added by TheRevenor
+		$ichkConnection = IniRead($config, "general", "ChkConnect", "1")
+		
+		; ChatBot by TheRevenor
 		$ichkchatdelay = IniRead($config, "global", "chdelay", "0")
+		
+		; Close TakeBrake - Added by TheRevenor
+		$ichkCloseTakeBreak = IniRead($config, "general", "ChkCloseEmuPB", "0")
+		
+		; Multi Farming Settings - Added by TheRevenor
+		$ichkSwitchDonate = IniRead($config, "Multy", "SwitchDonate", "0")
+		$ichkMultyFarming = IniRead($config, "Multy", "MultyFarming", "0")
+		$iAccount = IniRead($config, "Multy", "Account", "2")
+		
+		; Donate Stats - Added by cutidudz
+		$ichkDStats = IniRead($config, "donate", "chkDStats", "1")
+		$ichkLimitDStats = IniRead($config, "stats", "chkLimitDStats", "0")
 
+		; Don't Barack Mode - Added by AwesomeGamer
+		$iChkDontRemove = IniRead($config, "troop", "DontRemove", "0")
+		$iChkBarrackSpell = IniRead($config, "Spells", "BarrackSpell", "0")
+		
 	Else
 		Return False
 	EndIf
 	
-	; Clan Hop Setting
-	$ichkClanHop = IniRead($config, "Others", "ClanHop", "0")
-
-	;Profile Switch
+	; Profile Switch
 	$ichkGoldSwitchMax = IniRead($config, "profiles", "chkGoldSwitchMax", "0")
 	$icmbGoldMaxProfile = IniRead($config, "profiles", "cmbGoldMaxProfile", "0")
 	$itxtMaxGoldAmount = IniRead($config, "profiles", "txtMaxGoldAmount", "6000000")
@@ -1139,7 +1093,7 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 	$ichkTrophySwitchMin = IniRead($config, "profiles", "chkTrophySwitchMin", "0")
 	$icmbTrophyMinProfile = IniRead($config, "profiles", "cmbTrophyMinProfile", "0")
 	$itxtMinTrophyAmount = IniRead($config, "profiles", "txtMinTrophyAmount", "1000")
-
+	
 EndFunc   ;==>readConfig
 
 

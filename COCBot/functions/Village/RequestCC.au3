@@ -31,7 +31,11 @@ Func RequestCC()
 
 	;open army overview
 	If IsMainPage() Then
-		Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#0334")
+		If $iUseRandomClick = 0 then
+			Click($aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0, "#0334")
+		Else
+			ClickR($aArmyTrainButtonRND, $aArmyTrainButton[0], $aArmyTrainButton[1], 1, 0)
+		EndIF
 	EndIf
 	If _Sleep($iDelayRequestCC1) Then Return
 
@@ -115,4 +119,12 @@ Func _makerequest()
 		$canRequestCC = False
 	EndIf
 
+	If $ichkSwitchDonate = 1 Then
+		;exit from army overview
+		If _Sleep($iDelayRequestCC1) Then Return
+		ClickP($aAway, 2, 0, "#0335")
+		SetLog("===== Activate Switch Account For Donate =====", $COLOR_RED)
+		Sleep(1500)
+		SwitchDonate()
+	EndIf
 EndFunc   ;==>_makerequest
