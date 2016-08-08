@@ -33,7 +33,7 @@ ProcessSetPriority(@AutoItPID, $PROCESS_ABOVENORMAL)
 Global $iBotLaunchTime = 0
 Local $hBotLaunchTime = TimerInit()
 
-Global $sGitHubModOwner = "Pedro"
+Global $sGitHubModOwner = "pedroleon99"
 Global $sGitHubModRepo = "MyBot-PedroMod"
 Global $sGitHubModLatestReleaseTag = "PedroMod"
 Global $sModSupportUrl = "https://github.com/pedroleon99/MyBot-PedroMod"

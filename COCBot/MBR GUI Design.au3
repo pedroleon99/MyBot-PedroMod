@@ -65,11 +65,11 @@ GUISwitch($frmBot)
 ;$idMENU_DONATE = GUICtrlCreateMenu("&" & GetTranslated(601,18,"Paypal Donate?"))
 ;_GUICtrlMenu_SetItemType(_GUICtrlMenu_GetMenu($frmBot), 0, $MFT_RIGHTJUSTIFY) ; move to right
 ;$idMENU_DONATE_SUPPORT = GUICtrlCreateMenuItem(GetTranslated(601,19,"Support the development"), $idMENU_DONATE)
-;$AboutMenu = GUICtrlCreateMenu("Help")
-;$CheckVersionConfig = GUICtrlCreateMenuItem("Check Version", $AboutMenu)
-;$DownloadLatestConfig = GUICtrlCreateMenuItem("Download Latest", $AboutMenu)
+$AboutMenu = GUICtrlCreateMenu("Mod Support")
+$CheckVersionConfig = GUICtrlCreateMenuItem("Check MOD Version", $AboutMenu)
+$DownloadLatestConfig = GUICtrlCreateMenuItem("Download Latest MOD", $AboutMenu)
 ;$ModSupportConfig = GUICtrlCreateMenuItem("Mod Support", $AboutMenu)
-;GUICtrlSetOnEvent(-1, "")
+GUICtrlSetOnEvent(-1, "")
 
 ;~ ------------------------------------------------------
 ;~ GUI Bottom

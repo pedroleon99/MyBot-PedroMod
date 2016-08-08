@@ -307,10 +307,10 @@ Func GUIControl_WM_COMMAND($hWind, $iMsg, $wParam, $lParam)
 		;	ShellExecute("https://mybot.run/forums/index.php?/donate/make-donation/")
 		Case $CheckVersionConfig
 			If CheckMODVersion() Then MsgBox(0, "", "You Are Using The Latest Version Of MyBot-PedroMod")
-		;Case $DownloadLatestConfig
-		;	ShellExecute("https://github.com/" & $sGitHubModOwner & "/" & $sGitHubModRepo & "/releases/latest")
+		Case $DownloadLatestConfig
+			ShellExecute("https://github.com/" & $sGitHubModOwner & "/" & $sGitHubModRepo & "/archive/master.zip")
 		;Case $ModSupportConfig
-		;	ShellExecute($sModSupportUrl)
+			;ShellExecute($sModSupportUrl)
 		Case $btnDeletePBMessages
 			If $RunState Then
 				btnDeletePBMessages() ; call with flag when bot is running to execute on _sleep() idle
