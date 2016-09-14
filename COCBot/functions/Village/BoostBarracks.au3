@@ -31,6 +31,19 @@ Func BoostBarracks()
 
 	;	Verifying existent Variables to run this routine
 	If $bTrainEnabled = False Then Return
+	
+	If $iChkForecastBoost = 1 Then
+		If $currentForecast > Number($iTxtForecastBoost, 3) Then
+		Local $hour = StringSplit(_NowTime(4), ":", $STR_NOCOUNT)
+			If $iPlannedBoostBarracksHours[$hour[0]] = 0 Then
+				SetLog("No planned boosting for this hour.", $COLOR_RED)
+				Return ; exit func if no planned Boost Barracks checkmarks
+			EndIf
+		Else
+			Return
+		EndIf
+	EndIf
+	
 	If $icmbQuantBoostBarracks = 0 Or $icmbBoostBarracks = 0 Then Return
 
 	If True Then
@@ -203,6 +216,8 @@ Func BoostSpellFactory()
 
 	If $bTrainEnabled = False Then Return
 
+	If $iChkForecastBoost = 1 And $currentForecast <= Number($iTxtForecastBoost, 3) Then Return
+
 	;Local Variables to use with this routine
 	Local $ButtonX, $ButtonY
 	Local $hTimer = TimerInit()
@@ -283,6 +298,8 @@ EndFunc   ;==>BoostSpellFactory
 Func BoostDarkSpellFactory()
 
 	If $bTrainEnabled = False Then Return
+	
+	If $iChkForecastBoost = 1 And $currentForecast <= Number($iTxtForecastBoost, 3) Then Return
 
 	;Local Variables to use with this routine
 	Local $ButtonX, $ButtonY

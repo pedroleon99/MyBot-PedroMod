@@ -17,6 +17,8 @@ Global $LastDarkBarrackTrainDonatedTroop = 1
 
 
 Func Train()
+	$currentForecast = readCurrentForecast()
+	GUICtrlSetData($lblActualIndexValue, $currentForecast)
 
 	If $iAtkAlgorithm[$LB] = 2 Then
 		Local $TempTroopGroup[12][3] = [["Gobl", 3, 1], ["Arch", 1, 1], ["Giant", 2, 5], ["Wall", 4, 2], ["Barb", 0, 1], ["Heal", 7, 14], ["Pekk", 9, 25], ["Ball", 5, 5], ["Wiza", 6, 4], ["Drag", 8, 20], ["BabyD", 10, 10], ["Mine", 11, 5]]
@@ -271,8 +273,6 @@ Func Train()
 	; ########################################  2nd Stage : Calculating of Troops to Make ##############################################
 
 	If $debugsetlogTrain = 1 Then SetLog("Total ArmyCamp :" & $TotalCamp, $COLOR_PURPLE)
-
-If $IsWaitingForHeroesSpells = 0 Then
 
 	If $fullarmy = True Then
 		SetLog("Calculating Troops before Training new Army.", $COLOR_BLUE)
@@ -599,17 +599,15 @@ If $IsWaitingForHeroesSpells = 0 Then
 						If $icount = 7 Then ExitLoop
 					WEnd
 				EndIf
-				If $iChkDontRemove = 0 Then
-					$icount = 0
-					While Not _ColorCheck(_GetPixelColor(593, 200 + $midOffsetY, True), Hex(0xD0D0C0, 6), 20) ; while not disappears  green arrow
-						If Not (IsTrainPage()) Then Return ;exit if no train page
-						Click(568, 177 + $midOffsetY, 10, $isldTrainITDelay, "#0284") ; Remove Troops in training
-						$icount += 1
-						If $RunState = False Then Return
-						If $icount = 100 Then ExitLoop
-					WEnd
-					If $debugsetlogTrain = 1 And $icount = 100 Then SetLog("Train warning 7", $COLOR_PURPLE)
-				EndIf
+				$icount = 0
+				While Not _ColorCheck(_GetPixelColor(593, 200 + $midOffsetY, True), Hex(0xD0D0C0, 6), 20) ; while not disappears  green arrow
+					If Not (IsTrainPage()) Then Return ;exit if no train page
+					Click(568, 177 + $midOffsetY, 10, $isldTrainITDelay, "#0284") ; Remove Troops in training
+					$icount += 1
+					If $RunState = False Then Return
+					If $icount = 100 Then ExitLoop
+				WEnd
+				If $debugsetlogTrain = 1 And $icount = 100 Then SetLog("Train warning 7", $COLOR_PURPLE)
 			EndIf
 
 			If _Sleep($iDelayTrain1) Then Return
@@ -952,17 +950,15 @@ If $IsWaitingForHeroesSpells = 0 Then
 							If $icount = 7 Then ExitLoop
 						WEnd
 					EndIf
-					If $iChkDontRemove = 0 Then
-						$icount = 0
-						While Not _ColorCheck(_GetPixelColor(599, 202 + $midOffsetY, True), Hex(0xD0D0C0, 6), 20) ; while not disappears  green arrow
-							If Not (IsTrainPage()) Then Return ;exit if no train page
-							Click(568, 177 + $midOffsetY, 10, 0, "#0287") ; Remove Troops in training
-							$icount += 1
-							If $icount = 100 Then ExitLoop
-							If $RunState = False Then Return
-						WEnd
-						If $debugsetlogTrain = 1 And $icount = 100 Then SetLog("Train warning 9", $COLOR_PURPLE)
-					EndIf
+					$icount = 0
+					While Not _ColorCheck(_GetPixelColor(599, 202 + $midOffsetY, True), Hex(0xD0D0C0, 6), 20) ; while not disappears  green arrow
+						If Not (IsTrainPage()) Then Return ;exit if no train page
+						Click(568, 177 + $midOffsetY, 10, 0, "#0287") ; Remove Troops in training
+						$icount += 1
+						If $icount = 100 Then ExitLoop
+						If $RunState = False Then Return
+					WEnd
+					If $debugsetlogTrain = 1 And $icount = 100 Then SetLog("Train warning 9", $COLOR_PURPLE)
 				EndIf
 				If _Sleep($iDelayTrain1) Then Return
 				For $i = 0 To UBound($TroopDarkName) - 1
@@ -1112,7 +1108,7 @@ If $IsWaitingForHeroesSpells = 0 Then
 						$BarrackDarkFull[$brrDarkNum - 1] = False ; Dark barrack isn't full
 					EndIf
 					If $debugsetlogTrain = 1 Then SetLog("Available Dark BARRACK " & $brrDarkNum & " Full: " & $BarrackDarkFull[$brrDarkNum - 1], $COLOR_PURPLE)
-					
+
 					;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 					;;;;;;;;;;;;; If The remaining capacity is lower then the Housing Space of training troop , delete the remaining training troop and train 10 Minions;;;;;;;;;;;
@@ -1172,7 +1168,7 @@ If $IsWaitingForHeroesSpells = 0 Then
 	EndIf
 	;;;;;;;;;;;; End Training Dark Troops ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	If $debugsetlogTrain = 1 Then SetLog("---=====================END TRAIN =======================================---", $COLOR_PURPLE)
-EndIf
+
 
 	If _Sleep($iDelayTrain4) Then Return
 	BrewSpells() ; Create Spells
@@ -1197,12 +1193,14 @@ EndIf
 		$tempElixirSpent = ($tempElixir - $iElixirCurrent)
 		$iTrainCostElixir += $tempElixirSpent
 		$iElixirTotal -= $tempElixirSpent
+		If $ichkSwitchAcc = 1 Then $aElixirTotalAcc[$nCurProfile-1] -= $tempElixirSpent ; Separate stats per account - SwitchAcc - DEMEN
 	EndIf
 
 	If $tempDElixir <> "" And $iDarkCurrent <> "" Then
 		$tempDElixirSpent = ($tempDElixir - $iDarkCurrent)
 		$iTrainCostDElixir += $tempDElixirSpent
 		$iDarkTotal -= $tempDElixirSpent
+		If $ichkSwitchAcc = 1 Then $aDarkTotalAcc[$nCurProfile - 1] -= $tempDElixirSpent ; Separate stats per account - SwitchAcc -  DEMEN
 	EndIf
 
 	UpdateStats()

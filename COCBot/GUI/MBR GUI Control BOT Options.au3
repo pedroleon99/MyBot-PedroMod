@@ -147,12 +147,9 @@ Func chkSinglePBTForced()
 	If GUICtrlRead($chkSinglePBTForced) = $GUI_CHECKED Then
 		GUICtrlSetState($txtSinglePBTimeForced, $GUI_ENABLE)
 		GUICtrlSetState($txtPBTimeForcedExit, $GUI_ENABLE)
-		GUICtrlSetState($chkCloseTakeBreak, $GUI_ENABLE)
-		GUICtrlSetState($chkCloseTakeBreak, $GUI_CHECKED)
 	Else
 		GUICtrlSetState($txtSinglePBTimeForced, $GUI_DISABLE)
 		GUICtrlSetState($txtPBTimeForcedExit, $GUI_DISABLE)
-		GUICtrlSetState($chkCloseTakeBreak, $GUI_DISABLE)
 	EndIf
 	txtSinglePBTimeForced()
 EndFunc   ;==>chkSinglePBTForced
@@ -175,14 +172,6 @@ Func txtSinglePBTimeForced()
 			GUICtrlSetBkColor($txtPBTimeForcedExit, $COLOR_MONEYGREEN)
 	EndSwitch
 EndFunc   ;==>txtSinglePBTimeForced
-
-Func chkClosePBEmu()
-If GUICtrlRead($chkCloseTakeBreak) = $GUI_CHECKED Then
-		$ichkCloseTakeBreak = 1
-	Else
-		$ichkCloseTakeBreak = 0
-	EndIf
-EndFunc  ;==>chkClosePBEmu
 
 Func chkDebugClick()
 	If GUICtrlRead($chkDebugClick) = $GUI_CHECKED Then
@@ -353,3 +342,63 @@ Func btnTestAttackBar()
 EndFunc
 
 
+Func btnTestClickDrag()
+
+	Local $i
+
+	SetLog("Testing Click drag functionality...", $COLOR_BLUE)
+	For $i = 0 To 4
+		SetLog("Click x1/y1=100/600 and drag to x2/y2=150/600", $COLOR_BLUE)
+		ClickDrag(100, 600, 150, 600)
+	Next
+	SetDebugLog("Waiting 3 Seconds...")
+	_SleepStatus(3000, True, True, False)
+	For $i = 0 To 4
+		SetLog("Click x1/y1=150/600 and drag to x2/y2=100/600", $COLOR_BLUE)
+		ClickDrag(150, 600, 100, 600)
+	Next
+
+EndFunc
+
+Func btnTestImage()
+
+	Local $sImageFile = FileOpenDialog("Select CoC screenshot to test", $dirTemp, "Image (*.png)", $FD_FILEMUSTEXIST, "", $frmBot)
+
+	SetLog("Testing image " & $sImageFile, $COLOR_BLUE)
+
+	Local $currentRunState = $RunState
+	$RunState = True
+
+	; load test image
+	Local $hBMP = _GDIPlus_BitmapCreateFromFile($sImageFile)
+	Local $hHBMP = _GDIPlus_BitmapCreateDIBFromBitmap($hBMP)
+	TestCapture($hHBMP)
+
+	SetLog("Testing image hHBitmap = " & $hHBMP)
+
+	Local $Result
+
+	SetLog("Testing checkObstacles", $COLOR_GREEN)
+	$Result = checkObstacles()
+	SetLog("Testing checkObstacles DONE, $Result=" & $Result, $COLOR_GREEN)
+
+	SetLog("Testing waitMainScreen...", $COLOR_GREEN)
+	$Result = waitMainScreen()
+	SetLog("Testing waitMainScreen DONE, $Result=" & $Result, $COLOR_GREEN)
+
+	SetLog("Testing waitMainScreenMini", $COLOR_GREEN)
+	$Result = waitMainScreenMini()
+	SetLog("Testing waitMainScreenMini DONE, $Result=" & $Result, $COLOR_GREEN)
+
+	;checkObstacles()
+
+    _GDIPlus_BitmapDispose($hBMP)
+	_WinAPI_DeleteObject($hHBMP)
+
+	TestCapture(0)
+
+	SetLog("Testing finished", $COLOR_BLUE)
+
+	$RunState = $currentRunState
+
+EndFunc

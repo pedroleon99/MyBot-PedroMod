@@ -383,7 +383,7 @@ Func btnCloseWaitStopRandom()
 		GUICtrlSetState($btnCloseWaitStop, BitOR($GUI_DISABLE, $GUI_UNCHECKED))
 	Else
 		$ibtnCloseWaitStopRandom = 0
-		GUICtrlSetState($btnCloseWaitStop, $GUI_ENABLE)
+		If GUICtrlRead($chkCloseWaitEnable) = $GUI_CHECKED Then GUICtrlSetState($btnCloseWaitStop, $GUI_ENABLE)
 	EndIf
 EndFunc   ;==>btnCloseWaitStopRandom
 
@@ -433,6 +433,7 @@ Func chkTroopOrder($bNoiseMode = True)
 			For $i = 0 To UBound($DefaultTroopGroup) - 1
 				$sNewTrainList &= $TroopName[$i] & ", "
 			Next
+			$sNewTrainList = StringLeft($sNewTrainList, StringLen($sNewTrainList)-2)
 			Setlog("Current train order= " & $sNewTrainList, $COLOR_BLUE)
 		EndIf
 	EndIf
@@ -464,6 +465,7 @@ Func chkDarkTroopOrder($bNoiseMode = True)
 			For $i = 0 To UBound($DefaultTroopGroupDark) - 1
 				$sNewTrainList &= $TroopDarkName[$i] & ", "
 			Next
+			$sNewTrainList = StringLeft($sNewTrainList, StringLen($sNewTrainList)-2)
 			Setlog("Current train order= " & $sNewTrainList, $COLOR_BLUE)
 		EndIf
 	EndIf
@@ -787,3 +789,39 @@ Func IsUseCustomDarkTroopOrder()
 	If $debugsetlogTrain = 1 Then Setlog("Custom dark train order used...", $COLOR_PURPLE) ; debug
 	Return True
 EndFunc   ;==>IsUseCustomDarkTroopOrder
+
+; SmartZap from ChaCalGyn (LunaEclipse)- DEMEN
+Func chkSmartLightSpell()
+    If GUICtrlRead($chkSmartLightSpell) = $GUI_CHECKED Then
+        GUICtrlSetState($chkSmartZapDB, $GUI_ENABLE)
+        GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_ENABLE)
+        GUICtrlSetState($txtMinDark, $GUI_ENABLE)
+        $ichkSmartZap = 1
+    Else
+        GUICtrlSetState($chkSmartZapDB, $GUI_DISABLE)
+        GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_DISABLE)
+        GUICtrlSetState($txtMinDark, $GUI_DISABLE)
+        $ichkSmartZap = 0
+    EndIf
+EndFunc   ;==>chkSmartLightSpell
+
+Func chkSmartZapDB()
+    If GUICtrlRead($chkSmartZapDB) = $GUI_CHECKED Then
+        $ichkSmartZapDB = 1
+    Else
+        $ichkSmartZapDB = 0
+    EndIf
+EndFunc   ;==>chkSmartZapDB
+
+Func chkSmartZapSaveHeroes()
+    If GUICtrlRead($chkSmartZapSaveHeroes) = $GUI_CHECKED Then
+        $ichkSmartZapSaveHeroes = 1
+    Else
+        $ichkSmartZapSaveHeroes = 0
+    EndIf
+EndFunc   ;==>chkSmartZapSaveHeroes
+
+Func txtMinDark()
+	$itxtMinDE = GUICtrlRead($txtMinDark)
+EndFunc   ;==>txtMinDark
+; =========== SmartZap from ChaCalGyn (LunaEclipse) =========== - DEMEN

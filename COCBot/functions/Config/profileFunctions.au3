@@ -9,7 +9,7 @@
 
 Func setupProfileComboBox()
 	; Array to store Profile names to add to ComboBox
-	$profileString = ""
+	Global $profileString = ""
 	Local $aProfiles = _FileListToArray($sProfilePath, "*", $FLTA_FOLDERS)
 	If @error Then
 		; No folders for profiles so lets set the combo box to a generic entry
@@ -27,8 +27,12 @@ Func setupProfileComboBox()
 
 	; Clear the combo box current data in case profiles were deleted
 	GUICtrlSetData($cmbProfile, "", "")
+	GUICtrlSetData($cmbForecastHopingSwitchMin, "", "")
+	GUICtrlSetData($cmbForecastHopingSwitchMax, "", "")
 	; Set the new data of available profiles
 	GUICtrlSetData($cmbProfile, $profileString, "<No Profiles>")
+	GUICtrlSetData($cmbForecastHopingSwitchMax, $profileString, "<No Profiles>")
+	GUICtrlSetData($cmbForecastHopingSwitchMin, $profileString, "<No Profiles>")
 EndFunc   ;==>setupProfileComboBox
 
 Func renameProfile()
@@ -110,6 +114,8 @@ EndFunc   ;==>setupProfile
 Func selectProfile()
 	If _GUICtrlComboBox_FindStringExact($cmbProfile, String($sCurrProfile)) <> -1 Then
 		_GUICtrlComboBox_SelectString($cmbProfile, String($sCurrProfile))
+		_GUICtrlComboBox_SelectString($cmbForecastHopingSwitchMin, String($icmbForecastHopingSwitchMin))
+		_GUICtrlComboBox_SelectString($cmbForecastHopingSwitchMax, String($icmbForecastHopingSwitchMax))
 	Else
 		Local $comboBoxArray = _GUICtrlComboBox_GetListArray($cmbProfile)
 		$sCurrProfile = $comboBoxArray[1]
@@ -120,6 +126,8 @@ Func selectProfile()
 		applyConfig()
 
 		_GUICtrlComboBox_SetCurSel($cmbProfile, 0)
+		_GUICtrlComboBox_SetCurSel($cmbForecastHopingSwitchMax, 0)
+		_GUICtrlComboBox_SetCurSel($cmbForecastHopingSwitchMin, 0)
 	EndIf
 
 	; Set the profile name on the village info group.

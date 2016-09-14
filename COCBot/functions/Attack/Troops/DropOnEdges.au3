@@ -1,3 +1,4 @@
+
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: DropOnEdges
 ; Description ...:
@@ -15,6 +16,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+;
 Func DropOnEdges($troop, $nbSides, $number, $slotsPerEdge = 0)
 	If $nbSides = 0 Or $number = 1 Then
 		OldDropTroop($troop, $Edges[0], $number);
@@ -32,32 +34,31 @@ Func DropOnEdges($troop, $nbSides, $number, $slotsPerEdge = 0)
 		Next
 		Return
 	EndIf
-	; Classic Four Finger attack
-	If $nbSides = 5 Then
+
+	; Classic FourFinger attack - DEMEN
+	If $nbSides = 5 Then ;Four Finger attack
 		If $slotsPerEdge = 2 Then
-			For $i = 0 To $nbSides - 4 ;Four Finger Deployment Giants
-				KeepClicks()
+			For $i = 0 To $nbSides - 4 ;FourFinger Deployment Giants
 				Local $nbTroopsPerEdge = Round($nbTroopsLeft / (($nbSides-1) - $i * 2))
 				DropOnEdge($troop, $Edges[$i], $nbTroopsPerEdge, $slotsPerEdge, $Edges[$i + 2], $i)
 				$nbTroopsLeft -= $nbTroopsPerEdge * 2
-				ReleaseClicks()
 			Next
 		Else
-			For $i = 0 To $nbSides - 5 ;Four Finger Deployment Barch
-				KeepClicks()
+			For $i = 0 To $nbSides - 5 ;FourFinger Deployment Barch
 				Local $nbTroopsPerEdge = Round($nbTroopsLeft / (($nbSides-1) - $i * 2))
 				DropOnEdge($troop, $Edges[$i], $nbTroopsPerEdge, $slotsPerEdge, $Edges[$i + 2], $i, $nbSides)
 				$nbTroopsLeft -= $nbTroopsPerEdge * 2
-				ReleaseClicks()
 			Next
 		EndIf
 		Return
 	EndIf
+	; ============ Classic FourFinger attack ============= - DEMEN
+
 	For $i = 0 To $nbSides - 1
 		KeepClicks()
 		If $nbSides = 1 Or ($nbSides = 3 And $i = 2) Then
 			Local $nbTroopsPerEdge = Round($nbTroopsLeft / ($nbSides - $i))
-			If $iMatchMode = $LB And $iChkDeploySettings[$LB] >= 5 Then ; Used for DE or TH side attack
+			If $iMatchMode = $LB And $iChkDeploySettings[$LB] >= 4 Then ; Used for DE or TH side attack
 				DropOnEdge($troop, $Edges[$BuildingEdge], $nbTroopsPerEdge, $slotsPerEdge)
 			Else
 				DropOnEdge($troop, $Edges[$i], $nbTroopsPerEdge, $slotsPerEdge)

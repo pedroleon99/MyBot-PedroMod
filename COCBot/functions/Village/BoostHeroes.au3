@@ -17,6 +17,8 @@
 
 Func BoostKing()
 	If $bTrainEnabled = False Then Return
+	
+	If $iChkForecastBoost = 1 And $currentForecast <= Number($iTxtForecastBoost, 3) Then Return
 
 	If $icmbBoostBarbarianKing > 0 And ($boostsEnabled = 1) Then
 		SetLog("Boost Barbarian King...", $COLOR_BLUE)
@@ -60,6 +62,8 @@ EndFunc   ;==>BoostKing
 
 Func BoostQueen()
 	If $bTrainEnabled = False Then Return
+	
+	If $iChkForecastBoost = 1 And $currentForecast <= Number($iTxtForecastBoost, 3) Then Return
 
 	If $icmbBoostArcherQueen > 0 And ($boostsEnabled = 1) Then
 		SetLog("Boost Archer Queen...", $COLOR_BLUE)
@@ -102,6 +106,8 @@ EndFunc   ;==>BoostQueen
 
 Func BoostWarden()
 	If $bTrainEnabled = False Then Return
+
+	If $iChkForecastBoost = 1 And $currentForecast <= Number($iTxtForecastBoost, 3) Then Return
 
 	If $icmbBoostWarden > 0 And ($boostsEnabled = 1) Then
 		SetLog("Boost Grand Warden...", $COLOR_BLUE)

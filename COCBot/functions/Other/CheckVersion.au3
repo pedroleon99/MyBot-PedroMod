@@ -12,6 +12,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+
 Func CheckVersion()
 	If $ichkVersion = 1 Then
 		CheckVersionHTML()
@@ -19,7 +20,7 @@ Func CheckVersion()
 			SetLog("WE CANNOT OBTAIN PRODUCT VERSION AT THIS TIME", $COLOR_ORANGE)
 		ElseIf VersionNumFromVersionTXT($sBotVersion) < VersionNumFromVersionTXT($lastversion) Then
 			SetLog("WARNING, YOUR BOT VERSION (" & $sBotVersion & ") IS OUT OF DATE.", $COLOR_RED)
-			SetLog("PLEASE DOWNLOAD THE LATEST (" & $lastversion & ") FROM https://MyBot.run               ", $COLOR_RED)
+			SetLog("PLEASE DOWNLOAD THE LATEST(" & $lastversion & ") FROM https://MyBot.run               ", $COLOR_RED)
 			SetLog(" ")
 			_PrintLogVersion($oldversmessage)
 		ElseIf VersionNumFromVersionTXT($sBotVersion) > VersionNumFromVersionTXT($lastversion) Then
@@ -32,7 +33,6 @@ Func CheckVersion()
 			SetLog(" ")
 			_PrintLogVersion($lastmessage)
 		EndIf
-		CheckMODVersion()
 	EndIf
 EndFunc   ;==>CheckVersion
 
@@ -69,7 +69,7 @@ Func CheckVersionHTML()
 		FileCopy(@ScriptDir & "\TestVersion.txt", $versionfile, 1)
 	Else
 		;download page from site contains last bot version
-		$hDownload = InetGet("https://raw.githubusercontent.com/TheRevenor/MyBot-6.2-Official-Release/master/LastVersions.txt", $versionfile, 0, 1)
+		$hDownload = InetGet("https://raw.githubusercontent.com/MyBotRun/MyBot/master/LastVersion.txt", $versionfile, 0, 1)
 
 		; Wait for the download to complete by monitoring when the 2nd index value of InetGetInfo returns True.
 		Local $i = 0
@@ -84,18 +84,16 @@ Func CheckVersionHTML()
 	;search version into downloaded page
 	Local $f, $f2, $line, $line2, $Casesense = 0, $chkvers = False, $chkmsg = False, $chkmsg2 = False, $i = 0
 	$lastversion = ""
-	$lastModversion = ""
 	If FileExists($versionfile) Then
 		$f = FileOpen($versionfile, 0)
 		$lastversion = IniRead($versionfile, "general", "version", "")
-		$lastModversion = IniRead($versionfile,"mod","version","")
 		;look for localized messages for the new and old versions
 		Local $versionfilelocalized = @ScriptDir & "\LastVersion_" & $sLanguage & ".txt";
 		If FileExists(@ScriptDir & "\TestVersion_" & $sLanguage & ".txt") Then
 			FileCopy(@ScriptDir & "\TestVersion_" & $sLanguage & ".txt", $versionfilelocalized, 1)
 		Else
 			;download page from site contains last bot version localized messages
-			$hDownload = InetGet("https://raw.githubusercontent.com/TheRevenor/MyBot-6.2-Official-Release/master/LastVersions_" & $sLanguage & ".txt", $versionfilelocalized, 0, 1)
+			$hDownload = InetGet("https://raw.githubusercontent.com/MyBotRun/MyBot/master/LastVersion_" & $sLanguage & ".txt", $versionfilelocalized, 0, 1)
 
 			; Wait for the download to complete by monitoring when the 2nd index value of InetGetInfo returns True.
 			Local $i = 0
@@ -110,15 +108,11 @@ Func CheckVersionHTML()
 			$f2 = FileOpen($versionfilelocalized, 0)
 			$lastmessage = IniRead($versionfilelocalized, "general", "messagenew", "")
 			$oldversmessage = IniRead($versionfilelocalized, "general", "messageold", "")
-			$lastModmessage = IniRead($versionfilelocalized,"mod","messagenew","")
-			$oldModversmessage = IniRead($versionfilelocalized,"mod","messageold","")
 			FileClose($f2)
 			FileDelete($versionfilelocalized)
 		Else
 			$lastmessage = IniRead($versionfile, "general", "messagenew", "")
 			$oldversmessage = IniRead($versionfile, "general", "messageold", "")
-			$lastModmessage = IniRead($versionfilelocalized,"mod","messagenew","")
-			$oldModversmessage = IniRead($versionfilelocalized,"mod","messageold","")
 		EndIf
 		FileClose($f)
 		FileDelete($versionfile)
@@ -150,50 +144,6 @@ Func VersionNumFromVersionTXT($versionTXT)
 	EndIf
 	Return $resultnumber
 EndFunc   ;==>VersionNumFromVersionTXT
-
-Func CheckMODVersion()
-	Local $botFile = @ScriptDir & "\MyBot.run.exe"
-	Local $lastModified, $lastPushed, $lastPushedDatetime
-	If FileExists($botFile) Then
-		$lastModified = FileGetTime($botFile, $FT_MODIFIED, $FT_STRING)
-	EndIf
-
-	Local $tempJson = @ScriptDir & "\Temp.json"
-	$hDownload = InetGet("https://api.github.com/repos/pedroleon99/MyBot-PedroMod", $tempJson, 0, 1)
-	; Wait for the download to complete by monitoring when the 2nd index value of InetGetInfo returns True.
-	Local $i = 0
-	Do
-		Sleep($iDelayCheckVersionHTML1)
-		$i += 1
-	Until InetGetInfo($hDownload, $INET_DOWNLOADCOMPLETE) or $i > 25
-	InetClose($hDownload)
-
-	Local $file = FileOpen($tempJson, 0)
-	Local $fileContent = FileRead($file)
-	Local $decodedArray = _JSONDecode($fileContent)
-	For $i = 0 To Ubound($decodedArray) - 1
-		If $decodedArray[$i][0] = "pushed_at" Then
-			$lastPushedDatetime = $decodedArray[$i][1]
-			ExitLoop
-		EndIf
-	Next
-	FileClose($file)
-	FileDelete($tempJson)
-
-	; convert UTC time to local time
-	Local $utcPushedTime = _Date_Time_EncodeSystemTime(StringMid($lastPushedDatetime, 6, 2), StringMid($lastPushedDatetime, 9, 2), StringMid($lastPushedDatetime, 1, 4), StringMid($lastPushedDatetime, 12, 2), StringMid($lastPushedDatetime, 15, 2), StringMid($lastPushedDatetime, 18, 2))
-	Local $localPushedTime = _Date_Time_SystemTimeToTzSpecificLocalTime(DllStructGetPtr($utcPushedTime))
-	$lastPushed = StringRegExpReplace(_Date_Time_SystemTimeToDateTimeStr($localPushedTime, 1), "[^[:digit:]]", "")
-
-	If $lastModified And $lastPushed Then
-		If Number($lastModified) < Number($lastPushed) Then ; check if last modified timestamp of local bot is within 5 mins of latest upload timestamp
-			MsgBox(0, "", "A new version of " & $sGitHubModRepo & " has been uploaded(" & _Date_Time_SystemTimeToDateTimeStr($localPushedTime, 1) & ") , your version might be outdated." & @CRLF & _
-			"Check and download latest version from Mod Support Menu")
-			Return False
-		EndIf
-	EndIf
-	Return True
-EndFunc
 
 Func _PrintLogVersion($message)
 	Local $messagevet = StringSplit($message, "\n", 1)

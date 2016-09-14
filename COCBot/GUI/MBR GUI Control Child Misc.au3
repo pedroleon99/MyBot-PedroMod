@@ -12,12 +12,13 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-#Cs
 Func cmbProfile()
 	saveConfig()
 
 	FileClose($hLogFileHandle)
+	$hLogFileHandle = ""		;- Writing log for each profile in SwitchAcc Mode - DEMEN (Special thanks to ezeck0001)
 	FileClose($hAttackLogFileHandle)
+	$hAttackLogFileHandle = ""	;- Writing log for each profile in SwitchAcc Mode - DEMEN (Special thanks to ezeck0001)
 
 	; Setup the profile in case it doesn't exist.
 	setupProfile()
@@ -26,8 +27,161 @@ Func cmbProfile()
 	applyConfig()
 	saveConfig()
 
+	;DonateStats
+	InitDonateStats()
+
 	SetLog("Profile " & $sCurrProfile & " loaded from " & $config, $COLOR_GREEN)
+
+	btnUpdateProfile()			;- Refreshing setting of all profiles in SwitchAcc Mode - DEMEN
+
 EndFunc   ;==>cmbProfile
+
+; Actions While Training (SleepMode, HibernateMode, SwitchAcc) - DEMEN
+
+ Func radProfileType()
+	If GUICtrlRead($radIdleProfile) = $GUI_CHECKED Then
+	   _GUICtrlComboBox_SetCurSel($cmbMatchProfileAcc, 0)
+	EndIf
+	btnUpdateProfile()
+ EndFunc   ;==>radProfileType
+
+ Func cmbMatchProfileAcc()
+
+	If _GUICtrlComboBox_GetCurSel($cmbMatchProfileAcc) = 0 Then
+		GUICtrlSetState($radIdleProfile, $GUI_CHECKED)
+	EndIf
+
+    If _GUICtrlComboBox_GetCurSel($cmbTotalAccount) <> 0 And _GUICtrlComboBox_GetCurSel($cmbMatchProfileAcc) > _GUICtrlComboBox_GetCurSel($cmbTotalAccount) Then
+	   MsgBox($MB_OK, "SwitchAcc Mode", "Account [" & _GUICtrlComboBox_GetCurSel($cmbMatchProfileAcc) & "] exceeds Total Account declared" ,30, $hGUI_BOT)
+	   _GUICtrlComboBox_SetCurSel($cmbMatchProfileAcc, 0)
+	   GUICtrlSetState($radIdleProfile, $GUI_CHECKED)
+	   btnUpdateProfile()
+	EndIf
+
+	If _GUICtrlComboBox_GetCurSel($cmbMatchProfileAcc) <> 0 And _ArraySearch($aMatchProfileAcc,_GUICtrlComboBox_GetCurSel($cmbMatchProfileAcc)) <> -1 Then
+	   MsgBox($MB_OK, "SwitchAcc Mode", "Account [" & _GUICtrlComboBox_GetCurSel($cmbMatchProfileAcc) & "] has been assigned to Profile [" & _ArraySearch($aMatchProfileAcc,_GUICtrlComboBox_GetCurSel($cmbMatchProfileAcc)) + 1 & "]" ,30, $hGUI_BOT)
+	   _GUICtrlComboBox_SetCurSel($cmbMatchProfileAcc, 0)
+	   GUICtrlSetState($radIdleProfile, $GUI_CHECKED)
+	EndIf
+	btnUpdateProfile()
+
+	If _GUICtrlComboBox_GetCurSel($cmbMatchProfileAcc) <> 0 And UBound(_ArrayFindAll($aMatchProfileAcc,_GUICtrlComboBox_GetCurSel($cmbMatchProfileAcc))) > 1 Then
+	   MsgBox($MB_OK, "SwitchAcc Mode", "Account [" & _GUICtrlComboBox_GetCurSel($cmbMatchProfileAcc) & "] has been assigned to another profile" ,30, $hGUI_BOT)
+	   _GUICtrlComboBox_SetCurSel($cmbMatchProfileAcc, 0)
+	   GUICtrlSetState($radIdleProfile, $GUI_CHECKED)
+	   btnUpdateProfile()
+	EndIf
+
+ EndFunc   ;==>cmbMatchProfileAcc
+
+ Func btnUpdateProfile()
+
+    saveConfig()
+	setupProfile()
+	readConfig()
+	applyConfig()
+	saveConfig()
+
+   $ProfileList = _GUICtrlComboBox_GetListArray($cmbProfile)
+   $nTotalProfile = _GUICtrlComboBox_GetCount($cmbProfile)
+
+   For $i = 0 To 7
+	  If $i <= $nTotalProfile - 1 Then
+		 $aconfig[$i] = $sProfilePath & "\" & $ProfileList[$i + 1] & "\config.ini"
+		 $aProfileType[$i] = IniRead($aconfig[$i], "Switch Account", "Profile Type", 3)
+		 $aMatchProfileAcc[$i] = IniRead($aconfig[$i], "Switch Account", "Match Profile Acc", "")
+
+		 If $i <= 3 Then
+			For $j = $grpVillageAcc[$i] To $lblHourlyStatsDarkAcc[$i]
+			   GUICtrlSetState($j, $GUI_SHOW)
+			Next
+		 EndIf
+
+		 Switch $aProfileType[$i]
+		 Case 1
+			GUICtrlSetData($lblProfileList[$i],"Profile [" & $i+1 & "]: " & $ProfileList[$i+1] & " - Acc [" & $aMatchProfileAcc[$i] & "] - Active")
+			GUICtrlSetState($lblProfileList[$i], $GUI_ENABLE)
+			If $i <= 3 Then GUICtrlSetData($grpVillageAcc[$i], "Village: " & $ProfileList[$i+1] & " (Active)")
+
+		 Case 2
+			GUICtrlSetData($lblProfileList[$i],"Profile [" & $i+1 & "]: " & $ProfileList[$i+1] & " - Acc [" & $aMatchProfileAcc[$i] & "] - Donate")
+			GUICtrlSetState($lblProfileList[$i], $GUI_ENABLE)
+			If $i <= 3 Then
+			   GUICtrlSetData($grpVillageAcc[$i], "Village: " & $ProfileList[$i+1] & " (Donate)")
+			   For $j = $aStartHide[$i] To $lblHourlyStatsDarkAcc[$i]
+				  GUICtrlSetState($j, $GUI_HIDE)
+			   Next
+			EndIf
+		 Case 3
+			GUICtrlSetData($lblProfileList[$i],"Profile [" & $i+1 & "]: " & $ProfileList[$i+1] & " - Acc [" & $aMatchProfileAcc[$i] & "] - Idle")
+			GUICtrlSetState($lblProfileList[$i], $GUI_DISABLE)
+			If $i <= 3 Then
+			   GUICtrlSetData($grpVillageAcc[$i], "Village: " & $ProfileList[$i+1] & " (Idle)")
+			   For $j = $aStartHide[$i] To $lblHourlyStatsDarkAcc[$i]
+				  GUICtrlSetState($j, $GUI_HIDE)
+			   Next
+			EndIf
+		 EndSwitch
+
+	  Else
+		 GUICtrlSetData($lblProfileList[$i], "")
+		 If $i <= 3 Then
+			For $j = $grpVillageAcc[$i] to $lblHourlyStatsDarkAcc[$i]
+			   GUICtrlSetState($j, $GUI_HIDE)
+			Next
+		 EndIf
+	  EndIf
+   Next
+
+ EndFunc
+
+ Func chkSwitchAcc()
+	If GUICtrlRead($chkSwitchAcc) = $GUI_CHECKED Then
+	   If _GUICtrlComboBox_GetCount($cmbProfile) <= 1 Then
+		  GUICtrlSetState($chkSwitchAcc, $GUI_UNCHECKED)
+		  MsgBox($MB_OK, "SwitchAcc Mode", "Cannot enable SwitchAcc Mode" & @CRLF & "You have only " & _GUICtrlComboBox_GetCount($cmbProfile) & " Profile set", 30, $hGUI_BOT)
+	   Else
+		  For $i = $lblTotalAccount To $radNormalSwitch
+			 GUICtrlSetState($i, $GUI_ENABLE)
+		  Next
+		  If GUICtrlRead($radNormalSwitch) = $GUI_CHECKED And GUICtrlRead($chkUseTrainingClose) = $GUI_CHECKED Then
+			 GUICtrlSetState($radSmartSwitch, $GUI_CHECKED)
+		  EndIf
+	   EndIf
+	Else
+		For $i = $lblTotalAccount To $radNormalSwitch
+			 GUICtrlSetState($i, $GUI_DISABLE)
+		  Next
+	EndIf
+ EndFunc   ;==>chkSwitchAcc
+
+ Func radNormalSwitch()
+	If GUICtrlRead($chkUseTrainingClose) = $GUI_CHECKED Then
+	   GUICtrlSetState($radSmartSwitch, $GUI_CHECKED)
+	   MsgBox($MB_OK, "SwitchAcc Mode", "Cannot enable Sleep Mode together with Normal Switch Mode", 30, $hGUI_BOT)
+	EndIf
+ EndFunc   ;==>radNormalSwitch  - Normal Switch is not on the same boat with Sleep Combo
+
+Func chkUseTrainingClose()
+	If GUICtrlRead($chkUseTrainingClose) = $GUI_CHECKED And GUICtrlRead($chkSwitchAcc) = $GUI_CHECKED And GUICtrlRead($radNormalSwitch) = $GUI_CHECKED Then
+	   GUICtrlSetState($chkUseTrainingClose, $GUI_UNCHECKED)
+	   MsgBox($MB_OK, "SwitchAcc Mode", "Cannot enable Sleep Mode together with Normal Switch Mode", 30, $hGUI_BOT)
+	EndIf
+EndFunc   ;==>chkUseTrainingClose
+
+ Func chkRestartAndroid()
+	If GUICtrlRead($chkRestartAndroid) = $GUI_CHECKED Then
+		For $i = $txtRestartAndroidSearchLimit To $lblRestartAndroidTrainError
+			GUICtrlSetState($i, $GUI_ENABLE)
+		Next
+	Else
+		For $i = $txtRestartAndroidSearchLimit To $lblRestartAndroidTrainError
+			GUICtrlSetState($i, $GUI_DISABLE)
+		Next
+	EndIf
+ EndFunc   ;==>chkRestartAndroid
+
+; ============= SwitchAcc Mode ============= - DEMEN
 
 Func btnAddConfirm()
 	Switch @GUI_CtrlId
@@ -63,12 +217,15 @@ Func btnAddConfirm()
 
 			If GUICtrlGetState($btnDelete) <> $GUI_ENABLE Then GUICtrlSetState($btnDelete, $GUI_ENABLE)
 			If GUICtrlGetState($btnRename) <> $GUI_ENABLE Then GUICtrlSetState($btnRename, $GUI_ENABLE)
+			
+			;DonateStats
+			InitDonateStats()
+
 		Case Else
 			SetLog("If you are seeing this log message there is something wrong.", $COLOR_RED)
 	EndSwitch
 EndFunc   ;==>btnAddConfirm
-#Ce
-#Cs
+
 Func btnDeleteCancel()
 	Switch @GUI_CtrlId
 		Case $btnDelete
@@ -105,8 +262,7 @@ Func btnDeleteCancel()
 		GUICtrlSetState($btnRename, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>btnDeleteCancel
-#Ce
-#Cs
+
 Func btnRenameConfirm()
 	Switch @GUI_CtrlId
 		Case $btnRename
@@ -144,7 +300,6 @@ Func btnRenameConfirm()
 			SetLog("If you are seeing this log message there is something wrong.", $COLOR_RED)
 	EndSwitch
 EndFunc   ;==>btnRenameConfirm
-#Ce
 Func cmbBotCond()
 	If _GUICtrlComboBox_GetCurSel($cmbBotCond) = 15 Then
 		If _GUICtrlComboBox_GetCurSel($cmbHoursStop) = 0 Then _GUICtrlComboBox_SetCurSel($cmbHoursStop, 1)

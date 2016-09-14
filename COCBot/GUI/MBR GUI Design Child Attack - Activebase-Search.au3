@@ -115,6 +115,12 @@ Local $x = 25, $y = 45
 			GetTranslated(625,101, -1)
  			_GUICtrlSetTip(-1, $txtTip)
  			GUICtrlSetOnEvent(-1, "chkABSpellsWait")
+
+		$y += 21
+		$chkABNoLeague = GUICtrlCreateCheckbox("No League", $x, $y, -1, -1)
+			$txtTip ="Search for a base that has no league."
+			_GUICtrlSetTip(-1, $txtTip)
+
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 Local $x = 220, $y = 45

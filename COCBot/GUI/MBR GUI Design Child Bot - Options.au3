@@ -15,6 +15,8 @@
 ;$hGUI_BotOptions = GUICreate("", $_GUI_MAIN_WIDTH - 28, $_GUI_MAIN_HEIGHT - 255 - 28, 5, 25, BitOR($WS_CHILD, $WS_TABSTOP), -1, $hGUI_BOT)
 ;GUISwitch($hGUI_BotOptions)
 
+Global $FirstControlToHideMOD = GUICtrlCreateDummy()
+
 Local $x = 25, $y = 45
 $grpLanguages = GUICtrlCreateGroup(GetTranslated(636,83, "GUI Language"), $x - 20, $y - 20, 210, 47)
 	$y -=2
@@ -29,18 +31,12 @@ $grpLanguages = GUICtrlCreateGroup(GetTranslated(636,83, "GUI Language"), $x - 2
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 $y += 54
-$grpOnLoadBot = GUICtrlCreateGroup(GetTranslated(636,2, "When Bot Loads"), $x - 20, $y - 20, 210, 140)
+$grpOnLoadBot = GUICtrlCreateGroup(GetTranslated(636,2, "When Bot Loads"), $x - 20, $y - 20, 210, 120)
 	$y -= 4
     $chkDisableSplash = GUICtrlCreateCheckbox(GetTranslated(636,100, "Disable Splash Screen"), $x, $y, -1, -1)
         $txtTip = GetTranslated(636,101, "Disables the splash screen on startup.")
         GUICtrlSetTip(-1, $txtTip)
         GUICtrlSetState(-1, $GUI_UNCHECKED)
-	$y += 20
-	$chkConnection = GUICtrlCreateCheckbox("Check Internet Connection", $x, $y, -1, -1)
-		$txtTip = "Check if your Internet Connection Lost Will Close Emulator" & @CRLF & _
-				"     AND IF YOUR INTERNET RECONNECTED, WILL BE BACK START EMULATOR"
-		_GUICtrlSetTip(-1, $txtTip)
-		GUICtrlSetState(-1, $GUI_CHECKED)
     $y += 20
 	$chkVersion = GUICtrlCreateCheckbox(GetTranslated(636,3, "Check for Updates"), $x, $y, -1, -1)
 		$txtTip = GetTranslated(636,4, "Check if you are running the latest version of the bot.")
@@ -158,16 +154,16 @@ $y +=48
 $grpTimeWakeUp = GUICtrlCreateGroup(GetTranslated(636,85, "Remote Device"), $x - 20, $y - 20 , 225, 42)
 	$y -= 5
 	$lblTimeWakeUp = GUICtrlCreateLabel(GetTranslated(636,86, "When 'Another Device' wait") & ":", $x - 10, $y + 2, -1, -1)
-	$txtTip = GetTranslated(636,87, "Enter the time to wait (in seconds) before the Bot reconnects when another device took control.")
+	$txtTip = GetTranslated(636,87, "Enter the time to wait (in Minutes) before the Bot reconnects when another device took control.")
 		_GUICtrlSetTip(-1, $txtTip)
-	$txtTimeWakeUp = GUICtrlCreateInput("240", $x + 127, $y - 1, 35, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+	$txtTimeWakeUp = GUICtrlCreateInput("2", $x + 127, $y - 1, 35, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 		_GUICtrlSetTip(-1, $txtTip)
 		GUICtrlSetLimit(-1, 3)
-	$lblTimeWakeUpSec = GUICtrlCreateLabel(GetTranslated(603,6, "sec."), $x + 165, $y + 2, -1, -1)
+	$lblTimeWakeUpSec = GUICtrlCreateLabel(GetTranslated(603,10, "min."), $x + 165, $y + 2, -1, -1)
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 $y+= 51
-$grpOtherExpert = GUICtrlCreateGroup(GetTranslated(636,45, "Other Options"), $x - 20, $y - 20, 225, 110)
+$grpOtherExpert = GUICtrlCreateGroup(GetTranslated(636,45, "Other Options"), $x - 20, $y - 20, 225, 90)
 $chkSinglePBTForced = GUICtrlCreateCheckbox(GetTranslated(636,61, "Force Single PB logoff"), $x-5, $y, -1, -1)
 	GUICtrlSetOnEvent(-1, "chkSinglePBTForced")
 	_GUICtrlSetTip(-1, GetTranslated(636,62, "This forces bot to exit CoC only one time prior to normal start of PB"))
@@ -187,13 +183,8 @@ $txtPBTimeForcedExit = GUICtrlCreateInput("16", $x + 130, $y, 30, 16, BitOR($GUI
 	GUICtrlSetLimit(-1, 3)
 	GUICtrlSetState(-1, $GUI_DISABLE)
 $lblPBTimeForcedExit1 = GUICtrlCreateLabel( GetTranslated(603,9, -1), $x+162, $y+1, 27, 15)
-$y +=24
-$chkCloseTakeBreak = GUICtrlCreateCheckbox("Close Emulator When TakeBreak", $x-5, $y-5, -1, -1)
-	$txtTip = "This forces bot to Close Emulator only one time prior to normal start of PB"
-	_GUICtrlSetTip(-1, $txtTip)
-	GUICtrlSetOnEvent(-1, "chkClosePBEmu")
-	GUICtrlSetState(-1, $GUI_DISABLE)
-$y +=21
+
+$y +=30
 $chkTotalCampForced = GUICtrlCreateCheckbox(GetTranslated(636,46, "Force Total Army Camp")&":", $x-5, $y-5, -1, -1)
 	GUICtrlSetOnEvent(-1, "chkTotalCampForced")
 	_GUICtrlSetTip(-1, GetTranslated(636,47, "If not detected set army camp values (instead ask)"))

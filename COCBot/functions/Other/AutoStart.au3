@@ -15,7 +15,6 @@
 Func AutoStart()
 	If $ichkAutoStart = 1 Or $restarted = 1 Then
 		SetLog("Bot Auto Starting in " & $ichkAutoStartDelay & " seconds", $COLOR_RED)
-		_PushToPushBullet($iOrigPushBullet & " | Bot Auto Starting in " & $ichkAutoStartDelay & " seconds")
 		Sleep($ichkAutoStartDelay * 1000)
 		btnStart()
 	EndIf

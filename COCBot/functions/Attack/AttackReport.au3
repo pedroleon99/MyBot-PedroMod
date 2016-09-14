@@ -174,9 +174,8 @@ Func AttackReport()
 	SetLog("Stars earned: " & $starsearned)
 
 	Local $AtkLogTxt
+	$AtkLogTxt = String($nCurProfile) & " |" & _NowTime(4) & "|"  ; adding Acc No. in Attack Log - SwitchAcc - DEMEN
 	$iLastAtkTime = _NowTime(4) ;loot hour:mins last raid Added by CDudz Modified by CDudz
-	$AtkLogTxt = StringFormat("%1d", _GUICtrlComboBox_GetCurSel($cmbProfile) + 1) & "|"
-	$AtkLogTxt &= "" & _NowTime(4) & "|"
 	$AtkLogTxt &= StringFormat("%5d", $iTrophyCurrent) & "|"
 	$AtkLogTxt &= StringFormat("%6d", $SearchCount) & "|"
 	$AtkLogTxt &= StringFormat("%7d", $iGoldLast) & "|"
@@ -209,14 +208,20 @@ Func AttackReport()
 		EndIf
 	EndIf
 
+
+    CoCStats($starsearned)
+
 	If $FirstAttack = 0 Then $FirstAttack = 1
 	$iGoldTotal += $iGoldLast + $iGoldLastBonus
+	If $ichkSwitchAcc = 1 Then $aGoldTotalAcc[$nCurProfile-1] += $iGoldLast + $iGoldLastBonus ; Separate Stats per Each Account - SwitchAcc Mode - DEMEN
 	$iTotalGoldGain[$iMatchMode] += $iGoldLast + $iGoldLastBonus
 	$iElixirTotal += $iElixirLast + $iElixirLastBonus
 	$iTotalElixirGain[$iMatchMode] += $iElixirLast + $iElixirLastBonus
+	If $ichkSwitchAcc = 1 Then $aElixirTotalAcc[$nCurProfile-1] += $iElixirLast + $iElixirLastBonus ; Separate Stats per Each Account - SwitchAcc Mode - DEMEN
 	If $iDarkStart <> "" Then
 		$iDarkTotal += $iDarkLast + $iDarkLastBonus
 		$iTotalDarkGain[$iMatchMode] += $iDarkLast + $iDarkLastBonus
+		If $ichkSwitchAcc = 1 Then $aDarkTotalAcc[$nCurProfile-1] += $iDarkLast + $iDarkLastBonus ; Separate Stats per Each Account - SwitchAcc Mode - DEMEN
 	EndIf
 	$iTrophyTotal += $iTrophyLast
 	$iTotalTrophyGain[$iMatchMode] += $iTrophyLast
@@ -228,6 +233,7 @@ Func AttackReport()
 		EndIf
 	EndIf
 	$iAttackedVillageCount[$iMatchMode] += 1
+	If $ichkSwitchAcc = 1 Then $aAttackedCountAcc[$nCurProfile-1] += 1 ; SwitchAcc Mod - DEMEN
 	UpdateStats()
 
 EndFunc   ;==>AttackReport

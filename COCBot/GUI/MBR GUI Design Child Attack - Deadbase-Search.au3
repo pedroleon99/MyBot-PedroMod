@@ -120,6 +120,27 @@ Local $x = 25, $y = 45
 			GetTranslated(625,101, "Warning: Do not enable unless you have spell factory or bot will not attack!")
  			_GUICtrlSetTip(-1, $txtTip)
  			GUICtrlSetOnEvent(-1, "chkDBSpellsWait")
+
+		$y += 21
+		$chkDBNoLeague = GUICtrlCreateCheckbox("No League", $x, $y, -1, -1)
+			$txtTip ="Search for a base that has no league."
+			_GUICtrlSetTip(-1, $txtTip)
+
+			$y += 21 ; Check Collectors Outside
+		$chkDBMeetCollOutside = GUICtrlCreateCheckbox("Collectors outside", $x, $y, -1, -1)
+			$txtTip = "Search for bases that has their collectors outside."
+			GUICtrlSetOnEvent(-1, "chkDBMeetCollOutside")
+			_GUICtrlSetTip(-1, $txtTip)
+			GUICtrlSetState(-1, $GUI_UNCHECKED)
+			GUICtrlCreateLabel("Min: ", $x + 120, $y + 4, -1, -1)
+		$txtDBMinCollOutsidePercent = GUICtrlCreateInput("50", $x + 143, $y, 31, 20, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			$txtTip = "Set the Min. % of collectors outside to search for on a village to attack."
+			_GUICtrlSetTip(-1, $txtTip)
+			GUICtrlSetState(-1, $GUI_DISABLE)
+			GUICtrlSetLimit(-1, 3)
+			GUICtrlSetData(-1, 50)
+			GUICtrlCreateLabel("%", $x + 176, $y + 4, -1, -1)
+			_GUICtrlSetTip(-1, $txtTip)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 Local $x = 220, $y = 45

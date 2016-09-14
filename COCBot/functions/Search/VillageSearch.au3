@@ -34,9 +34,6 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 		Next
 	EndIf
 
-	_WinAPI_EmptyWorkingSet(GetAndroidPid()) ; Reduce Working Set of Android Process
-	_WinAPI_EmptyWorkingSet(@AutoItPID) ; Reduce Working Set of Bot
-
 	If _Sleep($iDelayVillageSearch1) Then Return
 	$Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
 	checkAttackDisable($iTaBChkAttack, $Result) ;last check to see If TakeABreak msg on screen for fast PC from PrepareSearch click
@@ -103,7 +100,6 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 		If $Restart = True Then Return ; exit func
 
 		If Mod(($iSkipped + 1), 100) = 0 Then
-			_WinAPI_EmptyWorkingSet(WinGetProcess($HWnD)) ; reduce Android memory
 			If _Sleep($iDelayRespond) Then Return
 			If CheckZoomOut() = False Then Return
 		EndIf
@@ -222,35 +218,83 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 			SetLog($GetResourcesTXT, $COLOR_GREEN, "Lucida Console", 7.5)
 			SetLog("      " & "Dead Base Found!", $COLOR_GREEN, "Lucida Console", 7.5)
 			$logwrited = True
-;============================================== Check Collectors Outside ==============================================
-			If $ichkDBMeetCollOutside = 1 Then
-				If AreCollectorsOutside($iDBMinCollOutsidePercent) Then
-					SetLog("Collectors are outside, match found !", $COLOR_GREEN, "Lucida Console", 7.5)
-					$iMatchMode = $DB
-					If $debugDeadBaseImage = 1 Then
-					_CaptureRegion()
-					_GDIPlus_ImageSaveToFile($hBitmap, @ScriptDir & "\Zombies\" & $Date & " at " & $Time & ".png")
-					_WinAPI_DeleteObject($hBitmap)
+
+				If $iChkNoLeague[$DB] = 1 Then
+					If _CheckPixel($aNoLeague, True) Then
+						SetLog("      " & "Dead Base is not in a league, match found !", $COLOR_GREEN, "Lucida Console", 7.5)
+
+						If $ichkDBMeetCollOutside = 1 Then
+							If AreCollectorsOutside($iDBMinCollOutsidePercent) Then
+								SetLog("Collectors are outside, match found !", $COLOR_GREEN, "Lucida Console", 7.5)
+								$iMatchMode = $DB
+									If $debugDeadBaseImage = 1 Then
+									_CaptureRegion()
+									_GDIPlus_ImageSaveToFile($hBitmap, @ScriptDir & "\Zombies\" & $Date & " at " & $Time & ".png")
+									_WinAPI_DeleteObject($hBitmap)
+									EndIf
+					ExitLoop
+							Else
+								SetLog("Collectors are not outside, skipping search !", $COLOR_RED, "Lucida Console", 7.5)
+							EndIf
+						Else
+						$iMatchMode = $DB
+						If $debugDeadBaseImage = 1 Then
+						_CaptureRegion()
+						_GDIPlus_ImageSaveToFile($hBitmap, @ScriptDir & "\Zombies\" & $Date & " at " & $Time & ".png")
+						_WinAPI_DeleteObject($hBitmap)
+						EndIf
+					ExitLoop
+						EndIf
+					Else
+						SetLog("      " & "Dead Base is in a league, skipping search !", $COLOR_RED, "Lucida Console", 7.5)
+						$match[$DB] = False ; skip attack
 					EndIf
-			ExitLoop
-				Else
-					SetLog("Collectors are not outside, skipping search !", $COLOR_RED, "Lucida Console", 7.5)
+
+				ElseIf $iChkNoLeague[$DB] = 0 Then
+
+					If $ichkDBMeetCollOutside = 1 Then
+						If AreCollectorsOutside($iDBMinCollOutsidePercent) Then
+							SetLog("Collectors are outside, match found !", $COLOR_GREEN, "Lucida Console", 7.5)
+							$iMatchMode = $DB
+							If $debugDeadBaseImage = 1 Then
+							_CaptureRegion()
+							_GDIPlus_ImageSaveToFile($hBitmap, @ScriptDir & "\Zombies\" & $Date & " at " & $Time & ".png")
+							_WinAPI_DeleteObject($hBitmap)
+							EndIf
+					ExitLoop
+						Else
+							SetLog("Collectors are not outside, skipping search !", $COLOR_RED, "Lucida Console", 7.5)
+						EndIf
+					Else ;Normal :  NoLeague et Collectors outside décochés
+							$iMatchMode = $DB
+							If $debugDeadBaseImage = 1 Then
+							_CaptureRegion()
+							_GDIPlus_ImageSaveToFile($hBitmap, @ScriptDir & "\Zombies\" & $Date & " at " & $Time & ".png")
+							_WinAPI_DeleteObject($hBitmap)
+							EndIf
+					ExitLoop
+					EndIf
 				EndIf
-			Else
-				$iMatchMode = $DB
-				If $debugDeadBaseImage = 1 Then
-				_CaptureRegion()
-				_GDIPlus_ImageSaveToFile($hBitmap, @ScriptDir & "\Zombies\" & $Date & " at " & $Time & ".png")
-				_WinAPI_DeleteObject($hBitmap)
-				EndIf
-			ExitLoop
-			EndIf
+
 		ElseIf $match[$LB] And Not $dbBase  Then
 			SetLog($GetResourcesTXT, $COLOR_GREEN, "Lucida Console", 7.5)
 			SetLog("      " & "Live Base Found!", $COLOR_GREEN, "Lucida Console", 7.5)
 			$logwrited = True
+
+			If $iChkMeetOne[$LB] = 0 Then
+				If $iChkNoLeague[$LB] = 1 Then
+					If _CheckPixel($aNoLeague, True) Then
+						SetLog("      " & "Live Base is not in a league, match found !", $COLOR_GREEN, "Lucida Console", 7.5)
+					Else
+						SetLog("      " & "Live Base is in a league, skipping search !", $COLOR_RED, "Lucida Console", 7.5)
+						$match[$LB] = False ; skip attack
+					EndIf
+				EndIf
+			EndIf
+			If $match[$LB] Then
 			$iMatchMode = $LB
 			ExitLoop
+			EndIf
 		ElseIf $match[$LB] Or $match[$DB]  Then
 			If $OptBullyMode = 1 And ($SearchCount >= $ATBullyMode) Then
 				If $SearchTHLResult = 1 Then
@@ -291,7 +335,7 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 		If $noMatchTxt <> "" Then
 			;SetLog(_PadStringCenter(" " & StringMid($noMatchTxt, 3) & " ", 50, "~"), $COLOR_PURPLE)
 			SetLog($GetResourcesTXT, $COLOR_BLACK, "Lucida Console", 7.5)
-			SetLog("      " & StringMid($noMatchTxt, 3), $COLOR_ORANGE, "Lucida Console", 7.5)
+			SetLog("      " & StringMid($noMatchTxt, 3), $COLOR_BLACK, "Lucida Console", 7.5)
 			$logwrited = True
 		EndIf
 
@@ -310,6 +354,7 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 		;If SWHTSearchLimit($iSkipped + 1) Then Return True
 		; Return Home on Search limit
 		If SearchLimit($iSkipped + 1) Then Return True
+	    If SearchLimitRestartAndroid($SearchCount) Then Return True
 
 		If checkAndroidTimeLag() = True Then
 		   $Restart = True
@@ -366,9 +411,11 @@ Func VillageSearch() ;Control for searching a village that meets conditions
 
 		$iSkipped = $iSkipped + 1
 		$iSkippedVillageCount += 1
+		If $ichkSwitchAcc = 1 Then $aSkippedVillageCountAcc[$nCurProfile - 1] += 1 ; SwitchAcc Mod - DEMEN
 		If $iTownHallLevel <> "" Then
 			$iSearchCost += $aSearchCost[$iTownHallLevel - 1]
 			$iGoldTotal -= $aSearchCost[$iTownHallLevel - 1]
+			If $ichkSwitchAcc = 1 Then $aGoldTotalAcc[$nCurProfile -1] -= $aSearchCost[$iTownHallLevel - 1] ; Separate Stats per Each Account - SwitchAcc Mode - DEMEN
 		EndIf
 		UpdateStats()
 
@@ -451,6 +498,25 @@ Func SearchLimit($iSkipped)
 		Return False
 	EndIf
 EndFunc   ;==>SearchLimit
+
+Func SearchLimitRestartAndroid($SearchCount); Restart-Android after long search - DEMEN
+	If $iChkRestartAndroid = 1 And Mod($SearchCount, Number($iRestartAndroidSearchlimit)) = 0  Then
+		$Is_SearchLimit = True
+		Setlog("So many skips, Restart CoC and Android")
+		  MakeScreenshot($dirTemp, "jpg")
+		  PoliteCloseCoC()
+		  CloseAndroid()
+		  If _SleepStatus(10000) Then Return
+		  OpenAndroid()
+		  OpenCoC()
+ 		getArmyCapacity(True, True)
+ 		$Restart = True ; set force runbot restart flag
+ 		$Is_ClientSyncError = True ; set OOS flag for fast restart
+		Return True
+	Else
+		Return False
+    EndIf
+ EndFunc; ==> SearchLimitRestartAndroid (Restart Android after long search - DEMEN)
 
 
 Func WriteLogVillageSearch ($x)

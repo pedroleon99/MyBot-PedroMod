@@ -1,3 +1,4 @@
+
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: LauchTroop
 ; Description ...:
@@ -52,7 +53,7 @@ Func LaunchTroop2($listInfoDeploy, $CC, $King, $Queen, $Warden)
 	Local $pixelRandomDrop[2]
 	Local $pixelRandomDropcc[2]
 
-	If ($iChkRedArea[$iMatchMode] = 1 And $iChkDeploySettings[$iMatchMode] <> 4) Then
+	If ($iChkRedArea[$iMatchMode] = 1 And $iChkDeploySettings[$iMatchMode] <> 4) Then 	; SmartAttack cannot stand together with FourFinger - DEMEN
 		For $i = 0 To UBound($listInfoDeploy) - 1
 			Local $troop = -1
 			Local $troopNb = 0

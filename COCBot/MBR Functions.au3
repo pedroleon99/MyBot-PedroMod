@@ -13,12 +13,11 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
+#include "functions\Other\Synchronization.au3"
 #include "functions\Other\OnAutoItErrorRegisterBot.au3"
-#include "functions\GUI\GUI_State.au3"
-#include "functions\GUI\SplashStep.au3"
 #include "functions\Other\UpdateStatsWall.au3"
-#include "functions\Config\profileFunctions.au3"
 
+#include "functions\Config\profileFunctions.au3"
 #include "functions\Config\applyConfig.au3"
 #include "functions\Config\strategies.au3"
 #include "functions\Config\readConfig.au3"
@@ -100,9 +99,6 @@
 #include "functions\Attack\Troops\SelectDropTroop.au3"
 #include "functions\Attack\Troops\SetSleep.au3"
 
-; TheRevenor
-#include "functions\BotInfo\runningBots.au3"
-
 #include "functions\CreateArmy\_TrainMoveBtn.au3"
 #include "functions\CreateArmy\BarracksStatus.au3"
 #include "functions\CreateArmy\CheckFullArmy.au3"
@@ -141,7 +137,7 @@
 #include "functions\Main Screen\RemoveGhostTrayIcons.au3"
 #include "functions\Main Screen\waitMainScreen.au3"
 
-; Android support for MEmu, Droid4X, Nox, BlueStacks...
+; Android support for MEmu, LeapDroid, Droid4X, Nox, BlueStacks...
 #include "functions\Android\AndroidMenuShortcuts.au3"
 #include "functions\Android\Close_OpenCoC.au3"
 #include "functions\Android\ZoomOut.au3"
@@ -151,13 +147,11 @@
 #include "functions\Android\OpenDroid4X.au3"
 #include "functions\Android\CloseDroid4X.au3"
 #include "functions\Android\AndroidMEmu.au3"
+#include "functions\Android\AndroidLeapDroid.au3"
 #include "functions\Android\AndroidNox.au3"
 #include "functions\Android\getBSPos.au3"
 #include "functions\Android\UniversalCloseWaitOpenCoC.au3"
 #include "functions\Android\AndroidEmbed.au3"
-
-; TheRevenor
-#include "functions\Android\BlueStacks1Shortcuts.au3"
 
 #include "functions\Other\WerFaultClose.au3"
 #include "functions\Other\_NumberFormat.au3"
@@ -171,7 +165,7 @@
 #include "functions\Other\ClickOkay.au3"
 #include "functions\Other\ClickRemove.au3"
 #include "functions\Other\CreateLogFile.au3"
-#include "functions\Other\MBRFunc.au3"
+;#include "functions\Other\MBRFunc.au3"
 #include "functions\Other\DebugImageSave.au3"
 #include "functions\Other\DebugSaveDesktopImage.au3"
 #include "functions\Other\ExtendedErrorInfo.au3"
@@ -194,6 +188,7 @@
 #include "functions\Other\CheckVersion.au3"
 #include "functions\Other\CloseRunningBot.au3"
 #include "functions\Other\WindowSystemMenu.au3"
+#include "functions\Other\image_get_info.au3"
 
 #include "functions\Other\ComError.au3"
 #include "functions\Other\IsPage.au3"
@@ -201,12 +196,6 @@
 #include "functions\Other\KillProcess.au3"
 #include "functions\Other\LaunchConsole.au3"
 #include "functions\Other\ADB.au3"
-
-; TheRevenor
-#include "functions\Other\JSON.au3"
-
-; Check Connections - Added by TheRevenor
-#include "functions\Other\CheckConnection.au3"
 
 #include "functions\Pixels\_CaptureRegion.au3"
 #include "functions\Pixels\_ColorCheck.au3"
@@ -273,28 +262,18 @@
 #include "functions\Village\StarBonus.au3"
 #include "functions\Other\ClickZoneR.au3"
 
-; TheRevenor
-#include "functions\Village\ProfileSwitch.au3"
+; RoroTiti MOD's functions
 
-; Attack files - Added by LunaEclipse
-#include "functions\Attack\attackFunctions.au3"
-#include "functions\Attack\unitInfo.au3"
+#include "functions\RoroTiti MODs\CoCStats.com.au3"
 
-; ExtremeZap - Added by TheRevenor
-#include "functions\Mod\SmartZap\ExtremeZap.au3"
-
-; SmartZap files - Added by LunaEclipse
-#include "functions\Mod\SmartZap\drillSearch.au3"
-#include "functions\Mod\SmartZap\smartZap.au3"
-
-; Android files - Added by LunaEclipse
-#include "functions\Android\modifyAndroid.au3"
-
-; DonateStats - Added by Cutidudz
-#include "functions\Mod\DonateStats\DonateStats.au3"
-
-; Check Collector Outside
-#include "functions\Mod\CollectorsOutside\AreCollectorsOutside.au3"
-
-; Multy Farming - Added by TheRevenor
-#include "functions\Mod\Multy\MultyFarmingRevenor.au3"
+#include "functions\RoroTiti MODs\AreCollectorsOutside.au3"
+#include "functions\RoroTiti MODs\ArmyPlanner.au3"
+#include "functions\RoroTiti MODs\AutoUpgrade.au3"
+#include "functions\RoroTiti MODs\ClanHop.au3"
+#include "functions\RoroTiti MODs\DonateStats.au3"
+#include "functions\RoroTiti MODs\drillSearch.au3"
+#include "functions\RoroTiti MODs\GUIControl.au3"
+#include "functions\RoroTiti MODs\ProfileSwitch.au3"
+#include "functions\RoroTiti MODs\smartZap.au3"
+#include "functions\RoroTiti MODs\SwitchAcc.au3"
+#include "functions\RoroTiti MODs\TreasuryCollect.au3"

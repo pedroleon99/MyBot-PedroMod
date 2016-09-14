@@ -45,7 +45,7 @@ Func Initiate()
 		;		$RunState = True
 
 		If Not $bSearchMode Then
-			AdlibRegister("SetTime", 1000)
+			;AdlibRegister("SetTime", 1000)
 			If $restarted = 1 Then
 				$restarted = 0
 				IniWrite($config, "general", "Restarted", 0)
@@ -59,6 +59,11 @@ Func Initiate()
 		If Not $RunState Then Return
 
 		ZoomOut()
+
+		If $ichkSwitchAcc = 1 Then ; SwitchAcc - Demen
+		   InitiateSwitchAcc()
+		EndIf
+
 		If Not $RunState Then Return
 
 		If Not $bSearchMode Then
@@ -137,6 +142,7 @@ Func IsStopped()
 EndFunc   ;==>IsStopped
 
 Func btnStart()
+   btnUpdateProfile()					;  SwitchAcc - DEMEN
 	; decide when to run
 	EnableControls($frmBotBottom, False, $frmBotBottomCtrlState)
 	Local $RunNow = $BotAction <> $eBotNoAction
@@ -148,10 +154,12 @@ Func btnStart()
 EndFunc   ;==>btnStart
 
 Func btnStop()
-	; always invoked in MyBot.run.au3!
-	EnableControls($frmBotBottom, False, $frmBotBottomCtrlState)
-	$RunState = False ; Exit BotStart()
-	$BotAction = $eBotStop
+	If $RunState Then
+		; always invoked in MyBot.run.au3!
+		EnableControls($frmBotBottom, False, $frmBotBottomCtrlState)
+		$RunState = False ; Exit BotStart()
+		$BotAction = $eBotStop
+	EndIf
 EndFunc   ;==>btnStop
 
 Func btnSearchMode()

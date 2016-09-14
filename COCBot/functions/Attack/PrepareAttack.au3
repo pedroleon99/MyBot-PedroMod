@@ -273,7 +273,6 @@ Func IsSpecialTroopToBeUsed($pMatchMode, $pTroopType)
 						 If $ichkSkeletonSpell[$DB] = 1 Then Return True
 				EndSwitch
 #comments-end
-
 			Case Else
 				Return False
 		EndSwitch

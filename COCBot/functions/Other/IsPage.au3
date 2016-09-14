@@ -25,9 +25,28 @@ Func IsTrainPage($writelogs = True)
 
 	If $i <= 28 Then
 		If ($DebugSetlog = 1 Or $DebugClick = 1) And $writelogs = True Then Setlog("**Train Window OK**", $COLOR_ORANGE)
+		If $iChkRestartAndroid = 1 Then $iTrainWindowErrorCounter = 0		;	Reset error counter - Restart Android - DEMEN
 		Return True
 	Else
 		If $writelogs = True Then SetLog("Cannot find train Window.", $COLOR_RED) ; in case of $i = 29 in while loop
+
+		;	Restart Android - DEMEN
+		If $iChkRestartAndroid = 1 Then
+			If $iTrainWindowErrorCounter >= $iRestartAndroidTrainError Then
+				MakeScreenshot($dirTemp, "jpg")
+				SetLog("Trying restart Android to fix graphic error.", $COLOR_RED)
+				PoliteCloseCoC()
+				CloseAndroid()
+				$iTrainWindowErrorCounter = 0
+				If _SleepStatus(10000) Then Return
+				OpenAndroid()
+				OpenCoC()
+				RunBot()
+			Else
+				$iTrainWindowErrorCounter += 1
+			EndIf
+		EndIf	;	=== Restart Android - DEMEN
+
 		If $debugImageSave = 1 Then DebugImageSave("IsTrainPage_")
 		Return False
 	EndIf

@@ -68,7 +68,7 @@ Local $x = $xStart +  25, $y = $yStart +  75 + 25
 		$x -= 5
 		$icnBarb = GUICtrlCreateIcon ($pIconLib, $eIcnBarbarian, $x - 10, $y - 5, 24, 24)
 		$lblBarbarians = GUICtrlCreateLabel($sTxtBarbarians, $x + 20, $y, -1, -1)
-		$txtNumBarb = GUICtrlCreateInput("50", $x + 80, $y - 3, 30, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$txtNumBarb = GUICtrlCreateInput("30", $x + 80, $y - 3, 30, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtSetPerc & " " & $sTxtBarbarians & " " & $sTxtSetPerc2)
 			GUICtrlSetLimit(-1, 3)
 			GUICtrlSetOnEvent(-1, "lblTotalCount")
@@ -76,7 +76,7 @@ Local $x = $xStart +  25, $y = $yStart +  75 + 25
 		$y += 25
 		$icnArch = GUICtrlCreateIcon ($pIconLib, $eIcnArcher, $x - 10, $y - 5, 24, 24)
 		$lblArchers = GUICtrlCreateLabel($sTxtArchers, $x + 20, $y, -1, -1)
-		$txtNumArch = GUICtrlCreateInput("50", $x + 80, $y - 3, 30, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$txtNumArch = GUICtrlCreateInput("60", $x + 80, $y - 3, 30, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtSetPerc & " " & $sTxtArchers & " " & $sTxtSetPerc2)
 			GUICtrlSetLimit(-1, 3)
 			GUICtrlSetOnEvent(-1, "lblTotalCount")
@@ -84,7 +84,7 @@ Local $x = $xStart +  25, $y = $yStart +  75 + 25
 		$y += 25
 		$icnGobl = GUICtrlCreateIcon ($pIconLib, $eIcnGoblin, $x - 10, $y - 5, 24, 24)
 		$lblGoblins = GUICtrlCreateLabel($sTxtGoblins, $x + 20, $y, -1, -1)
-		$txtNumGobl = GUICtrlCreateInput("0", $x + 80, $y - 3, 30, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$txtNumGobl = GUICtrlCreateInput("10", $x + 80, $y - 3, 30, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, $sTxtSetPerc & " " & $sTxtGoblins & " " & $sTxtSetPerc2)
 			GUICtrlSetLimit(-1, 3)
 			GUICtrlSetOnEvent(-1, "lblTotalCount")
@@ -140,7 +140,7 @@ Local $x = $xStart +  160 + 5, $y = $yStart +  45
 		GUICtrlCreateIcon ($pIconLib, $eIcnBldgTarget, $x - 10, $y - 8, 24, 24)
 		$lblFullTroop = GUICtrlCreateLabel(GetTranslated(621,20, "'Full' Camps"),$x + 16, $y, 55, 17)
 		$lblFullTroop2 = GUICtrlCreateLabel(ChrW(8805),$x + 75, $y, -1, 17)
-		$txtFullTroop = GUICtrlCreateInput("98",  $x + 83, $y - 3, 30, 22, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+		$txtFullTroop = GUICtrlCreateInput("100",  $x + 83, $y - 3, 30, 22, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 			_GUICtrlSetTip(-1, GetTranslated(621,21, "Army camps are 'Full' when reaching this %, then start attack."))
 			GUICtrlSetLimit(-1, 3)
 		$lblFullTroop3 = GUICtrlCreateLabel("%",$x + 114, $y, -1, 17)
@@ -150,14 +150,14 @@ Local $x = $xStart +  160 + 5, $y = $yStart +  75 + 25
 	$grpOtherTroops = GUICtrlCreateGroup(GetTranslated(621,22, "Add. Troops"), $x - 15, $y - 20, 139, 250)
 		$icnGiant = GUICtrlCreateIcon ($pIconLib, $eIcnGiant, $x - 10, $y - 5, 24, 24)
 		$lblGiants = GUICtrlCreateLabel($sTxtGiants, $x + 16, $y, -1, -1)
-		$txtNumGiant = GUICtrlCreateInput("0", $x + 83, $y - 3, 30, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+		$txtNumGiant = GUICtrlCreateInput("4", $x + 83, $y - 3, 30, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
 			_GUICtrlSetTip(-1, $sTxtSetPerc3 & " " & $sTxtGiants & " " & $sTxtSetPerc2)
 			GUICtrlSetLimit(-1, 2)
 		$lblTimesGiants = GUICtrlCreateLabel("x", $x + 115, $y, -1, -1)
 		$y +=25
 		$icnWall = GUICtrlCreateIcon ($pIconLib, $eIcnWallBreaker, $x - 10, $y - 5, 24, 24)
 		$lblWallBreakers = GUICtrlCreateLabel($sTxtWallBreakers, $x + 16, $y, -1, -1)
-		$txtNumWall = GUICtrlCreateInput("0", $x + 83, $y - 3, 30, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+		$txtNumWall = GUICtrlCreateInput("4", $x + 83, $y - 3, 30, -1, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
 			_GUICtrlSetTip(-1, $sTxtSetPerc3 & " " & $sTxtWallBreakers & " " & $sTxtSetPerc2)
 			GUICtrlSetLimit(-1, 3)
 		$lblTimesWallBreakers = GUICtrlCreateLabel("x", $x + 115, $y, -1, -1)
@@ -291,16 +291,29 @@ Local $x = $xStart +  160 + 148, $y = $yStart +  80 + 25 - 60
 			GUICtrlSetData(-1, $sTxtMinions & "|" & $sTxtHogRiders & "|" & $sTxtValkyries & "|" & $sTxtGolems & "|" & $sTxtWitches & "|" & $sTxtLavaHounds & "|" & $sTxtBowlers & "|" & $sTxtNone, $sTxtMinions)
 			GUICtrlSetState(-1, $GUI_DISABLE)
 			GUICtrlSetState(-1, $GUI_HIDE)
+
+; Don't Empty Barracks Mode =======================
+$x = 25
+$y = 336
+$chkDontRemove = GUICtrlCreateCheckbox("Don't Empty Barracks", $x - 10, $y, -1, -1)
+$txtTip = "The bot will not remove existing troops in the barracks when training. NOTE : Works only with barrack mode"
+_GUICtrlSetTip(-1, $txtTip)
+
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	; Don't Empty Barracks Mode =======================
-	$x = 25
-	$y =318
-	$grpMods = GUICtrlCreateGroup("Barrack Mode Options", $x - 20, $y + 2, 142, 40)
-		$y +=18
-		$chkDontRemove = GUICtrlCreateCheckbox("Don't Empty Barracks", $x - 10, $y, -1, -1)
-			$txtTip ="The bot will not remove existing troops in the barracks when training."
-			_GUICtrlSetTip(-1, $txtTip)
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+$x = 293
+$y = 300
+
+GUICtrlCreateGroup("Copy to Planner Tab", $x, $y, 140, 60)
+
+GUICtrlCreateLabel("Camps Capacity", $x + 12, $y + 16, 80, 16)
+$txtTotalCamp = GUICtrlCreateInput("200", $x + 98, $y + 14, 30, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+
+$btnCopyTroops = GUICtrlCreateButton("Copy to Planner Tab", $x + 10, $y + 35, 120, 20)
+GUICtrlSetOnEvent(-1, "copyTroops")
+
+GUICtrlCreateGroup("", -99, -99, 1, 1)
+
 GUICtrlCreateTabItem("")
 
 $hGUI_ARMY_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslated(600,21,"Spells"))
@@ -405,15 +418,111 @@ Local $x = $xStart + 25, $y = $yStart +  80 + 25 - 60
 			GUICtrlSetOnEvent(-1, "lblTotalCountSpell")
 		$lblTimesSkeletonS = GUICtrlCreateLabel("x", $x + 137, $y, -1, -1)
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
-	;====================== Spell Barrack Mode ======================
-	$x = 265
-	$y = 313
-	$grpMods = GUICtrlCreateGroup("Spells Training Options", $x - 20, $y + 2, 182, 40)
-		$y +=18
-		$chkBarrackSpell = GUICtrlCreateCheckbox("Spell Barrack Mode", $x - 10, $y, -1, -1)
-			$txtTip ="Train spells continuously in barrack mode (Lightning, Heal, and Rage only)."
-			_GUICtrlSetTip(-1, $txtTip)
-	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+Local $x = $xStart + 30, $y = $yStart + 255
+
+$chkBarrackSpell = GUICtrlCreateCheckbox("Spell Barrack Mode", $x + 180, $y - 210, -1, -1)
+$txtTip = "Train spells continuously in barrack mode (See Spells Tab)."
+_GUICtrlSetTip(-1, $txtTip)
+GUICtrlSetOnEvent(-1, "chkBarrackSpell")
+GUICtrlSetState(-1, $GUI_UNCHECKED)
+
+Local $x = $xStart + 30, $y = $yStart + 275
+
+$grpBrewInAdvance = GUICtrlCreateGroup("", $x + 180, $y - 190, 70, 270)
+GUICtrlSetState(-1, $GUI_HIDE)
+
+$chkBrewInAdvanceLightningSpell = GUICtrlCreateRadio("", $x + 195, $y - 175, 17, 17)
+_GUICtrlSetTip(-1, "Check to fill the factory with this spell")
+GUICtrlSetOnEvent(-1, "chkBrewInAdvanceLightningSpell")
+GUICtrlSetState(-1, $GUI_HIDE)
+$lblLightningIcon2 = GUICtrlCreateIcon($pIconLib, $eIcnLightSpell, $x + 217, $y - 180, 24, 24)
+GUICtrlSetState(-1, $GUI_HIDE)
+
+
+$chkBrewInAdvanceHealSpell = GUICtrlCreateRadio("", $x + 195, $y - 150, 17, 17)
+_GUICtrlSetTip(-1, "Check to fill the factory with this spell")
+GUICtrlSetOnEvent(-1, "chkBrewInAdvanceHealSpell")
+GUICtrlSetState(-1, $GUI_HIDE)
+$lblHealIcon2 = GUICtrlCreateIcon($pIconLib, $eIcnHealSpell, $x + 217, $y - 155, 24, 24)
+GUICtrlSetState(-1, $GUI_HIDE)
+
+
+$chkBrewInAdvanceRageSpell = GUICtrlCreateRadio("", $x + 195, $y - 125, 17, 17)
+_GUICtrlSetTip(-1, "Check to fill the factory with this spell")
+GUICtrlSetOnEvent(-1, "chkBrewInAdvanceRageSpell")
+GUICtrlSetState(-1, $GUI_HIDE)
+$lblRageIcon2 = GUICtrlCreateIcon($pIconLib, $eIcnRageSpell, $x + 217, $y - 130, 24, 24)
+GUICtrlSetState(-1, $GUI_HIDE)
+
+
+$chkBrewInAdvanceJumpSpell = GUICtrlCreateRadio("", $x + 195, $y - 100, 17, 17)
+_GUICtrlSetTip(-1, "Check to fill the factory with this spell")
+GUICtrlSetOnEvent(-1, "chkBrewInAdvanceJumpSpell")
+GUICtrlSetState(-1, $GUI_HIDE)
+$lblJumpIcon2 = GUICtrlCreateIcon($pIconLib, $eIcnJumpSpell, $x + 217, $y - 105, 24, 24)
+GUICtrlSetState(-1, $GUI_HIDE)
+
+
+$chkBrewInAdvanceFreezeSpell = GUICtrlCreateRadio("", $x + 195, $y - 75, 17, 17)
+_GUICtrlSetTip(-1, "Check to fill the factory with this spell")
+GUICtrlSetOnEvent(-1, "chkBrewInAdvanceFreezeSpell")
+GUICtrlSetState(-1, $GUI_HIDE)
+$lblFreezeIcon2 = GUICtrlCreateIcon($pIconLib, $eIcnFreezeSpell, $x + 217, $y - 80, 24, 24)
+GUICtrlSetState(-1, $GUI_HIDE)
+
+
+$chkBrewInAdvanceCloneSpell = GUICtrlCreateRadio("", $x + 195, $y - 50, 17, 17)
+_GUICtrlSetTip(-1, "Check to fill the factory with this spell")
+GUICtrlSetOnEvent(-1, "chkBrewInAdvanceCloneSpell")
+GUICtrlSetState(-1, $GUI_HIDE)
+$lblCloneIcon2 = GUICtrlCreateIcon($pIconLib, $eIcnCloneSpell, $x + 217, $y - 55, 24, 24)
+GUICtrlSetState(-1, $GUI_HIDE)
+
+
+$chkBrewInAdvancePoisonSpell = GUICtrlCreateRadio("", $x + 195, $y - 25, 17, 17)
+_GUICtrlSetTip(-1, "Check to fill the factory with this spell")
+GUICtrlSetOnEvent(-1, "chkBrewInAdvancePoisonSpell")
+GUICtrlSetState(-1, $GUI_HIDE)
+$lblPoisonIcon2 = GUICtrlCreateIcon($pIconLib, $eIcnPoisonSpell, $x + 217, $y - 30, 24, 24)
+GUICtrlSetState(-1, $GUI_HIDE)
+
+
+$chkBrewInAdvanceEarthSpell = GUICtrlCreateRadio("", $x + 195, $y, 17, 17)
+_GUICtrlSetTip(-1, "Check to fill the factory with this spell")
+GUICtrlSetOnEvent(-1, "chkBrewInAdvanceEarthSpell")
+GUICtrlSetState(-1, $GUI_HIDE)
+$lblEarthIcon2 = GUICtrlCreateIcon($pIconLib, $eIcnEarthquakeSpell, $x + 217, $y - 5, 24, 24)
+GUICtrlSetState(-1, $GUI_HIDE)
+
+
+$chkBrewInAdvanceHasteSpell = GUICtrlCreateRadio("", $x + 195, $y + 25, 17, 17)
+_GUICtrlSetTip(-1, "Check to fill the factory with this spell")
+GUICtrlSetOnEvent(-1, "chkBrewInAdvanceHasteSpell")
+GUICtrlSetState(-1, $GUI_HIDE)
+$lblHasteIcon2 = GUICtrlCreateIcon($pIconLib, $eIcnHasteSpell, $x + 217, $y + 20, 24, 24)
+GUICtrlSetState(-1, $GUI_HIDE)
+
+
+$chkBrewInAdvanceSkeletonSpell = GUICtrlCreateRadio("", $x + 195, $y + 50, 17, 17)
+_GUICtrlSetTip(-1, "Check to fill the factory with this spell")
+GUICtrlSetOnEvent(-1, "chkBrewInAdvanceSkeletonSpell")
+GUICtrlSetState(-1, $GUI_HIDE)
+$lblSkeletonIcon2 = GUICtrlCreateIcon($pIconLib, $eIcnSkeletonSpell, $x + 217, $y + 45, 24, 24)
+GUICtrlSetState(-1, $GUI_HIDE)
+
+GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+$x = 293
+$y = 300
+
+GUICtrlCreateGroup("Copy to Planner Tab", $x, $y, 140, 60)
+
+$btnCopySpells = GUICtrlCreateButton("Copy to Planner Tab", $x + 10, $y + 25, 120, 20)
+GUICtrlSetOnEvent(-1, "copySpells")
+
+GUICtrlCreateGroup("", -99, -99, 1, 1)
+
 GUICtrlCreateTabItem("")
 
 $hGUI_ARMY_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslated(600,22,"Boost"))
@@ -657,7 +766,8 @@ $y = $yStart + 45
 			GUICtrlSetOnEvent(-1, "chkTroopOrder2")
 
 	Local $sComboData = ""
-	Local $aTroopOrderList[13] = [ "", $sTxtBarbarians, $sTxtArchers, $sTxtGiants, $sTxtGoblins, $sTxtWallBreakers, $sTxtBalloons, $sTxtWizards, $sTxtHealers, $sTxtDragons, $sTxtPekkas, $sTxtBabyDragons, $sTxtMiners]
+	; Do Not Use translated names here or ChangeTroopTrainOrder() code breaks
+	Local $aTroopOrderList[13] = [ "", "Barbarians", "Archers", "Giants", "Goblins", "Wall Breakers", "Balloons", "Wizards", "Healers", "Dragons", "Pekkas", "Baby Dragons", "Miners"]
 
 	; Create translated list of Troops for combo box
 	For $j = 0 To UBound($aTroopOrderList) - 1
@@ -697,7 +807,8 @@ $y = $yStart + 45
 		GUICtrlSetOnEvent(-1, "chkDarkTroopOrder2")
 
 	Local $sComboData = ""
-	Local $aDarkTroopOrderList[8] = [ "", $sTxtMinions, $sTxtHogRiders, $sTxtValkyries, $sTxtGolems, $sTxtWitches, $sTxtLavaHounds, $sTxtBowlers]
+	; Do Not Use translated names here or ChangeDarkTroopTrainOrder()code breaks
+	Local $aDarkTroopOrderList[8] = [ "", "Minions", "Hog Riders", "Valkyries", "Golems", "Witches", "Lava Hounds", "Bowlers"]
 
 	; Create translated list of Troops for combo box
 	For $j = 0 To UBound($aDarkTroopOrderList) - 1
@@ -728,3 +839,364 @@ $y = $yStart + 45 + 184
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 GUICtrlCreateTabItem("")
+
+$hGUI_ARMY_TAB_ITEM5 = GUICtrlCreateTabItem("Army Planner")
+
+Local $x = 8, $y = 79
+
+$lblbooste1 = GUICtrlCreateLabel("Boost", $x - 1, $y + 2, 28, 12, $SS_RIGHT)
+$chkeBarrack1Boost = GUICtrlCreateCheckbox("", $x + 28, $y + 2, 12, 12)
+GUICtrlSetOnEvent(-1, "chkBarrackBoost")
+$lblusee1 = GUICtrlCreateLabel("Use", $x - 1, $y + 13, 28, 12, $SS_RIGHT)
+$chkeBarrack1Use = GUICtrlCreateCheckbox("", $x + 28, $y + 13, 12, 12)
+GUICtrlSetOnEvent(-1, "chkBarrackUse")
+GUICtrlSetState(-1, $GUI_CHECKED)
+
+$lblbooste2 = GUICtrlCreateLabel("Boost", $x - 1, $y + 27, 28, 12, $SS_RIGHT)
+$chkeBarrack2Boost = GUICtrlCreateCheckbox("", $x + 28, $y + 27, 12, 12)
+GUICtrlSetOnEvent(-1, "chkBarrackBoost")
+$lblusee2 = GUICtrlCreateLabel("Use", $x - 1, $y + 38, 28, 12, $SS_RIGHT)
+$chkeBarrack2Use = GUICtrlCreateCheckbox("", $x + 28, $y + 38, 12, 12)
+GUICtrlSetOnEvent(-1, "chkBarrackUse")
+GUICtrlSetState(-1, $GUI_CHECKED)
+
+$lblbooste3 = GUICtrlCreateLabel("Boost", $x - 1, $y + 52, 28, 12, $SS_RIGHT)
+$chkeBarrack3Boost = GUICtrlCreateCheckbox("", $x + 28, $y + 52, 12, 12)
+GUICtrlSetOnEvent(-1, "chkBarrackBoost")
+$lblusee3 = GUICtrlCreateLabel("Use", $x - 1, $y + 63, 28, 12, $SS_RIGHT)
+$chkeBarrack3Use = GUICtrlCreateCheckbox("", $x + 28, $y + 63, 12, 12)
+GUICtrlSetOnEvent(-1, "chkBarrackUse")
+GUICtrlSetState(-1, $GUI_CHECKED)
+
+$lblbooste4 = GUICtrlCreateLabel("Boost", $x - 1, $y + 77, 28, 12, $SS_RIGHT)
+$chkeBarrack4Boost = GUICtrlCreateCheckbox("", $x + 28, $y + 77, 12, 12)
+GUICtrlSetOnEvent(-1, "chkBarrackBoost")
+$lblusee4 = GUICtrlCreateLabel("Use", $x - 1, $y + 88, 28, 12, $SS_RIGHT)
+$chkeBarrack4Use = GUICtrlCreateCheckbox("", $x + 28, $y + 88, 12, 12)
+GUICtrlSetOnEvent(-1, "chkBarrackUse")
+GUICtrlSetState(-1, $GUI_CHECKED)
+
+Local $x = 48, $y = 30
+
+GUICtrlCreateIcon($pIconLib, $eIcnBarbarian, $x, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnArcher, $x + 32, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnGiant, $x + 64, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnGoblin, $x + 96, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnWallBreaker, $x + 128, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnBalloon, $x + 160, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnWizard, $x + 192, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnHealer, $x + 224, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnDragon, $x + 256, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnPekka, $x + 288, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnBabyDragon, $x + 320, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnMiner, $x + 352, $y, 30, 30, $BS_ICON)
+
+GUICtrlCreateLabel("Qty >", $x - 42, $y + 32, 40, 20, $SS_RIGHT)
+GUICtrlSetFont(-1, 10, $FW_BOLD, Default, "arial", $CLEARTYPE_QUALITY)
+
+Local $x = 51, $y = 62
+
+$eGUITotalTroops[0] = GUICtrlCreateInput("0", $x, $y, 25, 18, $SS_CENTER)
+$eGUITotalTroops[1] = GUICtrlCreateInput("0", $x + 32, $y, 25, 18, $SS_CENTER)
+$eGUITotalTroops[2] = GUICtrlCreateInput("0", $x + 64, $y, 25, 18, $SS_CENTER)
+$eGUITotalTroops[3] = GUICtrlCreateInput("0", $x + 96, $y, 25, 18, $SS_CENTER)
+$eGUITotalTroops[4] = GUICtrlCreateInput("0", $x + 128, $y, 25, 18, $SS_CENTER)
+$eGUITotalTroops[5] = GUICtrlCreateInput("0", $x + 160, $y, 25, 18, $SS_CENTER)
+$eGUITotalTroops[6] = GUICtrlCreateInput("0", $x + 192, $y, 25, 18, $SS_CENTER)
+$eGUITotalTroops[7] = GUICtrlCreateInput("0", $x + 224, $y, 25, 18, $SS_CENTER)
+$eGUITotalTroops[8] = GUICtrlCreateInput("0", $x + 256, $y, 25, 18, $SS_CENTER)
+$eGUITotalTroops[9] = GUICtrlCreateInput("0", $x + 288, $y, 25, 18, $SS_CENTER)
+$eGUITotalTroops[10] = GUICtrlCreateInput("0", $x + 320, $y, 25, 18, $SS_CENTER)
+$eGUITotalTroops[11] = GUICtrlCreateInput("0", $x + 352, $y, 25, 18, $SS_CENTER)
+
+$y = 86
+
+$eGUIBarracks[0][0] = GUICtrlCreateLabel("0", $x, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[0][1] = GUICtrlCreateLabel("0", $x + 32, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[0][2] = GUICtrlCreateLabel("0", $x + 64, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[0][3] = GUICtrlCreateLabel("0", $x + 96, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[0][4] = GUICtrlCreateLabel("0", $x + 128, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[0][5] = GUICtrlCreateLabel("0", $x + 160, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[0][6] = GUICtrlCreateLabel("0", $x + 192, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[0][7] = GUICtrlCreateLabel("0", $x + 224, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[0][8] = GUICtrlCreateLabel("0", $x + 256, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[0][9] = GUICtrlCreateLabel("0", $x + 288, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[0][10] = GUICtrlCreateLabel("0", $x + 320, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[0][11] = GUICtrlCreateLabel("0", $x + 352, $y, 25, 20, $SS_CENTER)
+
+$y = 111
+
+$eGUIBarracks[1][0] = GUICtrlCreateLabel("0", $x, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[1][1] = GUICtrlCreateLabel("0", $x + 32, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[1][2] = GUICtrlCreateLabel("0", $x + 64, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[1][3] = GUICtrlCreateLabel("0", $x + 96, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[1][4] = GUICtrlCreateLabel("0", $x + 128, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[1][5] = GUICtrlCreateLabel("0", $x + 160, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[1][6] = GUICtrlCreateLabel("0", $x + 192, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[1][7] = GUICtrlCreateLabel("0", $x + 224, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[1][8] = GUICtrlCreateLabel("0", $x + 256, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[1][9] = GUICtrlCreateLabel("0", $x + 288, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[1][10] = GUICtrlCreateLabel("0", $x + 320, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[1][11] = GUICtrlCreateLabel("0", $x + 352, $y, 25, 20, $SS_CENTER)
+
+$y = 136
+
+$eGUIBarracks[2][0] = GUICtrlCreateLabel("0", $x, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[2][1] = GUICtrlCreateLabel("0", $x + 32, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[2][2] = GUICtrlCreateLabel("0", $x + 64, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[2][3] = GUICtrlCreateLabel("0", $x + 96, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[2][4] = GUICtrlCreateLabel("0", $x + 128, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[2][5] = GUICtrlCreateLabel("0", $x + 160, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[2][6] = GUICtrlCreateLabel("0", $x + 192, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[2][7] = GUICtrlCreateLabel("0", $x + 224, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[2][8] = GUICtrlCreateLabel("0", $x + 256, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[2][9] = GUICtrlCreateLabel("0", $x + 288, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[2][10] = GUICtrlCreateLabel("0", $x + 320, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[2][11] = GUICtrlCreateLabel("0", $x + 352, $y, 25, 20, $SS_CENTER)
+
+$y = 161
+
+$eGUIBarracks[3][0] = GUICtrlCreateLabel("0", $x, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[3][1] = GUICtrlCreateLabel("0", $x + 32, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[3][2] = GUICtrlCreateLabel("0", $x + 64, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[3][3] = GUICtrlCreateLabel("0", $x + 96, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[3][4] = GUICtrlCreateLabel("0", $x + 128, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[3][5] = GUICtrlCreateLabel("0", $x + 160, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[3][6] = GUICtrlCreateLabel("0", $x + 192, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[3][7] = GUICtrlCreateLabel("0", $x + 224, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[3][8] = GUICtrlCreateLabel("0", $x + 256, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[3][9] = GUICtrlCreateLabel("0", $x + 288, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[3][10] = GUICtrlCreateLabel("0", $x + 320, $y, 25, 20, $SS_CENTER)
+$eGUIBarracks[3][11] = GUICtrlCreateLabel("0", $x + 352, $y, 25, 20, $SS_CENTER)
+
+Local $x = 8, $y = 235
+
+$lblboostd1 = GUICtrlCreateLabel("Boost", $x - 1, $y + 2, 28, 12, $SS_RIGHT)
+$chkdBarrack1Boost = GUICtrlCreateCheckbox("", $x + 28, $y + 2, 12, 12)
+GUICtrlSetOnEvent(-1, "chkBarrackBoost")
+$lblused1 = GUICtrlCreateLabel("Use", $x - 1, $y + 13, 28, 12, $SS_RIGHT)
+$chkdBarrack1Use = GUICtrlCreateCheckbox("", $x + 28, $y + 13, 12, 12)
+GUICtrlSetOnEvent(-1, "chkBarrackUse")
+GUICtrlSetState(-1, $GUI_CHECKED)
+
+$lblboostd2 = GUICtrlCreateLabel("Boost", $x - 1, $y + 27, 28, 12, $SS_RIGHT)
+$chkdBarrack2Boost = GUICtrlCreateCheckbox("", $x + 28, $y + 27, 12, 12)
+GUICtrlSetOnEvent(-1, "chkBarrackBoost")
+$lblused2 = GUICtrlCreateLabel("Use", $x - 1, $y + 38, 28, 12, $SS_RIGHT)
+$chkdBarrack2Use = GUICtrlCreateCheckbox("", $x + 28, $y + 38, 12, 12)
+GUICtrlSetOnEvent(-1, "chkBarrackUse")
+GUICtrlSetState(-1, $GUI_CHECKED)
+
+Local $x = 48, $y = 186
+
+GUICtrlCreateIcon($pIconLib, $eIcnMinion, $x, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnHogRider, $x + 32, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnValkyrie, $x + 64, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnGolem, $x + 96, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnWitch, $x + 128, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnLavaHound, $x + 160, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnBowler, $x + 192, $y, 30, 30)
+
+GUICtrlCreateLabel("Qty >", $x - 42, $y + 32, 40, 20, $SS_RIGHT)
+GUICtrlSetFont(-1, 10, $FW_BOLD, Default, "arial", $CLEARTYPE_QUALITY)
+
+Local $x = 51, $y = 218
+
+$dGUITotalTroops[0] = GUICtrlCreateInput("0", $x, $y, 25, 18, $SS_CENTER)
+$dGUITotalTroops[1] = GUICtrlCreateInput("0", $x + 32, $y, 25, 18, $SS_CENTER)
+$dGUITotalTroops[2] = GUICtrlCreateInput("0", $x + 64, $y, 25, 18, $SS_CENTER)
+$dGUITotalTroops[3] = GUICtrlCreateInput("0", $x + 96, $y, 25, 18, $SS_CENTER)
+$dGUITotalTroops[4] = GUICtrlCreateInput("0", $x + 128, $y, 25, 18, $SS_CENTER)
+$dGUITotalTroops[5] = GUICtrlCreateInput("0", $x + 160, $y, 25, 18, $SS_CENTER)
+$dGUITotalTroops[6] = GUICtrlCreateInput("0", $x + 192, $y, 25, 18, $SS_CENTER)
+
+$y = 242
+
+$dGUIBarracks[0][0] = GUICtrlCreateLabel("0", $x, $y, 25, 20, $SS_CENTER)
+$dGUIBarracks[0][1] = GUICtrlCreateLabel("0", $x + 32, $y, 25, 20, $SS_CENTER)
+$dGUIBarracks[0][2] = GUICtrlCreateLabel("0", $x + 64, $y, 25, 20, $SS_CENTER)
+$dGUIBarracks[0][3] = GUICtrlCreateLabel("0", $x + 96, $y, 25, 20, $SS_CENTER)
+$dGUIBarracks[0][4] = GUICtrlCreateLabel("0", $x + 128, $y, 25, 20, $SS_CENTER)
+$dGUIBarracks[0][5] = GUICtrlCreateLabel("0", $x + 160, $y, 25, 20, $SS_CENTER)
+$dGUIBarracks[0][6] = GUICtrlCreateLabel("0", $x + 192, $y, 25, 20, $SS_CENTER)
+
+$y = 267
+
+$dGUIBarracks[1][0] = GUICtrlCreateLabel("0", $x, $y, 25, 20, $SS_CENTER)
+$dGUIBarracks[1][1] = GUICtrlCreateLabel("0", $x + 32, $y, 25, 20, $SS_CENTER)
+$dGUIBarracks[1][2] = GUICtrlCreateLabel("0", $x + 64, $y, 25, 20, $SS_CENTER)
+$dGUIBarracks[1][3] = GUICtrlCreateLabel("0", $x + 96, $y, 25, 20, $SS_CENTER)
+$dGUIBarracks[1][4] = GUICtrlCreateLabel("0", $x + 128, $y, 25, 20, $SS_CENTER)
+$dGUIBarracks[1][5] = GUICtrlCreateLabel("0", $x + 160, $y, 25, 20, $SS_CENTER)
+$dGUIBarracks[1][6] = GUICtrlCreateLabel("0", $x + 192, $y, 25, 20, $SS_CENTER)
+
+Local $x = 8, $y = 339
+
+$lblboostef = GUICtrlCreateLabel("Boost", $x - 1, $y + 2, 28, 12, $SS_RIGHT)
+$chkeFactoryBoost = GUICtrlCreateCheckbox("", $x + 28, $y + 2, 12, 12)
+GUICtrlSetOnEvent(-1, "chkBarrackBoost")
+
+$lblboostdf = GUICtrlCreateLabel("Boost", $x + 255, $y + 2, 28, 12, $SS_RIGHT)
+$chkdFactoryBoost = GUICtrlCreateCheckbox("", $x + 284, $y + 2, 12, 12)
+GUICtrlSetOnEvent(-1, "chkBarrackBoost")
+
+Local $x = 48, $y = 290
+
+GUICtrlCreateIcon($pIconLib, $eIcnLightSpell, $x, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnHealSpell, $x + 32, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnRageSpell, $x + 64, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnJumpSpell, $x + 96, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnFreezeSpell, $x + 128, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnCloneSpell, $x + 160, $y, 30, 30)
+
+GUICtrlCreateIcon($pIconLib, $eIcnPoisonSpell, $x + 256, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnEarthQuakeSpell, $x + 288, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnHasteSpell, $x + 320, $y, 30, 30)
+GUICtrlCreateIcon($pIconLib, $eIcnSkeletonSpell, $x + 352, $y, 30, 30, $BS_ICON)
+
+GUICtrlCreateLabel("Qty >", $x - 42, $y + 32, 40, 20, $SS_RIGHT)
+GUICtrlSetFont(-1, 10, $FW_BOLD, Default, "arial", $CLEARTYPE_QUALITY)
+
+GUICtrlCreateLabel("Qty >", $x + 213, $y + 32, 40, 20, $SS_RIGHT)
+GUICtrlSetFont(-1, 10, $FW_BOLD, Default, "arial", $CLEARTYPE_QUALITY)
+
+Local $x = 51, $y = 322
+
+$eGUITotalSpells[0] = GUICtrlCreateInput("0", $x, $y, 25, 18, $SS_CENTER)
+$eGUITotalSpells[1] = GUICtrlCreateInput("0", $x + 32, $y, 25, 18, $SS_CENTER)
+$eGUITotalSpells[2] = GUICtrlCreateInput("0", $x + 64, $y, 25, 18, $SS_CENTER)
+$eGUITotalSpells[3] = GUICtrlCreateInput("0", $x + 96, $y, 25, 18, $SS_CENTER)
+$eGUITotalSpells[4] = GUICtrlCreateInput("0", $x + 128, $y, 25, 18, $SS_CENTER)
+$eGUITotalSpells[5] = GUICtrlCreateInput("0", $x + 160, $y, 25, 18, $SS_CENTER)
+$dGUITotalSpells[0] = GUICtrlCreateInput("0", $x + 256, $y, 25, 18, $SS_CENTER)
+$dGUITotalSpells[1] = GUICtrlCreateInput("0", $x + 288, $y, 25, 18, $SS_CENTER)
+$dGUITotalSpells[2] = GUICtrlCreateInput("0", $x + 320, $y, 25, 18, $SS_CENTER)
+$dGUITotalSpells[3] = GUICtrlCreateInput("0", $x + 352, $y, 25, 18, $SS_CENTER)
+
+Local $x = 190, $y = 192
+
+GUICtrlCreateIcon($pIconLib, $eIcnCamp, $x + 90, $y, 20, 20)
+$lblTotalArmy = GUICtrlCreateLabel(" 0", $x + 110, $y + 2, 40, 15, $SS_LEFT)
+GUICtrlSetFont(-1, 10, $FW_BOLD, Default, "arial", $CLEARTYPE_QUALITY)
+
+GUICtrlCreateIcon($pIconLib, $eIcnLightSpell, $x + 145, $y, 20, 20)
+$lblTotalSpell = GUICtrlCreateLabel(" 0", $x + 165, $y + 2, 20, 15, $SS_LEFT)
+GUICtrlSetFont(-1, 10, $FW_BOLD, Default, "arial", $CLEARTYPE_QUALITY)
+
+GUICtrlCreateIcon($pIconLib, $eIcnHourGlass, $x + 90, $y + 20, 20, 20)
+$lblTotalDuration = GUICtrlCreateLabel(" 0s", $x + 110, $y + 22, 80, 15, $SS_LEFT)
+GUICtrlSetFont(-1, 10, $FW_BOLD, Default, "arial", $CLEARTYPE_QUALITY)
+
+GUICtrlCreateIcon($pIconLib, $eIcnElixir, $x + 90, $y + 40, 20, 20)
+$lbleCost = GUICtrlCreateLabel(" 0", $x + 110, $y + 42, 80, 15, $SS_LEFT)
+GUICtrlSetFont(-1, 10, $FW_BOLD, Default, "arial", $CLEARTYPE_QUALITY)
+
+GUICtrlCreateIcon($pIconLib, $eIcnDark, $x + 90, $y + 60, 20, 20)
+$lbldCost = GUICtrlCreateLabel(" 0", $x + 110, $y + 62, 80, 15, $SS_LEFT)
+GUICtrlSetFont(-1, 10, $FW_BOLD, Default, "arial", $CLEARTYPE_QUALITY)
+
+Local $x = 380, $y = 185
+
+$btnSetLevels = GUICtrlCreateButton("Levels", $x, $y + 10, 50, 20)
+GUICtrlSetOnEvent(-1, "btnSetLevels")
+
+$btnReset = GUICtrlCreateButton("Reset", $x, $y + 35, 50, 20)
+GUICtrlSetOnEvent(-1, "btnReset")
+
+$btnCalcTotals = GUICtrlCreateButton("Calc !", $x, $y + 60, 50, 20)
+GUICtrlSetOnEvent(-1, "btnCalcTotals")
+
+GUICtrlCreateTabItem("")
+
+Func btnSetLevels()
+
+	GUICtrlSetData($btnSetLevels, "Open...")
+	GUICtrlSetState($btnSetLevels, $GUI_DISABLE)
+
+	#include <ButtonConstants.au3>
+	#include <EditConstants.au3>
+	#include <GUIConstantsEx.au3>
+	#include <StaticConstants.au3>
+	#include <WindowsConstants.au3>
+
+	$Form1 = GUICreate("Set Army Level...", 346, 497, -1, -1, BitOR($WS_SYSMENU, $WS_POPUP))
+	GUISetBkColor(0xFFFFFF)
+
+	$Group1 = GUICtrlCreateGroup("Elixir Troops", 8, 8, 329, 153, BitOR($GUI_SS_DEFAULT_GROUP, $BS_CENTER))
+	GUICtrlCreateIcon($pIconLib, $eIcnBarbarian, 16, 32, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnArcher, 56, 32, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnGiant, 96, 32, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnGoblin, 136, 32, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnWallBreaker, 176, 32, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnBalloon, 216, 32, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnWizard, 256, 32, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnHealer, 296, 32, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnDragon, 16, 96, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnPekka, 56, 96, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnBabyDragon, 96, 96, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnMiner, 136, 96, 32, 32)
+	$eGUILevelTroops[0] = GUICtrlCreateInput("0", 16, 64, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelTroops[1] = GUICtrlCreateInput("0", 56, 64, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelTroops[2] = GUICtrlCreateInput("0", 96, 64, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelTroops[3] = GUICtrlCreateInput("0", 136, 64, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelTroops[4] = GUICtrlCreateInput("0", 176, 64, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelTroops[5] = GUICtrlCreateInput("0", 216, 64, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelTroops[6] = GUICtrlCreateInput("0", 256, 64, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelTroops[7] = GUICtrlCreateInput("0", 296, 64, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelTroops[8] = GUICtrlCreateInput("0", 16, 128, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelTroops[9] = GUICtrlCreateInput("0", 56, 128, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelTroops[10] = GUICtrlCreateInput("0", 96, 128, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelTroops[11] = GUICtrlCreateInput("0", 136, 128, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+	$Group2 = GUICtrlCreateGroup("Dark Elixir Troops", 8, 168, 329, 89, BitOR($GUI_SS_DEFAULT_GROUP, $BS_CENTER))
+	GUICtrlCreateIcon($pIconLib, $eIcnMinion, 16, 192, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnHogRider, 56, 192, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnValkyrie, 96, 192, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnGolem, 136, 192, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnWitch, 176, 192, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnLavaHound, 216, 192, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnBowler, 256, 192, 32, 32)
+	$dGUILevelTroops[0] = GUICtrlCreateInput("0", 16, 224, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$dGUILevelTroops[1] = GUICtrlCreateInput("0", 56, 224, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$dGUILevelTroops[2] = GUICtrlCreateInput("0", 96, 224, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$dGUILevelTroops[3] = GUICtrlCreateInput("0", 136, 224, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$dGUILevelTroops[4] = GUICtrlCreateInput("0", 176, 224, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$dGUILevelTroops[5] = GUICtrlCreateInput("0", 216, 224, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$dGUILevelTroops[6] = GUICtrlCreateInput("0", 256, 224, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+	$Group3 = GUICtrlCreateGroup("Elixir Spells", 8, 264, 329, 89, BitOR($GUI_SS_DEFAULT_GROUP, $BS_CENTER))
+	GUICtrlCreateIcon($pIconLib, $eIcnLightSpell, 16, 288, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnHealSpell, 56, 288, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnRageSpell, 96, 288, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnJumpSpell, 136, 288, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnFreezeSpell, 176, 288, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnCloneSpell, 216, 288, 32, 32)
+	$eGUILevelSpells[0] = GUICtrlCreateInput("0", 16, 320, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelSpells[1] = GUICtrlCreateInput("0", 56, 320, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelSpells[2] = GUICtrlCreateInput("0", 96, 320, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelSpells[3] = GUICtrlCreateInput("0", 136, 320, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelSpells[4] = GUICtrlCreateInput("0", 176, 320, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$eGUILevelSpells[5] = GUICtrlCreateInput("0", 216, 320, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+	$Group4 = GUICtrlCreateGroup("Dark Elixir Spells", 8, 360, 329, 89, BitOR($GUI_SS_DEFAULT_GROUP, $BS_CENTER))
+	GUICtrlCreateIcon($pIconLib, $eIcnPoisonSpell, 16, 384, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnEarthquakeSpell, 56, 384, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnHasteSpell, 96, 384, 32, 32)
+	GUICtrlCreateIcon($pIconLib, $eIcnSkeletonSpell, 136, 384, 32, 32)
+	$dGUILevelSpells[0] = GUICtrlCreateInput("0", 16, 416, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$dGUILevelSpells[1] = GUICtrlCreateInput("0", 56, 416, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$dGUILevelSpells[2] = GUICtrlCreateInput("0", 96, 416, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	$dGUILevelSpells[3] = GUICtrlCreateInput("0", 136, 416, 33, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER))
+	GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+	$btnValidateLevels = GUICtrlCreateButton("Validate levels !", 112, 456, 137, 33)
+	GUICtrlSetOnEvent(-1, "CloseLevels")
+	GUISetState(@SW_SHOW)
+
+	ApplyGUILevels()
+
+EndFunc   ;==>btnSetLevels
+

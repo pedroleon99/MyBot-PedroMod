@@ -145,7 +145,6 @@ Func DonateCC($Check = False)
 				EndIf
 
 				If $ClanString = "" Or $ClanString = " " Then
-					SetLog("----------------------------------")
 					SetLog("Unable to read Chat Request!", $COLOR_RED)
 					$bDonate = True
 					$y = $DonatePixel[1] + 50
@@ -154,10 +153,8 @@ Func DonateCC($Check = False)
 					If $ichkExtraAlphabets = 1 Then
 						ClipPut($ClanString)
 						Local $tempClip = ClipGet()
-						SetLog("----------------------------------")
 						SetLog("Chat Request: " & $tempClip)
 					Else
-						SetLog("----------------------------------")
 						SetLog("Chat Request: " & $ClanString)
 					EndIf
 				EndIf
@@ -438,8 +435,7 @@ Func DonateCC($Check = False)
 			EndIf
 		EndIf
 	WEnd
-	
-	SetLog("-----------End Donate-----------", $COLOR_BLUE)
+
 	If _Sleep($iDelayDonateCC2) Then Return
 
 EndFunc   ;==>DonateCC
@@ -676,7 +672,7 @@ Func DonateTroopType($Type, $Quant = 0, $Custom = False, $bDonateAll = False)
 
 			;DonateStats =========================================
 			$DonatedValue = $iDonSpellsQuantity
-			
+
 			; Assign the donated quantity Spells to train : $Don $SpellName
 			; need to implement assign $DonPoison etc later
 
@@ -686,7 +682,7 @@ Func DonateTroopType($Type, $Quant = 0, $Custom = False, $bDonateAll = False)
 			SetLog("No " & NameOfTroop($Type) & " available to donate..", $COLOR_RED)
 		EndIf
 	EndIf
-	
+
 	;===================================== DonateStats =====================================;
 
 	If $bDonate And $ichkDStats = 1 And $DonatedValue <> 0 Then
@@ -814,7 +810,7 @@ Func DonateWindow($Open = True)
 
 				For $y = 1 To $bFileList[0]
 
-					$iImageCompare = CompareDBitmaps($DonateFile, $bFileList[$y])
+					$iImageCompare = CompareBitmaps($DonateFile, $bFileList[$y])
 					If $debugSetlog = 1 Then SetLog("DonateStats: Imagecompare result: " & $iImageCompare & "% match!", $COLOR_PURPLE)
 					If $iImageCompare > 90 Then
 						$ImageExist = $bFileList[$y]
@@ -834,7 +830,7 @@ Func DonateWindow($Open = True)
 		EndIf
 
 		;===================================== End DonateStats =====================================;
-		
+
 		Click($DonatePixel[0] + 50, $DonatePixel[1] + 10, 1, 0, "#0174")
 	Else
 		If $debugsetlog = 1 Then SetLog("Could not find the Donate Button!", $COLOR_PURPLE)

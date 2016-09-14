@@ -420,6 +420,9 @@ $x += $Offx
 		$x -= 10
 		$y -= 4
 		$picDonateBarbarians = GUICtrlCreateIcon($pIconLib, $eIcnDonBarbarian, $x + 215, $y, 64, 64, $BS_ICON)
+		$y += 10
+		$chkClanHop = GUICtrlCreateCheckbox("Hop Clans",$x + 285, $y - 10, -1, -1) ; Position of Hop clan check option
+		GUICtrlSetState(-1, $GUI_UNCHECKED)                                        ; Position of Hop clan check option
 		$chkDonateBarbarians = GUICtrlCreateCheckbox($sTxtDonate & " " & $sTxtBarbarians, $x + 285, $y + 10, -1, -1)
 			_GUICtrlSetTip(-1,  $sTxtDonateTip & " " & $sTxtBarbarians & " " & $sTxtDonateTipTroop)
 			GUICtrlSetOnEvent(-1, "chkDonateBarbarians")

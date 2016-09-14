@@ -31,6 +31,7 @@
 #include <TabConstants.au3>
 ;#include <WindowsConstants.au3> ; included on MBR Bot.au3
 #include <WinAPIProc.au3>
+#include <WinAPIRes.au3>
 #include <ScreenCapture.au3>
 #include <Array.au3>
 #include <Date.au3>
@@ -66,7 +67,7 @@ Global $debugsetlogTrain = 0
 Global $debugGetLocation = 0 ;make a image of each structure detected with getlocation
 Global $debugOCRdonate = 0 ; when 1 make OCR and simulate but do not donate
 Global $debugAndroidEmbedded = 1
-Global $debugWindowMessages = 0
+Global $debugWindowMessages = 0 ; 0=off, 1=most Window Messages, 2=all Window Messages
 
 Global Const $COLOR_ORANGE = 0xFF7700
 Global Const $bCapturePixel = True, $bNoCapturePixel = False
@@ -78,6 +79,7 @@ Else
 	$Compiled = @ScriptName & " Script"
 EndIf
 
+Global $hHBitmapTest = 0 ; Image used when testing image functions (_CaptureRegion will not take new screenshot when <> 0)
 Global $hBitmap ; Image for pixel functions
 Global $hHBitmap ; Handle Image for pixel functions
 ;Global $hBitmap2  ; Handle to bitmap object with image captured by _captureregion2()  Bitmap object not used when use _captureregion2()
@@ -93,11 +95,11 @@ Global $AndroidGamePackage = "com.supercell.clashofclans"
 Global $AndroidGameClass = ".GameApp"
 Global $AndroidEmbedEnabled = True
 Global $AndroidEmbedded = False
-Global $AndroidEmbeddedCtrlTarget[9]
+Global $AndroidEmbeddedCtrlTarget[10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $AndroidEmbeddedRedraw = False
 Global $AndroidShieldEnabled = True
-Global $AndroidShieldPreWin8 = StringRegExp(@OSVersion, "WIN_VISTA|WIN_7|WIN_2008") = 1 ; Layered Child Window only support for WIN_8 and later
-Global $AndroidShieldStatus[3] = [Default, 0, 0] ; Current Android Shield status (0: True = Shield Up, False = Shield Down, Default only for init; 1: Color; 2: Transparency = 0-255)
+Global $AndroidShieldPreWin8 = _WinAPI_GetVersion() < 6.2; Layered Child Window only support for WIN_8 and later
+Global $AndroidShieldStatus[5] = [Default, 0, 0, Default, Default] ; Current Android Shield status (0: True = Shield Up, False = Shield Down, Default only for init; 1: Color; 2: Transparency = 0-255; 3: Invisible Shield; 4: Detached Shield)
 Global $AndroidShieldDelay[4] = [0, 0, Default, Default] ; Delay shield call: 0=TimerInit Handle, 1=Delay in ms., 2=AndroidShield action: True, False, Default
 Global $AndroidShieldForceDown = False ; Have shield down in Default mode even if it should be on e.g. in run state
 Global $AndroidShieldColor = $COLOR_WHITE
@@ -123,11 +125,12 @@ Global $AndroidSuspendedEnabled = False ; Enable Android Suspend & Resume during
 Global $NoFocusTampering = False ; If enabled, no ControlFocus or WinActivate is called, except when really required (like Zoom-Out for Droid4X, might break restart stability when Android Window not responding)
 
 ; Android Configutions
-Global $__MEmu_Idx = 0 ; MEmu 2.2.1, 2.3.0, 2.3.1, 2.5.0, 2.6.1, 2.6.2, 2.6.5, 2.6.6, default config with open Tool Bar at right and System Bar at bottom, adjusted in config
-Global $__Droid4X_Idx = 1 ; Droid4X 0.8.6 Beta, 0.8.7 Beta, 0.9.0 Beta, 0.10.0 Beta, 0.11.1 Beta
-Global $__Nox_Idx = 2 ; Nox 3.1.0.0, 3.3.0.0, 3.5.1.0
-Global $__BS2_Idx = 3 ; BlueStacks 2.x
-Global $__BS_Idx = 4 ; BlueStacks 0.9.x, 0.10.x, 0.11.x
+Global $__MEmu_Idx = 0 ; MEmu 2.2.1, 2.3.0, 2.3.1, 2.5.0, 2.6.1, 2.6.2, 2.6.5, 2.6.6, 2.7.0, 2.7.2, 2.8.0, default config with open Tool Bar at right and System Bar at bottom, adjusted in config
+Global $__BS2_Idx = 1 ; BlueStacks 2.x
+Global $__BS_Idx = 2 ; BlueStacks 0.9.x, 0.10.x, 0.11.x
+Global $__Droid4X_Idx = 3 ; Droid4X 0.8.6 Beta, 0.8.7 Beta, 0.9.0 Beta, 0.10.0 Beta, 0.10.1 Beta, 0.10.2 Beta, 0.10.3 Beta
+GLobal $__LeapDroid_IDx = 4 ; LeapDroid 1.2, LeapDroid 1.3, LeapDroid 1.3.1
+Global $__Nox_Idx = 5 ; Nox 3.1.0.0, 3.3.0.0, 3.5.1.0, 3.6.0, 3.7.0
 ; "BlueStacks2" $AndroidAppConfig is also updated based on Registry settings in Func InitBlueStacks2() with these special variables
 Global $__BlueStacks_SystemBar = 48
 ; "MEmu" $AndroidAppConfig is also updated based on runtime config in Func UpdateMEmuWindowState() with these special variables
@@ -146,20 +149,20 @@ Global $__Droid4X_Window[3][3] = _ ; Alternative window sizes (array must be ord
     ["0.10.0",$DEFAULT_WIDTH +  6,$DEFAULT_HEIGHT + 53], _
     ["0.8.6" ,$DEFAULT_WIDTH + 10,$DEFAULT_HEIGHT + 50] _
 ]
-;   0            |1               |2                       |3                                 |4            |5                  |6                   |7                  |8                   |9             |10               |11                    |12                 |13
-;   $Android     |$AndroidInstance|$Title                  |$AppClassInstance                 |$AppPaneName |$AndroidClientWidth|$AndroidClientHeight|$AndroidWindowWidth|$AndroidWindowHeight|$ClientOffsetY|$AndroidAdbDevice|$AndroidSupportFeature|$AndroidShellPrompt|$AndroidMouseDevice
-;                |                |                        |                                  |             |                   |                    |                   |                    |              |                 |1 = Normal background mode                |
-;                |                |                        |                                  |             |                   |                    |                   |                    |              |                 |2 = ADB screencap mode|                   |
-;                |                |                        |                                  |             |                   |                    |                   |                    |              |                 |4 = ADB mouse click   |                   |
-;                |                |                        |                                  |             |                   |                    |                   |                    |              |                 |8 = ADB input text    |                   |
-;                |                |                        |                                  |             |                   |                    |                   |                    |              |                 |16 = ADB shell is steady                  |
-;                |                |                        |                                  |             |                   |                    |                   |                    |              |                 |32 = ADB click drag   |                   |
-Global $AndroidAppConfig[5][14] = [ _ ;                    |                                  |             |                   |                    |                   |                    |              |                 |64 = Dock mode support|                   |
-   ["MEmu",       "MEmu",          "MEmu 2.",              "[CLASS:subWin; INSTANCE:1]",       "",           $DEFAULT_WIDTH,     $DEFAULT_HEIGHT - 12,$DEFAULT_WIDTH + 51,$DEFAULT_HEIGHT + 24,0,             "127.0.0.1:21503",0+2+4+8+16+32+64      ,'# ',               'Microvirt Virtual Input'], _
-   ["Droid4X",    "droid4x",       "Droid4X 0.",           "[CLASS:subWin; INSTANCE:1]",       "",           $DEFAULT_WIDTH,     $DEFAULT_HEIGHT - 48,$DEFAULT_WIDTH + 10,$DEFAULT_HEIGHT + 50,0,             "127.0.0.1:26944",0+2+4+8+16+32+64      ,'# ',               'droid4x Virtual Input'], _
-   ["Nox",        "nox",           "No",                   "[CLASS:Qt5QWindowIcon;INSTANCE:4]","",           $DEFAULT_WIDTH,     $DEFAULT_HEIGHT - 48,$DEFAULT_WIDTH +  4,$DEFAULT_HEIGHT - 10,0,             "127.0.0.1:62001",0+2+4+8+16+32         ,'# ',               'nox Virtual Input'], _
-   ["BlueStacks2","",              "BlueStacks ",          "[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window",$DEFAULT_WIDTH,     $DEFAULT_HEIGHT - 48,$DEFAULT_WIDTH,     $DEFAULT_HEIGHT - 48,0,             "emulator-5554",  1    +8+16   +64      ,'$ ',               'BlueStacks Virtual Touch'], _
-   ["BlueStacks", "",              "BlueStacks App Player","[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window",$DEFAULT_WIDTH,     $DEFAULT_HEIGHT - 48,$DEFAULT_WIDTH,     $DEFAULT_HEIGHT - 48,0,             "emulator-5554",  1    +8+16   +64      ,'$ ',               'BlueStacks Virtual Touch'] _
+;   0            |1               |2                       |3                                 |4            |5                  |6                   |7                  |8                   |9             |10               |11                    |12                 |13                                  |14
+;   $Android     |$AndroidInstance|$Title                  |$AppClassInstance                 |$AppPaneName |$AndroidClientWidth|$AndroidClientHeight|$AndroidWindowWidth|$AndroidWindowHeight|$ClientOffsetY|$AndroidAdbDevice|$AndroidSupportFeature|$AndroidShellPrompt|$AndroidMouseDevice                 |$AndroidEmbed/$AndroidEmbedMode
+;                |                |                        |                                  |             |                   |                    |                   |                    |              |                 |1 = Normal background mode                |                                    |-1 = Not available
+;                |                |                        |                                  |             |                   |                    |                   |                    |              |                 |2 = ADB screencap mode|                   |                                    | 0 = Normal docking
+;                |                |                        |                                  |             |                   |                    |                   |                    |              |                 |4 = ADB mouse click   |                   |                                    | 1 = Simulated docking
+;                |                |                        |                                  |             |                   |                    |                   |                    |              |                 |8 = ADB input text    |                   |                                    |
+;                |                |                        |                                  |             |                   |                    |                   |                    |              |                 |16 = ADB shell is steady                  |                                    |
+Global $AndroidAppConfig[6][15] = [ _ ;                    |                                  |             |                   |                    |                   |                    |              |                 |32 = ADB click drag   |                   |                                    |
+   ["MEmu",       "MEmu",          "MEmu ",                "[CLASS:subWin; INSTANCE:1]",       "",           $DEFAULT_WIDTH,     $DEFAULT_HEIGHT - 12,$DEFAULT_WIDTH + 51,$DEFAULT_HEIGHT + 24,0,             "127.0.0.1:21503",0+2+4+8+16+32         ,'# ',               'Microvirt Virtual Input',           0], _
+   ["BlueStacks2","",              "BlueStacks ",          "[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window",$DEFAULT_WIDTH,     $DEFAULT_HEIGHT - 48,$DEFAULT_WIDTH,     $DEFAULT_HEIGHT - 48,0,             "emulator-5554",  1    +8+16            ,'$ ',               'BlueStacks Virtual Touch',          0], _
+   ["BlueStacks", "",              "BlueStacks App Player","[CLASS:BlueStacksApp; INSTANCE:1]","_ctl.Window",$DEFAULT_WIDTH,     $DEFAULT_HEIGHT - 48,$DEFAULT_WIDTH,     $DEFAULT_HEIGHT - 48,0,             "emulator-5554",  1    +8+16            ,'$ ',               'BlueStacks Virtual Touch',          0], _
+   ["Droid4X",    "droid4x",       "Droid4X ",             "[CLASS:subWin; INSTANCE:1]",       "",           $DEFAULT_WIDTH,     $DEFAULT_HEIGHT - 48,$DEFAULT_WIDTH + 10,$DEFAULT_HEIGHT + 50,0,             "127.0.0.1:26944",0+2+4+8+16+32         ,'# ',               'droid4x Virtual Input',             0], _
+   ["LeapDroid",  "vm1",           "Leapd",                "[CLASS:subWin; INSTANCE:1]",       "",           $DEFAULT_WIDTH,     $DEFAULT_HEIGHT - 48,$DEFAULT_WIDTH     ,$DEFAULT_HEIGHT - 48,0,             "emulator-5554",  1+  4+8+16+32         ,'# ',               'qwerty2',                           1], _
+   ["Nox",        "nox",           "No",                   "[CLASS:Qt5QWindowIcon;INSTANCE:4]","",           $DEFAULT_WIDTH,     $DEFAULT_HEIGHT - 48,$DEFAULT_WIDTH +  4,$DEFAULT_HEIGHT - 10,0,             "127.0.0.1:62001",0+2+4+8+16+32         ,'# ',               '(nox Virtual Input|Android Input)',-1] _
 ]
 Global $OnlyInstance = True
 Global $FoundRunningAndroid = False
@@ -173,6 +176,7 @@ Global $AndroidVersion ; Identified version of Android Emulator
 Global $Android ; Emulator used (BS, BS2, Droid4X, MEmu or Nox)
 Global $AndroidInstance ; Clone or instance of emulator or "" if not supported
 Global $Title ; Emulator Window Title
+Global $UpdateAndroidWindowTitle = False ; If Android has always same title (like LeapDroid) instance name will be added
 Global $AppClassInstance ; Control Class and instance of android rendering
 Global $AppPaneName ; Control name of android rendering TODO check is still required
 Global $AndroidClientWidth ; Expected width of android rendering control
@@ -182,7 +186,7 @@ Global $AndroidWindowHeight ; Expected height of android window
 Global $ClientOffsetY ; not used/required anymore
 Global $AndroidAdbPath ; Path to executable HD-Adb.exe or adb.exe
 Global $AndroidAdbDevice ; full device name ADB connects to
-Global $AndroidSupportFeature ; 0 = Not available, 1 = Available, 2 = Available using ADB (experimental!)
+Global $AndroidSupportFeature ; See $AndroidAppConfig above!
 Global $AndroidShellPrompt ; empty string not available, '# ' for rooted and '$ ' for not rooted android
 Global $AndroidMouseDevice ; empty string not available, can be direct device '/dev/input/event2' or name by getevent -p
 Global $AndroidAdbScreencap ; Use Android ADB to capture screenshots in RGBA raw format
@@ -190,7 +194,8 @@ Global $AndroidAdbClick ; Enable Android ADB mouse click
 Global $AndroidAdbInput ; Enable Android ADB send text (CC requests)
 Global $AndroidAdbInstance ; Enable Android steady ADB shell instance when available
 Global $AndroidAdbClickDrag ; Enable Android ADB Click Drag script
-Global $AndroidEmbed ; Enable Android Dock Mode
+Global $AndroidEmbed ; Enable Android Docking
+Global $AndroidEmbedMode ; Android Dock Mode: -1 = Not available, 0 = Normal docking, 1 = Simulated docking
 Global $AndroidBackgroundLaunch ; Enabled Android Background launch using Windows Scheduled Task
 Global $AndroidBackgroundLaunched ; True when Android was launched in headless mode without a window
 
@@ -200,8 +205,8 @@ EndFunc
 ; Updated in UpdateAndroidConfig() and $Android&Init() as well
 Global $InitAndroidActive = False
 Func InitAndroidConfig($bRestart = False)
-Global $Android = $AndroidAppConfig[$AndroidConfig][0]
 	If $bRestart = False Then
+	   $Android = $AndroidAppConfig[$AndroidConfig][0]
 	   $AndroidInstance = $AndroidAppConfig[$AndroidConfig][1]
 	   $Title = $AndroidAppConfig[$AndroidConfig][2]
 	EndIf
@@ -217,14 +222,16 @@ Global $Android = $AndroidAppConfig[$AndroidConfig][0]
 	$AndroidSupportFeature = $AndroidAppConfig[$AndroidConfig][11] ; 0 = Not available, 1 = Available, 2 = Available using ADB (experimental!)
 	$AndroidShellPrompt = $AndroidAppConfig[$AndroidConfig][12] ; empty string not available, '# ' for rooted and '$ ' for not rooted android
 	$AndroidMouseDevice = $AndroidAppConfig[$AndroidConfig][13] ; empty string not available, can be direct device '/dev/input/event2' or name by getevent -p
+	$AndroidEmbedMode = $AndroidAppConfig[$AndroidConfig][14] ; Android Dock Mode: -1 = Not available, 0 = Normal docking, 1 = Simulated docking
 	$AndroidAdbScreencap = $AndroidAdbScreencapEnabled = True And BitAND($AndroidSupportFeature, 2) = 2 ; Use Android ADB to capture screenshots in RGBA raw format
 	$AndroidAdbClick = $AndroidAdbClickEnabled = True And AndroidAdbClickSupported() ; Enable Android ADB mouse click
 	$AndroidAdbInput = $AndroidAdbInputEnabled = True And BitAND($AndroidSupportFeature, 8) = 8 ; Enable Android ADB send text (CC requests)
 	$AndroidAdbInstance = $AndroidAdbInstanceEnabled = True And BitAND($AndroidSupportFeature, 16) = 16 ; Enable Android steady ADB shell instance when available
 	$AndroidAdbClickDrag = $AndroidAdbClickDragEnabled = True And BitAND($AndroidSupportFeature, 32) = 32 ; Enable Android ADB Click Drag script
-	$AndroidEmbed = $AndroidEmbedEnabled = True And BitAND($AndroidSupportFeature, 64) = 64 ; Enable Android Dock Mode
+	$AndroidEmbed = $AndroidEmbedEnabled = True And $AndroidEmbedMode > -1 ; Enable Android Docking
 	$AndroidBackgroundLaunch = $AndroidBackgroundLaunchEnabled = True And True ; Enabled Android Background launch using Windows Scheduled Task
 	$AndroidBackgroundLaunched = False ; True when Android was launched in headless mode without a window
+	$UpdateAndroidWindowTitle = False ; If Android has always same title (like LeapDroid) instance name will be added
 	; screencap might have disabled backgroundmode
 	If $AndroidAdbScreencap And IsDeclared("chkBackground") Then
 		chkBackground()
@@ -233,6 +240,7 @@ EndFunc
 InitAndroidConfig() ; also called at end of file for supporting loaded config.ini
 
 Global $AndroidProgramPath = "" ; Program path and executable to launch android emulator
+Global $AndroidProgramFileVersionInfo = 0 ; Array of _WinAPI_VerQueryValue FileVersionInfo
 Global $AndroidHasSystemBar = False ; BS2 System Bar can be entirely disabled in Windows Registry
 Global $AndroidClientWidth_Configured = 0 ; Android configured Screen Width
 Global $AndroidClientHeight_Configured = 0 ; Android configured Screen Height
@@ -242,7 +250,7 @@ Global $AndroidAdbPid = 0 ; Single instance of ADB used for screencap (and sende
 Global $AndroidAdbPrompt = "mybot.run:" ; Single instance of ADB PS1 prompt
 Global $AndroidPicturesPath = ""; Android mounted path to pictures on host
 Global $AndroidPicturesHostPath = ""; Windows host path to mounted pictures in android
-Global $AndroidPicturesHostFolder = "mybot.run\" ; Subfolder for host and android, can be "", must end with "\" when used
+Global $AndroidPicturesHostFolder = "\" ; Subfolder for host and android, can be "", must end with "\" when used
 Global $AndroidPicturesPathAutoConfig = True ; Try to configure missing shared folder if missing
 ; Special ADB modes for screencap, mouse clicks and input text
 Global $AndroidAdbAutoTerminateCount = 0 ; Counter for $AndroidAdbAutoTerminate to terminate ADB shell automatically after x executed commands
@@ -289,6 +297,7 @@ Global $AndroidSuspended = False ; Android window is suspended flag
 Global $AndroidQueueReboot = False ; Reboot Android as soon as possible
 Global $AndroidSuspendedTimer = 0; Android Suspended Timer
 Global $InitAndroid = True ; Used to cache android config, is set to False once initialized, new emulator window handle resets it to True
+Global $frmBot = 0 ; Bot Window Handle
 Global $FrmBotMinimized = False ; prevents bot flickering
 
 Global $iVillageName
@@ -297,8 +306,14 @@ Global $sProfilePath = @ScriptDir & "\Profiles"
 Global $sPreset = @ScriptDir & "\Strategies"
 Global $aTxtLogInitText[0][6] = [[]]
 
-; TheRevenor
-Global $profileString
+Global $hTimer_SetTime = 0
+Global $hTimer_PBRemoteControlInterval = 0
+Global $hTimer_PBDeleteOldPushesInterval = 0
+Global $hTimer_EmptyWorkingSetAndroid = 0
+Global $iEmptyWorkingSetAndroid = 60000 ; Empty Android Workingset every Minute
+Global $iEmptyWorkingSetBot = 60000 ; Empty Bot Workingset every Minute
+Global $hTimer_EmptyWorkingSetBot = 0
+Global $bMoveDivider = False
 
 Global $iMoveMouseOutBS = 0 ; If enabled moves mouse out of Android window when bot is running
 Global $SilentSetLog = False ; No logs to Log Control when enabled
@@ -311,6 +326,7 @@ Global $__BlueStacks_Path
 Global $__Droid4X_Version
 Global $__Droid4X_Path
 Global $__MEmu_Path
+Global $__LeapDroid_Path
 Global $__Nox_Path
 
 Global $__VBoxManage_Path ; Full path to executable VBoxManage.exe
@@ -379,7 +395,7 @@ Global $AdbScriptsDir = $LibDir & "\adb.scripts" ; ADD script and event files fo
 Global $pImageLib = $LibDir & "\ImageSearchDLL.dll" ; ImageSearch library
 Global $pImgLib = $LibDir & "\ImgLoc.dll" ; Last Image Library from @trlopes with all Legal Information need on LGPL
 Global $pFuncLib = $LibDir & "\MBRFunctions.dll" ; functions library
-Global $hFuncLib ; handle to functions library
+Global $hFuncLib = -1 ; handle to functions library
 Global $hImgLib ; handle to imgloc library
 Global $pIconLib = $LibDir & "\MBRBOT.dll" ; icon library
 Global Const $dirTHSnipesAttacks = @ScriptDir & "\CSV\THSnipe"
@@ -398,7 +414,7 @@ Global Enum $eIcnArcher = 1, $eIcnDonArcher, $eIcnBalloon, $eIcnDonBalloon, $eIc
 		$eIcnBldgElixir, $eIcnBldgGold, $eIcnMagnifier, $eIcnWallElixir, $eIcnWallGold, $eIcnQueen, $eIcnKing, $eIcnDarkSpellBoost, $eIcnQueenBoostLocate, $eIcnKingBoostLocate, $eIcnKingUpgr, $eIcnQueenUpgr, $eIcnWardenAbility, $eIcnWarden, $eIcnWardenBoostLocate, $eIcnKingBoost, _
 		$eIcnQueenBoost, $eIcnWardenBoost, $eIcnWardenUpgr, $eIcnReload, $eIcnCopy, $eIcnAddcvs, $eIcnEdit, $eIcnTreeSnow, $eIcnSleepingQueen, $eIcnSleepingKing, $eIcnGoldElixir, $eIcnBowler, $eIcnDonBowler, $eIcnCCDonate, $eIcnEagleArt, $eIcnGembox, $eIcnInferno4, $eIcnInfo, $eIcnMain, _
 		$eIcnTree, $eIcnProfile, $eIcnCCRequest, $eIcnTelegram, $eIcnTiles, $eIcnXbow3, $eIcnBark, $eIcnDailyProgram, $eIcnLootCart, $eIcnSleepMode, $eIcnTH11, $eIcnTrainMode, $eIcnSleepingWarden, $eIcnCloneSpell, $eIcnSkeletonSpell, $eIcnBabyDragon, $eIcnDonBabyDragon, $eIcnMiner, $eIcnDonMiner, _
-		$eIcnNoShield, $eIcnDonCustomB, $eIcnDevo
+		$eIcnNoShield, $eIcnDonCustomB, $eIcnNotif, $eIcnChrono, $eIcnCrown, $eIcnEpee, $eIcnMeteo, $eIcnPeople, $eIcnSettings, $eIcnSwitch, $eIcnChat, $eIcnUpgrade, $eIcnPlanner
 
 Global $eIcnDonBlank = $eIcnDonBlacklist
 Global $eIcnOptions = $eIcnDonBlacklist
@@ -418,7 +434,6 @@ Global $AlertSearch = True
 Global $iChkAttackNow, $iAttackNowDelay, $bBtnAttackNowPressed = False
 Global $PushBulletToken = ""
 Global $TelegramToken = ""
-Global $TelegramEnabled
 
 Global $iGUIMasterWidth = 470
 Global $iGUIMasterHeight = 650
@@ -441,8 +456,6 @@ $sModeText[$MA] = "Milking Attack"
 Global $iAtkAlgorithm[$iModeCount]
 
 ;PushBullet---------------------------------------------------------------
-Global $TroopSpellStats[0][2] = [[]]
-Global $iLastAtkTime ; loot hour:mins last raid Added by CDudz Modified by CDudz
 Global $PBRemoteControlInterval = 60000 ; 60 secs
 Global $PBDeleteOldPushesInterval = 1800000 ; 30 mins
 Global $iOrigPushBullet
@@ -464,23 +477,6 @@ Global $icmbHoursPushBullet
 Global $chkDeleteAllPBPushes
 Global $ichkAlertPBCampFull
 Global $ichkAlertPBCampFullTest = 0
-
-;Info Notify - Added By TheRevenor
-Global $pAlertTopGain
-Global $RequestBuilderInfo = 0
-Global $RequestShieldInfo = 0
-Global $ichkAlertBuilderIdle
-Global $iReportIdleBuilder = 0
-
-;Pushbullet Stuff
-Global $StartTime = @HOUR & ":" & @MIN &", " & @MON & "/" & @MDAY
-Global $Attackcount = 0
-Global $VillageStatIncrement
-Global $VillageStatIncrementTXT
-Global $SearchNotifyCount
-Global $SearchNotifyCountTXT
-Global $SearchNotifyCountMsgIden
-Global $PersonalBreakNotified = False
 
 Global $sLogFName
 Global $sAttackLogFName
@@ -850,7 +846,7 @@ Global $CurSFactory = 0
 
 ;Wait For Spells
 Global $iEnableSpellsWait[$iModeCount]
-Global $bFullArmySpells = False, $IsWaitingForHeroesSpells = 0  ; true when $iTotalTrainSpaceSpell = $iTotalSpellSpace in getArmySpellCount
+Global $bFullArmySpells = False  ; true when $iTotalTrainSpaceSpell = $iTotalSpellSpace in getArmySpellCount
 
 Global $barrackPos[4][2] ;Positions of each barracks
 
@@ -948,6 +944,8 @@ Global $CurCamp, $TotalCamp = 0
 Global $NoLeague
 Global $FirstStart = True
 Global $TPaused, $BlockInputPause = 0
+Global $TogglePauseUpdateState = False ; If True, TooglePauseUpdateState() call required and called in _Sleep()
+Global $TogglePauseAllowed = True ; If False, pause will not immediately happen but on next call to _Sleep when $TogglePauseAllowed = True again
 
 ; Halt/Restart Mode values
 Global $itxtRestartGold = 10000
@@ -1168,14 +1166,11 @@ Global $bGForcePBTUpdate = False
 
 Global $iMakeScreenshotNow = False
 
-; TheRevenor
+
 Global $lastversion = "" ;latest version from GIT
-Global $lastModversion = "" ;latest version from GIT
 Global $lastmessage = "" ;message for last version
-Global $lastModmessage = "" ;message for last version
 Global $ichkVersion = 1
 Global $oldversmessage = "" ;warning message for old bot
-Global $oldModversmessage = "" ;warning message for old bot
 
 ;BarracksStatus
 Global $numBarracks = 0
@@ -1499,104 +1494,78 @@ Global $cmbLvl11Fill
 Global $cmbLvl12Fill
 Global $toleranceOffset
 
+
 ;Apply to switch Attack Standard after THSnipe End ==>
 Global $ichkTSActivateCamps2, $iEnableAfterArmyCamps2
 ;==> Apply to switch Attack Standard after THSnipe End
 
 Global $iShouldRearm = True
-;================================== New Variables =========================================
 
-; Profile Switch
-Global $ichkGoldSwitchMax, $itxtMaxGoldAmount, $icmbGoldMaxProfile, $ichkGoldSwitchMin, $itxtMinGoldAmount, $icmbGoldMinProfile
-Global $ichkElixirSwitchMax, $itxtMaxElixirAmount, $icmbElixirMaxProfile, $ichkElixirSwitchMin, $itxtMinElixirAmount, $icmbElixirMinProfile
-Global $ichkDESwitchMax, $itxtMaxDEAmount, $icmbDEMaxProfile, $ichkDESwitchMin, $itxtMinDEAmount, $icmbDEMinProfile
-Global $ichkTrophySwitchMax, $itxtMaxTrophyAmount, $icmbTrophyMaxProfile, $ichkTrophySwitchMin, $itxtMinTrophyAmount, $icmbTrophyMinProfile
-
-; Multi-Farming - Added by TheRevenor
-Global $iSwCount
-Global $ichkSwitchDonate
-Global $ichkMultyFarming
-Global $iAccount, $OkLoc, $AccountLoc
-Global $iconfirm
-Global $bAccount[6] = ["Main", "Second", "Third", "Fourth", "Fifth", "Sixth"]
-
-; Donate Stats - Added by TheRevenor
-Global $ichkLimitDStats = 0
-Global $iLimitDStats = 5000
-
-; Don't Barack Mode - Added by AwesomeGamer
-Global $iChkDontRemove, $chkDontRemove
-Global $iChkBarrackSpell, $chkBarrackSpell
-
-; Check Connections - by TheRevenor
-Global $ichkConnection = 1
-
-; Close Emulator TakeBreak - by TheRevenor
-Global $ichkCloseTakeBreak = 0
-
-; ChatBot - Added By TheRevenor
-Global $FoundChatMessage = 0
-
-; ExtremeZap - by TheRevenor
-Global $ichkExtLightSpell = 1
-
-; SmartZap GUI variables - Added by LunaEclipse
+; SmartZap GUI variables from ChaCalGyn (LunaEclipse) - DEMEN
 Global $ichkSmartZap = 1
 Global $ichkSmartZapDB = 1
 Global $ichkSmartZapSaveHeroes = 1
-Global $itxtMinDE = 250
+Global $itxtMinDE = 300
 
-; SmartZap stats - Added by LunaEclipse
+; SmartZap stats from ChaCalGyn (LunaEclipse) - DEMEN
 Global $smartZapGain = 0
-Global $ExtremeZapGain = 0
 Global $numLSpellsUsed = 0
 
-; SmartZap Array to hold Total Amount of DE available from Drill at each level (1-6) - Added by LunaEclipse
-Global Const $drillLevelHold[6] = [120, _
-								   225, _
-								   405, _
-								   630, _
-								   960, _
-								   1350]
+; SmartZap Array to hold Total Amount of DE available from Drill at each level (1-6) from ChaCalGyn (LunaEclipse) - DEMEN
+Global Const $drillLevelHold[6] = [	120, _
+												225, _
+												405, _
+												630, _
+												960, _
+												1350]
 
-; SmartZap Array to hold Amount of DE available to steal from Drills at each level (1-6) - Added by LunaEclipse
+; SmartZap Array to hold Amount of DE available to steal from Drills at each level (1-6) from ChaCalGyn (LunaEclipse) - DEMEN
 Global Const $drillLevelSteal[6] = [59, _
                                     102, _
-								    172, _
-								    251, _
-								    343, _
-								    479]
-								
-; Android Settings - Added by LunaEclipse
-Global $sAndroid = "<No Emulators>"
-Global $sAndroidInstance = ""
-;Global $ichkHideTaskBar = 0
+												172, _
+												251, _
+												343, _
+												479]
 
-#region Check Collectors Outside
-; collectors outside filter
-Global $ichkDBMeetCollOutside, $iDBMinCollOutsidePercent, $iCollOutsidePercent ; check later if $iCollOutsidePercent obsolete
+;SwitchAcc - DEMEN
+Global $profile = $sProfilePath & "\Profile.ini"
+Global $aconfig[8]
+Global $ichkSwitchAcc = 0
 
-; constants
-Global Const $THEllipseWidth = 200, $THEllipseHeigth = 150, $CollectorsEllipseWidth = 130, $CollectorsEllipseHeigth = 97.5
-Global Const $centerX = 430, $centerY = 335 ; check later if $THEllipseWidth, $THEllipseHeigth obsolete
+Global $icmbTotalCoCAcc		; 0 = Auto detect, 1 = 1 account, 2 = 2 accounts
+Global $nTotalCoCAcc
+Global $ichkSmartSwitch = 1
 
-Global $hBitmapFirst
-#endregion
+Global $ichkCloseTraining = 0
 
-; AwesomeGamer CSV Mod
-Global $attackcsv_use_red_line = 1
-Global $TroopDropNumber = 0
-Global $remainingTroops[12][2]
+Global $nCurProfile = 1
+Global $ProfileList
+Global $nTotalProfile = 1
 
-; Stats Top Loot
-Global $myHourlyStatsGold = ""
-Global $myHourlyStatsElixir = ""
-Global $myHourlyStatsDark = ""
-Global $myHourlyStatsTrophy =""
-Global $topgoldloot = 0
-Global $topelixirloot = 0
-Global $topdarkloot = 0
-Global $topTrophyloot = 0
+Global $ProfileType			; Type of the Current Profile, 1 = active, 2 = donate, 3 = idle
+Global $aProfileType[8]		; Type of the all Profiles, 1 = active, 2 = donate, 3 = idle
+
+Global $MatchProfileAcc		; Account match with Current Profile
+Global $aMatchProfileAcc[8]	; Accounts match with All Profiles
+
+Global $DonateSwitchCounter = 0
+
+Global $bReMatchAcc = False
+
+Global $aTimerStart[8]
+Global $aTimerEnd[8]
+Global $aRemainTrainTime[8]
+Global $aUpdateRemainTrainTime[8]
+Global $nNexProfile
+Global $nMinRemainTrain
+
+Global $iChkRestartAndroid
+Global $iRestartAndroidSearchLimit
+Global $iRestartAndroidTrainError
+Global $iTrainWindowErrorCounter = 0
+
+; Clan Hop Setting
+Global $ichkClanHop
 
 ; CSV Deployment Speed Mod
 Global $isldSelectedCSVSpeed[$iModeCount], $iCSVSpeeds[13]
@@ -1615,6 +1584,222 @@ $iCSVSpeeds[9] = 2.25
 $iCSVSpeeds[10] = 2.5
 $iCSVSpeeds[11] = 2.75
 $iCSVSpeeds[12] = 3
+
+;Trsorerie
+Global $ichkTrap, $iChkCollect, $ichkTombstones, $ichkCleanYard, $itxtTreasuryGold, $itxtTreasuryElixir, $itxtTreasuryDark, $ichkCollectTresory, $chkCollectTresory
+Global $chkCollectTresoryGold, $ichkCollectTresoryGold, $chkCollectTresoryElixir, $ichkCollectTresoryElixir, $chkCollectTresoryDark, $ichkCollectTresoryDark, $ichkTRFull
+
+;Forecast
+Global $ichkEnableForecastReading
+Global Const $COLOR_DEEPPINK = 0xFF1493
+Global Const $COLOR_DARKGREEN = 0x006400
+Global $oIE = ObjCreate("Shell.Explorer.2")
+Global $dtStamps[0]
+Global $lootMinutes[0]
+Global $timeOffset = 0
+Global $TimerForecast = 0
+Global $lootIndexScaleMarkers
+Global $currentForecast
+Global $chkForecastPause, $txtForecastPause
+Global $iChkForecastPause, $iTxtForecastPause
+Global $iChkDontRemoveredzone, $chkDontRemoveredzone
+Global $chkForecastBoost, $txtForecastBoost
+Global $iChkForecastBoost, $iTxtForecastBoost
+Global $cmbForecastHopingSwitchMax, $cmbForecastHopingSwitchMin
+Global $ichkForecastHopingSwitchMax, $icmbForecastHopingSwitchMax, $itxtForecastHopingSwitchMax, $ichkForecastHopingSwitchMin, $icmbForecastHopingSwitchMin, $itxtForecastHopingSwitchMin
+
+Global $ichkLimitDStats = 0
+
+Global $myHourlyStatsGold = ""
+Global $myHourlyStatsElixir =""
+Global $myHourlyStatsDark =""
+
+; Donate Stats - Added by TheRevenor
+Global $ichkLimitDStats = 0
+Global $iLimitDStats = 5000
+
+; AwesomeGamer CSV Mod
+Global $attackcsv_use_red_line = 1
+Global $TroopDropNumber = 0
+Global $remainingTroops[12][2]
+
+; Stats Top Loot
+Global $myHourlyStatsGold = ""
+Global $myHourlyStatsElixir =""
+Global $myHourlyStatsDark =""
+Global $myHourlyStatsTrophy =""
+Global $topgoldloot = 0
+Global $topelixirloot = 0
+Global $topdarkloot = 0
+Global $topTrophyloot = 0
+
+#region Check Collectors Outside
+; collectors outside filter
+Global $ichkDBMeetCollOutside, $iDBMinCollOutsidePercent, $iCollOutsidePercent ; check later if $iCollOutsidePercent obsolete
+
+; constants
+Global Const $THEllipseWidth = 200, $THEllipseHeigth = 150, $CollectorsEllipseWidth = 130, $CollectorsEllipseHeigth = 97.5
+Global Const $centerX = 430, $centerY = 335 ; check later if $THEllipseWidth, $THEllipseHeigth obsolete
+
+Global $hBitmapFirst
+#endregion
+
+Global $TelegramEnabled
+
+Global $TroopSpellStats[0][2] = [[]]
+Global $iLastAtkTime ; loot hour:mins last raid Added by CDudz Modified by CDudz
+
+;Info Notify - Added By TheRevenor
+Global $pAlertTopGain
+Global $RequestBuilderInfo = 0
+Global $RequestShieldInfo = 0
+Global $ichkAlertBuilderIdle
+Global $iReportIdleBuilder = 0
+
+;Pushbullet Stuff
+Global $StartTime = @HOUR & ":" & @MIN &", " & @MON & "/" & @MDAY
+Global $Attackcount = 0
+Global $VillageStatIncrement
+Global $VillageStatIncrementTXT
+Global $SearchNotifyCount
+Global $SearchNotifyCountTXT
+Global $SearchNotifyCountMsgIden
+Global $PersonalBreakNotified = False
+Global $RequestScreenshotHD
+Global $ichkAlertTopGain
+Global $ichkAlertSmartUpgrade
+
+Global $chkDBNoLeague, $chkABNoLeague, $iChkNoLeague[$iModeCount]
+
+; brew spell in advance
+Global $iLightningSpellBrewInAdvance = 0
+Global $iHealSpellBrewInAdvance = 0
+Global $iRageSpellBrewInAdvance = 0
+Global $iJumpSpellBrewInAdvance = 0
+Global $iFreezeSpellBrewInAdvance = 0
+Global $iPoisonSpellBrewInAdvance = 0
+Global $iEarthSpellBrewInAdvance = 0
+Global $iHasteSpellBrewInAdvance = 0
+Global $capaciteRose
+Global $iChkBarrackSpell, $chkBarrackSpell
+
+; ChatBot -modification by rulesss
+Global $FoundChatMessage = 0
+Global $ChatbotStartTime
+
+; Don't Barack Mode - Added by AwesomeGamer
+Global $iChkDontRemove, $chkDontRemove
+
+; Profile Switch
+Global $ichkGoldSwitchMax, $itxtMaxGoldAmount, $icmbGoldMaxProfile, $ichkGoldSwitchMin, $itxtMinGoldAmount, $icmbGoldMinProfile
+Global $ichkElixirSwitchMax, $itxtMaxElixirAmount, $icmbElixirMaxProfile, $ichkElixirSwitchMin, $itxtMinElixirAmount, $icmbElixirMinProfile
+Global $ichkDESwitchMax, $itxtMaxDEAmount, $icmbDEMaxProfile, $ichkDESwitchMin, $itxtMinDEAmount, $icmbDEMinProfile
+Global $ichkTrophySwitchMax, $itxtMaxTrophyAmount, $icmbTrophyMaxProfile, $ichkTrophySwitchMin, $itxtMinTrophyAmount, $icmbTrophyMinProfile
+
+; SmartUpgrade
+Global $ichkSmartUpgrade
+Global $ichkIgnoreTH, $ichkIgnoreKing, $ichkIgnoreQueen, $ichkIgnoreWarden, $ichkIgnoreCC, $ichkIgnoreLab
+Global $ichkIgnoreBarrack, $ichkIgnoreDBarrack, $ichkIgnoreFactory, $ichkIgnoreDFactory, $ichkIgnoreGColl, $ichkIgnoreEColl, $ichkIgnoreDColl
+Global $iSmartMinGold, $iSmartMinElixir, $iSmartMinDark
+Global $upgradeAvailable = 0
+Global $SufficentRessources = 0
+Global $upgradeX = 0
+Global $upgradeY = 0
+Global $zerosHere = 0
+Global $sBldgText, $sBldgLevel, $aString
+Global $upgradeName[3] = ["", "", ""]
+Global $UpgradeCost
+Global $TypeFound = 0
+Global $SmartMinGold, $SmartMinElixir, $SmartMinDark = 0
+
+; Train Duration
+
+Global $eBarracksContent[4][12] = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Global $dBarracksContent[2][7] = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]]
+Global $eFactoryContent[6] = [0, 0, 0, 0, 0, 0]
+Global $dFactoryContent[4] = [0, 0, 0, 0]
+
+Global $eGUIBarracks[4][12] = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Global $dGUIBarracks[2][7] = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]]
+
+Global $eTotalTroops[12] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $dTotalTroops[7] = [0, 0, 0, 0, 0, 0, 0]
+Global $eTotalSpells[6] = [0, 0, 0, 0, 0, 0]
+Global $dTotalSpells[4] = [0, 0, 0, 0]
+
+
+Global $eGUITotalTroops[12] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $dGUITotalTroops[7] = [0, 0, 0, 0, 0, 0, 0]
+Global $eGUITotalSpells[6] = [0, 0, 0, 0, 0, 0]
+Global $dGUITotalSpells[4] = [0, 0, 0, 0]
+
+Global $eGUILevelTroops[12] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $dGUILevelTroops[7] = [0, 0, 0, 0, 0, 0, 0]
+Global $eGUILevelSpells[6] = [0, 0, 0, 0, 0, 0]
+Global $dGUILevelSpells[4] = [0, 0, 0, 0]
+
+Global $eLevelTroops[12] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $dLevelTroops[7] = [0, 0, 0, 0, 0, 0, 0]
+Global $eLevelSpells[6] = [0, 0, 0, 0, 0, 0]
+Global $dLevelSpells[4] = [0, 0, 0, 0]
+
+Global $eBarrack1Duration = 0
+Global $eBarrack2Duration = 0
+Global $eBarrack3Duration = 0
+Global $eBarrack4Duration = 0
+Global $dBarrack1Duration = 0
+Global $dBarrack2Duration = 0
+Global $eFactoryDuration = 0
+Global $dFactoryDuration = 0
+Global $HourDuration, $MinDuration, $SecDuration
+
+Global $TotalArmy, $TotalSpell
+
+Global $ichkeBarrack1Boost, $ichkeBarrack2Boost, $ichkeBarrack3Boost, $ichkeBarrack4Boost, $ichkdBarrack1Boost, $ichkdBarrack2Boost
+Global $ichkeBarrack1Use, $ichkeBarrack2Use, $ichkeBarrack3Use, $ichkeBarrack4Use, $ichkdBarrack1Use, $ichkdBarrack2Use
+Global $ichkeFactoryBoost, $ichkdFactoryBoost
+
+Global $CanCalc = 1
+
+; Train Cost
+
+Global $BarbCost[8] = [0, 25, 40, 60, 100, 150, 200, 250]
+Global $ArchCost[8] = [0, 50, 80, 120, 200, 300, 400, 500]
+Global $GiantCost[9] = [0, 500, 750, 1250, 1750, 2250, 3000, 3500, 4000]
+Global $GoblCost[8] = [0, 25, 40, 60, 80, 100, 150, 200]
+Global $WBCost[7] = [0, 1000, 1500, 2000, 2500, 3000, 3500]
+Global $BallCost[8] = [0, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
+Global $WizCost[7] = [0, 1500, 2000, 2500, 3000, 3500, 4000]
+Global $HealCost[5] = [0, 5000, 6000, 8000, 10000]
+Global $DragCost[6] = [0, 25000, 29000, 33000, 37000, 42000]
+Global $PekkaCost[6] = [0, 28000, 32000, 36000, 40000, 45000]
+Global $BabyCost[5] = [0, 15000, 16000, 17000, 18000]
+Global $MinerCost[5] = [0, 4200, 4800, 5400, 6000]
+Global $MinionCost[8] = [0, 6, 7, 8, 9, 10, 11, 12]
+Global $HogCost[7] = [0, 40, 45, 52, 58, 65, 90]
+Global $ValkyrieCost[6] = [0, 70, 100, 130, 160, 190]
+Global $GolemCost[6] = [0, 450, 525, 600, 675, 750]
+Global $WitchCost[4] = [0, 250, 350, 450]
+Global $LavaCost[5] = [0, 390, 450, 510, 570]
+Global $BowlerCost[4] = [0, 130, 150, 170]
+
+Global $LightCost[8] = [0, 15000, 16500, 18000, 20000, 22000, 24000, 26000]
+Global $HealCost[7] = [0, 15000, 16500, 18000, 20000, 22000, 24000]
+Global $RageCost[6] = [0, 23000, 25000, 27000, 30000, 33000]
+Global $JumpCost[4] = [0, 23000, 27000, 31000]
+Global $FreezeCost[6] = [0, 26000, 29000, 31000, 33000, 35000]
+Global $CloneCost[5] = [0, 38000, 40000, 42000, 44000]
+Global $PoisonCost[5] = [0, 95, 110, 125, 140]
+Global $EarthCost[5] = [0, 125, 140, 160, 180]
+Global $HasteCost[5] = [0, 80, 85, 60, 95]
+Global $SkelCost[5] = [0, 110, 120, 130, 140]
+
+Global $Form1, $btnValidateLevels, $btnCalcTotals
+
+; CoCStats
+Global $ichkCoCStats = 0
+Global $stxtAPIKey = ""
+Global $MyApiKey = ""
 
 ;=== No variables below ! ================================================
 
